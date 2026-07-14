@@ -2,14 +2,12 @@ name: Apply major upgrade
 
 on:
   push:
-    branches:
-      - agent/tsao-sci-researcher-major-upgrade
+    branches: [agent/tsao-sci-researcher-major-upgrade]
     paths:
       - "dist/upgrade-generator/**"
       - ".github/workflows/apply-major-upgrade.yml"
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - "dist/upgrade-generator/**"
       - ".github/workflows/apply-major-upgrade.yml"
@@ -32,162 +30,95 @@ jobs:
         with:
           ref: agent/tsao-sci-researcher-major-upgrade
           fetch-depth: 0
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Install generator dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install jsonschema PyYAML
-
-      - name: Reconstruct generator and write diagnostics
+      - name: Reconstruct verified generator
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64
-          import hashlib
-          import json
-          import traceback
-          import zlib
-
-          base = Path("dist/upgrade-generator")
-          report = {
-              "expected_generator_sha256": "8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079",
-              "files": [],
-              "segments": [],
-              "success": False,
-          }
-          encoded_parts = []
-          try:
-              for path in sorted(base.glob("*")):
-                  if path.is_file():
-                      payload = path.read_bytes()
-                      report["files"].append({
-                          "path": path.as_posix(),
-                          "bytes": len(payload),
-                          "sha256": hashlib.sha256(payload).hexdigest(),
-                      })
-
-              for index in range(7):
-                  raw_path = base / f"part-{index:02}.txt"
-                  if raw_path.exists():
-                      text = raw_path.read_text(encoding="utf-8").strip()
-                      encoded_parts.append(text)
-                      report["segments"].append({
-                          "index": index,
-                          "mode": "raw",
-                          "paths": [raw_path.as_posix()],
-                          "decoded_bytes": len(text.encode("ascii")),
-                          "decoded_sha256": hashlib.sha256(text.encode("ascii")).hexdigest(),
-                      })
-                      continue
-
-                  verified_subparts = sorted(base.glob(f"part-{index:02}-*.b64"))
-                  legacy_subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
-                  subparts = verified_subparts or legacy_subparts
-                  if not subparts:
-                      raise RuntimeError(f"missing generator segment {index:02}")
-                  segment_parts = []
-                  for path in subparts:
-                      decoded = base64.b64decode(path.read_text(encoding="utf-8").strip(), validate=True)
-                      segment_parts.append(decoded)
-                      encoded_parts.append(decoded.decode("ascii"))
-                  segment = b"".join(segment_parts)
-                  report["segments"].append({
-                      "index": index,
-                      "mode": "verified-subparts" if verified_subparts else "legacy-subparts",
-                      "paths": [path.as_posix() for path in subparts],
-                      "decoded_bytes": len(segment),
-                      "decoded_sha256": hashlib.sha256(segment).hexdigest(),
-                  })
-
-              encoded = "".join(encoded_parts).encode("ascii")
-              report["combined_encoded_bytes"] = len(encoded)
-              report["combined_encoded_sha256"] = hashlib.sha256(encoded).hexdigest()
-              compressed = base64.b85decode(encoded)
-              report["compressed_bytes"] = len(compressed)
-              report["compressed_sha256"] = hashlib.sha256(compressed).hexdigest()
-              generator = zlib.decompress(compressed)
-              digest = hashlib.sha256(generator).hexdigest()
-              report["generator_bytes"] = len(generator)
-              report["generator_sha256"] = digest
-              if digest != report["expected_generator_sha256"]:
-                  raise RuntimeError(
-                      f"generator checksum mismatch: {digest} != {report['expected_generator_sha256']}"
-                  )
-              source = generator.decode("utf-8")
-              invalid_prefix = "import sys\nfrom __future__ import annotations\n"
-              valid_prefix = "from __future__ import annotations\nimport sys\n"
-              if source.startswith(invalid_prefix):
-                  source = valid_prefix + source[len(invalid_prefix):]
-              executable = source.encode("utf-8")
-              report["executable_generator_sha256"] = hashlib.sha256(executable).hexdigest()
-              Path("/tmp/tsr_upgrade_generator.py").write_bytes(executable)
-              Path("/tmp/generator-ok").write_text("ok\n", encoding="utf-8")
-              report["success"] = True
-          except Exception as exc:
-              report["error_type"] = type(exc).__name__
-              report["error"] = str(exc)
-              report["traceback"] = traceback.format_exc()
-          finally:
-              Path("generator-diagnostic.json").write_text(
-                  json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-                  encoding="utf-8",
+          import base64, hashlib, zlib
+          base = Path('dist/upgrade-generator')
+          parts = []
+          for index in range(7):
+              raw = base / f'part-{index:02}.txt'
+              if raw.exists():
+                  parts.append(raw.read_text(encoding='utf-8').strip())
+                  continue
+              verified = sorted(base.glob(f'part-{index:02}-*.b64'))
+              legacy = sorted(base.glob(f'part-{index:02}[0-9].b64'))
+              selected = verified or legacy
+              if not selected:
+                  raise SystemExit(f'missing segment {index:02}')
+              parts.extend(
+                  base64.b64decode(path.read_text(encoding='utf-8').strip(), validate=True).decode('ascii')
+                  for path in selected
               )
-              print(json.dumps(report, ensure_ascii=False, indent=2))
+          generator = zlib.decompress(base64.b85decode(''.join(parts).encode('ascii')))
+          expected = '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079'
+          actual = hashlib.sha256(generator).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'generator checksum mismatch: {actual} != {expected}')
+          source = generator.decode('utf-8').replace(
+              'import sys\nfrom __future__ import annotations\n',
+              'from __future__ import annotations\nimport sys\n',
+              1,
+          )
+          Path('/tmp/tsr_upgrade_generator.py').write_text(source, encoding='utf-8')
+          print(f'generator verified: sha256={actual}, bytes={len(generator)}')
           PY
-
-      - name: Upload generator diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generator-diagnostic
-          path: generator-diagnostic.json
-
-      - name: Validate generator reconstruction
-        run: test -f /tmp/generator-ok
-
       - name: Generate v0.5.0 source tree
         run: python /tmp/tsr_upgrade_generator.py
-
       - name: Remove bootstrap material and regenerate indexes
         shell: bash
         run: |
           rm -rf dist/upgrade-generator dist/upgrade-payload
           rm -f .github/workflows/apply-major-upgrade.yml
-          rm -f generator-diagnostic.json
+          rm -f generator-diagnostic.json generator-run.log generator-run.status
           python scripts/build_capability_index.py --write
           python scripts/generate_checksums.py --write
-
       - name: Install validation dependencies
         run: python -m pip install -r requirements-dev.txt
-
       - name: Compile generated Python
         run: |
           export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/tsr-pycache"
           python -m compileall -q scripts tests
-
-      - name: Run 53-layered software and scientific tests
-        run: python -m unittest discover -s tests -p 'test_*.py' -v
-
+      - name: Execute 53 software and scientific tests
+        shell: bash
+        run: |
+          set +e
+          python -m unittest discover -s tests -p 'test_*.py' -v > generated-tests.log 2>&1
+          status=$?
+          echo "$status" > generated-tests.status
+          cat generated-tests.log
+          exit 0
+      - name: Upload generated test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-tests-log
+          path: |
+            generated-tests.log
+            generated-tests.status
+      - name: Require all 53 tests to pass
+        run: test "$(cat generated-tests.status)" = "0"
+      - name: Remove test diagnostics
+        run: rm -f generated-tests.log generated-tests.status
       - name: Run 15-scenario benchmark gate
         run: python scripts/run_benchmarks.py
-
       - name: Mutation gate
         run: python scripts/run_mutation_smoke.py
-
       - name: Performance gate
         run: python scripts/performance_smoke.py
-
       - name: Security gate
         run: python scripts/security_scan.py
-
       - name: Release rebuild gate
         run: python scripts/validate_release.py
-
       - name: Verify clean source tree
         shell: bash
         run: |
@@ -196,8 +127,7 @@ jobs:
           test ! -e dist/upgrade-generator
           test ! -e dist/upgrade-payload
           test ! -e .github/workflows/apply-major-upgrade.yml
-          test ! -e generator-diagnostic.json
-
+          test ! -e generated-tests.log
       - name: Commit verified v0.5.0 source
         shell: bash
         run: |
