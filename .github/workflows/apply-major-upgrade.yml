@@ -7,6 +7,12 @@ on:
     paths:
       - "dist/upgrade-generator/**"
       - ".github/workflows/apply-major-upgrade.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "dist/upgrade-generator/**"
+      - ".github/workflows/apply-major-upgrade.yml"
   workflow_dispatch:
 
 permissions:
@@ -15,6 +21,7 @@ permissions:
 
 jobs:
   rebuild-validate-publish:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
