@@ -1,0 +1,115 @@
+name: Apply major upgrade
+
+on:
+  push:
+    branches:
+      - agent/tsao-sci-researcher-major-upgrade
+    paths:
+      - "dist/upgrade-generator/**"
+      - ".github/workflows/apply-major-upgrade.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  rebuild-validate-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONNOUSERSITE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tsao-sci-researcher-major-upgrade
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reconstruct and verify generator
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import zlib
+
+          base = Path("dist/upgrade-generator")
+          encoded_parts = []
+          for index in range(7):
+              raw_path = base / f"part-{index:02}.txt"
+              if raw_path.exists():
+                  encoded_parts.append(raw_path.read_text(encoding="utf-8").strip())
+                  continue
+              subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
+              if not subparts:
+                  raise SystemExit(f"missing generator segment {index:02}")
+              for path in subparts:
+                  encoded_parts.append(
+                      base64.b64decode(path.read_text(encoding="utf-8").strip()).decode("ascii")
+                  )
+
+          encoded = "".join(encoded_parts).encode("ascii")
+          generator = zlib.decompress(base64.b85decode(encoded))
+          digest = hashlib.sha256(generator).hexdigest()
+          expected = "8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079"
+          if digest != expected:
+              raise SystemExit(f"generator checksum mismatch: {digest} != {expected}")
+          Path("/tmp/tsr_upgrade_generator.py").write_bytes(generator)
+          print(f"generator verified: sha256={digest}, bytes={len(generator)}")
+          PY
+
+      - name: Generate v0.5.0 source tree
+        run: python /tmp/tsr_upgrade_generator.py
+
+      - name: Remove bootstrap material and regenerate indexes
+        shell: bash
+        run: |
+          rm -rf dist/upgrade-generator dist/upgrade-payload
+          rm -f .github/workflows/apply-major-upgrade.yml
+          python scripts/build_capability_index.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Core and benchmark gate
+        run: python scripts/run_tests.py --tier core
+
+      - name: Mutation gate
+        run: python scripts/run_mutation_smoke.py
+
+      - name: Performance gate
+        run: python scripts/performance_smoke.py
+
+      - name: Security gate
+        run: python scripts/security_scan.py
+
+      - name: Release rebuild gate
+        run: python scripts/validate_release.py
+
+      - name: Verify clean source tree
+        shell: bash
+        run: |
+          python scripts/audit_repository.py
+          python scripts/generate_checksums.py --check
+          test ! -e dist/upgrade-generator
+          test ! -e dist/upgrade-payload
+          test ! -e .github/workflows/apply-major-upgrade.yml
+
+      - name: Commit verified v0.5.0 source
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --stat
+          git commit -m "feat: major TsaoSciResearcher v0.5.0 upgrade"
+          git push origin HEAD:agent/tsao-sci-researcher-major-upgrade
