@@ -113,7 +113,14 @@ jobs:
                   raise RuntimeError(
                       f"generator checksum mismatch: {digest} != {report['expected_generator_sha256']}"
                   )
-              Path("/tmp/tsr_upgrade_generator.py").write_bytes(generator)
+              source = generator.decode("utf-8")
+              invalid_prefix = "import sys\nfrom __future__ import annotations\n"
+              valid_prefix = "from __future__ import annotations\nimport sys\n"
+              if source.startswith(invalid_prefix):
+                  source = valid_prefix + source[len(invalid_prefix):]
+              executable = source.encode("utf-8")
+              report["executable_generator_sha256"] = hashlib.sha256(executable).hexdigest()
+              Path("/tmp/tsr_upgrade_generator.py").write_bytes(executable)
               Path("/tmp/generator-ok").write_text("ok\n", encoding="utf-8")
               report["success"] = True
           except Exception as exc:
