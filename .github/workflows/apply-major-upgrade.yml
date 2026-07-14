@@ -80,7 +80,9 @@ jobs:
                       })
                       continue
 
-                  subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
+                  verified_subparts = sorted(base.glob(f"part-{index:02}-*.b64"))
+                  legacy_subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
+                  subparts = verified_subparts or legacy_subparts
                   if not subparts:
                       raise RuntimeError(f"missing generator segment {index:02}")
                   segment_parts = []
@@ -91,7 +93,7 @@ jobs:
                   segment = b"".join(segment_parts)
                   report["segments"].append({
                       "index": index,
-                      "mode": "base64-subparts",
+                      "mode": "verified-subparts" if verified_subparts else "legacy-subparts",
                       "paths": [path.as_posix() for path in subparts],
                       "decoded_bytes": len(segment),
                       "decoded_sha256": hashlib.sha256(segment).hexdigest(),
