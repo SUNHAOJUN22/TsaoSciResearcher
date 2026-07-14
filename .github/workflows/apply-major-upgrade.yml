@@ -96,8 +96,8 @@ jobs:
           root = Path.cwd()
           patch_dir = root / 'dist' / 'upgrade-patch'
           parts = sorted(patch_dir.glob('part-*.b64'))
-          if len(parts) != 4:
-              raise SystemExit(f'expected 4 correction parts, found {len(parts)}')
+          if len(parts) != 5:
+              raise SystemExit(f'expected 5 correction parts, found {len(parts)}')
           encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in parts)
           raw = zlib.decompress(base64.b64decode(encoded, validate=True))
           expected = 'fe2b030732854468841b2a525c6bb15acbbb88aef9d65f0c49b0f85ca9687e39'
