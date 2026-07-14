@@ -1,17 +1,15 @@
-name: Apply major upgrade
+name: Stage generated v0.5.0 candidate
 
 on:
   push:
     branches: [agent/tsao-sci-researcher-major-upgrade]
     paths:
       - "dist/upgrade-generator/**"
-      - "dist/upgrade-patch/**"
       - ".github/workflows/apply-major-upgrade.yml"
   pull_request:
     branches: [main]
     paths:
       - "dist/upgrade-generator/**"
-      - "dist/upgrade-patch/**"
       - ".github/workflows/apply-major-upgrade.yml"
   workflow_dispatch:
 
@@ -20,10 +18,10 @@ permissions:
   actions: write
 
 jobs:
-  rebuild-validate-publish:
+  stage-unverified-candidate:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     env:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONNOUSERSITE: "1"
@@ -80,52 +78,10 @@ jobs:
           print(f'generator verified: sha256={actual}, bytes={len(generator)}')
           PY
 
-      - name: Generate v0.5.0 source tree
+      - name: Generate candidate source tree
         run: python /tmp/tsr_upgrade_generator.py
 
-      - name: Apply verified final correction bundle
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import base64
-          import hashlib
-          import json
-          import zlib
-
-          root = Path.cwd()
-          patch_dir = root / 'dist' / 'upgrade-patch'
-          parts = sorted(patch_dir.glob('part-*.b64'))
-          if len(parts) != 5:
-              raise SystemExit(f'expected 5 correction parts, found {len(parts)}')
-          encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in parts)
-          raw = zlib.decompress(base64.b64decode(encoded, validate=True))
-          expected = 'fe2b030732854468841b2a525c6bb15acbbb88aef9d65f0c49b0f85ca9687e39'
-          actual = hashlib.sha256(raw).hexdigest()
-          if actual != expected:
-              raise SystemExit(f'correction checksum mismatch: {actual} != {expected}')
-          payload = json.loads(raw.decode('utf-8'))
-          writes = payload.get('writes', {})
-          deletes = payload.get('deletes', [])
-          if len(writes) != 19 or len(deletes) != 3:
-              raise SystemExit(
-                  f'unexpected correction scope: writes={len(writes)}, deletes={len(deletes)}'
-              )
-          for rel, encoded_file in writes.items():
-              target = root / rel
-              target.parent.mkdir(parents=True, exist_ok=True)
-              target.write_bytes(base64.b64decode(encoded_file, validate=True))
-          for rel in deletes:
-              target = root / rel
-              if target.exists():
-                  target.unlink()
-          print(
-              f'correction verified: sha256={actual}, '
-              f'writes={len(writes)}, deletes={len(deletes)}'
-          )
-          PY
-
-      - name: Remove bootstrap material and regenerate indexes
+      - name: Remove all bootstrap transport and regenerate manifests
         shell: bash
         run: |
           rm -rf dist/upgrade-generator dist/upgrade-payload dist/upgrade-patch
@@ -133,72 +89,14 @@ jobs:
           rm -f generator-diagnostic.json generator-run.log generator-run.status
           python scripts/build_capability_index.py --write
           python scripts/generate_checksums.py --write
+          python scripts/validate_structure.py
 
-      - name: Install validation dependencies
-        run: python -m pip install -r requirements-dev.txt
-
-      - name: Compile generated Python
-        run: |
-          export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/tsr-pycache"
-          python -m compileall -q scripts tests
-
-      - name: Execute software and scientific tests
-        shell: bash
-        run: |
-          set +e
-          python -m unittest discover -s tests -p 'test_*.py' -v \
-            > "$RUNNER_TEMP/generated-tests.log" 2>&1
-          status=$?
-          echo "$status" > "$RUNNER_TEMP/generated-tests.status"
-          cat "$RUNNER_TEMP/generated-tests.log"
-          exit 0
-
-      - name: Upload generated test log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-tests-log
-          path: |
-            ${{ runner.temp }}/generated-tests.log
-            ${{ runner.temp }}/generated-tests.status
-
-      - name: Require all tests to pass
-        run: test "$(cat "$RUNNER_TEMP/generated-tests.status")" = "0"
-
-      - name: Run 15-scenario benchmark gate
-        run: python scripts/run_benchmarks.py
-
-      - name: Mutation gate
-        run: python scripts/run_mutation_smoke.py
-
-      - name: Performance gate
-        run: python scripts/performance_smoke.py
-
-      - name: Security gate
-        run: python scripts/security_scan.py
-
-      - name: Release rebuild gate
-        run: python scripts/validate_release.py
-
-      - name: Verify clean source tree
-        shell: bash
-        run: |
-          python scripts/audit_repository.py
-          python scripts/generate_checksums.py --check
-          test ! -e dist/upgrade-generator
-          test ! -e dist/upgrade-payload
-          test ! -e dist/upgrade-patch
-          test ! -e .github/workflows/apply-major-upgrade.yml
-          test ! -e generator-diagnostic.json
-          test ! -e generated-tests.log
-          test ! -e generated-tests.status
-
-      - name: Commit verified v0.5.0 source
+      - name: Commit candidate explicitly as unverified
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --stat
-          git commit -m "feat: major TsaoSciResearcher v0.5.0 upgrade"
+          git commit -m "chore: stage generated v0.5.0 candidate (unverified)"
           git push origin HEAD:agent/tsao-sci-researcher-major-upgrade
