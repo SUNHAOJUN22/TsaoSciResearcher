@@ -158,6 +158,7 @@ jobs:
         run: |
           rm -rf dist/upgrade-generator dist/upgrade-payload
           rm -f .github/workflows/apply-major-upgrade.yml
+          rm -f generator-diagnostic.json
           python scripts/build_capability_index.py --write
           python scripts/generate_checksums.py --write
 
@@ -188,6 +189,7 @@ jobs:
           test ! -e dist/upgrade-generator
           test ! -e dist/upgrade-payload
           test ! -e .github/workflows/apply-major-upgrade.yml
+          test ! -e generator-diagnostic.json
 
       - name: Commit verified v0.5.0 source
         shell: bash
