@@ -1,0 +1,17 @@
+name: Capability proposal
+description: Propose a new research capability or workflow improvement.
+title: "[Capability]: "
+labels: [enhancement]
+body:
+  - type: input
+    id: slug
+    attributes: {label: Proposed unique slug}
+    validations: {required: true}
+  - type: textarea
+    id: usecase
+    attributes: {label: Scientific use case and evidence boundary}
+    validations: {required: true}
+  - type: textarea
+    id: tests
+    attributes: {label: Acceptance tests}
+    validations: {required: true}

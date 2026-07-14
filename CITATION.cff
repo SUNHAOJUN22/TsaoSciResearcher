@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: TsaoSciResearcher
+message: "If this research skill supports published work, cite the repository release used."
+type: software
+authors:
+  - family-names: Sun
+    given-names: Haojun
+repository-code: https://github.com/SUNHAOJUN22/TsaoSciResearcher
+license: Apache-2.0
+version: 0.2.0
+date-released: 2026-07-13
