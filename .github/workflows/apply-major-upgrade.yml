@@ -37,39 +37,104 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Reconstruct and verify generator
+      - name: Reconstruct generator and write diagnostics
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           import base64
           import hashlib
+          import json
+          import traceback
           import zlib
 
           base = Path("dist/upgrade-generator")
+          report = {
+              "expected_generator_sha256": "8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079",
+              "files": [],
+              "segments": [],
+              "success": False,
+          }
           encoded_parts = []
-          for index in range(7):
-              raw_path = base / f"part-{index:02}.txt"
-              if raw_path.exists():
-                  encoded_parts.append(raw_path.read_text(encoding="utf-8").strip())
-                  continue
-              subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
-              if not subparts:
-                  raise SystemExit(f"missing generator segment {index:02}")
-              for path in subparts:
-                  encoded_parts.append(
-                      base64.b64decode(path.read_text(encoding="utf-8").strip()).decode("ascii")
-                  )
+          try:
+              for path in sorted(base.glob("*")):
+                  if path.is_file():
+                      payload = path.read_bytes()
+                      report["files"].append({
+                          "path": path.as_posix(),
+                          "bytes": len(payload),
+                          "sha256": hashlib.sha256(payload).hexdigest(),
+                      })
 
-          encoded = "".join(encoded_parts).encode("ascii")
-          generator = zlib.decompress(base64.b85decode(encoded))
-          digest = hashlib.sha256(generator).hexdigest()
-          expected = "8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079"
-          if digest != expected:
-              raise SystemExit(f"generator checksum mismatch: {digest} != {expected}")
-          Path("/tmp/tsr_upgrade_generator.py").write_bytes(generator)
-          print(f"generator verified: sha256={digest}, bytes={len(generator)}")
+              for index in range(7):
+                  raw_path = base / f"part-{index:02}.txt"
+                  if raw_path.exists():
+                      text = raw_path.read_text(encoding="utf-8").strip()
+                      encoded_parts.append(text)
+                      report["segments"].append({
+                          "index": index,
+                          "mode": "raw",
+                          "paths": [raw_path.as_posix()],
+                          "decoded_bytes": len(text.encode("ascii")),
+                          "decoded_sha256": hashlib.sha256(text.encode("ascii")).hexdigest(),
+                      })
+                      continue
+
+                  subparts = sorted(base.glob(f"part-{index:02}[0-9].b64"))
+                  if not subparts:
+                      raise RuntimeError(f"missing generator segment {index:02}")
+                  segment_parts = []
+                  for path in subparts:
+                      decoded = base64.b64decode(path.read_text(encoding="utf-8").strip(), validate=True)
+                      segment_parts.append(decoded)
+                      encoded_parts.append(decoded.decode("ascii"))
+                  segment = b"".join(segment_parts)
+                  report["segments"].append({
+                      "index": index,
+                      "mode": "base64-subparts",
+                      "paths": [path.as_posix() for path in subparts],
+                      "decoded_bytes": len(segment),
+                      "decoded_sha256": hashlib.sha256(segment).hexdigest(),
+                  })
+
+              encoded = "".join(encoded_parts).encode("ascii")
+              report["combined_encoded_bytes"] = len(encoded)
+              report["combined_encoded_sha256"] = hashlib.sha256(encoded).hexdigest()
+              compressed = base64.b85decode(encoded)
+              report["compressed_bytes"] = len(compressed)
+              report["compressed_sha256"] = hashlib.sha256(compressed).hexdigest()
+              generator = zlib.decompress(compressed)
+              digest = hashlib.sha256(generator).hexdigest()
+              report["generator_bytes"] = len(generator)
+              report["generator_sha256"] = digest
+              if digest != report["expected_generator_sha256"]:
+                  raise RuntimeError(
+                      f"generator checksum mismatch: {digest} != {report['expected_generator_sha256']}"
+                  )
+              Path("/tmp/tsr_upgrade_generator.py").write_bytes(generator)
+              Path("/tmp/generator-ok").write_text("ok\n", encoding="utf-8")
+              report["success"] = True
+          except Exception as exc:
+              report["error_type"] = type(exc).__name__
+              report["error"] = str(exc)
+              report["traceback"] = traceback.format_exc()
+          finally:
+              Path("generator-diagnostic.json").write_text(
+                  json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+                  encoding="utf-8",
+              )
+              print(json.dumps(report, ensure_ascii=False, indent=2))
           PY
+
+      - name: Upload generator diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generator-diagnostic
+          path: generator-diagnostic.json
+
+      - name: Validate generator reconstruction
+        run: test -f /tmp/generator-ok
 
       - name: Generate v0.5.0 source tree
         run: python /tmp/tsr_upgrade_generator.py
