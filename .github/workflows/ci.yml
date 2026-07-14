@@ -20,41 +20,5 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: Install test dependencies
         run: python -m pip install -r requirements-dev.txt
-      - name: Run complete validation suite except checksum
-        shell: bash
-        run: |
-          python scripts/audit_repository.py
-          python -m compileall -q scripts tests
-          python scripts/validate_structure.py
-          python scripts/build_capability_index.py --check
-          python scripts/route_task.py --self-test
-          python scripts/validate_figure.py examples/figure-contract.json
-          python -m unittest discover -s tests -v
-  checksum-diagnostic:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Generate checksum diagnostic
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib
-          from scripts.generate_checksums import ROOT, build, source_files
-          lines = []
-          lines.append('stored=' + (ROOT / 'SHA256SUMS').read_text(encoding='utf-8').strip())
-          lines.append('computed=' + build().strip())
-          for path in source_files():
-              rel = path.relative_to(ROOT).as_posix()
-              lines.append(hashlib.sha256(path.read_bytes()).hexdigest() + '  ' + rel)
-          Path('checksum-diagnostic.txt').write_text('\n'.join(lines) + '\n', encoding='utf-8')
-          print('\n'.join(lines[:2]))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: checksum-diagnostic
-          path: checksum-diagnostic.txt
-      - name: Validate tree checksum
-        run: python scripts/generate_checksums.py --check
+      - name: Run complete validation suite
+        run: python scripts/run_tests.py
