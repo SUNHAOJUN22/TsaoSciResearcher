@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse, json, sys
+import jsonschema
+from common import ROOT, load_data
+
+def main():
+    p=argparse.ArgumentParser(); p.add_argument('contract'); a=p.parse_args()
+    try:
+        data=load_data(a.contract); schema=load_data(ROOT/'schemas/figure-contract.schema.json'); jsonschema.Draft202012Validator(schema).validate(data)
+        formats=set(data['export']['formats'])
+        if formats & {'png','tiff'} and data['export']['raster_dpi'] < 300: raise ValueError('publication raster export must be at least 300 DPI')
+        if data['audience'].lower().find('journal')>=0 and not formats & {'svg','pdf'}: raise ValueError('journal figure should include SVG or PDF vector export when applicable')
+        for p in data['panels']:
+            if p['kind']=='quantitative':
+                if p.get('x_axis') is None or p.get('y_axis') is None: raise ValueError(f'panel {p["id"]}: quantitative panel requires axes')
+                for axis in ['x_axis','y_axis']:
+                    if not p[axis]['label'].strip(): raise ValueError(f'panel {p["id"]}: {axis} label required')
+                    if not p[axis]['unit'].strip(): raise ValueError(f'panel {p["id"]}: {axis} unit or explicit dimensionless marker required')
+        print(json.dumps({'valid':True,'figure_id':data['figure_id'],'panels':len(data['panels']),'formats':sorted(formats)},ensure_ascii=False))
+    except Exception as e: print(f'INVALID: {e}',file=sys.stderr); raise SystemExit(1)
+if __name__=='__main__': main()

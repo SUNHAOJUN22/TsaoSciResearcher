@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "handoff_id": "COMP-001",
+  "scientific_question": "",
+  "target_property": "",
+  "scale": "",
+  "candidate_methods": [],
+  "inputs": [],
+  "boundary_conditions": [],
+  "initial_conditions": [],
+  "parameter_sources": [],
+  "convergence_checks": [],
+  "uncertainty_analysis": [],
+  "expected_outputs": [],
+  "acceptance_criteria": [],
+  "evidence_level": "planned",
+  "human_approval_points": []
+}

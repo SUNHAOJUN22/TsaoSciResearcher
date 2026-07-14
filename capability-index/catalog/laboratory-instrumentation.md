@@ -1,0 +1,22 @@
+# 实验室自动化与仪器
+
+- `experiment-sop-generator` — **实验SOP**: 将研究方案转换为可执行步骤和质控点
+- `lab-safety-checker` — **实验安全**: 检查化学品、温压、生物和操作风险
+- `reagent-calculator` — **试剂计算**: 计算摩尔量、浓度、配比和加料顺序
+- `sample-naming-manager` — **样品编码**: 生成可追溯样品命名和元数据
+- `electronic-lab-notebook` — **电子实验记录**: 整理时间、人员、批次、参数和结果
+- `instrument-data-importer` — **仪器数据导入**: 统一导入光谱、色谱、热分析和力学数据
+- `baseline-correction` — **基线校正**: 对光谱和色谱执行基线估计与校正
+- `peak-detection-fitting` — **寻峰与拟合**: 执行峰识别、分峰、积分和不确定性
+- `chromatography-analysis` — **色谱分析**: 分析GC、HPLC和GPC数据
+- `nmr-analysis` — **NMR分析**: 辅助峰归属、积分和结构确认
+- `ftir-raman-analysis` — **红外与拉曼**: 识别特征峰、官能团和结构变化
+- `xrd-analysis` — **XRD分析**: 分析物相、晶格、晶粒和结晶度
+- `xps-analysis` — **XPS分析**: 分析元素组成、价态和深度分布
+- `dsc-tga-analysis` — **DSC/TGA分析**: 提取热转变、结晶、降解和动力学
+- `sem-tem-analysis` — **电镜图像分析**: 分析粒径、形貌、孔隙和分散
+- `rheology-analysis` — **流变数据分析**: 拟合黏度、模量、松弛和屈服模型
+- `mechanical-test-analysis` — **力学测试**: 分析拉伸、弯曲、冲击、疲劳和失效
+- `robotic-lab-planner` — **机器人实验规划**: 生成液体工作站和机器人实验任务
+- `lims-integration` — **LIMS集成**: 连接样品、方法、仪器和结果数据库
+- `experiment-result-validator` — **实验结果验证**: 检查对照、重复、质控和异常批次

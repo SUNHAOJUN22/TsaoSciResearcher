@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "path",
+    "kind",
+    "created_at",
+    "checksum",
+    "state"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "checksum": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "state": {
+      "enum": [
+        "created",
+        "checked",
+        "validated",
+        "accepted",
+        "rejected",
+        "superseded"
+      ]
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

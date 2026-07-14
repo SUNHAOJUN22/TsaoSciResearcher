@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "handoff_id": "COMP-PP-CB-001",
+  "scientific_question": "How does carbon-black localization in a PP/elastomer blend affect conductive-network formation?",
+  "target_property": "carbon-black phase preference and percolation descriptors",
+  "scale": "multiscale",
+  "candidate_methods": [
+    "all-atom or coarse-grained MD",
+    "mesoscale morphology analysis"
+  ],
+  "inputs": [
+    "polymer repeat-unit structures",
+    "blend composition",
+    "carbon-black surface model"
+  ],
+  "boundary_conditions": [
+    "temperature and composition must match the target processing state"
+  ],
+  "initial_conditions": [
+    "multiple independently packed configurations"
+  ],
+  "parameter_sources": [
+    "validated force-field or literature parameters"
+  ],
+  "convergence_checks": [
+    "independent replicas",
+    "trajectory stationarity",
+    "box-size sensitivity"
+  ],
+  "uncertainty_analysis": [
+    "replicate variability",
+    "force-field sensitivity"
+  ],
+  "expected_outputs": [
+    "phase-contact statistics",
+    "dispersion metrics",
+    "validated structures"
+  ],
+  "acceptance_criteria": [
+    "stable statistics across replicas",
+    "physical consistency with experimental trends"
+  ],
+  "evidence_level": "planned",
+  "human_approval_points": [
+    "approve force field and carbon-black representation before execution"
+  ]
+}

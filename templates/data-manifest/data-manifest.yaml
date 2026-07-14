@@ -1,0 +1,14 @@
+schema_version: "1.0"
+dataset_id: DATA-001
+owner: ""
+created_at: ""
+source: ""
+license_or_consent: ""
+rows: null
+columns: []
+units: {}
+missing_value_codes: []
+transformations: []
+exclusions: []
+quality_checks: []
+checksum: ""

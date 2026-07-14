@@ -7,11 +7,13 @@
     <a href="README_EN.md">English</a> ·
     <a href="docs/ARCHITECTURE.md">Architecture</a> ·
     <a href="capability-index/capabilities.md">158 Capabilities</a> ·
-    <a href="docs/VALIDATION.md">Validation</a>
+    <a href="docs/VALIDATION.md">Validation</a> ·
+    <a href="docs/COMPLIANCE.md">Compliance</a> ·
+    <a href="docs/AUDIT_REPORT.md">Audit</a>
   </p>
 
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-0.2.0-0f766e" />
+    <img alt="Version" src="https://img.shields.io/badge/version-0.3.0-0f766e" />
     <img alt="Capabilities" src="https://img.shields.io/badge/capabilities-158-2563eb" />
     <img alt="Workflows" src="https://img.shields.io/badge/workflows-15-7c3aed" />
     <img alt="Python" src="https://img.shields.io/badge/Python-%E2%89%A53.10-3776AB?logo=python&logoColor=white" />
@@ -44,6 +46,21 @@
 | 人工决策 | 医学、专利/FTO、安全、科研诚信、高影响因果结论 | 必须由合格专家审核 |
 
 > **核心原则：** `completed ≠ checked ≠ validated ≠ accepted`。
+
+### v0.3.0 客观验证状态
+
+| 检查项 | 验证结果 |
+|---|---:|
+| 能力记录 | 158 条，slug 唯一，必填字段完整 |
+| 工作流 | 15 个，根路由和确定性路由器均可到达 |
+| Schema | 7 个，均通过 JSON Schema 自检 |
+| 路由测试 | 35 类科研意图 |
+| 安装测试 | Codex、Claude Code、Open Agent 与自定义目录 |
+| 科研绘图 | Figure Contract 示例和导出规格校验通过 |
+| 证据模型 | Evidence—Claim 关联示例通过 |
+| 仓库审计 | 版本、链接、路径、引用、CI目标和密钥扫描通过 |
+
+完整映射见 [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md)，修复记录见 [`docs/AUDIT_REPORT.md`](docs/AUDIT_REPORT.md)。这些结果证明仓库结构和确定性工具可运行，不代表外部数据库、实验仪器或计算求解器已经安装。
 
 ## 为什么不是 158 个独立 Skill
 
@@ -224,6 +241,7 @@ python scripts/handoff_to_computation.py \
 ## 测试与发布
 
 ```bash
+python scripts/audit_repository.py
 python scripts/run_tests.py
 python scripts/package_release.py
 ```

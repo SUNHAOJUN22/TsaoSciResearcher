@@ -1,0 +1,8 @@
+schema_version: "1.0"
+audit_id: AUDIT-001
+scope: [citations, data, statistics, figures, claims, provenance]
+mode: read-only
+materials: []
+reviewers: []
+severity_scale: [info, low, medium, high, critical]
+findings: []

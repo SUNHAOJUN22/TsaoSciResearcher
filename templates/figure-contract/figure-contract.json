@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "figure_id": "FIG-001",
+  "title": "",
+  "scientific_conclusion": "",
+  "audience": "journal manuscript",
+  "target_venue": "",
+  "panels": [
+    {
+      "id": "A",
+      "purpose": "",
+      "kind": "quantitative",
+      "chart_type": "line",
+      "data_sources": [
+        "DATA-001"
+      ],
+      "x_axis": {
+        "label": "Time",
+        "unit": "s",
+        "scale": "linear",
+        "start_at_zero": true
+      },
+      "y_axis": {
+        "label": "Response",
+        "unit": "a.u.",
+        "scale": "linear",
+        "start_at_zero": false
+      },
+      "transformations": []
+    }
+  ],
+  "uncertainty": {
+    "type": "95% CI",
+    "sample_size": "",
+    "calculation": ""
+  },
+  "statistics": {
+    "tests": [],
+    "multiplicity": "not applicable"
+  },
+  "legend": "",
+  "export": {
+    "formats": [
+      "png",
+      "svg"
+    ],
+    "raster_dpi": 450,
+    "width_mm": 180,
+    "height_mm": 100
+  },
+  "accessibility": {
+    "color_vision_checked": false,
+    "alt_text": ""
+  },
+  "review_risks": [],
+  "provenance": {
+    "raw_data": [],
+    "processed_data": [],
+    "code": []
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "figure_id": "FIG-001",
+  "title": "Synthetic stability trend",
+  "scientific_conclusion": "The synthetic response increases gradually over the demonstration interval.",
+  "audience": "journal manuscript",
+  "target_venue": "method demonstration",
+  "panels": [
+    {
+      "id": "A",
+      "purpose": "Show the synthetic time-dependent trend used to test the figure-contract workflow.",
+      "kind": "quantitative",
+      "chart_type": "line",
+      "data_sources": [
+        "DATA-001"
+      ],
+      "x_axis": {
+        "label": "Time",
+        "unit": "s",
+        "scale": "linear",
+        "start_at_zero": true
+      },
+      "y_axis": {
+        "label": "Response",
+        "unit": "a.u.",
+        "scale": "linear",
+        "start_at_zero": false
+      },
+      "transformations": []
+    }
+  ],
+  "uncertainty": {
+    "type": "none; synthetic demonstration",
+    "sample_size": "101 generated points",
+    "calculation": "not applicable"
+  },
+  "statistics": {
+    "tests": [],
+    "multiplicity": "not applicable"
+  },
+  "legend": "Line shows synthetic demonstration values only.",
+  "export": {
+    "formats": [
+      "png",
+      "svg"
+    ],
+    "raster_dpi": 450,
+    "width_mm": 180,
+    "height_mm": 100
+  },
+  "accessibility": {
+    "color_vision_checked": true,
+    "alt_text": "A synthetic line rises slowly with time from zero to one hundred nanoseconds."
+  },
+  "review_risks": [
+    "Synthetic data must not be interpreted as an experimental result."
+  ],
+  "provenance": {
+    "raw_data": [
+      "generated in examples/scientific_figure/plot_example.py"
+    ],
+    "processed_data": [],
+    "code": [
+      "examples/scientific_figure/plot_example.py"
+    ]
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "research-question": {
+    "weight": 3,
+    "keywords": [
+      "研究问题",
+      "科学问题",
+      "选题",
+      "假设",
+      "创新性",
+      "可行性",
+      "研究空白",
+      "research question",
+      "hypothesis",
+      "novelty",
+      "feasibility"
+    ]
+  },
+  "deep-research": {
+    "weight": 3,
+    "keywords": [
+      "深度研究",
+      "文献检索",
+      "查文献",
+      "论文阅读",
+      "前沿",
+      "综述资料",
+      "literature search",
+      "deep research",
+      "paper search",
+      "research gap",
+      "检索",
+      "文献",
+      "论文阅读",
+      "读取论文",
+      "提取方法",
+      "方法参数",
+      "研究空白"
+    ]
+  },
+  "systematic-review": {
+    "weight": 3,
+    "keywords": [
+      "系统综述",
+      "meta分析",
+      "荟萃分析",
+      "prisma",
+      "纳入排除",
+      "风险偏倚",
+      "systematic review",
+      "meta-analysis"
+    ]
+  },
+  "research-design": {
+    "weight": 2,
+    "keywords": [
+      "技术路线",
+      "研究方案",
+      "研究设计",
+      "闭环科研",
+      "多智能体科研",
+      "research design",
+      "technical route",
+      "study design"
+    ]
+  },
+  "experiment-design": {
+    "weight": 3,
+    "keywords": [
+      "实验设计",
+      "正交实验",
+      "响应面",
+      "样本量",
+      "统计功效",
+      "对照组",
+      "随机化",
+      "盲法",
+      "doe",
+      "sample size",
+      "power analysis",
+      "randomization"
+    ]
+  },
+  "data-analysis": {
+    "weight": 2,
+    "keywords": [
+      "数据清洗",
+      "统计分析",
+      "异常值",
+      "方差分析",
+      "回归",
+      "因果推断",
+      "不确定性",
+      "机器学习",
+      "anova",
+      "regression",
+      "causal inference",
+      "uncertainty",
+      "data analysis"
+    ]
+  },
+  "scientific-figure": {
+    "weight": 3,
+    "keywords": [
+      "科研绘图",
+      "论文配图",
+      "画图",
+      "作图",
+      "多panel",
+      "机制图",
+      "图形摘要",
+      "rmsd图",
+      "火山图",
+      "scientific figure",
+      "plot",
+      "graphical abstract",
+      "visualization",
+      "rmsd",
+      "自由能景观",
+      "fel",
+      "dccm",
+      "绘制",
+      "图表"
+    ]
+  },
+  "scientific-writing": {
+    "weight": 2,
+    "keywords": [
+      "论文写作",
+      "摘要",
+      "引言",
+      "方法章节",
+      "结果章节",
+      "讨论",
+      "润色",
+      "翻译",
+      "manuscript",
+      "abstract",
+      "introduction",
+      "academic writing"
+    ]
+  },
+  "peer-review": {
+    "weight": 3,
+    "keywords": [
+      "审稿",
+      "审稿意见",
+      "审稿回复",
+      "同行评审",
+      "rebuttal",
+      "reviewer",
+      "peer review",
+      "response to reviewers"
+    ]
+  },
+  "technical-report": {
+    "weight": 3,
+    "keywords": [
+      "技术报告",
+      "项目总结",
+      "阶段总结",
+      "验收报告",
+      "领导汇报",
+      "出差报告",
+      "technical report",
+      "executive briefing"
+    ]
+  },
+  "project-management": {
+    "weight": 2,
+    "keywords": [
+      "项目计划",
+      "里程碑",
+      "甘特图",
+      "风险登记",
+      "进度",
+      "工作包",
+      "科研管理",
+      "milestone",
+      "project plan",
+      "risk register",
+      "work breakdown"
+    ]
+  },
+  "patent-and-transfer": {
+    "weight": 3,
+    "keywords": [
+      "专利检索",
+      "专利地图",
+      "现有技术",
+      "技术交底",
+      "fTO",
+      "实施自由",
+      "技术成熟度",
+      "patent",
+      "prior art",
+      "freedom to operate",
+      "invention disclosure",
+      "trl"
+    ]
+  },
+  "research-integrity": {
+    "weight": 3,
+    "keywords": [
+      "科研诚信",
+      "数据造假",
+      "图像拼接",
+      "引用误用",
+      "p-hacking",
+      "幻觉",
+      "完整性审核",
+      "research integrity",
+      "fabrication",
+      "image manipulation",
+      "citation audit",
+      "图像重复",
+      "重复拼接",
+      "图像拼接",
+      "引用审核",
+      "引用支持",
+      "支持结论",
+      "引用完整性"
+    ]
+  },
+  "laboratory": {
+    "weight": 2,
+    "keywords": [
+      "实验sop",
+      "试剂计算",
+      "样品编码",
+      "仪器数据",
+      "电子实验记录",
+      "lims",
+      "机器人实验",
+      "laboratory",
+      "instrument data",
+      "sample tracking"
+    ]
+  },
+  "computation-handoff": {
+    "weight": 4,
+    "keywords": [
+      "量子化学",
+      "dft",
+      "vasp",
+      "gaussian",
+      "分子动力学",
+      "gromacs",
+      "lammps",
+      "有限元",
+      "fenics",
+      "cfd",
+      "openfoam",
+      "流程模拟",
+      "aspen",
+      "dwsim",
+      "idaes",
+      "simulation",
+      "molecular dynamics",
+      "finite element",
+      "process simulation"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 <div align="center"><img src="assets/logo.svg" alt="TsaoSciResearcher" width="920" />
 <p><strong>Evidence-first research architecture for questions, literature, experiments, data, figures, writing and validation.</strong></p>
-<p><a href="README.md">中文</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="capability-index/capabilities.md">158 capabilities</a></p></div>
+<p><a href="README.md">中文</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="capability-index/capabilities.md">158 capabilities</a> · <a href="docs/COMPLIANCE.md">Compliance</a> · <a href="docs/AUDIT_REPORT.md">Audit</a></p></div>
 
 ## Overview
 
@@ -17,12 +17,25 @@ It does not claim to replace scientific experts or to execute unavailable tools.
 | Multiscale simulation | Delegated to TsaoSciComputation or real solvers |
 | Medical, patent/FTO, safety and integrity decisions | Qualified human review required |
 
+## Verified implementation
+
+| Check | v0.3.0 result |
+|---|---:|
+| Capability records | 158 unique, schema-complete records |
+| Progressive workflows | 15 |
+| JSON Schemas | 7 |
+| Routing cases | 35 scientific intents |
+| Repository audit | Version, links, references, CI targets and secret scan pass |
+
+The verification covers repository structure and deterministic tools. It does not imply that external databases, laboratory instruments or scientific solvers are installed. See [compliance](docs/COMPLIANCE.md) and the [audit report](docs/AUDIT_REPORT.md).
+
 ## Install and test
 
 ```bash
 git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
 cd TsaoSciResearcher
 python -m pip install -r requirements.txt
+python scripts/audit_repository.py
 python scripts/run_tests.py
 python scripts/install.py --agent codex --scope user --validate
 ```
