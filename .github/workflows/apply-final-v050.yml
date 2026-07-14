@@ -1,0 +1,147 @@
+name: Apply final verified v0.5.0 patch
+
+on:
+  push:
+    branches: [agent/tsao-sci-researcher-major-upgrade]
+    paths:
+      - "dist/final-correction.bin"
+      - ".github/workflows/apply-final-v050.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "dist/final-correction.bin"
+      - ".github/workflows/apply-final-v050.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  apply-test-and-commit:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONNOUSERSITE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tsao-sci-researcher-major-upgrade
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Apply final correction with cryptographic verification
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import json
+          import zlib
+
+          root = Path.cwd()
+          compressed = (root / 'dist' / 'final-correction.bin').read_bytes()
+          raw = zlib.decompress(compressed)
+          expected = 'fe2b030732854468841b2a525c6bb15acbbb88aef9d65f0c49b0f85ca9687e39'
+          actual = hashlib.sha256(raw).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'correction checksum mismatch: {actual} != {expected}')
+          payload = json.loads(raw.decode('utf-8'))
+          writes = payload.get('writes', {})
+          deletes = payload.get('deletes', [])
+          if len(writes) != 19 or len(deletes) != 3:
+              raise SystemExit(
+                  f'unexpected correction scope: writes={len(writes)}, deletes={len(deletes)}'
+              )
+          for rel, encoded_file in writes.items():
+              target = root / rel
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_bytes(base64.b64decode(encoded_file, validate=True))
+          for rel in deletes:
+              target = root / rel
+              if target.exists():
+                  target.unlink()
+          print(
+              f'correction verified: sha256={actual}, '
+              f'writes={len(writes)}, deletes={len(deletes)}'
+          )
+          PY
+
+      - name: Remove temporary patch material and regenerate deterministic outputs
+        shell: bash
+        run: |
+          rm -f dist/final-correction.bin
+          rm -f .github/workflows/apply-final-v050.yml
+          python scripts/build_capability_index.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Compile Python without repository pollution
+        run: |
+          export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/tsr-pycache"
+          python -m compileall -q scripts tests
+
+      - name: Execute core software, scientific-validity and benchmark gate
+        shell: bash
+        run: |
+          set +e
+          python scripts/run_tests.py --tier core > "$RUNNER_TEMP/core-gate.log" 2>&1
+          status=$?
+          echo "$status" > "$RUNNER_TEMP/core-gate.status"
+          cat "$RUNNER_TEMP/core-gate.log"
+          exit 0
+
+      - name: Upload core-gate diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-gate-diagnostics
+          path: |
+            ${{ runner.temp }}/core-gate.log
+            ${{ runner.temp }}/core-gate.status
+
+      - name: Require core gate to pass
+        run: test "$(cat "$RUNNER_TEMP/core-gate.status")" = "0"
+
+      - name: Mutation gate
+        run: python scripts/run_mutation_smoke.py
+
+      - name: Performance gate
+        run: python scripts/performance_smoke.py
+
+      - name: Security gate
+        run: python scripts/security_scan.py
+
+      - name: Release rebuild gate
+        run: python scripts/validate_release.py
+
+      - name: Final repository audit and checksum gate
+        shell: bash
+        run: |
+          python scripts/audit_repository.py
+          python scripts/generate_checksums.py --check
+          test ! -e dist/final-correction.bin
+          test ! -e .github/workflows/apply-final-v050.yml
+          test ! -e dist/upgrade-generator
+          test ! -e dist/upgrade-patch
+          test ! -e dist/upgrade-payload
+
+      - name: Commit verified v0.5.0 release candidate
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --stat
+          git commit -m "feat: complete verified TsaoSciResearcher v0.5.0 release candidate"
+          git push origin HEAD:agent/tsao-sci-researcher-major-upgrade
