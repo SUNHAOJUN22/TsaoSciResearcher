@@ -1,0 +1,72 @@
+name: Diagnose generator execution
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "dist/upgrade-generator/**"
+      - ".github/workflows/diagnose-generator-run.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONNOUSERSITE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tsao-sci-researcher-major-upgrade
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reconstruct executable generator
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, zlib
+          base = Path('dist/upgrade-generator')
+          parts = []
+          for index in range(7):
+              raw = base / f'part-{index:02}.txt'
+              if raw.exists():
+                  parts.append(raw.read_text(encoding='utf-8').strip())
+                  continue
+              verified = sorted(base.glob(f'part-{index:02}-*.b64'))
+              legacy = sorted(base.glob(f'part-{index:02}[0-9].b64'))
+              selected = verified or legacy
+              if not selected:
+                  raise SystemExit(f'missing segment {index:02}')
+              parts.extend(base64.b64decode(p.read_text(encoding='utf-8').strip(), validate=True).decode('ascii') for p in selected)
+          generator = zlib.decompress(base64.b85decode(''.join(parts).encode('ascii')))
+          expected = '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079'
+          actual = hashlib.sha256(generator).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'checksum mismatch: {actual}')
+          source = generator.decode('utf-8')
+          source = source.replace('import sys\nfrom __future__ import annotations\n', 'from __future__ import annotations\nimport sys\n', 1)
+          Path('/tmp/tsr_upgrade_generator.py').write_text(source, encoding='utf-8')
+          PY
+      - name: Execute generator and capture log
+        shell: bash
+        run: |
+          set +e
+          python /tmp/tsr_upgrade_generator.py > generator-run.log 2>&1
+          status=$?
+          echo "$status" > generator-run.status
+          cat generator-run.log
+          exit 0
+      - name: Upload generator run log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generator-run-log
+          path: |
+            generator-run.log
+            generator-run.status
+      - name: Validate generator exit code
+        run: test "$(cat generator-run.status)" = "0"
