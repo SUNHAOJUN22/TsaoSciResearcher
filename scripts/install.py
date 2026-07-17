@@ -18,6 +18,8 @@ EXCLUDED = (
     ".pytest_cache",
     ".mypy_cache",
     ".ruff_cache",
+    ".hypothesis",
+    "build",
     "dist",
     "*.zip",
     ".tsao-research",

@@ -13,7 +13,17 @@ from common import ROOT, atomic_write_text, sha256
 
 ARCHIVE_ROOT = "TsaoSciResearcher"
 FIXED_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
-EXCLUDED_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tsao-research", "__pycache__", "dist"}
+EXCLUDED_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tsao-research",
+    ".hypothesis",
+    "build",
+    "__pycache__",
+    "dist",
+}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
 MAX_FILES = 10_000
 MAX_FILE_BYTES = 64 * 1024 * 1024
@@ -29,6 +39,8 @@ def source_files(root: Path = ROOT) -> list[Path]:
             continue
         if path.is_symlink():
             raise ValueError(f"release source contains symbolic link: {relative.as_posix()}")
+        if relative.as_posix() == "SHA256SUMS" or path.name.endswith(".sha256"):
+            continue
         if not path.is_file() or path.suffix in EXCLUDED_SUFFIXES:
             continue
         size = path.stat().st_size
@@ -44,7 +56,8 @@ def source_files(root: Path = ROOT) -> list[Path]:
 
 
 def _zip_info(relative: Path, mode: int) -> zipfile.ZipInfo:
-    info = zipfile.ZipInfo((Path(ARCHIVE_ROOT) / relative).as_posix(), FIXED_TIMESTAMP)
+    name = (Path(ARCHIVE_ROOT) / relative).as_posix()
+    info = zipfile.ZipInfo(name, FIXED_TIMESTAMP)
     info.compress_type = zipfile.ZIP_DEFLATED
     info.create_system = 3
     info.external_attr = (mode & 0xFFFF) << 16
@@ -58,22 +71,37 @@ def build_release(output_dir: str | Path, *, root: Path = ROOT) -> tuple[Path, P
     if output.is_symlink():
         raise ValueError(f"release output cannot be a symbolic link: {output}")
     version = (root / "VERSION").read_text(encoding="utf-8", errors="strict").strip()
-    if not version or any(char not in "0123456789.-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for char in version):
+    if not version or any(
+        char not in "0123456789.-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for char in version
+    ):
         raise ValueError(f"unsafe version string: {version!r}")
+
     archive = output / f"TsaoSciResearcher-v{version}.zip"
     fd, temporary_name = tempfile.mkstemp(prefix=f".{archive.name}.", dir=output)
     os.close(fd)
     temporary = Path(temporary_name)
     try:
-        with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9, strict_timestamps=True) as handle:
+        with zipfile.ZipFile(
+            temporary,
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
+            compresslevel=9,
+            strict_timestamps=True,
+        ) as handle:
             for source in source_files(root):
                 relative = source.relative_to(root)
-                mode = 0o755 if source.stat().st_mode & 0o111 else 0o644
+                executable = (
+                    relative.parts[0] == "scripts"
+                    and source.suffix in {".py", ".sh"}
+                    and source.read_bytes().startswith(b"#!")
+                )
+                mode = 0o755 if executable else 0o644
                 handle.writestr(_zip_info(relative, mode), source.read_bytes())
         validate_zip(temporary)
         os.replace(temporary, archive)
     finally:
         temporary.unlink(missing_ok=True)
+
     digest = sha256(archive)
     sidecar = output / f"{archive.name}.sha256"
     line = f"{digest}  {archive.name}\n"
@@ -96,7 +124,9 @@ def verify_sidecar(archive: str | Path, sidecar: str | Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build a deterministic release ZIP and external SHA-256 sidecar.")
+    parser = argparse.ArgumentParser(
+        description="Build a deterministic release ZIP and external SHA-256 sidecar."
+    )
     parser.add_argument("--out", default="dist")
     args = parser.parse_args()
     archive, sidecar = build_release(ROOT / args.out)
