@@ -1,0 +1,2 @@
+TsaoSciResearcher v0.4.0 final validation trigger.
+This path is intentionally excluded from deterministic release checksums and packaging.
