@@ -48,7 +48,7 @@
   },
   {
     "file": "tests/test_checksums.py",
-    "test_count": 2,
+    "test_count": 3,
     "framework": "pytest",
     "production_targets": [
       "scripts.generate_checksums"
@@ -180,7 +180,7 @@
   },
   {
     "file": "tests/test_release.py",
-    "test_count": 2,
+    "test_count": 3,
     "framework": "pytest",
     "production_targets": [
       "scripts.package_release"

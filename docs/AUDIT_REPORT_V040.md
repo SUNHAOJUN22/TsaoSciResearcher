@@ -15,17 +15,18 @@ The re-audit starts from the exact `main` commit above. Existing Draft PR #2 was
 - **TSR-016:** a capability test fixture used a category absent from the production catalog.
 - **TSR-017:** an isolated test module failed with `ModuleNotFoundError: common`; prior tests could hide the error by mutating `sys.path`.
 - **TSR-018–021:** repository-wide static gates, catalog I/O caching, mutation authenticity, and order/global-state validation were incomplete.
+- **TSR-022:** CI-generated `artifacts/` evidence contaminated source checksums and release inventory.
 
 The machine-readable details and state transitions are in `docs/audit/defects-v0.4.0.json`.
 
 ## Locally verified test architecture
 
-- **16** pytest modules and **109** collected tests.
+- **16** pytest modules and **111** collected tests.
 - Every script module is imported in a fresh interpreter; no bare sibling alias may leak into `sys.modules`.
 - Fifteen argparse CLIs are exercised directly with `--help` using `sys.executable`, explicit `cwd`, `shell=False`, a bounded timeout, and captured streams.
 - An autouse fixture detects and restores leaks in `sys.path`, `os.environ`, the current directory, root logging handlers, and warning filters.
 - The suite is exercised in normal, reverse, and seeded-random order; the recorded random seed is **20260717**.
-- CI defines per-module isolated jobs and five consecutive complete-suite executions. The five local repetitions completed in 7.217–7.669 seconds each with 109/109 tests passing.
+- CI defines per-module isolated jobs and five consecutive complete-suite executions. The five local repetitions completed in 7.217–7.669 seconds each with 109/109 tests passing before TSR-022; the updated 111-test suite is locally revalidated below.
 - The module-level inventory is recorded in `docs/audit/test-inventory-v0.4.0.json`.
 
 ## Locally verified quality and security gates
@@ -37,6 +38,7 @@ The machine-readable details and state transitions are in `docs/audit/defects-v0
 - Bandit: no medium/high-severity findings in `scripts`.
 - Mutation smoke: **15/15** named critical mutants killed after an isolated unmodified baseline first passed.
 - Repository audit, structure validation, capability catalog validation, router self-test, figure contract validation, and deterministic release validation: pass in the local validation environment.
+- Updated suite after TSR-022: **111/111** tests pass; runtime `artifacts/` evidence is checksum- and release-invariant.
 
 ## Bounded local performance evidence
 
