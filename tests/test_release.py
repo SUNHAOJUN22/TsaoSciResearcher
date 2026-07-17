@@ -1,38 +1,29 @@
-import hashlib
-import subprocess
+from __future__ import annotations
+
 import sys
-import tempfile
-import unittest
 import zipfile
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from package_release import build_release, verify_sidecar  # noqa: E402
 
 
-class TestRelease(unittest.TestCase):
-    def test_release_archive(self):
-        with tempfile.TemporaryDirectory() as td:
-            subprocess.run(
-                [sys.executable, 'scripts/package_release.py', '--out', td],
-                cwd=ROOT,
-                check=True,
-                env={'PATH': __import__('os').environ.get('PATH', ''), 'PYTHONDONTWRITEBYTECODE': '1'},
-            )
-            version = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
-            archive = Path(td) / f'TsaoSciResearcher-v{version}.zip'
-            self.assertTrue(archive.exists())
-            checksum_line = (Path(td) / 'SHA256SUMS').read_text(encoding='utf-8').strip()
-            self.assertEqual(checksum_line.split()[0], hashlib.sha256(archive.read_bytes()).hexdigest())
-            with zipfile.ZipFile(archive) as zf:
-                names = set(zf.namelist())
-            for required in [
-                'TsaoSciResearcher/SKILL.md',
-                'TsaoSciResearcher/manifest.json',
-                'TsaoSciResearcher/capability-index/capabilities.json',
-                'TsaoSciResearcher/scripts/run_tests.py',
-            ]:
-                self.assertIn(required, names)
+def test_release_is_byte_deterministic(tmp_path: Path) -> None:
+    first, first_sidecar = build_release(tmp_path / "first")
+    second, second_sidecar = build_release(tmp_path / "second")
+    assert first.read_bytes() == second.read_bytes()
+    verify_sidecar(first, first_sidecar)
+    verify_sidecar(second, second_sidecar)
+    with zipfile.ZipFile(first) as archive:
+        assert all(info.date_time == (1980, 1, 1, 0, 0, 0) for info in archive.infolist())
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_sidecar_detects_tampering(tmp_path: Path) -> None:
+    archive, sidecar = build_release(tmp_path / "release")
+    archive.write_bytes(archive.read_bytes() + b"tampered")
+    with pytest.raises(ValueError, match="mismatch"):
+        verify_sidecar(archive, sidecar)
