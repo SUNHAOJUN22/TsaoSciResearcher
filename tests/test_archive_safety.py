@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 import stat
-import sys
 import zipfile
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.archive_safety import safe_extract_zip, validate_zip
 
-from archive_safety import safe_extract_zip, validate_zip  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _write_zip(path: Path, members: list[tuple[str, bytes]]) -> None:
@@ -43,6 +41,21 @@ def test_rejects_symlink_member(tmp_path: Path) -> None:
         handle.writestr(info, "target")
     with pytest.raises(ValueError, match=r"Symbolic|symbolic"):
         validate_zip(archive)
+
+
+def test_rejects_total_expanded_size_limit(tmp_path: Path) -> None:
+    archive = tmp_path / "total-limit.zip"
+    _write_zip(archive, [("a.txt", b"aa"), ("b.txt", b"bb")])
+    with pytest.raises(ValueError, match="expanded size"):
+        validate_zip(archive, max_total_bytes=3)
+
+
+def test_rejects_excessive_compression_ratio(tmp_path: Path) -> None:
+    archive = tmp_path / "compression-bomb.zip"
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as handle:
+        handle.writestr("payload.txt", b"A" * 10_000)
+    with pytest.raises(ValueError, match="compression ratio"):
+        validate_zip(archive, max_compression_ratio=2.0)
 
 
 def test_safe_extract_is_atomic_and_bounded(tmp_path: Path) -> None:

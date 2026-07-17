@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.generate_checksums import build, source_files
 
-from generate_checksums import build, source_files  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_tree_checksum_is_deterministic_and_self_excluding(tmp_path: Path) -> None:
@@ -28,6 +26,6 @@ def test_tree_checksum_rejects_symlinks(tmp_path: Path) -> None:
     try:
         link.symlink_to(target)
     except OSError:
-        pytest.skip("symlinks unavailable")
+        pytest.skip("TSR-008: platform does not permit symlink creation")
     with pytest.raises(ValueError, match="symbolic"):
         build(tmp_path)

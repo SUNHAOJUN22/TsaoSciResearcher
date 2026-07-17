@@ -6,15 +6,18 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.install import destination, uninstall, validate_destination
 
-from install import destination, uninstall, validate_destination  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_custom_install_and_managed_uninstall(tmp_path: Path) -> None:
     dst = tmp_path / "skill"
-    subprocess.run([sys.executable, str(ROOT / "scripts/install.py"), "--target", str(dst), "--validate"], check=True, timeout=120)
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts/install.py"), "--target", str(dst), "--validate"],
+        check=True,
+        timeout=120,
+    )
     assert (dst / "SKILL.md").is_file()
     assert (dst / ".tsao-sci-researcher-install.json").is_file()
     uninstall(dst)
@@ -31,7 +34,13 @@ def test_refuses_unmanaged_force_and_uninstall(tmp_path: Path) -> None:
     dst = tmp_path / "unmanaged"
     dst.mkdir()
     (dst / "important.txt").write_text("keep", encoding="utf-8")
-    result = subprocess.run([sys.executable, str(ROOT / "scripts/install.py"), "--target", str(dst), "--force"], check=False, capture_output=True, text=True, timeout=120)
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/install.py"), "--target", str(dst), "--force"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
     assert result.returncode != 0
     assert (dst / "important.txt").read_text(encoding="utf-8") == "keep"
     with pytest.raises(ValueError, match="unmanaged"):

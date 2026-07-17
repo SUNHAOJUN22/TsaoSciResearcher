@@ -28,7 +28,14 @@ def _is_symlink(info: zipfile.ZipInfo) -> bool:
     return stat.S_ISLNK((info.external_attr >> 16) & 0xFFFF)
 
 
-def validate_zip(archive: str | Path, *, max_members: int = DEFAULT_MAX_MEMBERS, max_member_bytes: int = DEFAULT_MAX_MEMBER_BYTES, max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES, max_compression_ratio: float = DEFAULT_MAX_COMPRESSION_RATIO) -> list[zipfile.ZipInfo]:
+def validate_zip(
+    archive: str | Path,
+    *,
+    max_members: int = DEFAULT_MAX_MEMBERS,
+    max_member_bytes: int = DEFAULT_MAX_MEMBER_BYTES,
+    max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES,
+    max_compression_ratio: float = DEFAULT_MAX_COMPRESSION_RATIO,
+) -> list[zipfile.ZipInfo]:
     source = Path(archive)
     if source.is_symlink() or not source.is_file():
         raise ValueError(f"ZIP input must be a regular file: {source}")
@@ -54,7 +61,9 @@ def validate_zip(archive: str | Path, *, max_members: int = DEFAULT_MAX_MEMBERS,
             if info.file_size and info.compress_size == 0:
                 raise ValueError(f"invalid compressed size for {normalized}")
             if info.compress_size and info.file_size / info.compress_size > max_compression_ratio:
-                raise ValueError(f"ZIP compression ratio too high for {normalized}: {info.file_size / info.compress_size:.1f}")
+                raise ValueError(
+                    f"ZIP compression ratio too high for {normalized}: {info.file_size / info.compress_size:.1f}"
+                )
         return members
 
 

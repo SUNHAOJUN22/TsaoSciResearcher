@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import sys
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.audit_repository import audit
 
-from audit_repository import audit  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestRepositoryAudit(unittest.TestCase):

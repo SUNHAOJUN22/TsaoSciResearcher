@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import sys
 import zipfile
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.package_release import build_release, verify_sidecar
 
-from package_release import build_release, verify_sidecar  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_release_is_byte_deterministic(tmp_path: Path) -> None:

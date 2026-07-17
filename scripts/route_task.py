@@ -4,12 +4,16 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from common import ROOT
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT
 
 MAX_ROUTE_CHARS = 20_000
 DEFAULT_WORKFLOW = "research-question"
@@ -74,7 +78,17 @@ def route(text: str, *, rules: dict[str, dict[str, Any]] | None = None) -> dict[
     if best_score <= 0:
         best_workflow, best_matches = DEFAULT_WORKFLOW, []
     total = sum(score for _, score, _, _ in ranked)
-    return {"workflow": best_workflow, "read_first": f"workflows/{best_workflow}/WORKFLOW.md", "confidence": round(best_score / total, 3) if total and best_score > 0 else 0.0, "matched": best_matches, "alternatives": [{"workflow": workflow, "score": score} for workflow, score, _, _ in ranked if workflow != best_workflow and score > 0][:3]}
+    return {
+        "workflow": best_workflow,
+        "read_first": f"workflows/{best_workflow}/WORKFLOW.md",
+        "confidence": round(best_score / total, 3) if total and best_score > 0 else 0.0,
+        "matched": best_matches,
+        "alternatives": [
+            {"workflow": workflow, "score": score}
+            for workflow, score, _, _ in ranked
+            if workflow != best_workflow and score > 0
+        ][:3],
+    }
 
 
 def main() -> None:
@@ -84,7 +98,15 @@ def main() -> None:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     if args.self_test:
-        cases = {"请做系统综述并给出PRISMA流程": "systematic-review", "画一张论文多panel图": "scientific-figure", "设计样本量和随机化方案": "experiment-design", "用GROMACS做分子动力学": "computation-handoff", "检查论文是否存在引用误用": "research-integrity", "写一份项目验收技术报告": "technical-report", "帮我收敛研究问题": "research-question"}
+        cases = {
+            "请做系统综述并给出PRISMA流程": "systematic-review",
+            "画一张论文多panel图": "scientific-figure",
+            "设计样本量和随机化方案": "experiment-design",
+            "用GROMACS做分子动力学": "computation-handoff",
+            "检查论文是否存在引用误用": "research-integrity",
+            "写一份项目验收技术报告": "technical-report",
+            "帮我收敛研究问题": "research-question",
+        }
         for text, expected in cases.items():
             actual = route(text)["workflow"]
             if actual != expected:

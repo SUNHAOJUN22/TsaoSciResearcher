@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.validate_claims import validate_claim_graph
 
-from validate_claims import validate_claim_graph  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _write(path: Path, rows: list[dict[str, object]]) -> None:
@@ -17,14 +15,31 @@ def _write(path: Path, rows: list[dict[str, object]]) -> None:
 
 
 def evidence(*, supports: list[str] | None = None, refutes: list[str] | None = None) -> dict[str, object]:
-    row: dict[str, object] = {"schema_version":"1.0","evidence_id":"EV-1","evidence_type":"sourced_fact","title":"source","source":{"kind":"paper","locator":"10.1000/test"},"supports_claims":supports or [],"limitations":[]}
+    row: dict[str, object] = {
+        "schema_version": "1.0",
+        "evidence_id": "EV-1",
+        "evidence_type": "sourced_fact",
+        "title": "source",
+        "source": {"kind": "paper", "locator": "10.1000/test"},
+        "supports_claims": supports or [],
+        "limitations": [],
+    }
     if refutes is not None:
         row["refutes_claims"] = refutes
     return row
 
 
 def claim(*, evidence_ids: list[str] | None = None, claim_type: str = "sourced_fact") -> dict[str, object]:
-    return {"schema_version":"1.0","claim_id":"CL-1","statement":"A supported statement","claim_type":claim_type,"evidence_ids":evidence_ids or [],"assumptions":["Assumption"] if claim_type == "inference" else [],"status":"checked","limitations":[]}
+    return {
+        "schema_version": "1.0",
+        "claim_id": "CL-1",
+        "statement": "A supported statement",
+        "claim_type": claim_type,
+        "evidence_ids": evidence_ids or [],
+        "assumptions": ["Assumption"] if claim_type == "inference" else [],
+        "status": "checked",
+        "limitations": [],
+    }
 
 
 def test_claim_evidence_bidirectional_link(tmp_path: Path) -> None:

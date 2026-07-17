@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 import yaml
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+from scripts.init_project import build_project, project_id
+from scripts.validate_project import transition_allowed, validate
 
-from init_project import build_project, project_id  # noqa: E402
-from validate_project import transition_allowed, validate  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_project_ids_are_collision_resistant() -> None:

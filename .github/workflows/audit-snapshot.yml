@@ -40,10 +40,7 @@ jobs:
           git rev-parse HEAD > "$RUNNER_TEMP/tsr-audit/HEAD.txt"
           python scripts/audit_repository.py --json > "$RUNNER_TEMP/tsr-audit/repository-audit.json"
           python - <<'PY' > "$RUNNER_TEMP/tsr-audit/SOURCE_TREE_SHA256SUMS"
-          import sys
-          from pathlib import Path
-          sys.path.insert(0, str(Path("scripts").resolve()))
-          from generate_checksums import build
+          from scripts.generate_checksums import build
           print(build(), end="")
           PY
           tar --sort=name --mtime='UTC 1980-01-01' --owner=0 --group=0 --numeric-owner \

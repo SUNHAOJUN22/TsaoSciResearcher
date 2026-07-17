@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import shutil
+import sys
 import tempfile
 import uuid
 from collections.abc import Sequence
@@ -13,7 +14,11 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from common import atomic_write_text
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import atomic_write_text
 
 MANAGED_MARKER = "This directory is managed by TsaoSciResearcher."
 
@@ -76,17 +81,30 @@ def initialize(root: Path, project: dict[str, Any], *, force: bool) -> None:
     try:
         for directory in ["figures", "literature", "data", "reports", "artifacts", "protocols"]:
             (stage / directory).mkdir()
-        atomic_write_text(stage / "project.yaml", yaml.safe_dump(project, sort_keys=False, allow_unicode=True))
+        atomic_write_text(
+            stage / "project.yaml", yaml.safe_dump(project, sort_keys=False, allow_unicode=True)
+        )
         defaults: list[tuple[str, dict[str, list[object]]]] = [
             ("questions.json", {"questions": []}),
             ("hypotheses.json", {"hypotheses": []}),
             ("risks.json", {"risks": []}),
         ]
         for filename, default in defaults:
-            atomic_write_text(stage / filename, json.dumps(default, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
-        for filename in ["evidence.jsonl", "claims.jsonl", "decisions.jsonl", "artifacts.jsonl", "approvals.jsonl"]:
+            atomic_write_text(
+                stage / filename, json.dumps(default, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+            )
+        for filename in [
+            "evidence.jsonl",
+            "claims.jsonl",
+            "decisions.jsonl",
+            "artifacts.jsonl",
+            "approvals.jsonl",
+        ]:
             atomic_write_text(stage / filename, "")
-        atomic_write_text(stage / "README.md", f"# Research state\n\n{MANAGED_MARKER} Keep it under version control unless it contains sensitive data.\n")
+        atomic_write_text(
+            stage / "README.md",
+            f"# Research state\n\n{MANAGED_MARKER} Keep it under version control unless it contains sensitive data.\n",
+        )
         if root.exists():
             backup = _unique_backup(root)
             os.replace(root, backup)
@@ -106,7 +124,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Initialize a traceable TsaoSciResearcher project")
     parser.add_argument("--name", required=True)
     parser.add_argument("--question", required=True)
-    parser.add_argument("--research-type", default="mixed", choices=["descriptive", "explanatory", "predictive", "causal", "design", "mechanistic", "mixed"])
+    parser.add_argument(
+        "--research-type",
+        default="mixed",
+        choices=["descriptive", "explanatory", "predictive", "causal", "design", "mechanistic", "mixed"],
+    )
     parser.add_argument("--output", default=".")
     parser.add_argument("--force", action="store_true")
     return parser.parse_args(argv)

@@ -4,12 +4,16 @@ from __future__ import annotations
 import argparse
 import hashlib
 import os
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
 
-from archive_safety import validate_zip
-from common import ROOT, atomic_write_text, sha256
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.archive_safety import validate_zip
+from scripts.common import ROOT, atomic_write_text, sha256
 
 ARCHIVE_ROOT = "TsaoSciResearcher"
 FIXED_TIMESTAMP = (1980, 1, 1, 0, 0, 0)

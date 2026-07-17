@@ -9,7 +9,11 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
-from common import ROOT, load_data, read_jsonl
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, load_data, read_jsonl
 
 SHA256_PATTERN = re.compile(r"^(?:sha256:)?[0-9a-fA-F]{64}$")
 

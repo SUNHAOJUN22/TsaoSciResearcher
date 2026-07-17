@@ -90,7 +90,15 @@ FORBIDDEN_WORKFLOW = [
     re.compile(r"zlib\.decompress", re.IGNORECASE),
     re.compile(r"git\s+push", re.IGNORECASE),
     re.compile(r"permissions:\s*[\s\S]{0,200}contents:\s*write", re.IGNORECASE),
+    re.compile(r"continue-on-error:\s*true", re.IGNORECASE),
+    re.compile(r"\|\|\s*(?:true|exit\s+0)", re.IGNORECASE),
 ]
+REQUIRED_TEST_SUPPORT = {
+    "conftest.py",
+    "helpers.py",
+    "random_order_plugin.py",
+    "reverse_order_plugin.py",
+}
 SECRET_PATTERNS = [
     re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
     re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"),
@@ -310,6 +318,45 @@ def audit() -> dict[str, Any]:
             if pattern.search(text):
                 errors.append(f"opaque/self-modifying workflow pattern in {workflow.name}: {pattern.pattern}")
     checks["workflow_files"] = len(workflow_files)
+
+    test_directory = ROOT / "tests"
+    test_modules = sorted(test_directory.glob("test_*.py"))
+    if len(test_modules) < 16:
+        errors.append(f"expected at least 16 pytest modules, found {len(test_modules)}")
+    missing_test_support = sorted(
+        name for name in REQUIRED_TEST_SUPPORT if not (test_directory / name).is_file()
+    )
+    if missing_test_support:
+        errors.append(f"missing test support files: {missing_test_support}")
+    for test_path in test_modules:
+        test_text = test_path.read_text(encoding="utf-8", errors="strict")
+        if "sys.path.insert" in test_text:
+            errors.append(f"test mutates sys.path at import time: {test_path.name}")
+    checks["tests"] = {
+        "modules": len(test_modules),
+        "support_files": len(REQUIRED_TEST_SUPPORT) - len(missing_test_support),
+    }
+
+    ci_text = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8", errors="strict")
+    required_ci_markers = {
+        "os: [ubuntu-latest, windows-latest, macos-latest]",
+        'python-version: ["3.10", "3.11", "3.12", "3.13"]',
+        "python -m ruff format --check scripts tests",
+        "python -m ruff check scripts tests",
+        "python -m mypy scripts",
+        "tests.random_order_plugin",
+        "tests.reverse_order_plugin",
+        "run_mutation_smoke.py",
+        "performance_smoke.py",
+    }
+    missing_ci_markers = sorted(marker for marker in required_ci_markers if marker not in ci_text)
+    if missing_ci_markers:
+        errors.append(f"CI coverage markers missing: {missing_ci_markers}")
+    checks["ci_coverage_markers"] = {
+        "required": len(required_ci_markers),
+        "missing": missing_ci_markers,
+    }
+
     checks["status"] = "PASS" if not errors else "FAIL"
     return {"status": checks["status"], "checks": checks, "errors": errors, "warnings": warnings}
 

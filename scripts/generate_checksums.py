@@ -6,7 +6,10 @@ import hashlib
 import sys
 from pathlib import Path
 
-from common import ROOT, atomic_write_text
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, atomic_write_text
 
 EXCLUDED_DIRS = {
     ".git",
@@ -50,7 +53,9 @@ def build(root: Path = ROOT) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Write or verify the deterministic repository-tree checksum.")
+    parser = argparse.ArgumentParser(
+        description="Write or verify the deterministic repository-tree checksum."
+    )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true")
     mode.add_argument("--check", action="store_true")

@@ -4,13 +4,18 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from collections import Counter
+from pathlib import Path
 from typing import Any
 
 import jsonschema
 
-from capability_io import capability_index, load_capabilities
-from common import ROOT, load_data
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.capability_io import capability_index, load_capabilities
+from scripts.common import ROOT, load_data
 
 
 def validate_capabilities() -> tuple[list[dict[str, Any]], dict[str, Any]]:

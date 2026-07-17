@@ -5,11 +5,15 @@ import argparse
 import json
 import os
 import shutil
+import sys
 import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 
-from common import ROOT, atomic_write_text
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, atomic_write_text
 
 INSTALL_MARKER = ".tsao-sci-researcher-install.json"
 EXCLUDED = (

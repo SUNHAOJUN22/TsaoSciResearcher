@@ -8,13 +8,19 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
-from common import ROOT, load_data, read_jsonl
-from validate_evidence import validate_records
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, load_data, read_jsonl
+from scripts.validate_evidence import validate_records
 
 MATERIAL_CLAIM_TYPES = {"observation", "calculation", "sourced_fact", "inference", "recommendation"}
 
 
-def validate_claim_graph(claims_path: str | Path, evidence_path: str | Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def validate_claim_graph(
+    claims_path: str | Path, evidence_path: str | Path
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     schema = load_data(ROOT / "schemas/claim.schema.json")
     validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
     evidence = validate_records(evidence_path)
@@ -45,7 +51,9 @@ def validate_claim_graph(claims_path: str | Path, evidence_path: str | Path) -> 
     for claim_id, claim in claim_by_id.items():
         for evidence_id in claim["evidence_ids"]:
             evidence_row = evidence_by_id[evidence_id]
-            linked = set(evidence_row.get("supports_claims", [])) | set(evidence_row.get("refutes_claims", []))
+            linked = set(evidence_row.get("supports_claims", [])) | set(
+                evidence_row.get("refutes_claims", [])
+            )
             if claim_id not in linked:
                 raise ValueError(f"{claim_id} <-> {evidence_id}: missing reverse evidence link")
     return claims, evidence

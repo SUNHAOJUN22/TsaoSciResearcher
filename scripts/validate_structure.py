@@ -5,8 +5,11 @@ import re
 import sys
 from pathlib import Path
 
-from capability_io import capability_index, load_capabilities
-from common import ROOT
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.capability_io import capability_index, load_capabilities
+from scripts.common import ROOT
 
 REQUIRED = {
     "SKILL.md",
@@ -22,7 +25,16 @@ REQUIRED = {
     "scripts/run_tests.py",
 }
 TEXT_SUFFIXES = {".py", ".md", ".json", ".yaml", ".yml", ".toml", ".txt", ".csv", ".ps1", ".sh"}
-IGNORED_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".hypothesis", "__pycache__", "build", "dist"}
+IGNORED_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".hypothesis",
+    "__pycache__",
+    "build",
+    "dist",
+}
 SECRET_PATTERNS = [
     re.compile(r"(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*[\"'][A-Za-z0-9_-]{16,}"),
     re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
@@ -32,10 +44,10 @@ SECRET_PATTERNS = [
 
 def validate_structure(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
-    for relative in sorted(REQUIRED):
-        path = root / relative
+    for required_name in sorted(REQUIRED):
+        path = root / required_name
         if path.is_symlink() or not path.is_file():
-            errors.append(f"missing or unsafe {relative}")
+            errors.append(f"missing or unsafe {required_name}")
 
     index = capability_index()
     capabilities = load_capabilities()
@@ -43,24 +55,25 @@ def validate_structure(root: Path = ROOT) -> list[str]:
         errors.append("capability count must be 158")
 
     for path in root.rglob("*"):
-        relative = path.relative_to(root)
-        if any(part in IGNORED_DIRS for part in relative.parts):
+        relative_path = path.relative_to(root)
+        if any(part in IGNORED_DIRS for part in relative_path.parts):
             continue
         if path.is_symlink():
-            errors.append(f"symbolic link forbidden: {relative.as_posix()}")
+            errors.append(f"symbolic link forbidden: {relative_path.as_posix()}")
             continue
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         try:
             text = path.read_text(encoding="utf-8", errors="strict")
         except UnicodeDecodeError as exc:
-            errors.append(f"invalid UTF-8 in {relative.as_posix()}: {exc}")
+            errors.append(f"invalid UTF-8 in {relative_path.as_posix()}: {exc}")
             continue
-        if "PLACEHOLDER_CONTENT" in text:
-            errors.append(f"placeholder in {relative.as_posix()}")
+        placeholder_marker = "PLACEHOLDER" + "_CONTENT"
+        if placeholder_marker in text:
+            errors.append(f"placeholder in {relative_path.as_posix()}")
         for pattern in SECRET_PATTERNS:
             if pattern.search(text):
-                errors.append(f"possible secret in {relative.as_posix()}")
+                errors.append(f"possible secret in {relative_path.as_posix()}")
     return errors
 
 
