@@ -1,75 +1,20 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": [
-    "schema_version",
-    "protocol_id",
-    "objective",
-    "hypotheses",
-    "experimental_unit",
-    "factors",
-    "responses",
-    "controls",
-    "quality_controls",
-    "analysis_plan"
-  ],
-  "properties": {
-    "schema_version": {
-      "const": "1.0"
-    },
-    "protocol_id": {
-      "type": "string"
-    },
-    "objective": {
-      "type": "string",
-      "minLength": 1
-    },
-    "hypotheses": {
-      "type": "array"
-    },
-    "experimental_unit": {
-      "type": "string",
-      "minLength": 1
-    },
-    "factors": {
-      "type": "array"
-    },
-    "responses": {
-      "type": "array"
-    },
-    "controls": {
-      "type": "array"
-    },
-    "randomization": {
-      "type": "string"
-    },
-    "blinding": {
-      "type": "string"
-    },
-    "replication": {
-      "type": "string"
-    },
-    "sample_size_basis": {
-      "type": "string"
-    },
-    "measurement_plan": {
-      "type": "array"
-    },
-    "quality_controls": {
-      "type": "array"
-    },
-    "exclusion_rules": {
-      "type": "array"
-    },
-    "stopping_rules": {
-      "type": "array"
-    },
-    "safety_review": {
-      "type": "string"
-    },
-    "analysis_plan": {
-      "type": "string",
-      "minLength": 1
-    }
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://github.com/SUNHAOJUN22/TsaoSciResearcher/schemas/experiment-protocol.schema.json",
+  "title":"TsaoSciResearcher experiment protocol","type":"object","additionalProperties":false,
+  "required":["schema_version","protocol_id","objective","hypotheses","experimental_unit","factors","responses","controls","quality_controls","analysis_plan"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "protocol_id":{"type":"string","pattern":"^EXP-[A-Za-z0-9._-]+$"},
+    "objective":{"type":"string","minLength":1},
+    "hypotheses":{"type":"array","items":{"type":"string"}},
+    "experimental_unit":{"type":"string","minLength":1},
+    "factors":{"type":"array","items":{"type":["string","object"]}},
+    "responses":{"type":"array","items":{"type":["string","object"]}},
+    "controls":{"type":"array","items":{"type":["string","object"]}},
+    "randomization":{"type":"string"},"blinding":{"type":"string"},"replication":{"type":"string"},
+    "sample_size_basis":{"type":"string"},"measurement_plan":{"type":"array"},
+    "quality_controls":{"type":"array"},"exclusion_rules":{"type":"array"},"stopping_rules":{"type":"array"},
+    "safety_review":{"type":"string"},"analysis_plan":{"type":"string","minLength":1}
   }
 }
