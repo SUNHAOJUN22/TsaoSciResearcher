@@ -43,3 +43,4 @@ jobs:
             git commit -m 'feat: materialize TsaoSciResearcher v0.4.0'
             git push origin HEAD:agent/vnext-0.4.0
           fi
+# trigger: 2026-07-18
