@@ -5,7 +5,10 @@ on:
     branches: [agent/vnext-0.4.0]
     paths:
       - scripts/vnext_upgrade.py
+      - scripts/vnext_finalize.py
       - .github/workflows/vnext-materialize.yml
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -17,22 +20,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/vnext-0.4.0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'agent/vnext-0.4.0' }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: python -m pip install --upgrade pip PyYAML jsonschema coverage
-      - name: Generate v0.4.0 tree
-        run: python scripts/vnext_upgrade.py
-      - name: Run repository audit and complete tests
+        run: python -m pip install --upgrade pip -r requirements-dev.txt coverage
+      - name: Generate and finalize v0.4.0 tree
         run: |
-          python scripts/audit_repository.py
-          python -m unittest discover -s tests -p 'test_*.py' -v
+          python scripts/vnext_upgrade.py
+          python scripts/vnext_finalize.py
+      - name: Run complete compatibility and vNext validation
+        run: |
+          python scripts/run_tests.py
           python -m coverage run -m unittest discover -s tests -p 'test_vnext_release.py'
           python -m coverage report --include='tsao_researcher/*' --fail-under=65
-      - name: Commit generated release
+          rm -f .coverage
+      - name: Commit generated release on branch pushes
+        if: github.event_name == 'push'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -43,4 +49,3 @@ jobs:
             git commit -m 'feat: materialize TsaoSciResearcher v0.4.0'
             git push origin HEAD:agent/vnext-0.4.0
           fi
-# trigger: 2026-07-18
