@@ -36,8 +36,24 @@ jobs:
           cache: pip
       - name: Install test dependencies
         run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
-      - name: Compile and test
-        run: python scripts/run_tests.py
+      - name: Repository audit
+        run: python scripts/audit_repository.py
+      - name: Compile Python
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
+        run: python -m compileall -q scripts tests
+      - name: Structure validation
+        run: python scripts/validate_structure.py
+      - name: Capability catalog validation
+        run: python scripts/build_capability_index.py --check
+      - name: Router self-test
+        run: python scripts/route_task.py --self-test
+      - name: Figure contract validation
+        run: python scripts/validate_figure.py examples/figure-contract.json
+      - name: Pytest suite
+        run: python -m pytest -q
+      - name: Deterministic release validation
+        run: python scripts/validate_release.py
 
   quality:
     name: static-quality-and-security
