@@ -1,22 +1,24 @@
 <div align="center">
   <img src="assets/logo.svg" alt="TsaoSciResearcher" width="920" />
 
-  <p><strong>把科研问题、证据、数据、图表和文字组织成可验证、可追溯、可复现的研究工作流。</strong></p>
+  <p><strong>将科研问题、证据、数据、图表与结论组织为可验证、可追溯、可复现的研究工作流。</strong></p>
 
   <p>
     <a href="README_EN.md">English</a> ·
-    <a href="docs/ARCHITECTURE.md">Architecture</a> ·
-    <a href="capability-index/capabilities.md">158 Capabilities</a> ·
-    <a href="docs/VALIDATION.md">Validation</a> ·
-    <a href="docs/COMPLIANCE.md">Compliance</a> ·
-    <a href="docs/AUDIT_REPORT.md">Audit</a>
+    <a href="docs/ARCHITECTURE.md">架构</a> ·
+    <a href="capability-index/capabilities.md">158 项能力</a> ·
+    <a href="docs/VALIDATION.md">验证模型</a> ·
+    <a href="docs/COMPLIANCE.md">合规映射</a> ·
+    <a href="docs/AUDIT_REPORT_V040.md">v0.4.0 审计</a> ·
+    <a href="CHANGELOG.md">变更记录</a>
   </p>
 
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-0.3.0-0f766e" />
+    <img alt="Version" src="https://img.shields.io/badge/version-0.4.0-0f766e" />
     <img alt="Capabilities" src="https://img.shields.io/badge/capabilities-158-2563eb" />
     <img alt="Workflows" src="https://img.shields.io/badge/workflows-15-7c3aed" />
-    <img alt="Python" src="https://img.shields.io/badge/Python-%E2%89%A53.10-3776AB?logo=python&logoColor=white" />
+    <img alt="Schemas" src="https://img.shields.io/badge/schemas-8-9333ea" />
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.10--3.13-3776AB?logo=python&logoColor=white" />
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-f59e0b" />
     <img alt="CI" src="https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg" />
   </p>
@@ -24,127 +26,80 @@
 
 ---
 
-## 它是什么
+## 定位
 
-**TsaoSciResearcher** 是一个面向自然科学与工程科研的证据优先 Agent Skill。它负责研究问题形成、文献与证据综合、实验设计、数据分析、科研绘图、论文与技术报告、同行评审、项目治理、专利支持和科研诚信，并通过结构化协议把真实量子化学、分子动力学、有限元、CFD 和流程模拟任务交给 **TsaoSciComputation**。
+**TsaoSciResearcher** 是面向自然科学与工程研究的证据优先 Agent Skill。它把宽泛目标转换为研究问题、证据图谱、实验与统计契约、Figure Contract、论文/报告和项目治理产物；需要真实 DFT、MD、FEM、CFD 或流程模拟时，生成结构化计算交接单，而不伪造计算结果。
 
-它不是一个“万能提示词”，也不声称自动替代科研人员。当前版本包含：
+它不是自动替代科研人员的“万能提示词”，也不把文件存在、测试通过或交接单生成误写为科学结论已经成立。
 
-- **15 个**渐进式工作流；
-- **158 项**机器可检索的研究型能力；
-- 项目状态、证据、论断、图形合同和计算交接 Schema；
-- 确定性路由、校验、安装和发布脚本；
-- 中英文文档、示例和自动测试。
+## 当前可验证组成
 
-### 客观能力边界
+| 组成 | 数量/状态 | 含义 |
+|---|---:|---|
+| 工作流 | 15 | 渐进式路由到研究问题、综述、设计、分析、绘图、写作、治理等流程 |
+| 能力记录 | 158 | 机器可检索的触发、输入、输出、风险、人工审批与计算交接元数据 |
+| JSON Schema | 8 | 项目、证据、论断、图表、实验、工件、计算交接、能力记录契约 |
+| Python | 3.10–3.13 | CI 覆盖 Linux、Windows、macOS |
+| 真实计算 | 委托 | 必须由真实求解器执行并产生可验证工件 |
 
-| 层级 | 当前实现 | 说明 |
-|---|---|---|
-| 原生能力 | 路由、能力索引、项目状态、Schema、校验器、模板、安装器 | 仓库内可直接执行 |
-| 编排能力 | 文献检索、统计、绘图、文档生成、仪器数据处理 | 依赖当前 Agent 可用工具、数据和环境 |
-| 委托能力 | DFT、MD、FEM、CFD、流程模拟 | 生成严格 handoff，交给 TsaoSciComputation 或真实求解器 |
-| 人工决策 | 医学、专利/FTO、安全、科研诚信、高影响因果结论 | 必须由合格专家审核 |
+## 科研真实性边界
 
-> **核心原则：** `completed ≠ checked ≠ validated ≠ accepted`。
+- `completed ≠ checked ≠ validated ≠ accepted`。
+- “代码可运行”不等于数理逻辑正确；“单元测试通过”不等于测试充分。
+- 能力目录表示可路由元数据，不表示外部数据库、实验仪器或求解器已经安装。
+- 计算交接单是输入/方法/边界/收敛/验收契约，不是计算结果。
+- 本地测试、PR CI、合并后 main CI、Release 资产校验是四个独立证据层。
 
-### v0.3.0 客观验证状态
+## 15 个工作流
 
-| 检查项 | 验证结果 |
-|---|---:|
-| 能力记录 | 158 条，slug 唯一，必填字段完整 |
-| 工作流 | 15 个，根路由和确定性路由器均可到达 |
-| Schema | 7 个，均通过 JSON Schema 自检 |
-| 路由测试 | 35 类科研意图 |
-| 安装测试 | Codex、Claude Code、Open Agent 与自定义目录 |
-| 科研绘图 | Figure Contract 示例和导出规格校验通过 |
-| 证据模型 | Evidence—Claim 关联示例通过 |
-| 仓库审计 | 版本、链接、路径、引用、CI目标和密钥扫描通过 |
+| Workflow | 目标 |
+|---|---|
+| `research-question` | 把宽泛主题收敛为可回答、可证伪问题 |
+| `deep-research` | 检索、阅读、证据映射与冲突保留 |
+| `systematic-review` | 协议化筛选、质量评价与证据综合 |
+| `research-design` | 研究范式、技术路线、验证策略与阶段门 |
+| `experiment-design` | 因子、响应、对照、重复、功效与质量控制 |
+| `data-analysis` | 数据质量、统计、不确定性、因果与模型检查 |
+| `scientific-figure` | Figure Contract、统计、单位、可追溯导出 |
+| `scientific-writing` | 基于证据链的论文与学术修订 |
+| `peer-review` | 方法、统计、图表、引用与复现性审查 |
+| `technical-report` | 技术报告、阶段总结与决策材料 |
+| `project-management` | 状态、依赖、里程碑、风险、决策与交付 |
+| `patent-and-transfer` | 专利检索、地图、交底与 FTO 初筛 |
+| `research-integrity` | 引用、数据、统计、图像和来源完整性检查 |
+| `laboratory` | SOP、样品编码、仪器数据、QC 与 ELN 流程 |
+| `computation-handoff` | 为真实多尺度计算生成严格任务契约 |
 
-完整映射见 [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md)，修复记录见 [`docs/AUDIT_REPORT.md`](docs/AUDIT_REPORT.md)。这些结果证明仓库结构和确定性工具可运行，不代表外部数据库、实验仪器或计算求解器已经安装。
+## 安全与正确性强化
 
-## 为什么不是 158 个独立 Skill
+v0.4.0 的核心变化包括：
 
-把数百个能力同时加载会造成上下文膨胀、路由冲突和不一致。TsaoSciResearcher 使用“**一个入口 + 15 个工作流 + 按需参考资料 + 确定性校验器**”：
-
-<img src="assets/architecture.svg" alt="TsaoSciResearcher architecture" width="100%" />
-
-根 `SKILL.md` 只判断意图和科研阶段；工作流再按需加载参考文件、模板和脚本。完整能力目录只在精确检索时读取。
-
-## 工作流
-
-| Workflow | 目标 | Indexed capabilities |
-|---|---|---:|
-| `research-question` | 从宽泛主题收敛到可回答、可证伪的科学问题。 | 6 |
-| `deep-research` | 设计检索、筛选与证据映射，保留来源和冲突。 | 16 |
-| `systematic-review` | 执行协议化检索、筛选、质量评价和证据综合。 | 5 |
-| `research-design` | 建立研究范式、技术路线、方法矩阵、验证策略和阶段门。 | 10 |
-| `experiment-design` | 建立因子、响应、对照、重复、功效、DOE和质量控制方案。 | 3 |
-| `data-analysis` | 从数据生成机制出发执行质量、统计、不确定性和模型检查。 | 52 |
-| `scientific-figure` | 先定义图的科学结论与证据职责，再绘图、导出和视觉质检。 | 2 |
-| `scientific-writing` | 根据证据链写作论文，控制结论强度并维护引用完整性。 | 14 |
-| `peer-review` | 从科学问题、方法、统计、图表、引用和复现性审查稿件。 | 3 |
-| `technical-report` | 把研究证据转化为技术报告、阶段总结和领导决策材料。 | 3 |
-| `project-management` | 管理工作包、状态、依赖、里程碑、风险、决策和交付物。 | 17 |
-| `patent-and-transfer` | 支持检索、专利地图、现有技术初筛、交底和TRL评价；不替代法律意见。 | 7 |
-| `research-integrity` | 只读检查引用、数据、统计、图像、结论和AI生成风险。 | 8 |
-| `laboratory` | 建立SOP、样品编码、仪器数据、QC、ELN和实验室自动化流程。 | 8 |
-| `computation-handoff` | 把真实计算需求转换为有输入、边界、验证和审批的标准任务。 | 4 |
-
-## 158 项能力覆盖
-
-| 一级目录 | 数量 |
-|---|---:|
-| AI与机器学习科研 | 20 |
-| 实验室自动化与仪器 | 20 |
-| 数据统计与可视化 | 20 |
-| 文献与知识工程 | 18 |
-| 生物信息与医学科研 | 18 |
-| 科研Agent与编排 | 18 |
-| 科研写作与出版 | 20 |
-| 科研管理、专利与诚信 | 24 |
-
-完整目录：[`capability-index/capabilities.md`](capability-index/capabilities.md) · [`capabilities.json`](capability-index/capabilities.json) · [`capabilities.csv`](capability-index/capabilities.csv)
-
-每条能力均记录：触发条件、输入、输出、推荐工具、风险等级、人工审批要求、TsaoSciComputation 交接要求和参考文件。能力记录是**可路由元数据**，并不意味着所有外部数据库和软件已安装。
+- 管理型原子安装/卸载，拒绝删除或覆盖未受管目录；
+- Zip Slip、绝对路径、符号链接、重复路径、压缩炸弹与展开大小防护；
+- 字节级确定性 ZIP、外部 SHA-256 sidecar 与全新目录解压复验；
+- 标准 JSON 有限数约束，拒绝 NaN/Infinity，状态文件采用原子替换；
+- 项目状态转换、时间单调性、审批门与幂等性约束；
+- Claim–Evidence 双向引用、支持/反驳互斥和孤立节点检查；
+- Unicode 归一化路由、词边界、去重计分、稳定 tie-break 与输入上限；
+- 属性测试、对抗测试、关键变异测试、性能基线和跨平台矩阵；
+- GitHub Actions 最小只读权限与不可变提交 SHA 固定。
 
 ## 快速开始
-
-### 1. 克隆并验证
 
 ```bash
 git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
 cd TsaoSciResearcher
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
 python scripts/run_tests.py
 ```
 
-### 2. 安装到 Codex
-
-用户级：
+安装到 Codex 用户目录：
 
 ```bash
 python scripts/install.py --agent codex --scope user --validate
 ```
 
-项目级：
-
-```bash
-python scripts/install.py --agent codex --scope project --validate
-```
-
-Claude Code：
-
-```bash
-python scripts/install.py --agent claude --scope user --validate
-```
-
-Windows PowerShell：
-
-```powershell
-.\install.ps1 -Agent codex -Scope user -Validate
-```
-
-### 3. 初始化科研项目
+初始化可追溯科研项目：
 
 ```bash
 python scripts/init_project.py \
@@ -152,48 +107,17 @@ python scripts/init_project.py \
   --question "Which formulation and dispersion mechanisms control resistivity stability?" \
   --research-type mechanistic \
   --output .
-
 python scripts/validate_project.py .tsao-research/project.yaml
 ```
 
-### 4. 路由任务
+路由任务与能力检索：
 
 ```bash
 python scripts/route_task.py "检索聚丙烯半导体屏蔽料中炭黑选择性分散的文献"
 python scripts/capability_search.py "炭黑 分散"
 ```
 
-## 科研绘图：先写 Figure Contract
-
-绘图不是最后的装饰步骤。先定义结论和证据职责：
-
-```bash
-cp templates/figure-contract/figure-contract.json my-figure.json
-python scripts/validate_figure.py my-figure.json
-```
-
-默认规范：
-
-- Python + Matplotlib；用户指定时可使用 R；
-- 450 DPI 栅格预览；适合矢量的图同时输出 SVG/PDF；
-- 默认无装饰性网格；
-- 显式单位、样本量、不确定性和统计方法；
-- 时间轴在有意义时从 0 开始，其他坐标不机械强制从 0 开始；
-- 保留原始数据、转换数据、代码和最终导出；
-- 不使用截断坐标、面积或颜色夸大效应。
-
-## 证据—论断模型
-
-```mermaid
-flowchart LR
-  S[Source / data / observation] --> E[Evidence record EV-*]
-  E --> C[Claim CL-*]
-  C --> G{Validation gate}
-  G -->|supported| A[Accepted claim]
-  G -->|insufficient| R[Revise / reject]
-```
-
-论断类型包括 observation、calculation、sourced fact、inference、hypothesis、recommendation 和 open question。事实型论断必须绑定证据；推断还必须记录假设。
+## 证据—论断契约
 
 ```bash
 python scripts/validate_evidence.py .tsao-research/evidence.jsonl
@@ -201,9 +125,18 @@ python scripts/validate_claims.py .tsao-research/claims.jsonl --evidence .tsao-r
 python scripts/validate_citations.py .tsao-research/evidence.jsonl
 ```
 
-## 与 TsaoSciComputation 协作
+物质性事实论断必须绑定证据；推断还必须显式记录假设。证据与论断引用必须双向一致，同一证据不能同时支持和反驳同一论断。
 
-当任务要求真实 DFT、MD、有限元、CFD 或过程仿真时，本 Skill 不制造“看起来像结果”的文本，而是生成计算契约：
+## Figure Contract
+
+```bash
+cp templates/figure-contract/figure-contract.json my-figure.json
+python scripts/validate_figure.py my-figure.json
+```
+
+图表契约要求记录科学结论、Panel ID、数据源、变换、单位、坐标尺度、样本量、不确定性、统计方法、可访问性和原始数据/代码来源。
+
+## 真实计算交接
 
 ```bash
 python scripts/handoff_to_computation.py \
@@ -216,50 +149,22 @@ python scripts/handoff_to_computation.py \
   --expected-output "validated dispersion metrics"
 ```
 
-交接内容包含方法候选、输入、边界条件、参数来源、收敛检查、不确定性、验收标准和人工审批节点。
+真实计算必须由 TsaoSciComputation 或其他实际求解器执行，并以输入、版本、日志、收敛证据、输出和校验和完成闭环。
 
-## 项目状态目录
-
-```text
-.tsao-research/
-├── project.yaml
-├── questions.json
-├── hypotheses.json
-├── evidence.jsonl
-├── claims.jsonl
-├── decisions.jsonl
-├── artifacts.jsonl
-├── risks.json
-├── approvals.jsonl
-├── figures/
-├── literature/
-├── data/
-├── protocols/
-└── reports/
-```
-
-## 测试与发布
+## 验证
 
 ```bash
 python scripts/audit_repository.py
-python scripts/run_tests.py
-python scripts/package_release.py
+python -m compileall -q scripts tests
+python -m pytest -q
+python -m ruff check scripts tests
+python scripts/run_mutation_smoke.py
+python scripts/performance_smoke.py
+python scripts/validate_release.py
 ```
 
-CI 检查 Python 3.10-3.12、Schema、158 项能力完整性、35+ 路由意图、项目初始化、Figure Contract、证据—论断链接和安装流程。
+完整分层说明见 [验证模型](docs/VALIDATION.md)。机器可读缺陷登记见 [`docs/audit/defects-v0.4.0.json`](docs/audit/defects-v0.4.0.json)。
 
-## 许可证与来源
+## 许可证
 
-项目核心代码和原创文档采用 **Apache-2.0**。仓库没有打包上游提示词、代码、模型或数据。公开项目仅用于架构比较和能力分类，详情见 [`THIRD_PARTY.md`](THIRD_PARTY.md)。这不是任何上游项目的官方分支或替代品。
-
-## 已知限制
-
-- 不自带付费数据库访问权、期刊全文、LLM API 密钥或机构订阅；
-- 不保证每个外部统计、绘图、Office 或实验室工具在当前环境可用；
-- 不执行真实多尺度仿真；该部分由 TsaoSciComputation 和实际求解器承担；
-- 自动科研诚信检查只能提供风险信号，不能独立认定不端行为；
-- 医学、法律、专利和安全输出必须人工复核。
-
-## 贡献
-
-新增能力必须给出唯一 slug、路由工作流、输入、输出、风险、证据政策和测试。禁止在许可证不兼容或缺少归属说明的情况下复制其他 Skill 内容。参见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
+Apache-2.0。第三方来源与许可证边界见 `THIRD_PARTY.md` 和 `references/source-map.md`。

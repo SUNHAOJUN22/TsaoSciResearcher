@@ -10,12 +10,13 @@ description: >
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
   through the structured computation-handoff workflow.
-version: 0.3.0
+version: 0.4.0
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher
   capability_count: 158
   workflow_count: 15
+  schema_count: 8
   progressive_disclosure: true
   evidence_first: true
 ---
@@ -76,8 +77,6 @@ The following states are distinct and must not be collapsed:
 8. **Human gate** — medical, safety, patent/FTO, high-impact causal and integrity decisions require qualified human review.
 
 ## Default project state
-
-Initialize a traceable project with:
 
 ```bash
 python scripts/init_project.py --name "my-project" --question "What is being tested?" --output .

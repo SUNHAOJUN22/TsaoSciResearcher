@@ -1,51 +1,94 @@
-<div align="center"><img src="assets/logo.svg" alt="TsaoSciResearcher" width="920" />
-<p><strong>Evidence-first research architecture for questions, literature, experiments, data, figures, writing and validation.</strong></p>
-<p><a href="README.md">中文</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="capability-index/capabilities.md">158 capabilities</a> · <a href="docs/COMPLIANCE.md">Compliance</a> · <a href="docs/AUDIT_REPORT.md">Audit</a></p></div>
+# TsaoSciResearcher 0.4.0
 
-## Overview
+**TsaoSciResearcher** is an evidence-first Agent Skill for scientific and engineering research. It converts broad objectives into testable questions, traceable evidence, experiment and analysis contracts, Figure Contracts, manuscripts, reports and governed research artifacts.
 
-TsaoSciResearcher is a progressive-disclosure Agent Skill for full-lifecycle scientific research. It provides 15 workflows, 158 indexed capabilities, durable project state, evidence/claim/figure schemas, deterministic validators, bilingual documentation and cross-platform installation.
+[Chinese README](README.md) · [Architecture](docs/ARCHITECTURE.md) · [158 capabilities](capability-index/capabilities.md) · [Validation](docs/VALIDATION.md) · [v0.4.0 audit](docs/AUDIT_REPORT_V040.md)
 
-It does not claim to replace scientific experts or to execute unavailable tools. Real DFT, molecular dynamics, finite-element, CFD and process-simulation tasks are delegated through a structured TsaoSciComputation handoff.
+## Verified source composition
 
-## Objective capability boundary
-
-| Layer | Status |
-|---|---|
-| Routing, indexes, state, schemas, validators, templates, installation | Native and executable in this repository |
-| Literature retrieval, statistics, plotting, document generation | Orchestrated; depends on tools and data available to the active agent |
-| Multiscale simulation | Delegated to TsaoSciComputation or real solvers |
-| Medical, patent/FTO, safety and integrity decisions | Qualified human review required |
-
-## Verified implementation
-
-| Check | v0.3.0 result |
+| Component | Count/status |
 |---|---:|
-| Capability records | 158 unique, schema-complete records |
 | Progressive workflows | 15 |
-| JSON Schemas | 7 |
-| Routing cases | 35 scientific intents |
-| Repository audit | Version, links, references, CI targets and secret scan pass |
+| Searchable capability records | 158 |
+| Draft 2020-12 JSON Schemas | 8 |
+| Python compatibility matrix | 3.10–3.13 on Linux, Windows and macOS |
+| Real DFT/MD/FEM/CFD/process simulation | Delegated to an actual solver |
 
-The verification covers repository structure and deterministic tools. It does not imply that external databases, laboratory instruments or scientific solvers are installed. See [compliance](docs/COMPLIANCE.md) and the [audit report](docs/AUDIT_REPORT.md).
+## Truth boundaries
 
-## Install and test
+- `completed` is not equivalent to `checked`, `validated` or `accepted`.
+- A passing local suite does not prove that PR CI, post-merge main CI or Release verification passed.
+- A capability record is routing metadata; it does not prove that an external database, instrument or solver is installed.
+- A computation handoff is a specification, not an executed computation.
+
+## v0.4.0 correctness and security work
+
+- Managed atomic installation and uninstall with target ownership, staging, backup and rollback.
+- Zip Slip, absolute-path, symbolic-link, duplicate-path, expansion-size and compression-ratio defenses.
+- Byte-identical deterministic ZIP builds with external SHA-256 sidecars and fresh-directory extraction checks.
+- Finite standard JSON, atomic state writes, collision-resistant project IDs and explicit state invariants.
+- Bidirectional Claim–Evidence links and support/refute consistency.
+- Unicode-normalized routing with word boundaries, stable ties, bounded input and cached rules.
+- Adversarial, property, mutation, performance and cross-platform validation.
+- Immutable GitHub Action SHAs and read-only workflow permissions.
+
+## Install and validate
 
 ```bash
 git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
 cd TsaoSciResearcher
-python -m pip install -r requirements.txt
-python scripts/audit_repository.py
+python -m pip install -r requirements-dev.txt
 python scripts/run_tests.py
+```
+
+Install for Codex:
+
+```bash
 python scripts/install.py --agent codex --scope user --validate
 ```
 
-## Core principle
+Initialize a traceable project:
 
-`completed` is not `checked`; `checked` is not `validated`; `validated` is not automatically `accepted`.
+```bash
+python scripts/init_project.py \
+  --name "example" \
+  --question "What mechanism is being tested?" \
+  --research-type mechanistic \
+  --output .
+python scripts/validate_project.py .tsao-research/project.yaml
+```
 
-See the Chinese README for the full workflow, capability and usage documentation.
+Route a task:
+
+```bash
+python scripts/route_task.py "design a reproducible molecular dynamics study"
+```
+
+## Evidence, figures and computation
+
+```bash
+python scripts/validate_evidence.py .tsao-research/evidence.jsonl
+python scripts/validate_claims.py .tsao-research/claims.jsonl --evidence .tsao-research/evidence.jsonl
+python scripts/validate_figure.py examples/figure-contract.json
+python scripts/handoff_to_computation.py --project .tsao-research --out .tsao-research/computation-handoff.json
+```
+
+A real computation is complete only after an actual solver produces versioned inputs, logs, convergence evidence, outputs and checksums.
+
+## Validation gates
+
+```bash
+python scripts/audit_repository.py
+python -m compileall -q scripts tests
+python -m pytest -q
+python -m ruff check scripts tests
+python scripts/run_mutation_smoke.py
+python scripts/performance_smoke.py
+python scripts/validate_release.py
+```
+
+See [docs/VALIDATION.md](docs/VALIDATION.md) for the evidence hierarchy and [`docs/audit/defects-v0.4.0.json`](docs/audit/defects-v0.4.0.json) for the machine-readable defect ledger.
 
 ## License
 
-Original code and documentation are Apache-2.0. No upstream skill prompts or code are bundled. See `THIRD_PARTY.md`.
+Apache-2.0. Third-party inspiration and license boundaries are recorded in `THIRD_PARTY.md` and `references/source-map.md`.

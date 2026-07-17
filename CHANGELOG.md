@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 - 2026-07-17
+
+- Restore the verified source baseline from `main` and reject opaque bootstrap/self-modifying workflow candidates.
+- Add bounded safe ZIP validation and extraction for traversal paths, links, duplicate paths and compression bombs.
+- Make source packaging byte-deterministic and generate external per-asset SHA-256 sidecars.
+- Replace destructive installer behavior with managed targets, staging, unique backups and rollback.
+- Enforce finite standard JSON, atomic state writes, collision-resistant project IDs and state-machine invariants.
+- Enforce bidirectional Claim–Evidence references and support/refute consistency.
+- Harden Unicode routing, tie-breaking, duplicate-keyword handling and input bounds.
+- Expand to eight closed Draft 2020-12 schemas, including the capability-record contract.
+- Add adversarial, property, mutation, performance, cross-platform and deterministic-release gates.
+- Pin GitHub Actions to immutable commit SHAs and keep workflow permissions read-only.
+- Rewrite validation and README claims to distinguish local, PR, main and Release evidence.
+
 ## 0.3.0 - 2026-07-14
 
 - Complete the public repository with 158 capability records, 15 workflows, 7 schemas, templates, validators and tests.
