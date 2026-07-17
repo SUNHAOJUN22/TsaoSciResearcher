@@ -50,8 +50,14 @@ jobs:
         run: python scripts/route_task.py --self-test
       - name: Figure contract validation
         run: python scripts/validate_figure.py examples/figure-contract.json
-      - name: Pytest suite
-        run: python -m pytest -q
+      - name: Pytest security and I/O
+        run: python -m pytest -q tests/test_archive_safety.py tests/test_common.py tests/test_install.py
+      - name: Pytest state and contracts
+        run: python -m pytest -q tests/test_project_state.py tests/test_claims.py tests/test_schemas.py
+      - name: Pytest routing properties
+        run: python -m pytest -q tests/test_router.py
+      - name: Pytest deterministic release
+        run: python -m pytest -q tests/test_release.py
       - name: Deterministic release validation
         run: python scripts/validate_release.py
 
