@@ -27,16 +27,16 @@ def main() -> None:
             raise ValueError("publication raster export must be at least 300 DPI")
         if data["audience"].lower().find("journal") >= 0 and not formats & {"svg", "pdf"}:
             raise ValueError("journal figure should include SVG or PDF vector export when applicable")
-        for panel in data["panels"]:
-            if panel["kind"] == "quantitative":
-                if panel.get("x_axis") is None or panel.get("y_axis") is None:
-                    raise ValueError(f"panel {panel['id']}: quantitative panel requires axes")
+        for p in data["panels"]:
+            if p["kind"] == "quantitative":
+                if p.get("x_axis") is None or p.get("y_axis") is None:
+                    raise ValueError(f"panel {p['id']}: quantitative panel requires axes")
                 for axis in ["x_axis", "y_axis"]:
-                    if not panel[axis]["label"].strip():
-                        raise ValueError(f"panel {panel['id']}: {axis} label required")
-                    if not panel[axis]["unit"].strip():
+                    if not p[axis]["label"].strip():
+                        raise ValueError(f"panel {p['id']}: {axis} label required")
+                    if not p[axis]["unit"].strip():
                         raise ValueError(
-                            f"panel {panel['id']}: {axis} unit or explicit dimensionless marker required"
+                            f"panel {p['id']}: {axis} unit or explicit dimensionless marker required"
                         )
         print(
             json.dumps(
