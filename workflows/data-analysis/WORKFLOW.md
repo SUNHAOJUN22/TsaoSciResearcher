@@ -1,52 +1,32 @@
-# Data quality, statistics and scientific ML
+# data-analysis
 
-从数据生成机制出发执行质量、统计、不确定性和模型检查。
+## Purpose
+从数据生成机制出发执行质量、统计、UQ与科学ML
 
-Indexed capabilities routed here: **52**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `dataset`
-- `data_dictionary`
-- `analysis_question`
-- `assumptions`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 登记来源、许可、校验和与单位
+2. 检查缺失、重复、异常、批次和物理边界
+3. 识别依赖、聚类、删失和重复测量
+4. 选择统计或ML子协议并诊断假设
+5. 报告效应量、区间、多重性、泄漏和适用域
 
-- `quality_report`
-- `analysis_results`
-- `uncertainty`
-- `reproducible_code`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## Method-selection gate
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Match the method to data type, dependence, distribution, censoring, repeated measures and sampling design. Report effect sizes and uncertainty, not only p-values. Separate exploratory from confirmatory analysis and correct multiplicity when required.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/statistics/method-selection.md`
-- `references/statistics/uncertainty-and-robustness.md`
-
-Templates:
-- `templates/data-manifest/data-manifest.yaml`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

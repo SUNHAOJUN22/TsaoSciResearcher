@@ -1,48 +1,32 @@
-# Technical report and decision communication
+# technical-report
 
-把研究证据转化为技术报告、阶段总结和领导决策材料。
+## Purpose
+按科研、工程、管理、客户、监管或验收受众组织证据
 
-Indexed capabilities routed here: **3**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `project_context`
-- `methods`
-- `results`
-- `audience`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 识别受众和决策
+2. 限定数据口径和时间范围
+3. 组织方法、结果、风险和替代解释
+4. 区分事实、判断和建议
+5. 生成行动项、负责人和验收条件
 
-- `technical_report`
-- `executive_summary`
-- `figures`
-- `action_items`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/writing/technical-reporting.md`
-- `references/visualization/plotting-standards.md`
-
-Templates:
-- `templates/technical-report/technical-report.md`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

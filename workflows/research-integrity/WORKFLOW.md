@@ -1,51 +1,32 @@
-# Research integrity and audit
+# research-integrity
 
-只读检查引用、数据、统计、图像、结论和AI生成风险。
+## Purpose
+默认只读检查引用、数据、统计、图像、报告与AI风险
 
-Indexed capabilities routed here: **8**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `manuscript_or_dataset`
-- `audit_scope`
-- `provenance`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 冻结只读范围
+2. 记录异常、证据、严重度和置信度
+3. 列出良性替代解释
+4. 区分筛查信号与确认发现
+5. 生成修复、升级和人工复核建议
 
-- `integrity_findings`
-- `evidence_log`
-- `severity`
-- `recommended_actions`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## Read-only default
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Do not alter the manuscript, dataset, figure or audit trail unless the user explicitly switches from audit to revision. Report finding, evidence, severity, uncertainty and remediation separately. Do not accuse misconduct from an automated anomaly alone.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/integrity/integrity-gates.md`
-- `references/integrity/claim-evidence-policy.md`
-
-Templates:
-- `templates/research-integrity/audit-plan.yaml`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

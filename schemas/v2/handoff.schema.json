@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "handoff_id",
+    "project_id",
+    "scientific_question",
+    "status",
+    "inputs"
+  ],
+  "additionalProperties": true
+}

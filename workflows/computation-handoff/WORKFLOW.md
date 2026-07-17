@@ -1,52 +1,32 @@
-# TsaoSciComputation handoff
+# computation-handoff
 
-把真实计算需求转换为有输入、边界、验证和审批的标准任务。
+## Purpose
+生成绑定项目、输入、方法、收敛、验证和审批的计算合同
 
-Indexed capabilities routed here: **4**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `scientific_question`
-- `target_property`
-- `available_inputs`
-- `constraints`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 读取项目、问题、假设和证据ID
+2. 选择领域profile和候选方法
+3. 登记输入文件、单位、版本、许可和校验和
+4. 定义边界、资源、收敛、不确定性和物理验证
+5. 设置审批、结果回执和接受/拒绝门
 
-- `validated_handoff`
-- `method_candidates`
-- `validation_requirements`
-- `approval_points`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## No simulated execution
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Do not create fake output or state that software was run. Specify scientific question, target property, scale, candidate methods, inputs, boundary conditions, convergence checks, uncertainty analysis, expected outputs, evidence level and human approval points.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/computation/handoff-protocol.md`
-- `references/project-governance/scientific-validation.md`
-
-Templates:
-- `templates/computation-handoff/computation-handoff.json`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

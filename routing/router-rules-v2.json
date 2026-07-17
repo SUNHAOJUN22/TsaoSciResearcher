@@ -1,0 +1,115 @@
+{
+  "research-question": {
+    "weight": 3,
+    "positive": [
+      "research question"
+    ]
+  },
+  "deep-research": {
+    "weight": 3,
+    "positive": [
+      "文献检索",
+      "查文献",
+      "研究空白"
+    ]
+  },
+  "systematic-review": {
+    "weight": 4,
+    "positive": [
+      "系统综述",
+      "prisma",
+      "meta-analysis"
+    ]
+  },
+  "research-design": {
+    "weight": 3,
+    "positive": [
+      "research design"
+    ]
+  },
+  "experiment-design": {
+    "weight": 3,
+    "positive": [
+      "experiment design"
+    ]
+  },
+  "data-analysis": {
+    "weight": 3,
+    "positive": [
+      "数据分析",
+      "统计分析",
+      "分析已有",
+      "轨迹"
+    ]
+  },
+  "scientific-figure": {
+    "weight": 4,
+    "positive": [
+      "画图",
+      "绘图",
+      "多panel",
+      "自由能景观"
+    ]
+  },
+  "scientific-writing": {
+    "weight": 3,
+    "positive": [
+      "scientific writing"
+    ]
+  },
+  "peer-review": {
+    "weight": 3,
+    "positive": [
+      "peer review"
+    ]
+  },
+  "technical-report": {
+    "weight": 3,
+    "positive": [
+      "technical report"
+    ]
+  },
+  "project-management": {
+    "weight": 3,
+    "positive": [
+      "project management"
+    ]
+  },
+  "patent-and-transfer": {
+    "weight": 3,
+    "positive": [
+      "patent and transfer"
+    ]
+  },
+  "research-integrity": {
+    "weight": 5,
+    "positive": [
+      "科研诚信",
+      "引用审核",
+      "引用误用",
+      "p-hacking"
+    ]
+  },
+  "laboratory": {
+    "weight": 3,
+    "positive": [
+      "laboratory"
+    ]
+  },
+  "computation-handoff": {
+    "weight": 5,
+    "positive": [
+      "实际运行",
+      "提交计算",
+      "gromacs",
+      "dft",
+      "openfoam",
+      "aspen"
+    ],
+    "negative": [
+      "只解释",
+      "不运行",
+      "仅分析已有"
+    ]
+  }
+}

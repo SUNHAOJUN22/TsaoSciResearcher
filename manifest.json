@@ -1,16 +1,20 @@
 {
   "name": "TsaoSciResearcher",
-  "slug": "tsao-sci-researcher",
-  "version": "0.3.0",
-  "description": "Evidence-first full-lifecycle scientific research skill.",
-  "license": "Apache-2.0",
-  "capability_count": 158,
+  "version": "0.4.0",
   "workflow_count": 15,
+  "capability_count_v2": 340,
+  "legacy_capability_count": 158,
+  "domain_capability_count": 164,
+  "architecture": {
+    "router": "hybrid-v2",
+    "state": "event-driven-v2",
+    "evidence": "source-evidence-edge-claim-v2"
+  },
   "entrypoint": "SKILL.md",
   "agent_metadata": "agents/openai.yaml",
   "capability_index": "capability-index/capabilities.json",
+  "capability_index_v2": "capabilities/v2/index.json",
   "project_state_dir": ".tsao-research",
-  "generated_at": "2026-07-14T03:00:00Z",
   "compatibility": {
     "codex": true,
     "claude_code": true,
@@ -18,11 +22,5 @@
     "windows": true,
     "linux": true,
     "macos": true
-  },
-  "maturity": {
-    "routing": "native",
-    "schemas_and_validation": "native",
-    "research_execution": "orchestrated",
-    "multiscale_simulation": "delegated-to-TsaoSciComputation"
   }
 }

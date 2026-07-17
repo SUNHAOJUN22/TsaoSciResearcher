@@ -1,52 +1,32 @@
-# Experimental design and measurement plan
+# experiment-design
 
-建立因子、响应、对照、重复、功效、DOE和质量控制方案。
+## Purpose
+建立实验单位、DOE、随机化、功效和测量计划
 
-Indexed capabilities routed here: **3**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `hypotheses`
-- `factors`
-- `responses`
-- `constraints`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 区分实验单位和观察单位
+2. 定义因子、水平、响应、协变量和批次
+3. 选择空白/参考/阴性/基准对照
+4. 设计随机化、盲法、重复和功效
+5. 冻结排除、停止与分析规则
 
-- `experimental_design`
-- `sample_size`
-- `randomization_plan`
-- `analysis_plan`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## Design checks
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Identify experimental unit, observational unit, factors, levels, responses, nuisance variables and batch structure. Justify controls, randomization, blinding, replication and sample size. Predefine exclusions and stopping rules.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/experimental-design/doe-and-power.md`
-- `references/experimental-design/laboratory-quality.md`
-
-Templates:
-- `templates/experiment-protocol/protocol.yaml`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

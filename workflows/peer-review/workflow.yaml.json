@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "peer-review",
+  "purpose": "以学科、方法、统计、图表、复现、引用和诚信角色审查",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "建立多角色审稿矩阵",
+    "检查问题—方法—结论一致性",
+    "检查统计、图表和引用",
+    "记录严重度、证据、不确定性和必需行动",
+    "核对回复、稿件和补充材料一致性"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

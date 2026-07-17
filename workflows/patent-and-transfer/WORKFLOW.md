@@ -1,47 +1,32 @@
-# Patent and technology transfer support
+# patent-and-transfer
 
-支持检索、专利地图、现有技术初筛、交底和TRL评价；不替代法律意见。
+## Purpose
+支持特征拆解、检索、专利地图、FTO风险和技术交底
 
-Indexed capabilities routed here: **7**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `technical_solution`
-- `search_scope`
-- `claims_or_features`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 拆解技术特征和候选权利要求
+2. 组合关键词与IPC/CPC
+3. 聚合同族、优先权和法律状态
+4. 评价相关性与覆盖
+5. 生成风险信号、律师复核点和TRL
 
-- `search_strategy`
-- `landscape`
-- `risk_flags`
-- `disclosure_draft`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/project-governance/patent-and-transfer.md`
-- `references/integrity/claim-evidence-policy.md`
-
-Templates:
-- `templates/patent-and-transfer/invention-disclosure.md`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

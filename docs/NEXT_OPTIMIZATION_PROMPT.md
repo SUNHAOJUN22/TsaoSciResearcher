@@ -1,0 +1,3 @@
+# v0.5.0 next prompt
+
+Run all v0.4.0 tests first. Implement online primary-source citation resolution with cache and exact locators; typed statistical subprotocols with executable diagnostics; domain result validators for DFT/MD/FEM/CFD/process simulation; semantic capability retrieval with deterministic fallback; concurrency and crash-recovery property tests; signed artifact manifests, environment fingerprints, SBOM and reproducible releases; final-size figure semantic QA; blinded dual review; and manually labeled hard-negative benchmarks. Preserve migration, evidence, computation and human-approval gates. Produce code, tests, benchmark reports, migration notes and a release archive.

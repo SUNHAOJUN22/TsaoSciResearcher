@@ -1,47 +1,32 @@
-# Peer review and response audit
+# peer-review
 
-从科学问题、方法、统计、图表、引用和复现性审查稿件。
+## Purpose
+以学科、方法、统计、图表、复现、引用和诚信角色审查
 
-Indexed capabilities routed here: **3**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `manuscript`
-- `supplement`
-- `review_scope`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 建立多角色审稿矩阵
+2. 检查问题—方法—结论一致性
+3. 检查统计、图表和引用
+4. 记录严重度、证据、不确定性和必需行动
+5. 核对回复、稿件和补充材料一致性
 
-- `review_report`
-- `major_concerns`
-- `minor_comments`
-- `decision_rationale`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/writing/peer-review.md`
-- `references/integrity/integrity-gates.md`
-
-Templates:
-- `templates/review-response/response-to-reviewers.md`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

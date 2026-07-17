@@ -1,48 +1,32 @@
-# Research program management
+# project-management
 
-管理工作包、状态、依赖、里程碑、风险、决策和交付物。
+## Purpose
+通过事件状态、检查点、风险和产物血缘治理科研项目
 
-Indexed capabilities routed here: **17**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `objectives`
-- `work_packages`
-- `resources`
-- `constraints`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 建立WBS、所有者和依赖DAG
+2. 定义里程碑和验收标准
+3. 记录风险、决策和审批
+4. 创建检查点并检测陈旧产物
+5. 从哈希事件链恢复状态
 
-- `project_plan`
-- `milestones`
-- `risk_register`
-- `status_dashboard`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/project-governance/state-model.md`
-- `references/project-governance/scientific-validation.md`
-
-Templates:
-- `templates/project-plan/project-plan.yaml`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

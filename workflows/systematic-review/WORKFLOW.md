@@ -1,52 +1,32 @@
-# Systematic review and evidence synthesis
+# systematic-review
 
-执行协议化检索、筛选、质量评价和证据综合。
+## Purpose
+冻结协议后执行系统综述与证据综合
 
-Indexed capabilities routed here: **5**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `protocol`
-- `eligibility_criteria`
-- `databases`
-- `screening_records`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 冻结问题、纳排标准和检索式
+2. 设计双筛与分歧解决
+3. 记录PRISMA和排除理由
+4. 选择偏倚工具与效应量
+5. 检查异质性、发表偏倚和确定性
 
-- `prisma_log`
-- `included_studies`
-- `quality_assessment`
-- `evidence_synthesis`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## Protocol gate
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Freeze the question, eligibility criteria, databases, search strings, deduplication rule, screening process, extraction fields and quality tool before synthesis. Preserve excluded records with reasons. Do not call a narrative search a systematic review.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/literature/systematic-review.md`
-- `references/statistics/method-selection.md`
-
-Templates:
-- `templates/literature-matrix/literature-matrix.csv`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.

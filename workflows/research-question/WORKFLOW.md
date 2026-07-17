@@ -1,52 +1,32 @@
-# Research question and hypothesis formation
+# research-question
 
-从宽泛主题收敛到可回答、可证伪的科学问题。
+## Purpose
+形成可回答、可证伪的科学问题
 
-Indexed capabilities routed here: **6**.
+## Use when
+Use for the workflow intent routed by Router v2.
 
-## Inputs
+## Do not use when
+Do not use it to fabricate evidence, execution, validation or acceptance.
 
-- `broad_topic`
-- `background`
-- `constraints`
-- `decision_context`
+## Entry criteria
+- scientific objective recorded
+- inputs classified by provenance
 
-## Required outputs
+## Execution phases
+1. 区分事实、假设、推断和未知项
+2. 定义对象、变量、边界、结果和比较
+3. 分类描述/解释/预测/因果/设计/机理问题
+4. 构建竞争假设与区分性证据
+5. 定义证伪标准与可行性门
 
-- `research_question`
-- `hypotheses`
-- `scope`
-- `falsification_criteria`
+## Decision tree
+- unavailable tools produce a plan or handoff, not fake results
+- contradictory results trigger review, not suppression
+- high-risk final decisions require qualified approval
 
-## Blocking scoping gate
+## Failure and recovery
+Record the failure event, preserve partial artifacts and resume from the latest checksum-valid checkpoint.
 
-Do not draft a paper or full protocol from a broad topic alone. Produce 1-3 candidate research questions, each with object, variables, boundary conditions, outcome, falsification criterion and feasible evidence route. Distinguish descriptive, explanatory, predictive, causal, design and mechanistic questions.
-
-
-## Universal execution order
-
-1. Confirm the decision or scientific question.
-2. Classify provided material as user-provided, sourced, observed, calculated, inferred or hypothetical.
-3. Define inputs, exclusions, assumptions and acceptance criteria before analysis.
-4. Execute only tools actually available in the active environment.
-5. Record artifacts and evidence IDs.
-6. Run the workflow-specific checks.
-7. Assign a state: completed, checked, validated, accepted/rejected.
-8. Report limitations and unresolved decisions.
-
-## Load on demand
-
-References:
-- `references/research-paradigms/overview.md`
-- `references/project-governance/scientific-validation.md`
-
-Templates:
-- `templates/research-question/question-brief.yaml`
-
-## Completion criteria
-
-- Inputs, assumptions and exclusions are recorded.
-- Material claims are linked to evidence or explicitly labeled as inference/hypothesis/recommendation.
-- Required human approvals are recorded.
-- Outputs pass the relevant schema and semantic validators.
-- Limitations and unresolved conflicts remain visible.
+## Completion
+Required artifacts exist, claims are traceable and limitations remain visible.
