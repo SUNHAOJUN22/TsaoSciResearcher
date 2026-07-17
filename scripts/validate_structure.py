@@ -31,6 +31,7 @@ IGNORED_DIRS = {
     ".pytest_cache",
     ".ruff_cache",
     ".hypothesis",
+    "artifacts",
     "__pycache__",
     "build",
     "dist",

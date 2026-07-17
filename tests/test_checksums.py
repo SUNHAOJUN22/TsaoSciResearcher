@@ -29,3 +29,14 @@ def test_tree_checksum_rejects_symlinks(tmp_path: Path) -> None:
         pytest.skip("TSR-008: platform does not permit symlink creation")
     with pytest.raises(ValueError, match="symbolic"):
         build(tmp_path)
+
+
+def test_runtime_artifacts_do_not_change_source_checksum(tmp_path: Path) -> None:
+    (tmp_path / "source.txt").write_text("tracked\n", encoding="utf-8")
+    expected = build(tmp_path)
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    (artifacts / "environment.json").write_text('{"runner":"ci"}\n', encoding="utf-8")
+
+    assert build(tmp_path) == expected
+    assert [path.relative_to(tmp_path).as_posix() for path in source_files(tmp_path)] == ["source.txt"]

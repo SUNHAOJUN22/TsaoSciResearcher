@@ -23,6 +23,7 @@ EXCLUDED = (
     ".mypy_cache",
     ".ruff_cache",
     ".hypothesis",
+    "artifacts",
     "build",
     "dist",
     "*.zip",

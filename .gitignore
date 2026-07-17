@@ -12,3 +12,6 @@ Thumbs.db
 *.zip
 coverage.xml
 htmlcov/
+
+# CI/runtime evidence
+artifacts/

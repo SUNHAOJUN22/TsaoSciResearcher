@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 IGNORED_COPY_NAMES = {
     ".git",
     ".hypothesis",
+    "artifacts",
     ".mypy_cache",
     ".pytest_cache",
     ".ruff_cache",

@@ -23,6 +23,7 @@ EXCLUDED_DIRS = {
     ".pytest_cache",
     ".ruff_cache",
     ".tsao-research",
+    "artifacts",
     ".hypothesis",
     "build",
     "__pycache__",

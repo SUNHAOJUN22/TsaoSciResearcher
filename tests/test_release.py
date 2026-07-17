@@ -25,3 +25,20 @@ def test_sidecar_detects_tampering(tmp_path: Path) -> None:
     archive.write_bytes(archive.read_bytes() + b"tampered")
     with pytest.raises(ValueError, match="mismatch"):
         verify_sidecar(archive, sidecar)
+
+
+def test_release_excludes_runtime_artifacts(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "VERSION").write_text("0.4.0\n", encoding="utf-8")
+    (source / "tracked.txt").write_text("tracked\n", encoding="utf-8")
+    artifacts = source / "artifacts"
+    artifacts.mkdir()
+    (artifacts / "environment.json").write_text('{"runner":"ci"}\n', encoding="utf-8")
+
+    archive, sidecar = build_release(tmp_path / "release", root=source)
+    verify_sidecar(archive, sidecar)
+    with zipfile.ZipFile(archive) as handle:
+        names = set(handle.namelist())
+    assert "TsaoSciResearcher/tracked.txt" in names
+    assert all("/artifacts/" not in name for name in names)

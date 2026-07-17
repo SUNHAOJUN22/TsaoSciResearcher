@@ -18,6 +18,7 @@ EXCLUDED_DIRS = {
     ".ruff_cache",
     ".hypothesis",
     ".tsao-research",
+    "artifacts",
     "__pycache__",
     "build",
     "dist",
