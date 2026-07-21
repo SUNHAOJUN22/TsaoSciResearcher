@@ -11,7 +11,7 @@ on:
       - .github/workflows/verify-embedded-v050.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-payload:
@@ -19,15 +19,21 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: agent/autonomous-v0.5.0
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Reconstruct, checksum and inspect release archive
+        id: verify
+        continue-on-error: true
         run: |
           python - <<'PY'
           import importlib.util
           import json
           import tempfile
+          import traceback
           import zipfile
           from pathlib import Path
 
@@ -37,26 +43,83 @@ jobs:
           assert spec.loader is not None
           spec.loader.exec_module(module)
           expected = '75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7'
-          data, diagnostics = module.reconstruct_embedded_archive(Path('.v050-payload'), expected)
-          assert module.sha256_bytes(data) == expected
-          with tempfile.TemporaryDirectory() as temp_name:
-              temp = Path(temp_name)
-              archive = temp / 'release.zip'
-              archive.write_bytes(data)
-              with zipfile.ZipFile(archive) as bundle:
-                  bad = bundle.testzip()
-                  assert bad is None, bad
-              extracted = temp / 'extracted'
-              extracted.mkdir()
-              module.extract_checked(archive, extracted)
-              source = module.find_source_root(extracted)
-              assert (source / 'VERSION').read_text(encoding='utf-8').strip() == '0.5.0'
-          print(json.dumps({
-              'archive_sha256': expected,
-              'archive_bytes': len(data),
-              'selected_candidate': diagnostics['selected'],
-              'source_version': '0.5.0',
-              'crc': 'passed',
-              'safe_extraction': 'passed',
-          }, indent=2, sort_keys=True))
+          payload = Path('.v050-payload')
+          body_paths = sorted(payload.glob('part-*.txt'))
+          tail_paths = sorted(payload.glob('tailb64-*.txt'))
+          report = {
+              'expected_sha256': expected,
+              'body_files': [
+                  {'name': p.name, 'characters': len(module._compact_text(p)), 'mod5': len(module._compact_text(p)) % 5}
+                  for p in body_paths
+              ],
+              'tail_files': [
+                  {
+                      'name': p.name,
+                      'characters': len(module._compact_text(p)),
+                      'mod4': len(module._compact_text(p)) % 4,
+                      'suffix': module._compact_text(p)[-12:],
+                  }
+                  for p in tail_paths
+              ],
+              'candidates': [],
+          }
+          try:
+              for name, candidate in module._decode_payload_candidates(payload):
+                  report['candidates'].append({
+                      'name': name,
+                      'bytes': len(candidate),
+                      'sha256': module.sha256_bytes(candidate),
+                      'prefix_hex': candidate[:12].hex(),
+                      'suffix_hex': candidate[-12:].hex(),
+                      'zip_signature': candidate.startswith(b'PK\\x03\\x04'),
+                      'bz2_signature': candidate.startswith(b'BZh'),
+                  })
+              data, diagnostics = module.reconstruct_embedded_archive(payload, expected)
+              assert module.sha256_bytes(data) == expected
+              with tempfile.TemporaryDirectory() as temp_name:
+                  temp = Path(temp_name)
+                  archive = temp / 'release.zip'
+                  archive.write_bytes(data)
+                  with zipfile.ZipFile(archive) as bundle:
+                      bad = bundle.testzip()
+                      assert bad is None, bad
+                  extracted = temp / 'extracted'
+                  extracted.mkdir()
+                  module.extract_checked(archive, extracted)
+                  source = module.find_source_root(extracted)
+                  assert (source / 'VERSION').read_text(encoding='utf-8').strip() == '0.5.0'
+              report.update({
+                  'status': 'passed',
+                  'archive_bytes': len(data),
+                  'selected_candidate': diagnostics['selected'],
+                  'source_version': '0.5.0',
+                  'crc': 'passed',
+                  'safe_extraction': 'passed',
+              })
+          except Exception as exc:  # noqa: BLE001
+              report.update({
+                  'status': 'failed',
+                  'error_type': type(exc).__name__,
+                  'error': str(exc),
+                  'traceback_tail': traceback.format_exc().splitlines()[-8:],
+              })
+          out = Path('docs/EMBEDDED_PAYLOAD_DIAGNOSTICS.json')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding='utf-8')
+          print(out.read_text(encoding='utf-8'))
+          if report['status'] != 'passed':
+              raise SystemExit(1)
           PY
+      - name: Commit diagnostic snapshot on branch pushes
+        if: github.event_name == 'push' && always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/EMBEDDED_PAYLOAD_DIAGNOSTICS.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: record embedded v0.5.0 payload diagnostics'
+            git push origin HEAD:agent/autonomous-v0.5.0
+          fi
+      - name: Require payload verification
+        if: always()
+        run: test "${{ steps.verify.outcome }}" = "success"
