@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
           version="$(git show origin/agent/single-main-consolidation:VERSION 2>/dev/null || true)"
-          if [ "$version" = "0.5.1" ]; then
+          if [ "$version" = "0.5.0" ]; then
             echo 'already_materialized=true' >> "$GITHUB_OUTPUT"
           else
             echo 'already_materialized=false' >> "$GITHUB_OUTPUT"
@@ -49,14 +49,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Build candidate from verified sources
+      - name: Build candidate from independently audited source
         shell: bash
         run: |
           set -o pipefail
-          python scripts/consolidate_single_main.py \
+          python scripts/consolidate_v050_only.py \
             --root . \
             --bootstrap-ref origin/agent/autonomous-v0.5.0 \
-            --patch-ref origin/agent/single-main-consolidation \
             --target-branch agent/single-main-consolidation \
             2>&1 | tee "$RUNNER_TEMP/consolidation.log"
       - name: Upload consolidation diagnostics
@@ -112,5 +111,5 @@ jobs:
           rm -rf dist-a dist-b .coverage
           git add -A
           git status --short
-          git commit -m 'release: consolidate verified TsaoSciResearcher v0.5.1 into single-main candidate'
+          git commit -m 'release: materialize audited TsaoSciResearcher v0.5.0 single-main candidate'
           git push --force-with-lease origin HEAD:agent/single-main-consolidation
