@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "version": "0.5.1",
+  "base_url": "https://filebin.net/tsr-v050-75deca80/TsaoSciResearcher-v0.5.0-full.zip",
+  "base_sha256": "75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7",
+  "delta_archive_sha256": "e88b649184012b45a4825e296e5b18fad2a7352b4eae46643d985966ac67e809",
+  "delta_base64_sha256": "ad5f1b5704a6a149c4f0a33a0578dba6a541b80dbcd5132ff14ead7cf727e426",
+  "chunk_count": 3,
+  "chunk_names": [
+    "chunk-000",
+    "chunk-001",
+    "chunk-002"
+  ],
+  "expected_main_sha": "d4912dd80b85057d43b31d38b3e95a3a5d51fd38",
+  "history_heads": {
+    "pr2": "ee5147cb8d775f5f7933f57b681af6d4a501bcd1",
+    "pr3": "cf8c21356e3380055ba6504d1bb24339799128fc",
+    "pr4": "ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5",
+    "pr5": "7a4b9d1ee6c6182f820ee65d063f03df9bb911d8"
+  },
+  "final_file_count": 383,
+  "final_tree_sha256": "dda83a1f420eb89b431109678ecc7c98d5d9a1c06f398f15877071847143c6c7"
+}
