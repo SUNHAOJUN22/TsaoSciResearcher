@@ -2,9 +2,11 @@
 """Materialize the audited TsaoSciResearcher v0.5.0 source tree.
 
 The preferred source is the repository-embedded payload under ``.v050-payload``.
-It is reconstructed deterministically from Base85/BZip2 body parts and Base64
-binary-tail parts, then checked against the audited release SHA-256 before any
-checkout replacement. A pinned URL remains an optional fallback only.
+Its body is Base85 text encoding a BZip2 stream. The continuation is stored as
+Base64-wrapped Base85 text. The decoder removes only characters outside the
+strict Base64 alphabet, reconstructs the full Base85 stream, decompresses it,
+and requires the resulting ZIP to match the audited SHA-256 before extraction.
+A pinned URL remains an optional fallback only.
 
 This bootstrapper is stdlib-only and intentionally deletes itself when the
 verified release tree replaces the checkout.
@@ -26,6 +28,7 @@ from pathlib import Path, PurePosixPath
 EXPECTED_VERSION = "0.5.0"
 MAX_MEMBER_BYTES = 64 * 1024 * 1024
 MAX_TOTAL_BYTES = 512 * 1024 * 1024
+_B64_ALPHABET = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
 
 
 class MaterializationError(RuntimeError):
@@ -48,6 +51,20 @@ def _compact_text(path: Path) -> str:
     return "".join(path.read_text(encoding="ascii").split())
 
 
+def _decode_base64_wrapped_base85(text: str, *, label: str) -> str:
+    # Historical payload generation left one non-Base64 quote after the final
+    # padded chunk. Removing characters outside the Base64 alphabet is safe and
+    # explicitly bounded; all retained characters are then strictly validated.
+    cleaned = "".join(ch for ch in text if ch in _B64_ALPHABET)
+    if len(cleaned) % 4:
+        cleaned += "=" * ((4 - len(cleaned) % 4) % 4)
+    try:
+        decoded = base64.b64decode(cleaned, validate=True)
+        return decoded.decode("ascii")
+    except Exception as exc:  # noqa: BLE001
+        raise MaterializationError(f"invalid Base64-wrapped Base85 tail {label}: {exc}") from exc
+
+
 def _decode_payload_candidates(payload_dir: Path) -> list[tuple[str, bytes]]:
     body_paths = sorted(payload_dir.glob("part-*.txt"))
     tail_paths = sorted(payload_dir.glob("tailb64-*.txt"))
@@ -55,45 +72,37 @@ def _decode_payload_candidates(payload_dir: Path) -> list[tuple[str, bytes]]:
         raise MaterializationError(f"no Base85 body parts found in {payload_dir}")
 
     body_texts = [_compact_text(path) for path in body_paths]
-    tail_texts = [_compact_text(path) for path in tail_paths]
-    candidates: list[tuple[str, bytes]] = []
+    body_text = "".join(body_texts)
+    encoded_variants: list[tuple[str, str]] = [("body", body_text)]
 
-    # The producer may have split either before or after encoding. Support both
-    # layouts deterministically and deduplicate later by digest.
-    try:
-        candidates.append(("b85-concatenated", base64.b85decode("".join(body_texts))))
-    except Exception as exc:  # noqa: BLE001 - retained in aggregate diagnostics
-        candidates.append((f"b85-concatenated-error:{type(exc).__name__}", b""))
-    try:
-        candidates.append(("b85-per-part", b"".join(base64.b85decode(text) for text in body_texts)))
-    except Exception as exc:  # noqa: BLE001
-        candidates.append((f"b85-per-part-error:{type(exc).__name__}", b""))
-
-    tail_variants: list[tuple[str, bytes]] = [("no-tail", b"")]
-    if tail_texts:
-        try:
-            tail_variants.append(("b64-tail-concatenated", base64.b64decode("".join(tail_texts), validate=True)))
-        except Exception:
-            pass
-        try:
-            tail_variants.append(
-                ("b64-tail-per-part", b"".join(base64.b64decode(text, validate=True) for text in tail_texts))
-            )
-        except Exception:
-            pass
+    if tail_paths:
+        tail_base85_parts = [
+            _decode_base64_wrapped_base85(_compact_text(path), label=path.name)
+            for path in tail_paths
+        ]
+        encoded_variants.append(("body+base64-wrapped-base85-tail", body_text + "".join(tail_base85_parts)))
 
     expanded: list[tuple[str, bytes]] = []
-    for body_name, body in candidates:
-        if not body:
+    for name, encoded in encoded_variants:
+        try:
+            stream = base64.b85decode(encoded)
+        except Exception as exc:  # noqa: BLE001
+            expanded.append((f"b85-error({name}):{type(exc).__name__}", b""))
             continue
-        for tail_name, tail in tail_variants:
-            stream = body + tail
-            expanded.append((f"{body_name}+{tail_name}", stream))
-            if stream.startswith(b"BZh"):
-                try:
-                    expanded.append((f"bz2({body_name}+{tail_name})", bz2.decompress(stream)))
-                except Exception:
-                    pass
+        expanded.append((f"b85({name})", stream))
+        if stream.startswith(b"BZh"):
+            try:
+                expanded.append((f"bz2(b85({name}))", bz2.decompress(stream)))
+            except Exception:
+                pass
+
+    # Retain an independently decoded per-part body candidate to detect any
+    # future producer that splits before Base85 encoding rather than after it.
+    try:
+        per_part = b"".join(base64.b85decode(text) for text in body_texts)
+        expanded.append(("b85-per-body-part", per_part))
+    except Exception:
+        pass
 
     unique: dict[str, tuple[str, bytes]] = {}
     for name, data in expanded:
