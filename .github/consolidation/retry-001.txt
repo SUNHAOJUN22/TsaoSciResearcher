@@ -1,1 +1,1 @@
-retry branch snapshot export for lossless single-main consolidation audit
+retry deterministic branch snapshot export using git archive
