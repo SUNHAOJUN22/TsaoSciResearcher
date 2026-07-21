@@ -1,0 +1,87 @@
+name: Diagnose v0.5.0 tail encoding
+
+on:
+  push:
+    branches: [agent/autonomous-v0.5.0]
+    paths:
+      - .github/workflows/diagnose-tail04.yml
+      - .v050-payload/tailb64-04.txt
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/autonomous-v0.5.0
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Character-set and codec diagnostics
+        run: |
+          python - <<'PY'
+          import base64
+          import collections
+          import json
+          from pathlib import Path
+
+          raw = ''.join(Path('.v050-payload/tailb64-04.txt').read_text(encoding='ascii').split())
+          allowed64 = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
+          cleaned = ''.join(ch for ch in raw if ch in allowed64)
+          decoded = base64.b64decode(cleaned, validate=True)
+          counts = collections.Counter(decoded)
+          rfc85 = set(base64._b85alphabet)
+          ascii85 = set(range(33, 118))
+          z85 = set(b'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#')
+          base91 = set(b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~"')
+          def codec_summary(name, alphabet):
+              invalid = [(i, byte) for i, byte in enumerate(decoded) if byte not in alphabet]
+              return {
+                  'name': name,
+                  'valid_count': len(decoded) - len(invalid),
+                  'invalid_count': len(invalid),
+                  'invalid_positions': invalid[:100],
+              }
+          printable = sum(32 <= byte <= 126 for byte in decoded)
+          report = {
+              'raw_chars': len(raw),
+              'cleaned_chars': len(cleaned),
+              'decoded_bytes': len(decoded),
+              'printable_ascii_count': printable,
+              'printable_ascii_fraction': printable / len(decoded),
+              'unique_byte_values': len(counts),
+              'byte_values': [
+                  {
+                      'byte': byte,
+                      'hex': f'{byte:02x}',
+                      'char': chr(byte) if 32 <= byte <= 126 else None,
+                      'count': count,
+                  }
+                  for byte, count in sorted(counts.items())
+              ],
+              'codec_summaries': [
+                  codec_summary('rfc1924-base85', rfc85),
+                  codec_summary('ascii85', ascii85),
+                  codec_summary('z85', z85),
+                  codec_summary('base91-common', base91),
+              ],
+              'prefix_hex': decoded[:128].hex(),
+              'suffix_hex': decoded[-128:].hex(),
+          }
+          out = Path('docs/TAIL04_ENCODING_DIAGNOSTICS.json')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding='utf-8')
+          print(out.read_text(encoding='utf-8'))
+          PY
+      - name: Commit diagnostics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/TAIL04_ENCODING_DIAGNOSTICS.json
+          git commit -m 'chore: record tail encoding diagnostics'
+          git push origin HEAD:agent/autonomous-v0.5.0
