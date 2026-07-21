@@ -14,13 +14,15 @@ permissions:
 
 concurrency:
   group: materialize-single-main-v051
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   materialize-and-promote:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      STATUS_BRANCH: agent/final-single-main-v051
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,6 +33,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
+
+      - name: Initialize observable stage
+        shell: bash
+        run: echo 'pinned-state' > "$RUNNER_TEMP/single-main-stage"
 
       - name: Confirm pinned repository state
         shell: bash
@@ -47,6 +53,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo 'normalize-transport' > "$RUNNER_TEMP/single-main-stage"
           python - <<'PY'
           from pathlib import Path
           for path in sorted(Path('.single-main-delta').glob('chunk-*')):
@@ -61,16 +68,15 @@ jobs:
           PY
 
       - name: Materialize exact v0.5.1 source tree
-        run: >-
-          python scripts/materialize_single_main_delta.py
-          --checkout .
-          --payload .single-main-delta
-          --json-out "$RUNNER_TEMP/materialize-result.json"
+        run: |
+          echo 'materialize-tree' > "$RUNNER_TEMP/single-main-stage"
+          python scripts/materialize_single_main_delta.py --checkout . --payload .single-main-delta --json-out "$RUNNER_TEMP/materialize-result.json"
 
       - name: Confirm transport state was removed
         shell: bash
         run: |
           set -euo pipefail
+          echo 'verify-materialized-tree' > "$RUNNER_TEMP/single-main-stage"
           test "$(cat VERSION)" = "0.5.1"
           test ! -e .single-main-delta
           test ! -e .single-main-payload
@@ -80,6 +86,7 @@ jobs:
 
       - name: Install exact CI dependencies
         run: |
+          echo 'install-dependencies' > "$RUNNER_TEMP/single-main-stage"
           python -m pip install --upgrade pip
           python -m pip install -r requirements-ci.lock
           python -m pip check
@@ -89,6 +96,7 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
           PYTHONPYCACHEPREFIX: ${{ runner.temp }}/pycache
         run: |
+          echo 'audit-compile' > "$RUNNER_TEMP/single-main-stage"
           python scripts/audit_repository.py
           python -m compileall -q tsao_researcher scripts tests
           python -m unittest -q tests.test_test_suite_integrity tests.test_mutation_contract_v4
@@ -99,11 +107,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo 'four-shard-regression' > "$RUNNER_TEMP/single-main-stage"
           for shard in 0 1 2 3; do
-            python scripts/run_tests.py --quiet --jobs 2 \
-              --shard-count 4 --shard-index "$shard" \
-              --skip-audit --skip-compile --module-timeout 120 \
-              --json-out "$RUNNER_TEMP/shard-$shard.json"
+            python scripts/run_tests.py --quiet --jobs 2 --shard-count 4 --shard-index "$shard" --skip-audit --skip-compile --module-timeout 120 --json-out "$RUNNER_TEMP/shard-$shard.json"
           done
           python - <<'PY'
           import json, os
@@ -121,17 +127,15 @@ jobs:
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
-          python scripts/run_tests.py --quiet --jobs 4 --order reverse \
-            --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' \
-            --skip-audit --skip-compile --module-timeout 120
-          python scripts/run_tests.py --quiet --jobs 4 --order random --seed 20260721 \
-            --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' \
-            --skip-audit --skip-compile --module-timeout 120
+          echo 'order-invariance' > "$RUNNER_TEMP/single-main-stage"
+          python scripts/run_tests.py --quiet --jobs 4 --order reverse --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --skip-audit --skip-compile --module-timeout 120
+          python scripts/run_tests.py --quiet --jobs 4 --order random --seed 20260721 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --skip-audit --skip-compile --module-timeout 120
 
       - name: Verify performance and mutation resistance
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
+          echo 'performance-mutation' > "$RUNNER_TEMP/single-main-stage"
           python scripts/performance_smoke.py --quick --json-out "$RUNNER_TEMP/performance.json"
           python scripts/run_mutation_smoke.py --timeout 120 --json-out "$RUNNER_TEMP/mutation.json"
 
@@ -141,6 +145,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo 'reproducible-release' > "$RUNNER_TEMP/single-main-stage"
           python scripts/package_release.py --out "$RUNNER_TEMP/dist-a"
           python scripts/package_release.py --out "$RUNNER_TEMP/dist-b"
           A="$(find "$RUNNER_TEMP/dist-a" -type f -name '*.zip' | sort | head -n 1)"
@@ -162,6 +167,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo 'promote-main' > "$RUNNER_TEMP/single-main-stage"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
@@ -180,22 +186,29 @@ jobs:
               refs/remotes/origin/HEAD|refs/remotes/origin/main|refs/remotes/origin/agent/final-single-main-v051) continue ;;
             esac
             head="$(git rev-parse "$ref")"
-            if [[ -n "${seen[$head]:-}" ]]; then
-              continue
-            fi
+            if [[ -n "${seen[$head]:-}" ]]; then continue; fi
             seen["$head"]=1
-            if git merge-base --is-ancestor "$head" "$source_commit"; then
-              continue
-            fi
+            if git merge-base --is-ancestor "$head" "$source_commit"; then continue; fi
             parents+=("$head")
           done < <(git for-each-ref --format='%(refname)' refs/remotes/origin | sort)
           args=("$tree")
-          for parent in "${parents[@]}"; do
-            args+=("-p" "$parent")
-          done
+          for parent in "${parents[@]}"; do args+=("-p" "$parent"); done
           final_commit="$(printf '%s\n' 'release: consolidate all verified history into single main v0.5.1' | git commit-tree "${args[@]}")"
           echo "Source commit: $source_commit"
           echo "Final commit:  $final_commit"
           echo "Parent count:  ${#parents[@]}"
           git show --no-patch --pretty=raw "$final_commit"
           git push origin "$final_commit:refs/heads/main"
+
+      - name: Publish machine-readable failure status
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage="$(cat "$RUNNER_TEMP/single-main-stage" 2>/dev/null || echo unknown)"
+          status_file="$RUNNER_TEMP/status.json"
+          printf '{"run_id":"%s","run_attempt":"%s","commit":"%s","stage":"%s","status":"failed"}\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_SHA" "$stage" > "$status_file"
+          encoded="$(base64 -w0 "$status_file")"
+          gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/.single-main-status/$GITHUB_RUN_ID.json" -f message="ci: record single-main failure at $stage" -f content="$encoded" -f branch="$STATUS_BRANCH"
