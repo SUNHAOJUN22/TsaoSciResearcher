@@ -15,10 +15,15 @@ concurrency:
 
 jobs:
   guard:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/single-main-consolidation'
+    if: >-
+      github.event_name == 'pull_request' &&
+      (github.head_ref == 'agent/single-main-consolidation' ||
+       github.head_ref == 'agent/final-main-candidate') &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     outputs:
       already_materialized: ${{ steps.check.outputs.already_materialized }}
+      head_ref: ${{ steps.check.outputs.head_ref }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,21 +31,30 @@ jobs:
           fetch-depth: 0
       - id: check
         shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           set -euo pipefail
           git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
-          version="$(git show origin/agent/single-main-consolidation:VERSION 2>/dev/null || true)"
+          case "$HEAD_REF" in
+            agent/single-main-consolidation|agent/final-main-candidate) ;;
+            *) echo "unexpected head ref: $HEAD_REF" >&2; exit 1 ;;
+          esac
+          version="$(git show "origin/$HEAD_REF:VERSION" 2>/dev/null || true)"
           if [ "$version" = "0.5.1" ]; then
             echo 'already_materialized=true' >> "$GITHUB_OUTPUT"
           else
             echo 'already_materialized=false' >> "$GITHUB_OUTPUT"
           fi
+          echo "head_ref=$HEAD_REF" >> "$GITHUB_OUTPUT"
 
   build-candidate:
     needs: guard
     if: needs.guard.outputs.already_materialized != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      CANDIDATE_HEAD: ${{ needs.guard.outputs.head_ref }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,12 +70,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git show origin/agent/single-main-consolidation:scripts/consolidate_single_main.py > "$RUNNER_TEMP/consolidate_single_main.py"
+          case "$CANDIDATE_HEAD" in
+            agent/single-main-consolidation|agent/final-main-candidate) ;;
+            *) echo "unexpected head ref: $CANDIDATE_HEAD" >&2; exit 1 ;;
+          esac
+          git show "origin/$CANDIDATE_HEAD:scripts/consolidate_single_main.py" > "$RUNNER_TEMP/consolidate_single_main.py"
           python "$RUNNER_TEMP/consolidate_single_main.py" \
             --root . \
             --bootstrap-ref origin/agent/autonomous-v0.5.0 \
-            --patch-ref origin/agent/single-main-consolidation \
-            --target-branch agent/single-main-consolidation
+            --patch-ref "origin/$CANDIDATE_HEAD" \
+            --target-branch "$CANDIDATE_HEAD"
           test "$(cat VERSION)" = "0.5.1"
           test ! -e .github/consolidation
           test ! -e scripts/consolidate_single_main.py
@@ -134,4 +152,4 @@ jobs:
             ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5 \
             7a4b9d1ee6c6182f820ee65d063f03df9bb911d8 \
             dfba0af4f834955d12a10ceedd0cacf5ff962c93
-          git push --force-with-lease origin HEAD:agent/single-main-consolidation
+          git push --force-with-lease origin HEAD:"$CANDIDATE_HEAD"
