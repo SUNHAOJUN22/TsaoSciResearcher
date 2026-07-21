@@ -1,0 +1,143 @@
+name: Export generated v0.5.0 candidate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/export-generated-v050.yml
+      - dist/upgrade-generator/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-generated-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONNOUSERSITE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tsao-sci-researcher-major-upgrade
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install generator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema PyYAML
+      - name: Reconstruct verified generator and generate candidate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, zlib
+          base = Path('dist/upgrade-generator')
+          parts = []
+          for index in range(7):
+              raw = base / f'part-{index:02}.txt'
+              if raw.exists():
+                  parts.append(raw.read_text(encoding='utf-8').strip())
+                  continue
+              verified = sorted(base.glob(f'part-{index:02}-*.b64'))
+              legacy = sorted(base.glob(f'part-{index:02}[0-9].b64'))
+              selected = verified or legacy
+              if not selected:
+                  raise SystemExit(f'missing generator segment {index:02}')
+              parts.extend(
+                  base64.b64decode(path.read_text(encoding='utf-8').strip(), validate=True).decode('ascii')
+                  for path in selected
+              )
+          generator = zlib.decompress(base64.b85decode(''.join(parts).encode('ascii')))
+          expected = '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079'
+          actual = hashlib.sha256(generator).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'generator checksum mismatch: {actual} != {expected}')
+          source = generator.decode('utf-8').replace(
+              'import sys\nfrom __future__ import annotations\n',
+              'from __future__ import annotations\nimport sys\n',
+              1,
+          )
+          Path('/tmp/tsr_upgrade_generator.py').write_text(source, encoding='utf-8')
+          print(f'generator verified: sha256={actual}, bytes={len(generator)}')
+          PY
+          python /tmp/tsr_upgrade_generator.py
+      - name: Remove bootstrap transport
+        run: |
+          rm -rf dist/upgrade-generator dist/upgrade-payload dist/upgrade-patch
+          rm -f .github/workflows/apply-major-upgrade.yml
+          rm -f .github/workflows/diagnose-major-v050.yml
+          rm -f .github/workflows/export-generated-v050.yml
+          rm -f generator-diagnostic.json generator-run.log generator-run.status
+      - name: Run post-generation steps independently
+        continue-on-error: true
+        run: |
+          mkdir -p candidate-diagnostics
+          run_one() {
+            name="$1"; shift
+            set +e
+            "$@" > "candidate-diagnostics/${name}.log" 2>&1
+            code=$?
+            set -e
+            echo "$code" > "candidate-diagnostics/${name}.status"
+            cat "candidate-diagnostics/${name}.log"
+            echo "exit=$code"
+          }
+          run_one build_capability_index python scripts/build_capability_index.py --write
+          run_one generate_checksums python scripts/generate_checksums.py --write
+          run_one validate_structure python scripts/validate_structure.py
+      - name: Write candidate manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('.')
+          diagnostics = Path('candidate-diagnostics')
+          report = {
+              'generator_sha256': '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079',
+              'version': (root / 'VERSION').read_text(encoding='utf-8').strip() if (root / 'VERSION').exists() else None,
+              'file_count': sum(1 for path in root.rglob('*') if path.is_file() and '.git' not in path.parts),
+              'commands': {},
+              'files': [],
+          }
+          for status_path in sorted(diagnostics.glob('*.status')):
+              name = status_path.stem
+              log = (diagnostics / f'{name}.log').read_text(encoding='utf-8', errors='replace')
+              report['commands'][name] = {'exit': int(status_path.read_text().strip()), 'log_tail': log.splitlines()[-200:]}
+          for path in sorted(p for p in root.rglob('*') if p.is_file() and '.git' not in p.parts and 'candidate-diagnostics' not in p.parts):
+              report['files'].append({
+                  'path': path.as_posix(),
+                  'bytes': path.stat().st_size,
+                  'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+              })
+          Path('candidate-diagnostics/CANDIDATE_MANIFEST.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          PY
+      - name: Create deterministic candidate archive
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root = Path('.')
+          out = Path('/tmp/TsaoSciResearcher-v0.5.0-generated-candidate.zip')
+          excluded = {'.git'}
+          epoch = (1980, 1, 1, 0, 0, 0)
+          with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as bundle:
+              for path in sorted(p for p in root.rglob('*') if p.is_file() and not excluded.intersection(p.parts)):
+                  rel = path.as_posix()
+                  info = zipfile.ZipInfo(rel, epoch)
+                  info.compress_type = zipfile.ZIP_DEFLATED
+                  info.external_attr = (0o100644 << 16)
+                  bundle.writestr(info, path.read_bytes())
+          print(out, out.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-v050-candidate
+          path: /tmp/TsaoSciResearcher-v0.5.0-generated-candidate.zip
+          if-no-files-found: error
+          retention-days: 7
