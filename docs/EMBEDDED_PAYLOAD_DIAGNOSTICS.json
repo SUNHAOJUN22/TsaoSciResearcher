@@ -31,18 +31,8 @@
       "name": "part-05.txt"
     }
   ],
-  "candidates": [
-    {
-      "bytes": 86400,
-      "bz2_signature": true,
-      "name": "b85-concatenated+no-tail",
-      "prefix_hex": "425a68393141592653592fda",
-      "sha256": "40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929",
-      "suffix_hex": "7f1f2f17430095640bdbd958",
-      "zip_signature": false
-    }
-  ],
-  "error": "embedded payload did not reproduce audited archive; diagnostics=[{\"bytes\":86400,\"candidate\":\"b85-concatenated+no-tail\",\"sha256\":\"40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929\",\"zip_signature\":false}]",
+  "candidates": [],
+  "error": "invalid Base64-wrapped Base85 tail tailb64-04.txt: 'ascii' codec can't decode byte 0xef in position 860: ordinal not in range(128)",
   "error_type": "MaterializationError",
   "expected_sha256": "75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7",
   "status": "failed",
@@ -105,10 +95,13 @@
     }
   ],
   "traceback_tail": [
-    "Traceback (most recent call last):",
-    "  File \"<stdin>\", line 54, in <module>",
-    "  File \"/home/runner/work/TsaoSciResearcher/TsaoSciResearcher/scripts/materialize_v050_from_release.py\", line 115, in reconstruct_embedded_archive",
-    "    raise MaterializationError(",
-    "materializer.MaterializationError: embedded payload did not reproduce audited archive; diagnostics=[{\"bytes\":86400,\"candidate\":\"b85-concatenated+no-tail\",\"sha256\":\"40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929\",\"zip_signature\":false}]"
+    "  File \"/home/runner/work/TsaoSciResearcher/TsaoSciResearcher/scripts/materialize_v050_from_release.py\", line 79, in _decode_payload_candidates",
+    "    tail_base85_parts = [",
+    "                        ^",
+    "  File \"/home/runner/work/TsaoSciResearcher/TsaoSciResearcher/scripts/materialize_v050_from_release.py\", line 80, in <listcomp>",
+    "    _decode_base64_wrapped_base85(_compact_text(path), label=path.name)",
+    "  File \"/home/runner/work/TsaoSciResearcher/TsaoSciResearcher/scripts/materialize_v050_from_release.py\", line 65, in _decode_base64_wrapped_base85",
+    "    raise MaterializationError(f\"invalid Base64-wrapped Base85 tail {label}: {exc}\") from exc",
+    "materializer.MaterializationError: invalid Base64-wrapped Base85 tail tailb64-04.txt: 'ascii' codec can't decode byte 0xef in position 860: ordinal not in range(128)"
   ]
 }
