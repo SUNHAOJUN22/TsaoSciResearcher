@@ -1,0 +1,88 @@
+{
+  "body_files": [
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-00.txt"
+    },
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-01.txt"
+    },
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-02.txt"
+    },
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-03.txt"
+    },
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-04.txt"
+    },
+    {
+      "characters": 18000,
+      "mod5": 0,
+      "name": "part-05.txt"
+    }
+  ],
+  "candidates": [
+    {
+      "bytes": 86400,
+      "bz2_signature": true,
+      "name": "b85-concatenated+no-tail",
+      "prefix_hex": "425a68393141592653592fda",
+      "sha256": "40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929",
+      "suffix_hex": "7f1f2f17430095640bdbd958",
+      "zip_signature": false
+    }
+  ],
+  "error": "embedded payload did not reproduce audited archive; diagnostics=[{\"bytes\":86400,\"candidate\":\"b85-concatenated+no-tail\",\"sha256\":\"40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929\",\"zip_signature\":false}]",
+  "error_type": "MaterializationError",
+  "expected_sha256": "75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7",
+  "status": "failed",
+  "tail_files": [
+    {
+      "characters": 12000,
+      "mod4": 0,
+      "name": "tailb64-00.txt",
+      "suffix": "ZElScm4oI30r"
+    },
+    {
+      "characters": 12000,
+      "mod4": 0,
+      "name": "tailb64-01.txt",
+      "suffix": "IUlwd25NZEU9"
+    },
+    {
+      "characters": 12000,
+      "mod4": 0,
+      "name": "tailb64-02.txt",
+      "suffix": "bXFIVko4fGtW"
+    },
+    {
+      "characters": 12000,
+      "mod4": 0,
+      "name": "tailb64-03.txt",
+      "suffix": "PDBnVzVYYzVn"
+    },
+    {
+      "characters": 11897,
+      "mod4": 1,
+      "name": "tailb64-04.txt",
+      "suffix": "D0lZ11efA=='"
+    }
+  ],
+  "traceback_tail": [
+    "Traceback (most recent call last):",
+    "  File \"<stdin>\", line 45, in <module>",
+    "  File \"/home/runner/work/TsaoSciResearcher/TsaoSciResearcher/scripts/materialize_v050_from_release.py\", line 115, in reconstruct_embedded_archive",
+    "    raise MaterializationError(",
+    "materializer.MaterializationError: embedded payload did not reproduce audited archive; diagnostics=[{\"bytes\":86400,\"candidate\":\"b85-concatenated+no-tail\",\"sha256\":\"40b6446efe950218aeec614a6a7d4594c20ebfdf0eddc6fb12555d8421d90929\",\"zip_signature\":false}]"
+  ]
+}
