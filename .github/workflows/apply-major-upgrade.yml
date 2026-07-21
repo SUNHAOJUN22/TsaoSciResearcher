@@ -6,22 +6,21 @@ on:
     paths:
       - "dist/upgrade-generator/**"
       - ".github/workflows/apply-major-upgrade.yml"
-  pull_request:
-    branches: [main]
-    paths:
-      - "dist/upgrade-generator/**"
-      - ".github/workflows/apply-major-upgrade.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
   actions: write
 
+concurrency:
+  group: stage-generated-v050
+  cancel-in-progress: false
+
 jobs:
   stage-unverified-candidate:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONNOUSERSITE: "1"
@@ -49,20 +48,21 @@ jobs:
 
           base = Path('dist/upgrade-generator')
           parts = []
+          selected_files = []
           for index in range(7):
               raw = base / f'part-{index:02}.txt'
               if raw.exists():
                   parts.append(raw.read_text(encoding='utf-8').strip())
+                  selected_files.append(str(raw))
                   continue
               verified = sorted(base.glob(f'part-{index:02}-*.b64'))
               legacy = sorted(base.glob(f'part-{index:02}[0-9].b64'))
               selected = verified or legacy
               if not selected:
                   raise SystemExit(f'missing generator segment {index:02}')
-              parts.extend(
-                  base64.b64decode(path.read_text(encoding='utf-8').strip(), validate=True).decode('ascii')
-                  for path in selected
-              )
+              for path in selected:
+                  parts.append(base64.b64decode(path.read_text(encoding='utf-8').strip(), validate=True).decode('ascii'))
+                  selected_files.append(str(path))
 
           generator = zlib.decompress(base64.b85decode(''.join(parts).encode('ascii')))
           expected = '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079'
@@ -75,28 +75,82 @@ jobs:
               1,
           )
           Path('/tmp/tsr_upgrade_generator.py').write_text(source, encoding='utf-8')
+          Path('/tmp/generator-files.txt').write_text('\n'.join(selected_files), encoding='utf-8')
           print(f'generator verified: sha256={actual}, bytes={len(generator)}')
           PY
 
       - name: Generate candidate source tree
         run: python /tmp/tsr_upgrade_generator.py
 
-      - name: Remove all bootstrap transport and regenerate manifests
+      - name: Remove bootstrap transport
         shell: bash
         run: |
           rm -rf dist/upgrade-generator dist/upgrade-payload dist/upgrade-patch
           rm -f .github/workflows/apply-major-upgrade.yml
+          rm -f .github/workflows/diagnose-major-v050.yml
           rm -f generator-diagnostic.json generator-run.log generator-run.status
-          python scripts/build_capability_index.py --write
-          python scripts/generate_checksums.py --write
-          python scripts/validate_structure.py
 
-      - name: Commit candidate explicitly as unverified
+      - name: Run post-generation steps and persist exact diagnostics
+        shell: bash
+        run: |
+          set +e
+          mkdir -p /tmp/v050-diagnostics docs
+          run_one() {
+            name="$1"; shift
+            "$@" > "/tmp/v050-diagnostics/${name}.log" 2>&1
+            code=$?
+            echo "$code" > "/tmp/v050-diagnostics/${name}.status"
+            echo "===== ${name} (exit=${code}) ====="
+            cat "/tmp/v050-diagnostics/${name}.log"
+          }
+          run_one build_capability_index python scripts/build_capability_index.py --write
+          run_one generate_checksums python scripts/generate_checksums.py --write
+          run_one validate_structure python scripts/validate_structure.py
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          root = Path('.')
+          diag = Path('/tmp/v050-diagnostics')
+          report = {
+              'release_state': 'generated-unverified',
+              'generator_sha256': '8f1c3267fb9412bb86d34177914ca35ca88f21573f0c11bcaf9d865a889ed079',
+              'version': (root / 'VERSION').read_text(encoding='utf-8').strip() if (root / 'VERSION').exists() else None,
+              'file_count': sum(1 for path in root.rglob('*') if path.is_file() and '.git' not in path.parts),
+              'commands': {},
+              'key_paths': {},
+          }
+          for status_path in sorted(diag.glob('*.status')):
+              name = status_path.stem
+              log = (diag / f'{name}.log').read_text(encoding='utf-8', errors='replace')
+              report['commands'][name] = {
+                  'exit': int(status_path.read_text().strip()),
+                  'log_tail': log.splitlines()[-200:],
+              }
+          for rel in [
+              'VERSION','SKILL.md','pyproject.toml','requirements-dev.txt',
+              'capabilities/index.json','capabilities/index.md','CHECKSUMS.sha256',
+              'scripts/run_tests.py','scripts/audit_repository.py',
+          ]:
+              path = root / rel
+              report['key_paths'][rel] = {
+                  'exists': path.exists(),
+                  'bytes': path.stat().st_size if path.exists() and path.is_file() else None,
+                  'sha256': hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() and path.is_file() else None,
+              }
+          out = root / 'docs' / 'GENERATED_V050_DIAGNOSTICS.json'
+          out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding='utf-8')
+          print(out.read_text(encoding='utf-8'))
+          PY
+          exit 0
+
+      - name: Commit generated candidate explicitly as unverified
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --stat
-          git commit -m "chore: stage generated v0.5.0 candidate (unverified)"
+          test -n "$(git status --porcelain)"
+          git commit -m "chore: stage generated v0.5.0 candidate with diagnostics"
           git push origin HEAD:agent/tsao-sci-researcher-major-upgrade
