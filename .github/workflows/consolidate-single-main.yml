@@ -1,11 +1,9 @@
 name: Build verified single-main candidate
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths:
-      - scripts/consolidate_single_main.py
-      - .github/workflows/consolidate-single-main.yml
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +14,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  guard:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/single-main-consolidation'
+    runs-on: ubuntu-latest
+    outputs:
+      already_materialized: ${{ steps.check.outputs.already_materialized }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
+          version="$(git show origin/agent/single-main-consolidation:VERSION 2>/dev/null || true)"
+          if [ "$version" = "0.5.1" ]; then
+            echo 'already_materialized=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'already_materialized=false' >> "$GITHUB_OUTPUT"
+          fi
+
   build-candidate:
+    needs: guard
+    if: needs.guard.outputs.already_materialized != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -24,11 +46,9 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Build candidate from verified sources
         run: >-
           python scripts/consolidate_single_main.py
@@ -36,42 +56,31 @@ jobs:
           --bootstrap-ref origin/agent/autonomous-v0.5.0
           --patch-ref origin/agent/single-main-consolidation
           --target-branch agent/single-main-consolidation
-
       - name: Install exact CI dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-ci.lock
           python -m pip check
-
       - name: Cross-contract audit and compilation
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python scripts/audit_repository.py
           python -m compileall -q tsao_researcher scripts tests
-
       - name: Deterministic normal-order regression
         env:
           PYTHONDONTWRITEBYTECODE: '1'
-        run: >-
-          python scripts/run_tests.py
-          --jobs 4
-          --order normal
-          --module-timeout 120
-          --json-out /tmp/tests-normal.json
-
+        run: python scripts/run_tests.py --jobs 4 --order normal --module-timeout 120 --json-out /tmp/tests-normal.json
       - name: Reverse and seeded-random high-risk regression
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python scripts/run_tests.py --jobs 4 --order reverse --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-reverse.json
           python scripts/run_tests.py --jobs 4 --order random --seed 20260721 --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-random.json
-
       - name: Import isolation and performance smoke
         run: |
           python scripts/performance_smoke.py --json-out /tmp/performance.json
           python -m unittest tests.test_import_isolation -v
-
       - name: Installer and release verification
         env:
           PYTHONDONTWRITEBYTECODE: '1'
@@ -86,7 +95,6 @@ jobs:
           cmp "$A" "$B"
           python scripts/verify_release.py "$A"
           sha256sum "$A" "$B"
-
       - name: Commit verified candidate branch
         run: |
           git config user.name 'github-actions[bot]'
@@ -96,5 +104,3 @@ jobs:
           git status --short
           git commit -m 'release: consolidate verified TsaoSciResearcher v0.5.1 into single-main candidate'
           git push --force-with-lease origin HEAD:agent/single-main-consolidation
-
-# registered-workflow-trigger: 2026-07-21T16:00+09:00
