@@ -46,21 +46,30 @@ jobs:
           payload = Path('.v050-payload')
           body_paths = sorted(payload.glob('part-*.txt'))
           tail_paths = sorted(payload.glob('tailb64-*.txt'))
+          b64_chars = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
+
+          tail_report = []
+          for p in tail_paths:
+              text = module._compact_text(p)
+              invalid = [{'index': i, 'char': repr(ch), 'codepoint': ord(ch)} for i, ch in enumerate(text) if ch not in b64_chars]
+              tail_report.append({
+                  'name': p.name,
+                  'characters': len(text),
+                  'mod4': len(text) % 4,
+                  'prefix': text[:24],
+                  'suffix': text[-24:],
+                  'padding_count': text.count('='),
+                  'invalid_count': len(invalid),
+                  'invalid': invalid[:20],
+              })
+
           report = {
               'expected_sha256': expected,
               'body_files': [
                   {'name': p.name, 'characters': len(module._compact_text(p)), 'mod5': len(module._compact_text(p)) % 5}
                   for p in body_paths
               ],
-              'tail_files': [
-                  {
-                      'name': p.name,
-                      'characters': len(module._compact_text(p)),
-                      'mod4': len(module._compact_text(p)) % 4,
-                      'suffix': module._compact_text(p)[-12:],
-                  }
-                  for p in tail_paths
-              ],
+              'tail_files': tail_report,
               'candidates': [],
           }
           try:
