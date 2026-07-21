@@ -1,1 +1,1 @@
-retry complete hidden v0.5.0 payload export for byte-level recovery
+retry branch snapshot export for lossless single-main consolidation audit
