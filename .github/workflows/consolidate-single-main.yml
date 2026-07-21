@@ -1,0 +1,109 @@
+name: Build verified single-main v0.5.1 candidate
+
+on:
+  push:
+    branches: [agent/single-main-consolidation]
+    paths:
+      - scripts/consolidate_single_main.py
+      - .github/workflows/consolidate-single-main.yml
+      - .github/consolidation/final-v051-part-*.txt
+      - .github/consolidation/final-v051-tail-*.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-single-main-v051
+  cancel-in-progress: false
+
+jobs:
+  build-candidate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/single-main-consolidation
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Materialize verified candidate
+        run: >-
+          python scripts/consolidate_single_main.py
+          --root .
+          --bootstrap-ref origin/agent/autonomous-v0.5.0
+          --patch-ref HEAD
+          --target-branch agent/single-main-consolidation
+      - name: Install exact CI dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.lock
+          python -m pip check
+      - name: Audit and compile
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/audit_repository.py
+          python -m compileall -q tsao_researcher scripts tests
+      - name: Run deterministic normal-order shards
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          for shard in 0 1 2 3; do
+            python scripts/run_tests.py --quiet --jobs 2 \
+              --shard-count 4 --shard-index "$shard" \
+              --skip-audit --skip-compile --module-timeout 120 \
+              --json-out "/tmp/tests-normal-$shard.json"
+          done
+      - name: Run reverse and seeded-random high-risk regression
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          FILTER='test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)'
+          python scripts/run_tests.py --quiet --jobs 4 --order reverse \
+            --include "$FILTER" --skip-audit --skip-compile --module-timeout 120 \
+            --json-out /tmp/tests-reverse.json
+          python scripts/run_tests.py --quiet --jobs 4 --order random --seed 20260721 \
+            --include "$FILTER" --skip-audit --skip-compile --module-timeout 120 \
+            --json-out /tmp/tests-random.json
+      - name: Run bounded performance and mutation smoke
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/performance_smoke.py --quick --json-out /tmp/performance.json
+          python scripts/run_mutation_smoke.py --timeout 120 --json-out /tmp/mutations.json
+      - name: Verify install and reproducible release
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          python scripts/install.py --target "$RUNNER_TEMP/TsaoSciResearcher" --dry-run --validate
+          rm -rf dist-a dist-b
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          A="$(find dist-a -type f -name '*.zip' | sort | head -n 1)"
+          B="$(find dist-b -type f -name '*.zip' | sort | head -n 1)"
+          test -n "$A" && test -n "$B"
+          cmp "$A" "$B"
+          python -m tsao_researcher release-verify "$A"
+          sha256sum "$A" "$B"
+      - name: Commit candidate and preserve all branch histories
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf dist-a dist-b .coverage
+          git add -A
+          git commit -m 'release: materialize verified TsaoSciResearcher v0.5.1 single-main tree'
+          git merge -s ours --no-edit \
+            ee5147cb8d775f5f7933f57b681af6d4a501bcd1 \
+            cf8c21356e3380055ba6504d1bb24339799128fc \
+            ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5 \
+            7a4b9d1ee6c6182f820ee65d063f03df9bb911d8
+          git push --force-with-lease origin HEAD:agent/single-main-consolidation
