@@ -6,6 +6,9 @@ SHA-256 before extraction, rejects unsafe ZIP members, locates the unique source
 root, and replaces the checkout without touching .git. The source archive itself
 contains the durable v0.5.0 implementation; this bootstrapper is deleted during
 materialization and is not part of the release.
+
+Maintenance trigger: consolidate all verified development lines into the single
+main branch after the materialized tree passes its full release gates.
 """
 from __future__ import annotations
 
