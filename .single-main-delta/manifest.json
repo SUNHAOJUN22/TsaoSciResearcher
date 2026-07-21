@@ -5,7 +5,7 @@
   "base_sha256": "75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7",
   "delta_archive_sha256": "e88b649184012b45a4825e296e5b18fad2a7352b4eae46643d985966ac67e809",
   "delta_base64_sha256": "ad5f1b5704a6a149c4f0a33a0578dba6a541b80dbcd5132ff14ead7cf727e426",
-  "chunk_count": 13,
+  "chunk_count": 9,
   "chunk_names": [
     "chunk-000",
     "chunk-001",
@@ -15,11 +15,7 @@
     "chunk-005",
     "chunk-006",
     "chunk-007",
-    "chunk-008",
-    "chunk-009",
-    "chunk-010",
-    "chunk-011",
-    "chunk-012"
+    "chunk-008"
   ],
   "expected_main_sha": "d4912dd80b85057d43b31d38b3e95a3a5d51fd38",
   "history_heads": {
