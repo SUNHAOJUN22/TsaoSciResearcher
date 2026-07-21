@@ -17,12 +17,13 @@
     "chunk-007",
     "chunk-008"
   ],
-  "expected_main_sha": "d4912dd80b85057d43b31d38b3e95a3a5d51fd38",
+  "expected_main_sha": "1c78747a42210c9bab265a71ef693be83112145e",
   "history_heads": {
-    "pr2": "ee5147cb8d775f5f7933f57b681af6d4a501bcd1",
+    "pr2": "e71527b0356af7ef8f1d99422d52fb4bdacdef24",
     "pr3": "cf8c21356e3380055ba6504d1bb24339799128fc",
     "pr4": "ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5",
-    "pr5": "7a4b9d1ee6c6182f820ee65d063f03df9bb911d8"
+    "pr5": "7a4b9d1ee6c6182f820ee65d063f03df9bb911d8",
+    "pr6": "dfba0af4f834955d12a10ceedd0cacf5ff962c93"
   },
   "final_file_count": 383,
   "final_tree_sha256": "dda83a1f420eb89b431109678ecc7c98d5d9a1c06f398f15877071847143c6c7"
