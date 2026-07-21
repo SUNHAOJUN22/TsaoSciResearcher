@@ -48,6 +48,7 @@ jobs:
           echo "Expected main: $expected"
           echo "Actual main:   $actual"
           test "$actual" = "$expected"
+          printf '%s' "$expected" > "$RUNNER_TEMP/expected-main"
 
       - name: Normalize transport-only line endings
         shell: bash
@@ -172,7 +173,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
           main_head="$(git rev-parse origin/main)"
-          expected="d4912dd80b85057d43b31d38b3e95a3a5d51fd38"
+          expected="$(cat "$RUNNER_TEMP/expected-main")"
           test "$main_head" = "$expected"
           git add -A
           tree="$(git write-tree)"
