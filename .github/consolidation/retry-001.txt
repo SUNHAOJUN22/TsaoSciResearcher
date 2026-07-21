@@ -1,1 +1,1 @@
-retry checksum-pinned v0.5.0 recovery and export complete payload for byte-level diagnosis
+retry complete hidden v0.5.0 payload export for byte-level recovery
