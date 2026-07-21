@@ -17,7 +17,7 @@
     "chunk-007",
     "chunk-008"
   ],
-  "expected_main_sha": "c809f4cd7ed2bcab2432d0f3a9e42a4128f35bfe",
+  "expected_main_sha": "863979cd213e48484e5b1710af7053d6c91395a1",
   "history_heads": {
     "pr2": "e71527b0356af7ef8f1d99422d52fb4bdacdef24",
     "pr3": "cf8c21356e3380055ba6504d1bb24339799128fc",
