@@ -1,0 +1,98 @@
+name: Build verified single-main candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/consolidate_single_main.py
+      - .github/workflows/consolidate-single-main.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-single-main-candidate
+  cancel-in-progress: false
+
+jobs:
+  build-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build candidate from verified sources
+        run: >-
+          python scripts/consolidate_single_main.py
+          --root .
+          --bootstrap-ref origin/agent/autonomous-v0.5.0
+          --patch-ref origin/agent/single-main-consolidation
+          --target-branch agent/single-main-consolidation
+
+      - name: Install exact CI dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.lock
+          python -m pip check
+
+      - name: Cross-contract audit and compilation
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/audit_repository.py
+          python -m compileall -q tsao_researcher scripts tests
+
+      - name: Deterministic normal-order regression
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: >-
+          python scripts/run_tests.py
+          --jobs 4
+          --order normal
+          --module-timeout 120
+          --json-out /tmp/tests-normal.json
+
+      - name: Reverse and seeded-random high-risk regression
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/run_tests.py --jobs 4 --order reverse --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-reverse.json
+          python scripts/run_tests.py --jobs 4 --order random --seed 20260721 --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-random.json
+
+      - name: Import isolation and performance smoke
+        run: |
+          python scripts/performance_smoke.py --json-out /tmp/performance.json
+          python -m unittest tests.test_import_isolation -v
+
+      - name: Installer and release verification
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/install.py --agent codex --scope user --dry-run --validate
+          rm -rf dist-a dist-b
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          A="$(find dist-a -type f -name '*.zip' | sort | head -n 1)"
+          B="$(find dist-b -type f -name '*.zip' | sort | head -n 1)"
+          test -n "$A" && test -n "$B"
+          cmp "$A" "$B"
+          python scripts/verify_release.py "$A"
+          sha256sum "$A" "$B"
+
+      - name: Commit verified candidate branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf dist-a dist-b .coverage
+          git add -A
+          git status --short
+          git commit -m 'release: consolidate verified TsaoSciResearcher v0.5.1 into single-main candidate'
+          git push --force-with-lease origin HEAD:agent/single-main-consolidation
