@@ -34,4 +34,5 @@ jobs:
             docs/EMBEDDED_PAYLOAD_DIAGNOSTICS.json
             docs/TAIL04_ENCODING_DIAGNOSTICS.json
             v050-payload-sha256.txt
+          include-hidden-files: true
           if-no-files-found: error
