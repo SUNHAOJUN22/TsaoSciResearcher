@@ -2,50 +2,88 @@ name: Materialize vNext
 
 on:
   push:
-    branches: [agent/vnext-0.4.0]
+    branches: [agent/autonomous-v0.5.0]
     paths:
-      - scripts/vnext_upgrade.py
-      - scripts/vnext_finalize.py
+      - scripts/materialize_v050_from_release.py
       - .github/workflows/vnext-materialize.yml
-  pull_request:
-    branches: [main]
+      - .v050-payload/**
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: materialize-autonomous-v050
+  cancel-in-progress: false
+
 jobs:
   materialize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'agent/vnext-0.4.0' }}
+          ref: agent/autonomous-v0.5.0
           fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip -r requirements-dev.txt coverage
-      - name: Generate and finalize v0.4.0 tree
+
+      - name: Reconstruct and materialize pinned v0.5.0 source tree
+        run: >-
+          python scripts/materialize_v050_from_release.py
+          --payload-dir .v050-payload
+          --sha256 75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7
+          --diagnostics "$RUNNER_TEMP/materialization-diagnostics.json"
+          --checkout .
+
+      - name: Confirm source version and bootstrap removal
         run: |
-          python scripts/vnext_upgrade.py
-          python scripts/vnext_finalize.py
-      - name: Run complete compatibility and vNext validation
+          test "$(cat VERSION)" = "0.5.0"
+          test ! -e .v050-payload
+          test ! -e scripts/materialize_v050_from_release.py
+          test ! -e .github/workflows/materialize-autonomous-v050.yml
+          test ! -e .github/workflows/vnext-materialize.yml
+
+      - name: Install audited dependencies
         run: |
-          python scripts/run_tests.py
-          python -m coverage run -m unittest discover -s tests -p 'test_vnext_release.py'
-          python -m coverage report --include='tsao_researcher/*' --fail-under=65
-          rm -f .coverage
-      - name: Commit generated release on branch pushes
-        if: github.event_name == 'push'
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+          python -m pip check
+
+      - name: Audit, segmented regression and compilation
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/audit_repository.py
+          python scripts/run_tests.py --quiet --module-timeout 120 --phase-timeout 180
+          python -m compileall -q tsao_researcher scripts tests
+
+      - name: Verify reproducible release construction
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          rm -rf dist-a dist-b
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          A="$(find dist-a -type f -name '*.zip' | sort | head -n 1)"
+          B="$(find dist-b -type f -name '*.zip' | sort | head -n 1)"
+          test -n "$A" && test -n "$B"
+          cmp "$A" "$B"
+          sha256sum "$A" "$B"
+
+      - name: Commit verified v0.5.0 source tree
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf dist-a dist-b
           git add -A
+          git status --short
           if git diff --cached --quiet; then
-            echo 'No generated changes to commit'
+            echo 'No materialized changes to commit'
           else
-            git commit -m 'feat: materialize TsaoSciResearcher v0.4.0'
-            git push origin HEAD:agent/vnext-0.4.0
+            git commit -m 'release: materialize verified TsaoSciResearcher v0.5.0'
+            git push origin HEAD:agent/autonomous-v0.5.0
           fi
