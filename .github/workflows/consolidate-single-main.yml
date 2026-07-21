@@ -96,3 +96,5 @@ jobs:
           git status --short
           git commit -m 'release: consolidate verified TsaoSciResearcher v0.5.1 into single-main candidate'
           git push --force-with-lease origin HEAD:agent/single-main-consolidation
+
+# registered-workflow-trigger: 2026-07-21T16:00+09:00
