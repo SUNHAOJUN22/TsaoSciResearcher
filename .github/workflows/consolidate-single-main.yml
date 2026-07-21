@@ -8,6 +8,7 @@ on:
       - .github/workflows/consolidate-single-main.yml
       - .github/consolidation/final-v051-part-*.txt
       - .github/consolidation/final-v051-tail-*.txt
+      - .github/consolidation/TRIGGER
   workflow_dispatch:
 
 permissions:
