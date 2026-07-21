@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "version": "0.5.1",
+  "encoding": "base64",
+  "compression": "xz",
+  "archive_format": "tar",
+  "archive_sha256": "41efee9712fbbff11f421bada8974fc8cb3fd2749e3a65ab71296d96211e66dc",
+  "base64_sha256": "7e0fe292c643dfa59330d45ab88e3420921e8ad9f9bf032c14445de02fe5d1a6",
+  "chunk_count": 15,
+  "chunk_names": [
+    "chunk-000",
+    "chunk-001",
+    "chunk-002",
+    "chunk-003",
+    "chunk-004",
+    "chunk-005",
+    "chunk-006",
+    "chunk-007",
+    "chunk-008",
+    "chunk-009",
+    "chunk-010",
+    "chunk-011",
+    "chunk-012",
+    "chunk-013",
+    "chunk-014"
+  ],
+  "expected_main_sha": "d4912dd80b85057d43b31d38b3e95a3a5d51fd38",
+  "history_heads": {
+    "pr2": "ee5147cb8d775f5f7933f57b681af6d4a501bcd1",
+    "pr3": "cf8c21356e3380055ba6504d1bb24339799128fc",
+    "pr4": "ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5",
+    "pr5": "7a4b9d1ee6c6182f820ee65d063f03df9bb911d8"
+  }
+}
