@@ -30,6 +30,7 @@ jobs:
         continue-on-error: true
         run: |
           python - <<'PY'
+          import base64
           import importlib.util
           import json
           import tempfile
@@ -47,20 +48,48 @@ jobs:
           body_paths = sorted(payload.glob('part-*.txt'))
           tail_paths = sorted(payload.glob('tailb64-*.txt'))
           b64_chars = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
+          b85_chars = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~')
 
           tail_report = []
           for p in tail_paths:
               text = module._compact_text(p)
               invalid = [{'index': i, 'char': repr(ch), 'codepoint': ord(ch)} for i, ch in enumerate(text) if ch not in b64_chars]
+              cleaned = ''.join(ch for ch in text if ch in b64_chars)
+              decoded = b''
+              decode_error = None
+              try:
+                  decoded = base64.b64decode(cleaned, validate=True)
+              except Exception as exc:
+                  decode_error = f'{type(exc).__name__}: {exc}'
+              non_ascii = [i for i, byte in enumerate(decoded) if byte >= 128]
+              non_b85 = [i for i, byte in enumerate(decoded) if byte >= 128 or chr(byte) not in b85_chars]
+              first_bad = non_b85[0] if non_b85 else None
+              encoded_center = None if first_bad is None else (first_bad // 3) * 4
+              window_start = 0 if encoded_center is None else max(0, encoded_center - 48)
+              window_end = 0 if encoded_center is None else min(len(cleaned), encoded_center + 64)
+              byte_start = 0 if first_bad is None else max(0, first_bad - 24)
+              byte_end = 0 if first_bad is None else min(len(decoded), first_bad + 40)
               tail_report.append({
                   'name': p.name,
                   'characters': len(text),
-                  'mod4': len(text) % 4,
+                  'cleaned_characters': len(cleaned),
+                  'mod4': len(cleaned) % 4,
                   'prefix': text[:24],
                   'suffix': text[-24:],
-                  'padding_count': text.count('='),
+                  'padding_count': cleaned.count('='),
                   'invalid_count': len(invalid),
                   'invalid': invalid[:20],
+                  'decoded_bytes': len(decoded),
+                  'decode_error': decode_error,
+                  'non_ascii_count': len(non_ascii),
+                  'non_ascii_positions': non_ascii[:40],
+                  'non_base85_count': len(non_b85),
+                  'non_base85_positions': non_b85[:40],
+                  'first_bad_decoded_index': first_bad,
+                  'encoded_center_index': encoded_center,
+                  'encoded_window': cleaned[window_start:window_end],
+                  'decoded_window_hex': decoded[byte_start:byte_end].hex(),
+                  'decoded_window_latin1': decoded[byte_start:byte_end].decode('latin1') if decoded else '',
               })
 
           report = {
@@ -105,7 +134,7 @@ jobs:
                   'crc': 'passed',
                   'safe_extraction': 'passed',
               })
-          except Exception as exc:  # noqa: BLE001
+          except Exception as exc:
               report.update({
                   'status': 'failed',
                   'error_type': type(exc).__name__,
