@@ -38,17 +38,24 @@ jobs:
         shell: bash
         run: echo 'pinned-state' > "$RUNNER_TEMP/single-main-stage"
 
-      - name: Confirm pinned repository state
+      - name: Confirm main changes are transport-only
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main --prune
           expected="$(python -c 'import json; print(json.load(open(".single-main-delta/manifest.json"))["expected_main_sha"])')"
           actual="$(git rev-parse origin/main)"
-          echo "Expected main: $expected"
-          echo "Actual main:   $actual"
-          test "$actual" = "$expected"
-          printf '%s' "$expected" > "$RUNNER_TEMP/expected-main"
+          echo "Pinned ancestor: $expected"
+          echo "Current main:    $actual"
+          git merge-base --is-ancestor "$expected" "$actual"
+          while IFS= read -r path; do
+            [[ -z "$path" ]] && continue
+            case "$path" in
+              .github/final-payload/*) ;;
+              *) echo "Unexpected main change since pinned ancestor: $path" >&2; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$expected..$actual")
+          printf '%s' "$actual" > "$RUNNER_TEMP/expected-main"
 
       - name: Normalize transport-only line endings
         shell: bash
@@ -172,16 +179,23 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
-          main_head="$(git rev-parse origin/main)"
-          expected="$(cat "$RUNNER_TEMP/expected-main")"
-          test "$main_head" = "$expected"
+          start_main="$(cat "$RUNNER_TEMP/expected-main")"
+          latest_main="$(git rev-parse origin/main)"
+          git merge-base --is-ancestor "$start_main" "$latest_main"
+          while IFS= read -r path; do
+            [[ -z "$path" ]] && continue
+            case "$path" in
+              .github/final-payload/*) ;;
+              *) echo "Unexpected main change during validation: $path" >&2; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$start_main..$latest_main")
           git add -A
           tree="$(git write-tree)"
-          source_commit="$(printf '%s\n' 'release: materialize verified TsaoSciResearcher v0.5.1 source tree' | git commit-tree "$tree" -p "$main_head")"
+          source_commit="$(printf '%s\n' 'release: materialize verified TsaoSciResearcher v0.5.1 source tree' | git commit-tree "$tree" -p "$latest_main")"
           parents=("$source_commit")
           declare -A seen
           seen["$source_commit"]=1
-          seen["$main_head"]=1
+          seen["$latest_main"]=1
           while read -r ref; do
             case "$ref" in
               refs/remotes/origin/HEAD|refs/remotes/origin/main|refs/remotes/origin/agent/final-single-main-v051) continue ;;
