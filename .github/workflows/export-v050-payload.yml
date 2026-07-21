@@ -1,16 +1,16 @@
 name: Export audited v0.5.0 recovery payload
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths:
-      - .github/workflows/export-v050-payload.yml
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
 
 jobs:
   export:
+    if: github.head_ref == 'agent/single-main-consolidation'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
