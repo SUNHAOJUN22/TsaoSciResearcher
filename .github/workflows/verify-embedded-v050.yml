@@ -1,0 +1,62 @@
+name: Verify embedded v0.5.0 payload
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [agent/autonomous-v0.5.0]
+    paths:
+      - .v050-payload/**
+      - scripts/materialize_v050_from_release.py
+      - .github/workflows/verify-embedded-v050.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-payload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reconstruct, checksum and inspect release archive
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import tempfile
+          import zipfile
+          from pathlib import Path
+
+          path = Path('scripts/materialize_v050_from_release.py')
+          spec = importlib.util.spec_from_file_location('materializer', path)
+          module = importlib.util.module_from_spec(spec)
+          assert spec.loader is not None
+          spec.loader.exec_module(module)
+          expected = '75deca80fafaf8f5193bcbb106b52c9661cd072388968cde9fbf76332f2f61d7'
+          data, diagnostics = module.reconstruct_embedded_archive(Path('.v050-payload'), expected)
+          assert module.sha256_bytes(data) == expected
+          with tempfile.TemporaryDirectory() as temp_name:
+              temp = Path(temp_name)
+              archive = temp / 'release.zip'
+              archive.write_bytes(data)
+              with zipfile.ZipFile(archive) as bundle:
+                  bad = bundle.testzip()
+                  assert bad is None, bad
+              extracted = temp / 'extracted'
+              extracted.mkdir()
+              module.extract_checked(archive, extracted)
+              source = module.find_source_root(extracted)
+              assert (source / 'VERSION').read_text(encoding='utf-8').strip() == '0.5.0'
+          print(json.dumps({
+              'archive_sha256': expected,
+              'archive_bytes': len(data),
+              'selected_candidate': diagnostics['selected'],
+              'source_version': '0.5.0',
+              'crc': 'passed',
+              'safe_extraction': 'passed',
+          }, indent=2, sort_keys=True))
+          PY
