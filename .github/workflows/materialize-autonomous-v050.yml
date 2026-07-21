@@ -87,3 +87,5 @@ jobs:
             git commit -m 'release: materialize verified TsaoSciResearcher v0.5.0'
             git push origin HEAD:agent/autonomous-v0.5.0
           fi
+
+# consolidation-trigger: 2026-07-21
