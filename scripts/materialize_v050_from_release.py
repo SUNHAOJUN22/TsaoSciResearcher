@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""Materialize the audited v0.5.0 source tree from a pinned release archive.
+"""Materialize the audited TsaoSciResearcher v0.5.0 source tree.
 
-This one-shot bootstrapper is intentionally stdlib-only. It verifies the archive
-SHA-256 before extraction, rejects unsafe ZIP members, locates the unique source
-root, and replaces the checkout without touching .git. The source archive itself
-contains the durable v0.5.0 implementation; this bootstrapper is deleted during
-materialization and is not part of the release.
+The preferred source is the repository-embedded payload under ``.v050-payload``.
+It is reconstructed deterministically from Base85/BZip2 body parts and Base64
+binary-tail parts, then checked against the audited release SHA-256 before any
+checkout replacement. A pinned URL remains an optional fallback only.
 
-Maintenance trigger: consolidate all verified development lines into the single
-main branch after the materialized tree passes its full release gates.
+This bootstrapper is stdlib-only and intentionally deletes itself when the
+verified release tree replaces the checkout.
 """
 from __future__ import annotations
 
 import argparse
+import base64
+import bz2
 import hashlib
-import os
+import json
 import shutil
 import stat
 import tempfile
@@ -31,12 +32,90 @@ class MaterializationError(RuntimeError):
     pass
 
 
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _compact_text(path: Path) -> str:
+    return "".join(path.read_text(encoding="ascii").split())
+
+
+def _decode_payload_candidates(payload_dir: Path) -> list[tuple[str, bytes]]:
+    body_paths = sorted(payload_dir.glob("part-*.txt"))
+    tail_paths = sorted(payload_dir.glob("tailb64-*.txt"))
+    if not body_paths:
+        raise MaterializationError(f"no Base85 body parts found in {payload_dir}")
+
+    body_texts = [_compact_text(path) for path in body_paths]
+    tail_texts = [_compact_text(path) for path in tail_paths]
+    candidates: list[tuple[str, bytes]] = []
+
+    # The producer may have split either before or after encoding. Support both
+    # layouts deterministically and deduplicate later by digest.
+    try:
+        candidates.append(("b85-concatenated", base64.b85decode("".join(body_texts))))
+    except Exception as exc:  # noqa: BLE001 - retained in aggregate diagnostics
+        candidates.append((f"b85-concatenated-error:{type(exc).__name__}", b""))
+    try:
+        candidates.append(("b85-per-part", b"".join(base64.b85decode(text) for text in body_texts)))
+    except Exception as exc:  # noqa: BLE001
+        candidates.append((f"b85-per-part-error:{type(exc).__name__}", b""))
+
+    tail_variants: list[tuple[str, bytes]] = [("no-tail", b"")]
+    if tail_texts:
+        try:
+            tail_variants.append(("b64-tail-concatenated", base64.b64decode("".join(tail_texts), validate=True)))
+        except Exception:
+            pass
+        try:
+            tail_variants.append(
+                ("b64-tail-per-part", b"".join(base64.b64decode(text, validate=True) for text in tail_texts))
+            )
+        except Exception:
+            pass
+
+    expanded: list[tuple[str, bytes]] = []
+    for body_name, body in candidates:
+        if not body:
+            continue
+        for tail_name, tail in tail_variants:
+            stream = body + tail
+            expanded.append((f"{body_name}+{tail_name}", stream))
+            if stream.startswith(b"BZh"):
+                try:
+                    expanded.append((f"bz2({body_name}+{tail_name})", bz2.decompress(stream)))
+                except Exception:
+                    pass
+
+    unique: dict[str, tuple[str, bytes]] = {}
+    for name, data in expanded:
+        if data:
+            unique.setdefault(sha256_bytes(data), (name, data))
+    return list(unique.values())
+
+
+def reconstruct_embedded_archive(payload_dir: Path, expected_sha256: str) -> tuple[bytes, dict[str, object]]:
+    observations: list[dict[str, object]] = []
+    for name, data in _decode_payload_candidates(payload_dir):
+        digest = sha256_bytes(data)
+        is_zip = data.startswith(b"PK\x03\x04")
+        observations.append({"candidate": name, "bytes": len(data), "sha256": digest, "zip_signature": is_zip})
+        if digest == expected_sha256:
+            if not is_zip:
+                raise MaterializationError("payload digest matched but ZIP signature is absent")
+            return data, {"selected": name, "candidates": observations}
+    raise MaterializationError(
+        "embedded payload did not reproduce audited archive; diagnostics="
+        + json.dumps(observations, sort_keys=True, separators=(",", ":"))
+    )
 
 
 def _safe_member(info: zipfile.ZipInfo) -> PurePosixPath:
@@ -121,26 +200,51 @@ def download(url: str, destination: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", required=True)
+    parser.add_argument("--payload-dir", default=".v050-payload")
+    parser.add_argument("--url")
     parser.add_argument("--sha256", required=True)
     parser.add_argument("--checkout", default=".")
+    parser.add_argument("--diagnostics")
     args = parser.parse_args()
 
     expected = args.sha256.lower().strip()
     if len(expected) != 64 or any(ch not in "0123456789abcdef" for ch in expected):
         raise MaterializationError("--sha256 must be a lowercase 64-character digest")
     checkout = Path(args.checkout).resolve()
+    diagnostics: dict[str, object] = {"expected_sha256": expected}
+
     with tempfile.TemporaryDirectory(prefix="tsr-v050-", dir=checkout.parent) as temp_name:
         temp = Path(temp_name)
         archive = temp / "release.zip"
         extracted = temp / "extracted"
         extracted.mkdir()
-        download(args.url, archive)
+        payload_dir = (checkout / args.payload_dir).resolve()
+        try:
+            data, payload_diag = reconstruct_embedded_archive(payload_dir, expected)
+            archive.write_bytes(data)
+            diagnostics["source"] = "embedded-payload"
+            diagnostics["payload"] = payload_diag
+        except Exception as embedded_exc:  # noqa: BLE001
+            diagnostics["embedded_error"] = str(embedded_exc)
+            if not args.url:
+                if args.diagnostics:
+                    Path(args.diagnostics).write_text(json.dumps(diagnostics, indent=2, sort_keys=True), encoding="utf-8")
+                raise
+            download(args.url, archive)
+            diagnostics["source"] = "pinned-url-fallback"
+
         actual = sha256(archive)
+        diagnostics["actual_sha256"] = actual
+        diagnostics["archive_bytes"] = archive.stat().st_size
         if actual != expected:
+            if args.diagnostics:
+                Path(args.diagnostics).write_text(json.dumps(diagnostics, indent=2, sort_keys=True), encoding="utf-8")
             raise MaterializationError(f"release digest mismatch: {actual}")
         extract_checked(archive, extracted)
         source = find_source_root(extracted)
+        diagnostics["source_root"] = source.name
+        if args.diagnostics:
+            Path(args.diagnostics).write_text(json.dumps(diagnostics, indent=2, sort_keys=True), encoding="utf-8")
         replace_checkout(source, checkout)
     print(f"materialized TsaoSciResearcher {EXPECTED_VERSION} into {checkout}")
 
