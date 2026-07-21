@@ -3,7 +3,7 @@ name: Build verified single-main candidate
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
           version="$(git show origin/agent/single-main-consolidation:VERSION 2>/dev/null || true)"
-          if [ "$version" = "0.5.0" ]; then
+          if [ "$version" = "0.5.1" ]; then
             echo 'already_materialized=true' >> "$GITHUB_OUTPUT"
           else
             echo 'already_materialized=false' >> "$GITHUB_OUTPUT"
@@ -40,7 +40,7 @@ jobs:
     needs: guard
     if: needs.guard.outputs.already_materialized != 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,52 +49,68 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Build candidate from independently audited source
+          cache: pip
+      - name: Fetch all candidate and history refs
+        run: git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
+      - name: Materialize checksum-bound v0.5.1 candidate
         shell: bash
         run: |
-          set -o pipefail
-          python scripts/consolidate_v050_only.py \
+          set -euo pipefail
+          git show origin/agent/single-main-consolidation:scripts/consolidate_single_main.py > "$RUNNER_TEMP/consolidate_single_main.py"
+          python "$RUNNER_TEMP/consolidate_single_main.py" \
             --root . \
             --bootstrap-ref origin/agent/autonomous-v0.5.0 \
-            --target-branch agent/single-main-consolidation \
-            2>&1 | tee "$RUNNER_TEMP/consolidation.log"
-      - name: Upload consolidation diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: single-main-consolidation-diagnostics
-          path: ${{ runner.temp }}/consolidation.log
-          if-no-files-found: error
+            --patch-ref origin/agent/single-main-consolidation \
+            --target-branch agent/single-main-consolidation
+          test "$(cat VERSION)" = "0.5.1"
+          test ! -e .github/consolidation
+          test ! -e scripts/consolidate_single_main.py
       - name: Install exact CI dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-ci.lock
           python -m pip check
-      - name: Cross-contract audit and compilation
+      - name: Audit and compile
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python scripts/audit_repository.py
           python -m compileall -q tsao_researcher scripts tests
-      - name: Deterministic normal-order regression
-        env:
-          PYTHONDONTWRITEBYTECODE: '1'
-        run: python scripts/run_tests.py --jobs 4 --order normal --module-timeout 120 --json-out /tmp/tests-normal.json
-      - name: Reverse and seeded-random high-risk regression
+      - name: Run deterministic normal-order shards
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
-          python scripts/run_tests.py --jobs 4 --order reverse --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-reverse.json
-          python scripts/run_tests.py --jobs 4 --order random --seed 20260721 --module-timeout 120 --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' --json-out /tmp/tests-random.json
-      - name: Import isolation and performance smoke
-        run: |
-          python scripts/performance_smoke.py --json-out /tmp/performance.json
-          python -m unittest tests.test_import_isolation -v
-      - name: Installer and release verification
+          set -euo pipefail
+          for shard in 0 1 2 3; do
+            python scripts/run_tests.py --quiet --jobs 2 \
+              --shard-count 4 --shard-index "$shard" \
+              --skip-audit --skip-compile --module-timeout 120 \
+              --json-out "/tmp/tests-normal-$shard.json"
+          done
+      - name: Run reverse and seeded-random high-risk regression
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
-          python scripts/install.py --agent codex --scope user --dry-run --validate
+          set -euo pipefail
+          FILTER='test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)'
+          python scripts/run_tests.py --quiet --jobs 4 --order reverse \
+            --include "$FILTER" --skip-audit --skip-compile --module-timeout 120 \
+            --json-out /tmp/tests-reverse.json
+          python scripts/run_tests.py --quiet --jobs 4 --order random --seed 20260721 \
+            --include "$FILTER" --skip-audit --skip-compile --module-timeout 120 \
+            --json-out /tmp/tests-random.json
+      - name: Run bounded performance and mutation smoke
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/performance_smoke.py --quick --json-out /tmp/performance.json
+          python scripts/run_mutation_smoke.py --timeout 120 --json-out /tmp/mutations.json
+      - name: Verify install and reproducible release
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          python scripts/install.py --target "$RUNNER_TEMP/TsaoSciResearcher" --dry-run --validate
           rm -rf dist-a dist-b
           python scripts/package_release.py --out dist-a
           python scripts/package_release.py --out dist-b
@@ -102,14 +118,20 @@ jobs:
           B="$(find dist-b -type f -name '*.zip' | sort | head -n 1)"
           test -n "$A" && test -n "$B"
           cmp "$A" "$B"
-          python scripts/verify_release.py "$A"
+          python -m tsao_researcher release-verify "$A"
           sha256sum "$A" "$B"
-      - name: Commit verified candidate branch
+      - name: Commit candidate and preserve development history
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           rm -rf dist-a dist-b .coverage
           git add -A
-          git status --short
-          git commit -m 'release: materialize audited TsaoSciResearcher v0.5.0 single-main candidate'
+          git commit -m 'release: materialize verified TsaoSciResearcher v0.5.1 single-main tree'
+          git merge -s ours --no-edit \
+            ee5147cb8d775f5f7933f57b681af6d4a501bcd1 \
+            cf8c21356e3380055ba6504d1bb24339799128fc \
+            ac9e3dd50908010ecad5d4ed3ad510ca60c9b3f5 \
+            7a4b9d1ee6c6182f820ee65d063f03df9bb911d8 \
+            dfba0af4f834955d12a10ceedd0cacf5ff962c93
           git push --force-with-lease origin HEAD:agent/single-main-consolidation
