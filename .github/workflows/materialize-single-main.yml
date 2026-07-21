@@ -1,0 +1,201 @@
+name: Materialize verified single main v0.5.1
+
+on:
+  push:
+    branches: [agent/final-single-main-v051]
+    paths:
+      - '.single-main-delta/**'
+      - 'scripts/materialize_single_main_delta.py'
+      - '.github/workflows/materialize-single-main.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-single-main-v051
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-promote:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/final-single-main-v051
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Confirm pinned repository state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --prune
+          expected="$(python -c 'import json; print(json.load(open(".single-main-delta/manifest.json"))["expected_main_sha"])')"
+          actual="$(git rev-parse origin/main)"
+          echo "Expected main: $expected"
+          echo "Actual main:   $actual"
+          test "$actual" = "$expected"
+
+      - name: Normalize transport-only line endings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          for path in sorted(Path('.single-main-delta').glob('chunk-*')):
+              data = path.read_bytes()
+              if data.endswith(b'\r\n'):
+                  data = data[:-2]
+              elif data.endswith(b'\n'):
+                  data = data[:-1]
+              if any(chr(byte).isspace() for byte in data):
+                  raise SystemExit(f'embedded whitespace in {path}')
+              path.write_bytes(data)
+          PY
+
+      - name: Materialize exact v0.5.1 source tree
+        run: >-
+          python scripts/materialize_single_main_delta.py
+          --checkout .
+          --payload .single-main-delta
+          --json-out "$RUNNER_TEMP/materialize-result.json"
+
+      - name: Confirm transport state was removed
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat VERSION)" = "0.5.1"
+          test ! -e .single-main-delta
+          test ! -e .single-main-payload
+          test ! -e scripts/materialize_single_main.py
+          test ! -e scripts/materialize_single_main_delta.py
+          test ! -e .github/workflows/materialize-single-main.yml
+
+      - name: Install exact CI dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.lock
+          python -m pip check
+
+      - name: Audit and compile exact candidate
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/pycache
+        run: |
+          python scripts/audit_repository.py
+          python -m compileall -q tsao_researcher scripts tests
+          python -m unittest -q tests.test_test_suite_integrity tests.test_mutation_contract_v4
+
+      - name: Run deterministic four-shard regression
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          for shard in 0 1 2 3; do
+            python scripts/run_tests.py --quiet --jobs 2 \
+              --shard-count 4 --shard-index "$shard" \
+              --skip-audit --skip-compile --module-timeout 120 \
+              --json-out "$RUNNER_TEMP/shard-$shard.json"
+          done
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          rows = [json.loads((root / f'shard-{index}.json').read_text()) for index in range(4)]
+          totals = {key: sum(row[key] for row in rows) for key in ('tests_run','passed','skipped','failed','timeouts','zero_test_modules')}
+          print(totals)
+          expected = {'tests_run':151,'passed':150,'skipped':1,'failed':0,'timeouts':0,'zero_test_modules':0}
+          if totals != expected:
+              raise SystemExit(f'unexpected regression totals: {totals} != {expected}')
+          PY
+
+      - name: Verify high-risk order invariance
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/run_tests.py --quiet --jobs 4 --order reverse \
+            --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' \
+            --skip-audit --skip-compile --module-timeout 120
+          python scripts/run_tests.py --quiet --jobs 4 --order random --seed 20260721 \
+            --include 'test_(state|evidence|handoff|security|release|statistics|ml|systematic|laboratory|integrity|workflow|capability|router)' \
+            --skip-audit --skip-compile --module-timeout 120
+
+      - name: Verify performance and mutation resistance
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python scripts/performance_smoke.py --quick --json-out "$RUNNER_TEMP/performance.json"
+          python scripts/run_mutation_smoke.py --timeout 120 --json-out "$RUNNER_TEMP/mutation.json"
+
+      - name: Verify reproducible release construction
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/package_release.py --out "$RUNNER_TEMP/dist-a"
+          python scripts/package_release.py --out "$RUNNER_TEMP/dist-b"
+          A="$(find "$RUNNER_TEMP/dist-a" -type f -name '*.zip' | sort | head -n 1)"
+          B="$(find "$RUNNER_TEMP/dist-b" -type f -name '*.zip' | sort | head -n 1)"
+          test -n "$A" && test -n "$B"
+          cmp "$A" "$B"
+          python - "$A" <<'PY'
+          import sys
+          from pathlib import Path
+          from tsao_researcher.release import verify_release
+          result = verify_release(Path(sys.argv[1]))
+          print(result)
+          assert result['valid'] is True
+          assert result['signature_status'] == 'unsigned'
+          PY
+          sha256sum "$A" "$B"
+
+      - name: Create history-preserving single-main commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+          main_head="$(git rev-parse origin/main)"
+          expected="d4912dd80b85057d43b31d38b3e95a3a5d51fd38"
+          test "$main_head" = "$expected"
+          git add -A
+          tree="$(git write-tree)"
+          source_commit="$(printf '%s\n' 'release: materialize verified TsaoSciResearcher v0.5.1 source tree' | git commit-tree "$tree" -p "$main_head")"
+          parents=("$source_commit")
+          declare -A seen
+          seen["$source_commit"]=1
+          seen["$main_head"]=1
+          while read -r ref; do
+            case "$ref" in
+              refs/remotes/origin/HEAD|refs/remotes/origin/main|refs/remotes/origin/agent/final-single-main-v051) continue ;;
+            esac
+            head="$(git rev-parse "$ref")"
+            if [[ -n "${seen[$head]:-}" ]]; then
+              continue
+            fi
+            seen["$head"]=1
+            if git merge-base --is-ancestor "$head" "$source_commit"; then
+              continue
+            fi
+            parents+=("$head")
+          done < <(git for-each-ref --format='%(refname)' refs/remotes/origin | sort)
+          args=("$tree")
+          for parent in "${parents[@]}"; do
+            args+=("-p" "$parent")
+          done
+          final_commit="$(printf '%s\n' 'release: consolidate all verified history into single main v0.5.1' | git commit-tree "${args[@]}")"
+          echo "Source commit: $source_commit"
+          echo "Final commit:  $final_commit"
+          echo "Parent count:  ${#parents[@]}"
+          git show --no-patch --pretty=raw "$final_commit"
+          git push origin "$final_commit:refs/heads/main"
