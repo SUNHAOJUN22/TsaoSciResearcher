@@ -44,7 +44,13 @@ def test_handoff_cli_creates_and_registers_v2_contract(tmp_path: Path) -> None:
         "--input-file",
         "data/input.dat",
     ]
-    completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     assert completed.returncode == 0, completed.stderr
 
     handoff_path = project / "computation/cli-handoff.json"
@@ -84,6 +90,12 @@ def test_handoff_cli_rejects_missing_method(tmp_path: Path) -> None:
         "electronic",
         "--draft",
     ]
-    completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     assert completed.returncode != 0
     assert "at least one --method is required" in completed.stderr
