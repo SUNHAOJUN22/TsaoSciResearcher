@@ -2,6 +2,6 @@
   "compatibility": "failure",
   "order_independence": "skipped",
   "performance_release": "skipped",
-  "quality": "success",
+  "quality": "failure",
   "regression": "failure"
 }
