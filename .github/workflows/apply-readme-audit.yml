@@ -45,10 +45,14 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-ci.lock
       - name: Reconstruct and verify checksum-bound patch
+        id: reconstruct
         if: steps.staged.outputs.apply == 'true'
+        continue-on-error: true
         shell: bash
         run: |
-          set -euo pipefail
+          set -o pipefail
+          exec > >(tee /tmp/readme-reconstruction.log) 2>&1
+          set -euxo pipefail
           python - <<'PY'
           from __future__ import annotations
 
@@ -97,14 +101,26 @@ jobs:
           PY
           git apply --3way --whitespace=nowarn /tmp/readme-audit.patch
           rm -rf .github/readme-audit-parts .github/workflows/apply-readme-audit.yml
+          git status --short
+      - name: Upload reconstruction diagnostics
+        if: steps.staged.outputs.apply == 'true' && always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: readme-reconstruction-diagnostics
+          path: /tmp/readme-reconstruction.log
+          if-no-files-found: error
+          retention-days: 7
+      - name: Require successful reconstruction
+        if: steps.staged.outputs.apply == 'true' && steps.reconstruct.outcome != 'success'
+        run: exit 1
       - name: Install exact validation dependencies
-        if: steps.staged.outputs.apply == 'true'
+        if: steps.staged.outputs.apply == 'true' && steps.reconstruct.outcome == 'success'
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
       - name: Validate materialized documentation tree
-        if: steps.staged.outputs.apply == 'true'
+        if: steps.staged.outputs.apply == 'true' && steps.reconstruct.outcome == 'success'
         env:
           PYTHONDONTWRITEBYTECODE: '1'
           PYTHONNOUSERSITE: '1'
@@ -115,7 +131,7 @@ jobs:
           python scripts/audit_repository.py
           python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_readme_facts.py tests/test_repository_audit.py
       - name: Commit real source changes
-        if: steps.staged.outputs.apply == 'true'
+        if: steps.staged.outputs.apply == 'true' && steps.reconstruct.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
