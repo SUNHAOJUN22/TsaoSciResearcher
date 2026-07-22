@@ -26,26 +26,15 @@ def build_facts(root: Path = ROOT) -> dict[str, Any]:
     v2_index = _load_json(root / "capabilities/v2/index.json")
     legacy_stats = _load_json(root / "capability-index/stats.json")
 
-    workflows = sorted(
-        path.name for path in (root / "workflows").iterdir() if path.is_dir()
-    )
-    schemas = sorted(
-        path.relative_to(root).as_posix()
-        for path in (root / "schemas").rglob("*.schema.json")
-    )
-    domain_packs = sorted(
-        path.name for path in (root / "domain-packs").iterdir() if path.is_dir()
-    )
+    workflows = sorted(path.name for path in (root / "workflows").iterdir() if path.is_dir())
+    schemas = sorted(path.relative_to(root).as_posix() for path in (root / "schemas").rglob("*.schema.json"))
+    domain_packs = sorted(path.name for path in (root / "domain-packs").iterdir() if path.is_dir())
     test_modules = sorted(path.name for path in (root / "tests").glob("test_*.py"))
     references = sorted(
-        path.relative_to(root).as_posix()
-        for path in (root / "references").rglob("*")
-        if path.is_file()
+        path.relative_to(root).as_posix() for path in (root / "references").rglob("*") if path.is_file()
     )
     templates = sorted(
-        path.relative_to(root).as_posix()
-        for path in (root / "templates").rglob("*")
-        if path.is_file()
+        path.relative_to(root).as_posix() for path in (root / "templates").rglob("*") if path.is_file()
     )
 
     facts: dict[str, Any] = {
