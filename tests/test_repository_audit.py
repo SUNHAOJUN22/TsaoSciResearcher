@@ -1,20 +1,20 @@
-import sys
-import unittest
-from pathlib import Path
+from __future__ import annotations
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'scripts'))
-from audit_repository import audit
+import unittest
+
+from scripts.audit_repository import audit
 
 
 class TestRepositoryAudit(unittest.TestCase):
-    def test_repository_audit(self):
+    def test_repository_audit(self) -> None:
         result = audit()
-        self.assertEqual(result['status'], 'PASS', result['errors'])
-        self.assertEqual(result['checks']['capabilities']['loaded'], 158)
-        self.assertEqual(result['checks']['workflows']['count'], 15)
-        self.assertEqual(result['checks']['schemas']['count'], 7)
+        self.assertEqual(result["status"], "PASS", result["errors"])
+        self.assertEqual(result["checks"]["capabilities"]["loaded"], 158)
+        self.assertEqual(result["checks"]["capabilities"]["v2_loaded"], 340)
+        self.assertEqual(result["checks"]["workflows"]["count"], 15)
+        self.assertEqual(result["checks"]["schemas"]["total"], 15)
+        self.assertEqual(result["checks"]["domain_packs"]["count"], 7)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

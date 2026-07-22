@@ -1,0 +1,264 @@
+{
+  "research-question": {
+    "weight": 4,
+    "priority": 80,
+    "positive": [
+      "research question",
+      "scientific question",
+      "科学问题",
+      "研究问题",
+      "假设形成",
+      "可证伪",
+      "研究目标"
+    ],
+    "negative": [
+      "系统综述",
+      "meta-analysis"
+    ]
+  },
+  "deep-research": {
+    "weight": 4,
+    "priority": 70,
+    "positive": [
+      "文献检索",
+      "查文献",
+      "研究空白",
+      "前沿扫描",
+      "literature search",
+      "deep research",
+      "evidence map",
+      "证据图谱"
+    ],
+    "negative": [
+      "系统综述",
+      "prisma"
+    ]
+  },
+  "systematic-review": {
+    "weight": 5,
+    "priority": 95,
+    "positive": [
+      "系统综述",
+      "prisma",
+      "meta-analysis",
+      "meta analysis",
+      "荟萃分析",
+      "系统评价",
+      "protocol registration"
+    ],
+    "negative": [
+      "快速综述"
+    ]
+  },
+  "research-design": {
+    "weight": 4,
+    "priority": 75,
+    "positive": [
+      "research design",
+      "研究设计",
+      "技术路线",
+      "研究方案",
+      "机制研究方案",
+      "end-to-end study",
+      "全尺度研究"
+    ],
+    "negative": []
+  },
+  "experiment-design": {
+    "weight": 4,
+    "priority": 78,
+    "positive": [
+      "experiment design",
+      "实验设计",
+      "doe",
+      "正交试验",
+      "响应面",
+      "样本量",
+      "对照组",
+      "随机化"
+    ],
+    "negative": [
+      "只分析已有"
+    ]
+  },
+  "data-analysis": {
+    "weight": 4,
+    "priority": 74,
+    "positive": [
+      "数据分析",
+      "统计分析",
+      "分析已有",
+      "轨迹分析",
+      "data analysis",
+      "statistics",
+      "uncertainty",
+      "因果分析",
+      "machine learning",
+      "机器学习",
+      "只解释",
+      "解释已有",
+      "已有轨迹",
+      "不运行模拟",
+      "仅解读结果",
+      "analyze existing",
+      "analyse existing",
+      "do not run simulation"
+    ],
+    "negative": [
+      "实际运行模拟"
+    ]
+  },
+  "scientific-figure": {
+    "weight": 5,
+    "priority": 76,
+    "positive": [
+      "画图",
+      "绘图",
+      "多panel",
+      "多面板",
+      "自由能景观",
+      "scientific figure",
+      "mechanism diagram",
+      "机理图",
+      "publication figure"
+    ],
+    "negative": []
+  },
+  "scientific-writing": {
+    "weight": 4,
+    "priority": 72,
+    "positive": [
+      "scientific writing",
+      "论文写作",
+      "学位论文",
+      "manuscript",
+      "润色论文",
+      "引言",
+      "结果与讨论",
+      "摘要"
+    ],
+    "negative": [
+      "审稿意见"
+    ]
+  },
+  "peer-review": {
+    "weight": 5,
+    "priority": 86,
+    "positive": [
+      "peer review",
+      "审稿",
+      "审稿意见",
+      "response to reviewers",
+      "回复审稿人",
+      "模拟审稿"
+    ],
+    "negative": []
+  },
+  "technical-report": {
+    "weight": 4,
+    "priority": 68,
+    "positive": [
+      "technical report",
+      "技术报告",
+      "项目报告",
+      "验收报告",
+      "可行性报告",
+      "研究报告"
+    ],
+    "negative": []
+  },
+  "project-management": {
+    "weight": 4,
+    "priority": 65,
+    "positive": [
+      "project management",
+      "项目管理",
+      "里程碑",
+      "风险登记",
+      "任务分解",
+      "进度计划",
+      "项目计划"
+    ],
+    "negative": []
+  },
+  "patent-and-transfer": {
+    "weight": 5,
+    "priority": 88,
+    "positive": [
+      "patent",
+      "专利",
+      "fto",
+      "自由实施",
+      "专利布局",
+      "技术转移",
+      "invention disclosure",
+      "发明交底"
+    ],
+    "negative": [
+      "论文写作"
+    ]
+  },
+  "research-integrity": {
+    "weight": 6,
+    "priority": 100,
+    "positive": [
+      "科研诚信",
+      "引用审核",
+      "引用误用",
+      "p-hacking",
+      "数据造假",
+      "图片重复",
+      "证据审计",
+      "citation audit",
+      "research integrity",
+      "reproducibility audit"
+    ],
+    "negative": []
+  },
+  "laboratory": {
+    "weight": 4,
+    "priority": 82,
+    "positive": [
+      "laboratory",
+      "实验室",
+      "sop",
+      "仪器",
+      "校准",
+      "样品制备",
+      "质量控制",
+      "lab automation"
+    ],
+    "negative": [
+      "计算模拟"
+    ]
+  },
+  "computation-handoff": {
+    "weight": 6,
+    "priority": 90,
+    "positive": [
+      "实际运行",
+      "提交计算",
+      "执行模拟",
+      "实际计算",
+      "gromacs",
+      "lammps",
+      "dft",
+      "quantum chemistry",
+      "openfoam",
+      "aspen",
+      "abaqus",
+      "comsol",
+      "有限元",
+      "分子动力学",
+      "计算流体力学",
+      "数字孪生"
+    ],
+    "negative": [
+      "只解释",
+      "不运行",
+      "仅分析已有",
+      "只分析已有",
+      "结果解读"
+    ]
+  }
+}

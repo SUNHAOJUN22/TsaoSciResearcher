@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/artifact.schema.json",
+  "title": "TsaoSciResearcher Artifact",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "path",
+    "sha256",
+    "state",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "artifact_id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "media_type": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "state": {
+      "enum": [
+        "proposed",
+        "planned",
+        "running",
+        "completed",
+        "checked",
+        "validated",
+        "accepted",
+        "rejected",
+        "superseded"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

@@ -1,46 +1,16 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": [
-    "artifact_id",
-    "path",
-    "kind",
-    "created_at",
-    "checksum",
-    "state"
-  ],
-  "properties": {
-    "artifact_id": {
-      "type": "string"
-    },
-    "path": {
-      "type": "string"
-    },
-    "kind": {
-      "type": "string"
-    },
-    "created_at": {
-      "type": "string"
-    },
-    "checksum": {
-      "type": "string",
-      "pattern": "^[a-fA-F0-9]{64}$"
-    },
-    "state": {
-      "enum": [
-        "created",
-        "checked",
-        "validated",
-        "accepted",
-        "rejected",
-        "superseded"
-      ]
-    },
-    "source_ids": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://github.com/SUNHAOJUN22/TsaoSciResearcher/schemas/artifact-manifest.schema.json",
+  "title":"TsaoSciResearcher artifact manifest","type":"object","additionalProperties":false,
+  "required":["schema_version","artifact_id","path","kind","created_at","checksum","state"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "artifact_id":{"type":"string","pattern":"^ART-[A-Za-z0-9._-]+$"},
+    "path":{"type":"string","minLength":1,"pattern":"^(?![/\\\\])(?![A-Za-z]:)(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"},
+    "kind":{"type":"string","minLength":1},
+    "created_at":{"type":"string","format":"date-time"},
+    "checksum":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "state":{"enum":["created","checked","validated","accepted","rejected","superseded"]},
+    "source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}}
   }
 }

@@ -1,0 +1,98 @@
+name: Enforce single main branch
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: enforce-single-main
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    if: github.ref == 'refs/heads/main' && github.repository == 'SUNHAOJUN22/TsaoSciResearcher'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Close obsolete pull requests and delete non-main branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import time
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          token = os.environ["GITHUB_TOKEN"]
+          repository = os.environ["GITHUB_REPOSITORY"]
+          base = f"https://api.github.com/repos/{repository}"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TsaoSciResearcher-single-main-governance",
+          }
+
+          def request(method, path, payload=None):
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              for attempt in range(4):
+                  try:
+                      req = urllib.request.Request(base + path, data=body, headers=headers, method=method)
+                      with urllib.request.urlopen(req, timeout=30) as response:
+                          raw = response.read()
+                          return json.loads(raw) if raw else None
+                  except urllib.error.HTTPError as exc:
+                      if exc.code in {409, 422} and method == "DELETE":
+                          raise
+                      if exc.code < 500 or attempt == 3:
+                          raise
+                  except urllib.error.URLError:
+                      if attempt == 3:
+                          raise
+                  time.sleep(2**attempt)
+              raise RuntimeError("unreachable")
+
+          def list_all(path):
+              rows = []
+              page = 1
+              separator = "&" if "?" in path else "?"
+              while True:
+                  batch = request("GET", f"{path}{separator}per_page=100&page={page}")
+                  if not isinstance(batch, list):
+                      raise RuntimeError(f"expected list response for {path}")
+                  rows.extend(batch)
+                  if len(batch) < 100:
+                      return rows
+                  page += 1
+
+          repository_info = request("GET", "")
+          if repository_info.get("default_branch") != "main":
+              raise SystemExit(f"default branch is not main: {repository_info.get('default_branch')}")
+
+          pulls = list_all("/pulls?state=open")
+          for pull in pulls:
+              if pull["head"]["ref"] != "main":
+                  request("PATCH", f"/pulls/{pull['number']}", {"state": "closed"})
+
+          branches = list_all("/branches")
+          for branch in branches:
+              if branch["name"] == "main":
+                  continue
+              encoded = urllib.parse.quote(branch["name"], safe="")
+              request("DELETE", f"/git/refs/heads/{encoded}")
+
+          remaining = list_all("/branches")
+          names = sorted(branch["name"] for branch in remaining)
+          if names != ["main"]:
+              raise SystemExit(f"single-main enforcement failed; remaining branches: {names}")
+          print(f"single-main enforcement PASS deleted={len(branches) - 1}")
+          PY
