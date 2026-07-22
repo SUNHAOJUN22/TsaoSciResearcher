@@ -79,25 +79,20 @@ jobs:
               compact_parts.append(compact)
 
           encoded = b"".join(compact_parts)
-          encoded_sha = hashlib.sha256(encoded).hexdigest()
-          print(f"encoded_bytes={len(encoded)} encoded_sha256={encoded_sha}")
-          if encoded_sha != "bebe2973823ce7adbd7aa556544cec393dfa7090be779e932609a599d48b750a":
+          if hashlib.sha256(encoded).hexdigest() != "bebe2973823ce7adbd7aa556544cec393dfa7090be779e932609a599d48b750a":
               raise SystemExit("combined Base64 digest mismatch")
-
           compressed = base64.b64decode(encoded, validate=True)
-          compressed_sha = hashlib.sha256(compressed).hexdigest()
-          print(f"compressed_bytes={len(compressed)} compressed_sha256={compressed_sha}")
-          if compressed_sha != "529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526":
+          if hashlib.sha256(compressed).hexdigest() != "529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526":
               raise SystemExit("XZ digest mismatch")
-
           patch = lzma.decompress(compressed)
-          patch_sha = hashlib.sha256(patch).hexdigest()
-          print(f"patch_bytes={len(patch)} patch_sha256={patch_sha}")
-          if patch_sha != "cb40d57a1682619262840371f2e675692807093b6cc485f5bdccca689e50627b":
+          if hashlib.sha256(patch).hexdigest() != "cb40d57a1682619262840371f2e675692807093b6cc485f5bdccca689e50627b":
               raise SystemExit("raw patch digest mismatch")
           Path("/tmp/readme-audit.patch").write_bytes(patch)
           PY
-          git apply --3way --whitespace=nowarn --exclude=SHA256SUMS /tmp/readme-audit.patch
+          git apply --3way --whitespace=nowarn \
+            --exclude=SHA256SUMS \
+            --exclude=.github/workflows/ci.yml \
+            /tmp/readme-audit.patch
           rm -rf .github/readme-audit-parts
           git status --short
       - name: Upload reconstruction diagnostics
