@@ -44,7 +44,8 @@ jobs:
       - name: Reconstruct checksum-bound source tree
         shell: bash
         run: |
-          set -euo pipefail
+          exec > >(tee "$RUNNER_TEMP/reconstruct.log") 2>&1
+          set -euxo pipefail
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
           test "$(git rev-parse "origin/$HEAD_REF")" = "$EXPECTED_HEAD_SHA"
           git cat-file -e "$REAUDIT_SHA^{commit}"
@@ -68,16 +69,20 @@ jobs:
               | tr -d '\r\n\t ' >> "$PATCH_DIR/primary.b64"
           done
           base64 --decode "$PATCH_DIR/primary.b64" > "$PATCH_DIR/primary.patch.xz"
+          sha256sum "$PATCH_DIR/primary.patch.xz"
           echo "$PRIMARY_XZ_SHA256  $PATCH_DIR/primary.patch.xz" | sha256sum --check --strict
           xz --decompress --stdout "$PATCH_DIR/primary.patch.xz" > "$PATCH_DIR/primary.patch"
+          sha256sum "$PATCH_DIR/primary.patch"
           echo "$PRIMARY_PATCH_SHA256  $PATCH_DIR/primary.patch" | sha256sum --check --strict
           git apply --check --binary "$PATCH_DIR/primary.patch"
           git apply --binary "$PATCH_DIR/primary.patch"
 
           git show origin/main:.github/final-payload/supplement.b64 \
             | tr -d '\r\n\t ' | base64 --decode > "$PATCH_DIR/supplement.patch.xz"
+          sha256sum "$PATCH_DIR/supplement.patch.xz"
           echo "$SUPPLEMENT_XZ_SHA256  $PATCH_DIR/supplement.patch.xz" | sha256sum --check --strict
           xz --decompress --stdout "$PATCH_DIR/supplement.patch.xz" > "$PATCH_DIR/supplement.patch"
+          sha256sum "$PATCH_DIR/supplement.patch"
           echo "$SUPPLEMENT_PATCH_SHA256  $PATCH_DIR/supplement.patch" | sha256sum --check --strict
           git apply --check --binary "$PATCH_DIR/supplement.patch"
           git apply --binary "$PATCH_DIR/supplement.patch"
@@ -92,6 +97,14 @@ jobs:
           test ! -e scripts/consolidate_single_main.py
           test ! -e scripts/vnext_upgrade.py
           test ! -e scripts/vnext_finalize.py
+      - name: Upload reconstruction diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: final-v051-reconstruction-diagnostics
+          path: ${{ runner.temp }}/reconstruct.log
+          if-no-files-found: error
+          retention-days: 7
       - name: Install exact dependencies
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
