@@ -1,1 +1,2 @@
 trigger guarded CI write audit hardening
+attempt 2 with self-diagnostics
