@@ -1,28 +1,47 @@
 {
-  "schema_version": "1.1",
-  "release": "0.5.2",
-  "evidence_date": "2026-07-22",
-  "status": "PENDING_MAIN_CI",
-  "baseline": {
-    "workflow": "CI",
-    "run_id": 29901191165,
-    "commit": "202ff658b0f7d3f6251305c30cdf89415c31cac6",
-    "tests": 96,
-    "failures": 0,
-    "mutation_killed": 15,
-    "mutation_total": 15,
-    "all_jobs": "PASS"
+  "compatibility": {
+    "macos_python_3_12": "PASS",
+    "ubuntu_python_3_10": "PASS",
+    "ubuntu_python_3_13": "PASS",
+    "windows_python_3_12": "PASS"
   },
-  "pending_checks": [
-    "322 named capability contracts",
-    "unified project-state layout",
-    "schema validation CLI",
-    "simplified bilingual README",
-    "v0.5.2 reproducible release"
-  ],
+  "evidence_date": "2026-07-23",
+  "gates": {
+    "bandit_high_severity": "PASS",
+    "bounded_performance": "PASS",
+    "byte_identical_release_builds": "PASS",
+    "complete_regression": "PASS",
+    "critical_mutation_killed": "15/15",
+    "json_schemas_15": "PASS",
+    "mypy_strict": "PASS",
+    "repository_and_contract_audit": "PASS",
+    "reverse_order_regression": "PASS",
+    "ruff_format_and_lint": "PASS",
+    "seeded_random_order_regression": "PASS"
+  },
   "interpretation": [
-    "The baseline proves the v0.5.1 source before this direct-main update.",
-    "This file must be replaced with the new main CI evidence after v0.5.2 passes.",
-    "Software validation does not imply scientific acceptance of external calculations or experiments."
-  ]
+    "The evidence validates the software repository and its declared contracts.",
+    "The comprehensive job removed the one-shot validation workflow, trigger, and result before auditing the simulated permanent tree.",
+    "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions, or safety decisions."
+  ],
+  "release": "0.5.2",
+  "schema_version": "1.2",
+  "status": "PASS",
+  "verified_inventory": {
+    "capability_records": 340,
+    "domain_packs": 7,
+    "generic_domain_placeholders": 0,
+    "runtime_core_capabilities": 18,
+    "schemas": 15,
+    "test_modules": 22,
+    "workbook_named_capabilities": 322,
+    "workflows": 15
+  },
+  "workflow": {
+    "name": "Final validate TsaoSciResearcher v0.5.2 once",
+    "permanent_tree_simulated": true,
+    "result_commit": "b53cd5ce20fa72f66a9999abd172a84b01278317",
+    "run_id": 29940827319,
+    "validated_commit": "131cf1d8dfa8b969f662a14a6a3568e72ecaaa9a"
+  }
 }
