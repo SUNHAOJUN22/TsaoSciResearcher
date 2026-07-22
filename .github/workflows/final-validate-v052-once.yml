@@ -19,8 +19,49 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
+  heartbeat:
+    name: final-validation-heartbeat
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Publish running state
+        env:
+          VALIDATED_COMMIT: ${{ github.sha }}
+          VALIDATED_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          Path(".github/final-v052-once-result.json").write_text(
+              json.dumps(
+                  {
+                      "status": "RUNNING",
+                      "release": "0.5.2",
+                      "run_id": int(os.environ["VALIDATED_RUN_ID"]),
+                      "validated_commit": os.environ["VALIDATED_COMMIT"],
+                  },
+                  indent=2,
+                  sort_keys=True,
+              ) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/final-v052-once-result.json
+          git commit -m 'ci: mark v0.5.2 final validation running'
+          git push origin HEAD:main
+
   compatibility:
     name: final-compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
+    needs: heartbeat
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
@@ -71,6 +112,7 @@ jobs:
 
   comprehensive:
     name: final-comprehensive-linux
+    needs: heartbeat
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -134,21 +176,21 @@ jobs:
           cmp /tmp/dist-a/TsaoSciResearcher-v0.5.2.zip /tmp/dist-b/TsaoSciResearcher-v0.5.2.zip
           python scripts/validate_release.py
 
-  finalize:
-    name: final-publish-evidence-or-status
+  report:
+    name: final-validation-report
     if: ${{ always() }}
-    needs: [compatibility, comprehensive]
+    needs: [heartbeat, compatibility, comprehensive]
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Checkout main
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: main
           fetch-depth: 0
-      - name: Evaluate upstream gates
-        id: evaluate
+      - name: Publish final status
         env:
+          HEARTBEAT_RESULT: ${{ needs.heartbeat.result }}
           COMPATIBILITY_RESULT: ${{ needs.compatibility.result }}
           COMPREHENSIVE_RESULT: ${{ needs.comprehensive.result }}
           VALIDATED_COMMIT: ${{ github.sha }}
@@ -159,140 +201,20 @@ jobs:
           import json
           import os
           from pathlib import Path
-          results = {
+          jobs = {
+              "heartbeat": os.environ["HEARTBEAT_RESULT"],
               "compatibility": os.environ["COMPATIBILITY_RESULT"],
               "comprehensive": os.environ["COMPREHENSIVE_RESULT"],
           }
-          success = all(value == "success" for value in results.values())
-          payload = {
-              "status": "PASS" if success else "FAIL",
-              "release": "0.5.2",
-              "run_id": int(os.environ["VALIDATED_RUN_ID"]),
-              "validated_commit": os.environ["VALIDATED_COMMIT"],
-              "jobs": results,
-              "artifact": "final-v052-source" if success else None,
-          }
-          Path(".github/final-v052-once-result.json").write_text(
-              json.dumps(payload, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
-              handle.write(f"success={'true' if success else 'false'}\n")
-          PY
-      - name: Set up Python
-        if: steps.evaluate.outputs.success == 'true'
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: requirements-ci.lock
-      - name: Install exact dependencies and package
-        if: steps.evaluate.outputs.success == 'true'
-        run: |
-          python -m pip install --disable-pip-version-check -r requirements-ci.lock
-          python -m pip install --disable-pip-version-check -e . --no-deps
-      - name: Build final evidence and source archive
-        if: steps.evaluate.outputs.success == 'true'
-        env:
-          VALIDATED_COMMIT: ${{ github.sha }}
-          VALIDATED_RUN_ID: ${{ github.run_id }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp .github/workflows/final-validate-v052-once.yml /tmp/final-workflow.yml
-          cp .github/final-v052-once-trigger /tmp/final-trigger
-          rm -f .github/workflows/final-validate-v052-once.yml
-          rm -f .github/final-v052-once-trigger .github/final-v052-once-result.json
-          python - <<'PY'
-          from __future__ import annotations
-
-          import json
-          import os
-          import re
-          import subprocess
-          from datetime import date
-          from pathlib import Path
-
-          completed = subprocess.run(
-              [
-                  "python",
-                  "-m",
-                  "pytest",
-                  "--collect-only",
-                  "-q",
-                  "-p",
-                  "hypothesis.extra.pytestplugin",
-              ],
-              check=True,
-              capture_output=True,
-              text=True,
-          )
-          text = completed.stdout + "\n" + completed.stderr
-          match = re.search(r"(\d+) tests? collected", text)
-          if not match:
-              raise SystemExit("unable to determine collected test count")
-          payload = {
-              "schema_version": "1.1",
-              "release": "0.5.2",
-              "evidence_date": date.today().isoformat(),
-              "status": "PASS",
-              "workflow": "Final validate TsaoSciResearcher v0.5.2 once",
-              "run_id": int(os.environ["VALIDATED_RUN_ID"]),
-              "validated_commit": os.environ["VALIDATED_COMMIT"],
-              "tests_collected": int(match.group(1)),
-              "failures": 0,
-              "platforms": [
-                  "ubuntu-latest / Python 3.10",
-                  "ubuntu-latest / Python 3.13",
-                  "windows-latest / Python 3.12",
-                  "macos-latest / Python 3.12",
-              ],
-              "gates": {
-                  "repository_and_schema_audit": "PASS",
-                  "full_regression": "PASS",
-                  "reverse_and_seeded_order": "PASS",
-                  "ruff_format_and_lint": "PASS",
-                  "mypy_strict": "PASS",
-                  "bandit_high_severity": "PASS",
-                  "critical_mutation": "15/15 killed",
-                  "performance_smoke": "PASS",
-                  "byte_identical_release_builds": "PASS",
-              },
-              "interpretation": [
-                  "The v0.5.2 software and documentation contracts passed the final repository validation gates.",
-                  "Software validation does not imply scientific acceptance of external calculations or experiments.",
-              ],
-          }
-          Path("docs/VALIDATION_EVIDENCE.json").write_text(
-              json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          PY
-          python scripts/build_readme_facts.py --write
-          python scripts/generate_checksums.py --write
-          python scripts/generate_checksums.py --check
-          tar --exclude=.git -czf /tmp/TsaoSciResearcher-v0.5.2-final-source.tar.gz .
-          cp docs/VALIDATION_EVIDENCE.json /tmp/VALIDATION_EVIDENCE.json
-          cp docs/README_FACTS.json /tmp/README_FACTS.json
-          cp SHA256SUMS /tmp/SHA256SUMS
-          mv /tmp/final-workflow.yml .github/workflows/final-validate-v052-once.yml
-          mv /tmp/final-trigger .github/final-v052-once-trigger
-          cp /tmp/VALIDATION_EVIDENCE.json docs/VALIDATION_EVIDENCE.json
-          cp /tmp/README_FACTS.json docs/README_FACTS.json
-          cp /tmp/SHA256SUMS SHA256SUMS
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
+          success = all(value == "success" for value in jobs.values())
           Path(".github/final-v052-once-result.json").write_text(
               json.dumps(
                   {
-                      "status": "PASS",
+                      "status": "PASS" if success else "FAIL",
                       "release": "0.5.2",
                       "run_id": int(os.environ["VALIDATED_RUN_ID"]),
                       "validated_commit": os.environ["VALIDATED_COMMIT"],
-                      "jobs": {"compatibility": "success", "comprehensive": "success"},
-                      "artifact": "final-v052-source",
+                      "jobs": jobs,
                   },
                   indent=2,
                   sort_keys=True,
@@ -300,23 +222,8 @@ jobs:
               encoding="utf-8",
           )
           PY
-      - name: Upload final source archive
-        if: steps.evaluate.outputs.success == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: final-v052-source
-          path: /tmp/TsaoSciResearcher-v0.5.2-final-source.tar.gz
-          if-no-files-found: error
-          retention-days: 7
-      - name: Commit final status and evidence
-        shell: bash
-        run: |
-          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .github/final-v052-once-result.json
-          if [ "${{ steps.evaluate.outputs.success }}" = "true" ]; then
-            git add docs/VALIDATION_EVIDENCE.json docs/README_FACTS.json SHA256SUMS
-          fi
-          git commit -m 'ci: publish v0.5.2 final validation status'
+          git commit -m 'ci: report v0.5.2 final validation result'
           git push origin HEAD:main
