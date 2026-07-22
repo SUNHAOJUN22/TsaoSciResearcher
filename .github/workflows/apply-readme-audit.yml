@@ -101,7 +101,6 @@ jobs:
           PY
           git apply --3way --whitespace=nowarn --exclude=SHA256SUMS /tmp/readme-audit.patch
           rm -rf .github/readme-audit-parts .github/workflows/apply-readme-audit.yml
-          python scripts/generate_checksums.py --write
           git status --short
       - name: Upload reconstruction diagnostics
         if: steps.staged.outputs.apply == 'true' && always()
@@ -127,6 +126,7 @@ jobs:
           PYTHONNOUSERSITE: '1'
           PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
         run: |
+          python scripts/generate_checksums.py --write
           python scripts/build_readme_facts.py --check
           python scripts/generate_checksums.py --check
           python scripts/audit_repository.py
