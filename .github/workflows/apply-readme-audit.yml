@@ -99,8 +99,9 @@ jobs:
               raise SystemExit("raw patch digest mismatch")
           Path("/tmp/readme-audit.patch").write_bytes(patch)
           PY
-          git apply --3way --whitespace=nowarn /tmp/readme-audit.patch
+          git apply --3way --whitespace=nowarn --exclude=SHA256SUMS /tmp/readme-audit.patch
           rm -rf .github/readme-audit-parts .github/workflows/apply-readme-audit.yml
+          python scripts/generate_checksums.py --write
           git status --short
       - name: Upload reconstruction diagnostics
         if: steps.staged.outputs.apply == 'true' && always()
