@@ -1,986 +1,1970 @@
 [
   {
     "id": "DOM-COMP-01",
-    "slug": "computational-chemistry-materials-capability-01",
+    "catalog_id": "S0115",
+    "slug": "molecular-structure-builder",
+    "name_zh": "分子结构构建",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-02",
-    "slug": "computational-chemistry-materials-capability-02",
+    "catalog_id": "S0116",
+    "slug": "structure-cleaner",
+    "name_zh": "结构清理",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-03",
-    "slug": "computational-chemistry-materials-capability-03",
+    "catalog_id": "S0117",
+    "slug": "conformer-generator",
+    "name_zh": "构象生成",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-04",
-    "slug": "computational-chemistry-materials-capability-04",
+    "catalog_id": "S0118",
+    "slug": "protonation-state-predictor",
+    "name_zh": "质子化状态",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-05",
-    "slug": "computational-chemistry-materials-capability-05",
+    "catalog_id": "S0119",
+    "slug": "charge-multiplicity-assignment",
+    "name_zh": "电荷与多重度",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-06",
-    "slug": "computational-chemistry-materials-capability-06",
+    "catalog_id": "S0120",
+    "slug": "quantum-method-selector",
+    "name_zh": "量化方法选择",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-07",
-    "slug": "computational-chemistry-materials-capability-07",
+    "catalog_id": "S0121",
+    "slug": "dft-input-generator",
+    "name_zh": "DFT输入生成",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-08",
-    "slug": "computational-chemistry-materials-capability-08",
+    "catalog_id": "S0122",
+    "slug": "geometry-optimization",
+    "name_zh": "几何优化",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-09",
-    "slug": "computational-chemistry-materials-capability-09",
+    "catalog_id": "S0123",
+    "slug": "frequency-analysis",
+    "name_zh": "频率分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-10",
-    "slug": "computational-chemistry-materials-capability-10",
+    "catalog_id": "S0124",
+    "slug": "transition-state-search",
+    "name_zh": "过渡态搜索",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-11",
-    "slug": "computational-chemistry-materials-capability-11",
+    "catalog_id": "S0125",
+    "slug": "irc-analysis",
+    "name_zh": "IRC分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-12",
-    "slug": "computational-chemistry-materials-capability-12",
+    "catalog_id": "S0126",
+    "slug": "reaction-pathway-explorer",
+    "name_zh": "反应路径探索",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-13",
-    "slug": "computational-chemistry-materials-capability-13",
+    "catalog_id": "S0127",
+    "slug": "thermochemistry-calculator",
+    "name_zh": "热化学计算",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-14",
-    "slug": "computational-chemistry-materials-capability-14",
+    "catalog_id": "S0128",
+    "slug": "electronic-structure-analysis",
+    "name_zh": "电子结构分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-15",
-    "slug": "computational-chemistry-materials-capability-15",
+    "catalog_id": "S0129",
+    "slug": "weak-interaction-analysis",
+    "name_zh": "弱相互作用",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-16",
-    "slug": "computational-chemistry-materials-capability-16",
+    "catalog_id": "S0130",
+    "slug": "spectroscopy-predictor",
+    "name_zh": "光谱预测",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-17",
-    "slug": "computational-chemistry-materials-capability-17",
+    "catalog_id": "S0131",
+    "slug": "crystal-structure-builder",
+    "name_zh": "晶体结构构建",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-18",
-    "slug": "computational-chemistry-materials-capability-18",
+    "catalog_id": "S0132",
+    "slug": "symmetry-analyzer",
+    "name_zh": "对称性分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-19",
-    "slug": "computational-chemistry-materials-capability-19",
+    "catalog_id": "S0133",
+    "slug": "surface-slab-builder",
+    "name_zh": "表面模型",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-20",
-    "slug": "computational-chemistry-materials-capability-20",
+    "catalog_id": "S0134",
+    "slug": "defect-generator",
+    "name_zh": "缺陷生成",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-21",
-    "slug": "computational-chemistry-materials-capability-21",
+    "catalog_id": "S0135",
+    "slug": "kpoint-convergence",
+    "name_zh": "K点收敛",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-22",
-    "slug": "computational-chemistry-materials-capability-22",
+    "catalog_id": "S0136",
+    "slug": "cutoff-convergence",
+    "name_zh": "截断能收敛",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-23",
-    "slug": "computational-chemistry-materials-capability-23",
+    "catalog_id": "S0137",
+    "slug": "band-structure-analysis",
+    "name_zh": "能带分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-24",
-    "slug": "computational-chemistry-materials-capability-24",
+    "catalog_id": "S0138",
+    "slug": "dos-pdos-analysis",
+    "name_zh": "态密度分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-25",
-    "slug": "computational-chemistry-materials-capability-25",
+    "catalog_id": "S0139",
+    "slug": "phonon-analysis",
+    "name_zh": "声子分析",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-26",
-    "slug": "computational-chemistry-materials-capability-26",
+    "catalog_id": "S0140",
+    "slug": "elastic-property-calculator",
+    "name_zh": "弹性性质",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-27",
-    "slug": "computational-chemistry-materials-capability-27",
+    "catalog_id": "S0141",
+    "slug": "defect-formation-energy",
+    "name_zh": "缺陷形成能",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-28",
-    "slug": "computational-chemistry-materials-capability-28",
+    "catalog_id": "S0142",
+    "slug": "adsorption-energy-calculator",
+    "name_zh": "吸附能",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-29",
-    "slug": "computational-chemistry-materials-capability-29",
+    "catalog_id": "S0143",
+    "slug": "neb-barrier",
+    "name_zh": "NEB能垒",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-COMP-30",
-    "slug": "computational-chemistry-materials-capability-30",
+    "catalog_id": "S0144",
+    "slug": "high-throughput-dft",
+    "name_zh": "高通量DFT",
+    "category": "计算化学与材料计算",
     "disposition": "computation-delegated",
-    "domain_pack": "computational-chemistry-materials"
+    "domain_pack": "computational-chemistry-materials",
+    "source_repository": "materialsproject/pymatgen",
+    "source_url": "https://github.com/materialsproject/pymatgen",
+    "priority": "S"
   },
   {
     "id": "DOM-MOLE-01",
-    "slug": "molecular-dynamics-multiscale-capability-01",
+    "catalog_id": "S0145",
+    "slug": "md-system-builder",
+    "name_zh": "MD体系构建",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-02",
-    "slug": "molecular-dynamics-multiscale-capability-02",
+    "catalog_id": "S0146",
+    "slug": "force-field-selector",
+    "name_zh": "力场选择",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-03",
-    "slug": "molecular-dynamics-multiscale-capability-03",
+    "catalog_id": "S0147",
+    "slug": "topology-generator",
+    "name_zh": "拓扑生成",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-04",
-    "slug": "molecular-dynamics-multiscale-capability-04",
+    "catalog_id": "S0148",
+    "slug": "box-solvation-builder",
+    "name_zh": "溶剂与盒子",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-05",
-    "slug": "molecular-dynamics-multiscale-capability-05",
+    "catalog_id": "S0149",
+    "slug": "energy-minimization-workflow",
+    "name_zh": "能量最小化",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-06",
-    "slug": "molecular-dynamics-multiscale-capability-06",
+    "catalog_id": "S0150",
+    "slug": "equilibration-workflow",
+    "name_zh": "平衡流程",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-07",
-    "slug": "molecular-dynamics-multiscale-capability-07",
+    "catalog_id": "S0151",
+    "slug": "production-md-runner",
+    "name_zh": "生产期MD",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-08",
-    "slug": "molecular-dynamics-multiscale-capability-08",
+    "catalog_id": "S0152",
+    "slug": "trajectory-quality-control",
+    "name_zh": "轨迹质控",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-09",
-    "slug": "molecular-dynamics-multiscale-capability-09",
+    "catalog_id": "S0153",
+    "slug": "rmsd-rmsf-analysis",
+    "name_zh": "RMSD/RMSF",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-10",
-    "slug": "molecular-dynamics-multiscale-capability-10",
+    "catalog_id": "S0154",
+    "slug": "radius-gyration-analysis",
+    "name_zh": "回旋半径",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-11",
-    "slug": "molecular-dynamics-multiscale-capability-11",
+    "catalog_id": "S0155",
+    "slug": "hydrogen-bond-analysis",
+    "name_zh": "氢键分析",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-12",
-    "slug": "molecular-dynamics-multiscale-capability-12",
+    "catalog_id": "S0156",
+    "slug": "contact-map-analysis",
+    "name_zh": "接触图",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-13",
-    "slug": "molecular-dynamics-multiscale-capability-13",
+    "catalog_id": "S0157",
+    "slug": "clustering-analysis",
+    "name_zh": "构象聚类",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-14",
-    "slug": "molecular-dynamics-multiscale-capability-14",
+    "catalog_id": "S0158",
+    "slug": "pca-free-energy",
+    "name_zh": "PCA自由能景观",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-15",
-    "slug": "molecular-dynamics-multiscale-capability-15",
+    "catalog_id": "S0159",
+    "slug": "mmpbsa-analysis",
+    "name_zh": "MM/PBSA",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-16",
-    "slug": "molecular-dynamics-multiscale-capability-16",
+    "catalog_id": "S0160",
+    "slug": "umbrella-sampling",
+    "name_zh": "伞形采样",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-17",
-    "slug": "molecular-dynamics-multiscale-capability-17",
+    "catalog_id": "S0161",
+    "slug": "metadynamics",
+    "name_zh": "元动力学",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-18",
-    "slug": "molecular-dynamics-multiscale-capability-18",
+    "catalog_id": "S0162",
+    "slug": "fep-ti-workflow",
+    "name_zh": "FEP/TI",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-19",
-    "slug": "molecular-dynamics-multiscale-capability-19",
+    "catalog_id": "S0163",
+    "slug": "coarse-grained-md",
+    "name_zh": "粗粒化MD",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-20",
-    "slug": "molecular-dynamics-multiscale-capability-20",
+    "catalog_id": "S0164",
+    "slug": "reactive-md",
+    "name_zh": "反应MD",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-21",
-    "slug": "molecular-dynamics-multiscale-capability-21",
+    "catalog_id": "S0165",
+    "slug": "polymer-md-builder",
+    "name_zh": "聚合物MD",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-22",
-    "slug": "molecular-dynamics-multiscale-capability-22",
+    "catalog_id": "S0166",
+    "slug": "diffusion-analysis",
+    "name_zh": "扩散分析",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-23",
-    "slug": "molecular-dynamics-multiscale-capability-23",
+    "catalog_id": "S0167",
+    "slug": "rheology-md",
+    "name_zh": "MD流变",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-MOLE-24",
-    "slug": "molecular-dynamics-multiscale-capability-24",
+    "catalog_id": "S0168",
+    "slug": "multiscale-mapper",
+    "name_zh": "多尺度映射",
+    "category": "分子动力学与多尺度",
     "disposition": "computation-delegated",
-    "domain_pack": "molecular-dynamics-multiscale"
+    "domain_pack": "molecular-dynamics-multiscale",
+    "source_repository": "gromacs/gromacs",
+    "source_url": "https://github.com/gromacs/gromacs",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-01",
-    "slug": "catalysis-polymers-composites-capability-01",
+    "catalog_id": "S0169",
+    "slug": "catalyst-literature-miner",
+    "name_zh": "催化文献挖掘",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-02",
-    "slug": "catalysis-polymers-composites-capability-02",
+    "catalog_id": "S0170",
+    "slug": "active-site-identifier",
+    "name_zh": "活性位识别",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-03",
-    "slug": "catalysis-polymers-composites-capability-03",
+    "catalog_id": "S0171",
+    "slug": "catalyst-structure-generator",
+    "name_zh": "催化剂结构生成",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-04",
-    "slug": "catalysis-polymers-composites-capability-04",
+    "catalog_id": "S0172",
+    "slug": "adsorption-site-sampler",
+    "name_zh": "吸附位点采样",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-05",
-    "slug": "catalysis-polymers-composites-capability-05",
+    "catalog_id": "S0173",
+    "slug": "reaction-network-generator",
+    "name_zh": "反应网络生成",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-06",
-    "slug": "catalysis-polymers-composites-capability-06",
+    "catalog_id": "S0174",
+    "slug": "rate-determining-step",
+    "name_zh": "决速步骤识别",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-07",
-    "slug": "catalysis-polymers-composites-capability-07",
+    "catalog_id": "S0175",
+    "slug": "catalyst-descriptor-extractor",
+    "name_zh": "催化描述符",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-08",
-    "slug": "catalysis-polymers-composites-capability-08",
+    "catalog_id": "S0176",
+    "slug": "volcano-plot-builder",
+    "name_zh": "火山图",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-09",
-    "slug": "catalysis-polymers-composites-capability-09",
+    "catalog_id": "S0177",
+    "slug": "microkinetic-model",
+    "name_zh": "微观动力学",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-10",
-    "slug": "catalysis-polymers-composites-capability-10",
+    "catalog_id": "S0178",
+    "slug": "kinetic-monte-carlo",
+    "name_zh": "动力学蒙特卡洛",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-11",
-    "slug": "catalysis-polymers-composites-capability-11",
+    "catalog_id": "S0179",
+    "slug": "catalyst-inverse-design",
+    "name_zh": "催化剂逆向设计",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-12",
-    "slug": "catalysis-polymers-composites-capability-12",
+    "catalog_id": "S0180",
+    "slug": "polymerization-mechanism",
+    "name_zh": "聚合机理",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-13",
-    "slug": "catalysis-polymers-composites-capability-13",
+    "catalog_id": "S0181",
+    "slug": "polymerization-dft",
+    "name_zh": "聚合DFT",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-14",
-    "slug": "catalysis-polymers-composites-capability-14",
+    "catalog_id": "S0182",
+    "slug": "comonomer-incorporation",
+    "name_zh": "共聚单体插入",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-15",
-    "slug": "catalysis-polymers-composites-capability-15",
+    "catalog_id": "S0183",
+    "slug": "stereoselectivity",
+    "name_zh": "立构选择性",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-16",
-    "slug": "catalysis-polymers-composites-capability-16",
+    "catalog_id": "S0184",
+    "slug": "chain-transfer-analysis",
+    "name_zh": "链转移分析",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-17",
-    "slug": "catalysis-polymers-composites-capability-17",
+    "catalog_id": "S0185",
+    "slug": "polymerization-kinetics",
+    "name_zh": "聚合动力学",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-18",
-    "slug": "catalysis-polymers-composites-capability-18",
+    "catalog_id": "S0186",
+    "slug": "population-balance",
+    "name_zh": "群体平衡",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-19",
-    "slug": "catalysis-polymers-composites-capability-19",
+    "catalog_id": "S0187",
+    "slug": "molecular-weight-predictor",
+    "name_zh": "分子量预测",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-20",
-    "slug": "catalysis-polymers-composites-capability-20",
+    "catalog_id": "S0188",
+    "slug": "sequence-distribution",
+    "name_zh": "序列分布",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-21",
-    "slug": "catalysis-polymers-composites-capability-21",
+    "catalog_id": "S0189",
+    "slug": "branching-predictor",
+    "name_zh": "支化结构",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-22",
-    "slug": "catalysis-polymers-composites-capability-22",
+    "catalog_id": "S0190",
+    "slug": "polymer-reactor-coupler",
+    "name_zh": "聚合反应器耦合",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-23",
-    "slug": "catalysis-polymers-composites-capability-23",
+    "catalog_id": "S0191",
+    "slug": "polymerization-parameter-fit",
+    "name_zh": "聚合参数反演",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-24",
-    "slug": "catalysis-polymers-composites-capability-24",
+    "catalog_id": "S0192",
+    "slug": "polymer-formulation-optimizer",
+    "name_zh": "高分子配方优化",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-25",
-    "slug": "catalysis-polymers-composites-capability-25",
+    "catalog_id": "S0193",
+    "slug": "filler-compatibility",
+    "name_zh": "填料相容性",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-26",
-    "slug": "catalysis-polymers-composites-capability-26",
+    "catalog_id": "S0194",
+    "slug": "carbon-black-dispersion",
+    "name_zh": "炭黑分散",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-27",
-    "slug": "catalysis-polymers-composites-capability-27",
+    "catalog_id": "S0195",
+    "slug": "percolation-threshold",
+    "name_zh": "渗流阈值",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-28",
-    "slug": "catalysis-polymers-composites-capability-28",
+    "catalog_id": "S0196",
+    "slug": "electrical-resistivity",
+    "name_zh": "电阻率预测",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-29",
-    "slug": "catalysis-polymers-composites-capability-29",
+    "catalog_id": "S0197",
+    "slug": "extrusion-eccentricity",
+    "name_zh": "挤出偏心诊断",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-CATA-30",
-    "slug": "catalysis-polymers-composites-capability-30",
+    "catalog_id": "S0198",
+    "slug": "polymer-aging",
+    "name_zh": "聚合物老化",
+    "category": "催化、高分子与复合材料",
     "disposition": "computation-delegated",
-    "domain_pack": "catalysis-polymers-composites"
+    "domain_pack": "catalysis-polymers-composites",
+    "source_repository": "lammps/lammps",
+    "source_url": "https://github.com/lammps/lammps",
+    "priority": "S+"
   },
   {
     "id": "DOM-FEM--01",
-    "slug": "fem-multiphysics-capability-01",
+    "catalog_id": "S0199",
+    "slug": "geometry-mesh-builder",
+    "name_zh": "几何与网格",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--02",
-    "slug": "fem-multiphysics-capability-02",
+    "catalog_id": "S0200",
+    "slug": "mesh-quality-checker",
+    "name_zh": "网格质量",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--03",
-    "slug": "fem-multiphysics-capability-03",
+    "catalog_id": "S0201",
+    "slug": "pde-formulator",
+    "name_zh": "PDE建模",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--04",
-    "slug": "fem-multiphysics-capability-04",
+    "catalog_id": "S0202",
+    "slug": "linear-elasticity",
+    "name_zh": "线弹性",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--05",
-    "slug": "fem-multiphysics-capability-05",
+    "catalog_id": "S0203",
+    "slug": "nonlinear-mechanics",
+    "name_zh": "非线性力学",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--06",
-    "slug": "fem-multiphysics-capability-06",
+    "catalog_id": "S0204",
+    "slug": "viscoelasticity",
+    "name_zh": "黏弹性",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--07",
-    "slug": "fem-multiphysics-capability-07",
+    "catalog_id": "S0205",
+    "slug": "plasticity-damage",
+    "name_zh": "塑性与损伤",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--08",
-    "slug": "fem-multiphysics-capability-08",
+    "catalog_id": "S0206",
+    "slug": "heat-transfer",
+    "name_zh": "传热有限元",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--09",
-    "slug": "fem-multiphysics-capability-09",
+    "catalog_id": "S0207",
+    "slug": "diffusion-transport",
+    "name_zh": "扩散输运",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--10",
-    "slug": "fem-multiphysics-capability-10",
+    "catalog_id": "S0208",
+    "slug": "electrostatics",
+    "name_zh": "静电场",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--11",
-    "slug": "fem-multiphysics-capability-11",
+    "catalog_id": "S0209",
+    "slug": "electromagnetics",
+    "name_zh": "电磁场",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--12",
-    "slug": "fem-multiphysics-capability-12",
+    "catalog_id": "S0210",
+    "slug": "thermo-mechanical",
+    "name_zh": "热-力耦合",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--13",
-    "slug": "fem-multiphysics-capability-13",
+    "catalog_id": "S0211",
+    "slug": "electro-thermal",
+    "name_zh": "电-热耦合",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--14",
-    "slug": "fem-multiphysics-capability-14",
+    "catalog_id": "S0212",
+    "slug": "chemo-mechanical",
+    "name_zh": "化学-力耦合",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--15",
-    "slug": "fem-multiphysics-capability-15",
+    "catalog_id": "S0213",
+    "slug": "phase-field",
+    "name_zh": "相场模拟",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--16",
-    "slug": "fem-multiphysics-capability-16",
+    "catalog_id": "S0214",
+    "slug": "fracture-phase-field",
+    "name_zh": "相场断裂",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--17",
-    "slug": "fem-multiphysics-capability-17",
+    "catalog_id": "S0215",
+    "slug": "porous-media-flow",
+    "name_zh": "多孔介质",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--18",
-    "slug": "fem-multiphysics-capability-18",
+    "catalog_id": "S0216",
+    "slug": "fsi-coupling",
+    "name_zh": "流固耦合",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--19",
-    "slug": "fem-multiphysics-capability-19",
+    "catalog_id": "S0217",
+    "slug": "inverse-fem",
+    "name_zh": "有限元反问题",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-FEM--20",
-    "slug": "fem-multiphysics-capability-20",
+    "catalog_id": "S0218",
+    "slug": "fem-model-validation",
+    "name_zh": "有限元验证",
+    "category": "有限元与多物理场",
     "disposition": "computation-delegated",
-    "domain_pack": "fem-multiphysics"
+    "domain_pack": "fem-multiphysics",
+    "source_repository": "FEniCS/dolfinx",
+    "source_url": "https://github.com/FEniCS/dolfinx",
+    "priority": "S"
   },
   {
     "id": "DOM-CFD--01",
-    "slug": "cfd-particles-processing-capability-01",
+    "catalog_id": "S0219",
+    "slug": "cfd-case-builder",
+    "name_zh": "CFD算例构建",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--02",
-    "slug": "cfd-particles-processing-capability-02",
+    "catalog_id": "S0220",
+    "slug": "turbulence-model-selector",
+    "name_zh": "湍流模型选择",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--03",
-    "slug": "cfd-particles-processing-capability-03",
+    "catalog_id": "S0221",
+    "slug": "non-newtonian-flow",
+    "name_zh": "非牛顿流",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--04",
-    "slug": "cfd-particles-processing-capability-04",
+    "catalog_id": "S0222",
+    "slug": "multiphase-flow",
+    "name_zh": "多相流",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--05",
-    "slug": "cfd-particles-processing-capability-05",
+    "catalog_id": "S0223",
+    "slug": "reacting-flow",
+    "name_zh": "反应流",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--06",
-    "slug": "cfd-particles-processing-capability-06",
+    "catalog_id": "S0224",
+    "slug": "conjugate-heat-transfer",
+    "name_zh": "共轭传热",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--07",
-    "slug": "cfd-particles-processing-capability-07",
+    "catalog_id": "S0225",
+    "slug": "species-transport",
+    "name_zh": "组分输运",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--08",
-    "slug": "cfd-particles-processing-capability-08",
+    "catalog_id": "S0226",
+    "slug": "mixing-analysis",
+    "name_zh": "混合分析",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--09",
-    "slug": "cfd-particles-processing-capability-09",
+    "catalog_id": "S0227",
+    "slug": "residence-time-distribution",
+    "name_zh": "停留时间分布",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--10",
-    "slug": "cfd-particles-processing-capability-10",
+    "catalog_id": "S0228",
+    "slug": "extrusion-flow",
+    "name_zh": "挤出流动",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--11",
-    "slug": "cfd-particles-processing-capability-11",
+    "catalog_id": "S0229",
+    "slug": "die-swell",
+    "name_zh": "挤出胀大",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--12",
-    "slug": "cfd-particles-processing-capability-12",
+    "catalog_id": "S0230",
+    "slug": "flow-instability",
+    "name_zh": "流动不稳定",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--13",
-    "slug": "cfd-particles-processing-capability-13",
+    "catalog_id": "S0231",
+    "slug": "particle-dispersion",
+    "name_zh": "颗粒分散",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--14",
-    "slug": "cfd-particles-processing-capability-14",
+    "catalog_id": "S0232",
+    "slug": "dem-particle",
+    "name_zh": "离散元颗粒",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--15",
-    "slug": "cfd-particles-processing-capability-15",
+    "catalog_id": "S0233",
+    "slug": "cfd-dem-coupling",
+    "name_zh": "CFD-DEM耦合",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--16",
-    "slug": "cfd-particles-processing-capability-16",
+    "catalog_id": "S0234",
+    "slug": "shape-optimization",
+    "name_zh": "流道优化",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--17",
-    "slug": "cfd-particles-processing-capability-17",
+    "catalog_id": "S0235",
+    "slug": "cfd-verification",
+    "name_zh": "CFD验证",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-CFD--18",
-    "slug": "cfd-particles-processing-capability-18",
+    "catalog_id": "S0236",
+    "slug": "process-flow-digital-twin",
+    "name_zh": "流动数字孪生",
+    "category": "CFD、颗粒与加工过程",
     "disposition": "computation-delegated",
-    "domain_pack": "cfd-particles-processing"
+    "domain_pack": "cfd-particles-processing",
+    "source_repository": "OpenFOAM/OpenFOAM-dev",
+    "source_url": "https://github.com/OpenFOAM/OpenFOAM-dev",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-01",
-    "slug": "process-kinetics-digital-twin-capability-01",
+    "catalog_id": "S0237",
+    "slug": "flowsheet-builder",
+    "name_zh": "流程图构建",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-02",
-    "slug": "process-kinetics-digital-twin-capability-02",
+    "catalog_id": "S0238",
+    "slug": "property-method-selector",
+    "name_zh": "物性方法选择",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-03",
-    "slug": "process-kinetics-digital-twin-capability-03",
+    "catalog_id": "S0239",
+    "slug": "component-validator",
+    "name_zh": "组分定义检查",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-04",
-    "slug": "process-kinetics-digital-twin-capability-04",
+    "catalog_id": "S0240",
+    "slug": "reactor-model-selector",
+    "name_zh": "反应器选择",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-05",
-    "slug": "process-kinetics-digital-twin-capability-05",
+    "catalog_id": "S0241",
+    "slug": "reaction-kinetics-builder",
+    "name_zh": "反应动力学模型",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-06",
-    "slug": "process-kinetics-digital-twin-capability-06",
+    "catalog_id": "S0242",
+    "slug": "reactor-network",
+    "name_zh": "反应器网络",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-07",
-    "slug": "process-kinetics-digital-twin-capability-07",
+    "catalog_id": "S0243",
+    "slug": "distillation-design",
+    "name_zh": "精馏设计",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-08",
-    "slug": "process-kinetics-digital-twin-capability-08",
+    "catalog_id": "S0244",
+    "slug": "heat-exchanger-network",
+    "name_zh": "换热网络",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-09",
-    "slug": "process-kinetics-digital-twin-capability-09",
+    "catalog_id": "S0245",
+    "slug": "process-convergence",
+    "name_zh": "流程收敛诊断",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-10",
-    "slug": "process-kinetics-digital-twin-capability-10",
+    "catalog_id": "S0246",
+    "slug": "process-sensitivity",
+    "name_zh": "流程敏感性",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-11",
-    "slug": "process-kinetics-digital-twin-capability-11",
+    "catalog_id": "S0247",
+    "slug": "process-optimization",
+    "name_zh": "流程优化",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-12",
-    "slug": "process-kinetics-digital-twin-capability-12",
+    "catalog_id": "S0248",
+    "slug": "parameter-estimation",
+    "name_zh": "参数估计",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-13",
-    "slug": "process-kinetics-digital-twin-capability-13",
+    "catalog_id": "S0249",
+    "slug": "dynamic-process-model",
+    "name_zh": "动态过程模型",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-14",
-    "slug": "process-kinetics-digital-twin-capability-14",
+    "catalog_id": "S0250",
+    "slug": "pid-tuning",
+    "name_zh": "控制回路整定",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-15",
-    "slug": "process-kinetics-digital-twin-capability-15",
+    "catalog_id": "S0251",
+    "slug": "soft-sensor",
+    "name_zh": "软测量",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-16",
-    "slug": "process-kinetics-digital-twin-capability-16",
+    "catalog_id": "S0252",
+    "slug": "digital-twin-calibration",
+    "name_zh": "数字孪生校准",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-17",
-    "slug": "process-kinetics-digital-twin-capability-17",
+    "catalog_id": "S0253",
+    "slug": "state-estimation",
+    "name_zh": "状态估计",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-18",
-    "slug": "process-kinetics-digital-twin-capability-18",
+    "catalog_id": "S0254",
+    "slug": "what-if-scenario",
+    "name_zh": "情景分析",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-19",
-    "slug": "process-kinetics-digital-twin-capability-19",
+    "catalog_id": "S0255",
+    "slug": "techno-economic-analysis",
+    "name_zh": "技术经济评价",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-20",
-    "slug": "process-kinetics-digital-twin-capability-20",
+    "catalog_id": "S0256",
+    "slug": "carbon-emission",
+    "name_zh": "碳排放核算",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-21",
-    "slug": "process-kinetics-digital-twin-capability-21",
+    "catalog_id": "S0257",
+    "slug": "scale-up-advisor",
+    "name_zh": "工艺放大",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-PROC-22",
-    "slug": "process-kinetics-digital-twin-capability-22",
+    "catalog_id": "S0258",
+    "slug": "process-safety-check",
+    "name_zh": "过程安全检查",
+    "category": "化工流程、动力学与数字孪生",
     "disposition": "computation-delegated",
-    "domain_pack": "process-kinetics-digital-twin"
+    "domain_pack": "process-kinetics-digital-twin",
+    "source_repository": "IDAES/idaes-pse",
+    "source_url": "https://github.com/IDAES/idaes-pse",
+    "priority": "S+"
   },
   {
     "id": "DOM-HPC--01",
-    "slug": "hpc-reproducibility-capability-01",
+    "catalog_id": "S0279",
+    "slug": "hpc-environment-inspector",
+    "name_zh": "HPC环境检查",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--02",
-    "slug": "hpc-reproducibility-capability-02",
+    "catalog_id": "S0280",
+    "slug": "dependency-validator",
+    "name_zh": "依赖验证",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--03",
-    "slug": "hpc-reproducibility-capability-03",
+    "catalog_id": "S0281",
+    "slug": "job-script-generator",
+    "name_zh": "作业脚本",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--04",
-    "slug": "hpc-reproducibility-capability-04",
+    "catalog_id": "S0282",
+    "slug": "batch-calculation-generator",
+    "name_zh": "批量任务生成",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--05",
-    "slug": "hpc-reproducibility-capability-05",
+    "catalog_id": "S0283",
+    "slug": "job-submitter",
+    "name_zh": "任务提交",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--06",
-    "slug": "hpc-reproducibility-capability-06",
+    "catalog_id": "S0284",
+    "slug": "job-status-monitor",
+    "name_zh": "任务监控",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--07",
-    "slug": "hpc-reproducibility-capability-07",
+    "catalog_id": "S0285",
+    "slug": "failure-log-classifier",
+    "name_zh": "失败日志分类",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--08",
-    "slug": "hpc-reproducibility-capability-08",
+    "catalog_id": "S0286",
+    "slug": "auto-restart",
+    "name_zh": "自动恢复",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--09",
-    "slug": "hpc-reproducibility-capability-09",
+    "catalog_id": "S0287",
+    "slug": "resource-optimizer",
+    "name_zh": "资源优化",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--10",
-    "slug": "hpc-reproducibility-capability-10",
+    "catalog_id": "S0288",
+    "slug": "checkpoint-manager",
+    "name_zh": "检查点管理",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--11",
-    "slug": "hpc-reproducibility-capability-11",
+    "catalog_id": "S0289",
+    "slug": "result-collector",
+    "name_zh": "结果收集",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--12",
-    "slug": "hpc-reproducibility-capability-12",
+    "catalog_id": "S0290",
+    "slug": "calculation-provenance",
+    "name_zh": "计算溯源",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--13",
-    "slug": "hpc-reproducibility-capability-13",
+    "catalog_id": "S0291",
+    "slug": "workflow-dag",
+    "name_zh": "科研DAG",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--14",
-    "slug": "hpc-reproducibility-capability-14",
+    "catalog_id": "S0292",
+    "slug": "container-builder",
+    "name_zh": "科研容器",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--15",
-    "slug": "hpc-reproducibility-capability-15",
+    "catalog_id": "S0293",
+    "slug": "reproducible-env-packager",
+    "name_zh": "可重复环境打包",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--16",
-    "slug": "hpc-reproducibility-capability-16",
+    "catalog_id": "S0294",
+    "slug": "cloud-hpc-orchestrator",
+    "name_zh": "云HPC编排",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--17",
-    "slug": "hpc-reproducibility-capability-17",
+    "catalog_id": "S0295",
+    "slug": "hpc-cost-estimator",
+    "name_zh": "计算成本估算",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--18",
-    "slug": "hpc-reproducibility-capability-18",
+    "catalog_id": "S0296",
+    "slug": "reproducibility-checker",
+    "name_zh": "可重复性检查",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--19",
-    "slug": "hpc-reproducibility-capability-19",
+    "catalog_id": "S0297",
+    "slug": "scientific-ci",
+    "name_zh": "科研持续集成",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   },
   {
     "id": "DOM-HPC--20",
-    "slug": "hpc-reproducibility-capability-20",
+    "catalog_id": "S0298",
+    "slug": "supply-chain-security",
+    "name_zh": "Skill供应链安全",
+    "category": "HPC、云计算与可重复性",
     "disposition": "computation-delegated",
-    "domain_pack": "hpc-reproducibility"
+    "domain_pack": "hpc-reproducibility",
+    "source_repository": "snakemake/snakemake",
+    "source_url": "https://github.com/snakemake/snakemake",
+    "priority": "S"
   }
 ]

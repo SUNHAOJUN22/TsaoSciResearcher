@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.2 - 2026-07-22
+
+- Replace 164 generic domain-slot slugs with the exact named contracts from the 322-entry AI-for-Science catalog while preserving stable internal IDs and delegated-execution boundaries.
+- Unify the CLI and compatibility project initializers on one v2 `.tsao-research/` layout with questions, hypotheses, evidence, claims, decisions, artifacts, risks, approvals and a hash-linked event chain.
+- Add a deterministic all-schema validator and strengthen repository audit/tests for exact catalog coverage, project registries and documentation drift.
+- Replace the legacy handoff CLI/template path with one canonical v2 contract covering scale, boundary/initial conditions, metrics, expected outputs and evidence level; register every handoff in project and artifact state.
+- Add searchable design aliases for question trees, hypothesis matrices, UMAP/t-SNE, FEL, DCCM, molecular-weight distributions, image integrity, time series and publication-format workflows.
+- Simplify the bilingual README around verified facts, quick start, boundaries and validation; move detailed comparison evidence to dedicated audit documents.
+- Make reproducible-release CI derive archive names from `VERSION` instead of hard-coding a release number.
+
 ## 0.5.1 - 2026-07-21
 
 - Consolidate the hardened v0.4 runtime and the broad vNext capability tree into one auditable source distribution.

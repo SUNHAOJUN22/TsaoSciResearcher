@@ -11,64 +11,64 @@
     "updated_at",
     "status",
     "scientific_question",
+    "research_type",
+    "scope",
+    "rationale",
+    "evidence_policy",
     "approvals",
+    "computation_handoffs",
     "latest_event_hash"
   ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {
-      "const": "2.0"
-    },
-    "project_id": {
-      "type": "string",
-      "minLength": 3
-    },
-    "name": {
-      "type": "string",
-      "minLength": 1
-    },
-    "created_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "updated_at": {
-      "type": "string",
-      "format": "date-time"
-    },
+    "schema_version": {"const": "2.0"},
+    "project_id": {"type": "string", "minLength": 3},
+    "name": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
     "status": {
       "enum": [
-        "proposed",
-        "planned",
-        "running",
-        "completed",
-        "checked",
-        "validated",
-        "accepted",
-        "rejected",
-        "superseded"
+        "proposed", "planned", "running", "completed", "checked",
+        "validated", "accepted", "rejected", "superseded"
       ]
     },
-    "scientific_question": {
-      "type": "string",
-      "minLength": 3
+    "scientific_question": {"type": "string", "minLength": 3},
+    "research_type": {
+      "enum": ["descriptive", "explanatory", "predictive", "causal", "design", "mechanistic", "mixed"]
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["included", "excluded"],
+      "properties": {
+        "included": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "excluded": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "rationale": {"type": "string", "minLength": 1},
+    "evidence_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material_claims_require_evidence", "inferences_require_assumptions"],
+      "properties": {
+        "material_claims_require_evidence": {"type": "boolean"},
+        "inferences_require_assumptions": {"type": "boolean"}
+      }
     },
     "approvals": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "computation_handoffs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
       "uniqueItems": true
     },
     "latest_event_hash": {
       "anyOf": [
-        {
-          "type": "null"
-        },
-        {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
-        }
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       ]
     }
   }

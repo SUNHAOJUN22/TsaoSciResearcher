@@ -1,18 +1,29 @@
 {
-  "schema_version": "1.0",
-  "handoff_id": "COMP-001",
-  "scientific_question": "",
-  "target_property": "",
-  "scale": "",
-  "candidate_methods": [],
+  "schema_version": "2.0",
+  "handoff_id": "COMP-template",
+  "project_id": "TSR-template",
+  "scientific_question": "Define the testable scientific question.",
+  "target_property": "Define the target property.",
+  "profile": "method profile",
+  "scale": "multiscale",
+  "status": "draft",
+  "evidence_level": "planned",
+  "candidate_methods": [
+    {
+      "name": "candidate method",
+      "rationale": "Explain why the method matches the property, scale and assumptions.",
+      "limitations": ["Document domain, model-form and numerical limitations."]
+    }
+  ],
   "inputs": [],
   "boundary_conditions": [],
   "initial_conditions": [],
-  "parameter_sources": [],
-  "convergence_checks": [],
-  "uncertainty_analysis": [],
-  "expected_outputs": [],
-  "acceptance_criteria": [],
-  "evidence_level": "planned",
-  "human_approval_points": []
+  "evaluation_metrics": ["Define a measurable evaluation metric."],
+  "expected_outputs": ["Define the expected validated artifact."],
+  "convergence_checks": ["Define method-appropriate numerical and model convergence."],
+  "uncertainty_analysis": ["Separate parameter, model-form and numerical uncertainty."],
+  "physical_validation": ["Define benchmark, experiment, conservation or limiting-case checks."],
+  "acceptance_criteria": ["Converged, physically consistent and answers the scientific question."],
+  "human_approval_points": ["Approve method, assumptions and resources before execution."],
+  "created_at": "1970-01-01T00:00:00Z"
 }

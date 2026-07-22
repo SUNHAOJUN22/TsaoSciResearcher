@@ -77,6 +77,7 @@ REQUIRED_SCRIPTS = {
     "validate_evidence.py",
     "validate_project.py",
     "validate_release.py",
+    "validate_schemas.py",
     "run_mutation_smoke.py",
     "performance_smoke.py",
 }
@@ -342,6 +343,8 @@ def audit() -> dict[str, Any]:
         v2 = []
     v2_ids: set[str] = set()
     v2_slugs: set[str] = set()
+    workbook_catalog_ids: set[str] = set()
+    generic_domain_slugs: list[str] = []
     v2_required = {
         "schema_version",
         "id",
@@ -377,6 +380,13 @@ def audit() -> dict[str, Any]:
             errors.append(f"duplicate v2 capability at row {number}")
         v2_ids.add(identifier)
         v2_slugs.add(slug)
+        if re.search(r"-capability-[0-9]+$", slug):
+            generic_domain_slugs.append(slug)
+        for lineage in row.get("source_lineage", []):
+            if isinstance(lineage, dict) and lineage.get("source") == "ai-for-science-workbook-322":
+                catalog_id = lineage.get("catalog_id")
+                if isinstance(catalog_id, str):
+                    workbook_catalog_ids.add(catalog_id)
         if row.get("workflow") not in workflow_dirs:
             errors.append(f"v2 capability {slug} references missing workflow")
         for field in ("input_schema", "output_schema"):
@@ -389,12 +399,25 @@ def audit() -> dict[str, Any]:
                 errors.append(f"v2 capability {slug} references missing/unsafe file {reference}")
     if len(v2) != 340 or v2_index.get("total") != 340:
         errors.append(f"v2 capability total {len(v2)} / {v2_index.get('total')} != 340")
+    if len(workbook_catalog_ids) != 322 or v2_index.get("workbook_named_total") != 322:
+        errors.append(
+            f"workbook-named capability coverage {len(workbook_catalog_ids)} / "
+            f"{v2_index.get('workbook_named_total')} != 322"
+        )
+    if generic_domain_slugs or v2_index.get("generic_domain_slots") != 0:
+        errors.append(
+            f"generic domain capability slugs remain: {generic_domain_slugs[:5]} "
+            f"(index={v2_index.get('generic_domain_slots')})"
+        )
     checks["capabilities"] = {
         "loaded": len(legacy),
         "legacy_unique": len(legacy_ids),
         "v2_loaded": len(v2),
         "v2_unique": len(v2_ids),
-        "domain_added": v2_index.get("domain_added"),
+        "workbook_named": len(workbook_catalog_ids),
+        "domain_named": v2_index.get("domain_named"),
+        "runtime_core": v2_index.get("core_added"),
+        "generic_domain_slots": v2_index.get("generic_domain_slots"),
     }
 
     domain_dirs = sorted(path for path in (ROOT / "domain-packs").iterdir() if path.is_dir())
@@ -491,6 +514,8 @@ def audit() -> dict[str, Any]:
     manifest_expectations = {
         "capability_count": 340,
         "legacy_capability_count": 158,
+        "workbook_named_capability_count": 322,
+        "domain_named_capability_count": 164,
         "workflow_count": 15,
         "schema_count": 15,
         "domain_pack_count": 7,

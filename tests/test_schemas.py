@@ -53,3 +53,18 @@ def test_schema_rejects_additional_properties() -> None:
     }
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.Draft202012Validator(schema).validate(value)
+
+
+def test_schema_validation_cli() -> None:
+    from scripts.validate_schemas import validate_all
+
+    result = validate_all(ROOT)
+    assert result == {"valid": True, "schemas": 15, "draft": "2020-12"}
+
+
+def test_canonical_handoff_template_matches_v2_schema() -> None:
+    schema = json.loads((ROOT / "schemas/v2/handoff.schema.json").read_text(encoding="utf-8"))
+    template = json.loads(
+        (ROOT / "templates/computation-handoff/computation-handoff.json").read_text(encoding="utf-8")
+    )
+    jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(template)

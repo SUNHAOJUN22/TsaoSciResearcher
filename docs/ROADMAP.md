@@ -1,14 +1,15 @@
 # Roadmap
 
-## Current source version
+## Current release
 
-- **v0.4.0** — security and correctness re-audit: deterministic bounded releases, managed atomic installation, finite JSON, explicit state invariants, bidirectional Claim–Evidence validation, eight closed schemas, adversarial/property/mutation/performance tests and cross-platform CI.
-
-A source version does not by itself prove that a GitHub Release exists. Release status is determined by the repository's Tags/Releases page and downloadable asset verification.
+**v0.5.2** provides 322 named AI-for-Science capability contracts, 18 runtime/core contracts, 15 gated workflows, a unified design-compatible project state, deterministic validation and cross-platform reproducible release gates.
 
 ## Planned work
 
-- **v0.5** — richer bibliographic connectors, reproducible notebook templates, broader instrument-data adapters and journal-specific reporting profiles.
-- **v0.6** — formal bidirectional TsaoSciComputation artifact protocol, cross-scale acceptance contracts and expanded evaluation fixtures.
+- tested adapters and execution receipts for selected external solvers, databases and instruments;
+- richer bibliographic connectors and reproducible notebook templates;
+- journal/organization-specific reporting profiles;
+- stronger cross-scale acceptance contracts with TsaoSciComputation;
+- larger routing, adversarial and scientific-method evaluation fixtures.
 
-Roadmap items are plans, not current capabilities.
+Roadmap items are plans, not current capabilities. External execution remains unavailable until a real adapter and environment are connected.

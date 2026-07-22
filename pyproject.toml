@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tsao-sci-researcher"
-version = "0.5.1"
+version = "0.5.2"
 description = "Evidence-first full-lifecycle scientific research platform"
 readme = "README.md"
 requires-python = ">=3.10"

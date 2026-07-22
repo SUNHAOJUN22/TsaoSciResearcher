@@ -1,6 +1,6 @@
 # Third-party sources and license boundaries
 
-TsaoSciResearcher is an original Apache-2.0 implementation. **No third-party source code, prompt files, datasets, models or binaries are bundled.** License observations were last reviewed on **2026-07-14**. The projects below were reviewed as architecture or capability-taxonomy references. Their licenses continue to govern their own content; this repository does not relicense that content.
+TsaoSciResearcher is an original Apache-2.0 implementation. **No third-party source code, prompt files, datasets, models or binaries are bundled.** License observations were last reviewed on **2026-07-22**. The projects below were reviewed as architecture or capability-taxonomy references. Their licenses continue to govern their own content; this repository does not relicense that content.
 
 | Project | Role in design review | Upstream license observed | Bundled here? |
 |---|---|---|---|

@@ -12,7 +12,7 @@ import yaml
 from tsao_researcher.capabilities import load_capabilities, search_capabilities
 from tsao_researcher.errors import IntegrityError, LockTimeoutError, ValidationError
 from tsao_researcher.handoff import create_handoff
-from tsao_researcher.io import canonical_json, exclusive_lock, load_json, new_id, sha256_file
+from tsao_researcher.io import canonical_json, exclusive_lock, load_json, new_id, read_jsonl, sha256_file
 from tsao_researcher.router import MAX_ROUTE_CHARS, clear_rule_cache, load_rules, route
 from tsao_researcher.state import initialize, load_project, transition, verify
 
@@ -34,6 +34,32 @@ def test_capability_search_is_ranked_and_filterable() -> None:
     assert rows
     assert rows == sorted(rows, key=lambda row: (-row["score"], row["slug"]))
     assert all("molecular-dynamics-multiscale" in row["domains"] for row in rows)
+
+
+def test_capability_search_indexes_named_engine_triggers() -> None:
+    rows = search_capabilities("GROMACS", domains={"molecular-dynamics-multiscale"})
+    assert rows
+    assert all("molecular-dynamics-multiscale" in row["domains"] for row in rows)
+
+
+@pytest.mark.parametrize(
+    ("query", "expected_slug"),
+    [
+        ("UMAP", "publication-quality-plot"),
+        ("DCCM", "contact-map-analysis"),
+        ("free-energy landscape", "pca-free-energy"),
+        ("molecular weight distribution", "population-balance"),
+        ("image splicing", "image-manipulation-detector"),
+        ("research question tree", "research-question-formulator"),
+        ("hypothesis matrix", "hypothesis-generator"),
+        ("research team analysis", "citation-network-analyzer"),
+        ("time series", "scientific-feature-engineering"),
+        ("journal format adaptation", "reference-formatter"),
+    ],
+)
+def test_capability_search_supports_design_aliases(query: str, expected_slug: str) -> None:
+    rows = search_capabilities(query, limit=20)
+    assert any(row["slug"] == expected_slug for row in rows)
 
 
 def test_capability_search_rejects_unbounded_limit() -> None:
@@ -136,6 +162,16 @@ def test_handoff_schema_validation(tmp_path: Path) -> None:
     schema = load_json(ROOT / "schemas/v2/handoff.schema.json")
     jsonschema.Draft202012Validator(schema).validate(handoff)
     assert handoff["inputs"][0]["sha256"] == sha256_file(data)
+    assert handoff["scale"] == "multiscale"
+    assert handoff["evidence_level"] == "prepared"
+    assert handoff["evaluation_metrics"] == ["energy"]
+    assert handoff["expected_outputs"] == ["validated artifact for energy"]
+    project = load_project(root)
+    assert project["computation_handoffs"] == ["computation/handoff.json"]
+    artifacts = read_jsonl(root / "artifacts.jsonl")
+    assert artifacts[-1]["artifact_type"] == "computation-handoff"
+    assert artifacts[-1]["path"] == "computation/handoff.json"
+    assert verify(root)["valid"] is True
 
 
 def test_project_schema_validation(tmp_path: Path) -> None:

@@ -53,4 +53,6 @@ def test_v2_handoff_has_unique_id_and_checksum(tmp_path: Path) -> None:
 def test_v2_capability_count() -> None:
     index = json.loads((ROOT / "capabilities/v2/index.json").read_text(encoding="utf-8"))
     assert index["total"] == 340
-    assert index["domain_added"] == 164
+    assert index["workbook_named_total"] == 322
+    assert index["domain_named"] == 164
+    assert index["generic_domain_slots"] == 0

@@ -65,6 +65,9 @@ def _search_index(
             row.get("description", ""),
             row.get("category", ""),
             " ".join(row.get("domains", [])) if isinstance(row.get("domains"), list) else "",
+            " ".join(row.get("positive_triggers", []))
+            if isinstance(row.get("positive_triggers"), list)
+            else "",
         ]
         haystack = _normalize(" ".join(str(field) for field in fields))
         indexed.append((row, haystack, frozenset(_TOKEN_RE.findall(haystack))))

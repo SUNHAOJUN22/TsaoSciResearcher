@@ -7,10 +7,16 @@
     "inputs classified by provenance"
   ],
   "inputs": [
-    "workflow-specific inputs"
+    "scientific question and target property",
+    "scale, profile and candidate methods",
+    "checksum-verifiable input files",
+    "boundary/initial conditions and constraints",
+    "evaluation metrics and expected outputs"
   ],
   "artifacts": [
-    "workflow-specific artifacts"
+    "registered v2 computation handoff",
+    "input checksum inventory",
+    "convergence, uncertainty, validation and approval requirements"
   ],
   "phases": [
     "读取项目、问题、假设和证据ID",

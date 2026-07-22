@@ -10,9 +10,15 @@
     "scientific_question",
     "target_property",
     "profile",
+    "scale",
     "status",
+    "evidence_level",
     "candidate_methods",
     "inputs",
+    "boundary_conditions",
+    "initial_conditions",
+    "evaluation_metrics",
+    "expected_outputs",
     "convergence_checks",
     "uncertainty_analysis",
     "physical_validation",
@@ -22,61 +28,30 @@
   ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {
-      "const": "2.0"
+    "schema_version": {"const": "2.0"},
+    "handoff_id": {"type": "string", "minLength": 3},
+    "project_id": {"type": "string", "minLength": 3},
+    "scientific_question": {"type": "string", "minLength": 3},
+    "target_property": {"type": "string", "minLength": 1},
+    "profile": {"type": "string", "minLength": 1},
+    "scale": {
+      "enum": ["electronic", "atomistic", "mesoscale", "continuum", "device", "process", "multiscale"]
     },
-    "handoff_id": {
-      "type": "string",
-      "minLength": 3
-    },
-    "project_id": {
-      "type": "string",
-      "minLength": 3
-    },
-    "scientific_question": {
-      "type": "string",
-      "minLength": 3
-    },
-    "target_property": {
-      "type": "string",
-      "minLength": 1
-    },
-    "profile": {
-      "type": "string",
-      "minLength": 1
-    },
-    "status": {
-      "enum": [
-        "draft",
-        "ready"
-      ]
-    },
+    "status": {"enum": ["draft", "ready"]},
+    "evidence_level": {"enum": ["planned", "prepared", "executed", "checked", "validated", "accepted"]},
     "candidate_methods": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "name",
-          "rationale",
-          "limitations"
-        ],
+        "required": ["name", "rationale", "limitations"],
         "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "rationale": {
-            "type": "string",
-            "minLength": 1
-          },
+          "name": {"type": "string", "minLength": 1},
+          "rationale": {"type": "string", "minLength": 1},
           "limitations": {
             "type": "array",
-            "items": {
-              "type": "string",
-              "minLength": 1
-            },
+            "items": {"type": "string", "minLength": 1},
             "minItems": 1
           }
         }
@@ -87,73 +62,56 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "path",
-          "size_bytes",
-          "sha256"
-        ],
+        "required": ["path", "size_bytes", "sha256"],
         "properties": {
-          "path": {
-            "type": "string",
-            "minLength": 1
-          },
-          "size_bytes": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "sha256": {
-            "type": "string",
-            "pattern": "^[0-9a-f]{64}$"
-          }
+          "path": {"type": "string", "minLength": 1},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
         }
       }
     },
-    "created_at": {
-      "type": "string",
-      "format": "date-time"
+    "boundary_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "initial_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "evaluation_metrics": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
     },
+    "expected_outputs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "created_at": {"type": "string", "format": "date-time"},
     "convergence_checks": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
       "minItems": 1,
       "uniqueItems": true
     },
     "uncertainty_analysis": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
       "minItems": 1,
       "uniqueItems": true
     },
     "physical_validation": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
       "minItems": 1,
       "uniqueItems": true
     },
     "acceptance_criteria": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
       "minItems": 1,
       "uniqueItems": true
     },
     "human_approval_points": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
+      "items": {"type": "string", "minLength": 1},
       "minItems": 1,
       "uniqueItems": true
     }

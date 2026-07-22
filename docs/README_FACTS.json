@@ -22,7 +22,8 @@
       "systematic-review": 5,
       "technical-report": 3
     },
-    "domain_slots": 164,
+    "domain_named": 164,
+    "generic_domain_slots": 0,
     "legacy_by_category": {
       "AI与机器学习科研": 20,
       "实验室自动化与仪器": 20,
@@ -35,7 +36,8 @@
     },
     "legacy_named": 158,
     "runtime_core": 18,
-    "v2_total": 340
+    "v2_total": 340,
+    "workbook_named": 322
   },
   "domain_packs": {
     "count": 7,
@@ -59,7 +61,7 @@
   "repository_assets": {
     "references": 22,
     "templates": 13,
-    "test_modules": 19
+    "test_modules": 20
   },
   "schema_version": "1.0",
   "schemas": {
@@ -82,7 +84,7 @@
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.5.1",
+  "version": "0.5.2",
   "workflows": {
     "count": 15,
     "items": [

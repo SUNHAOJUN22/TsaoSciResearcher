@@ -1,7 +1,7 @@
 name: TsaoSciResearcher
-description: Evidence-first scientific research architect with 340 capability contracts,
+description: Evidence-first scientific research architect with 322 named AI-for-Science contracts plus 18 runtime capabilities,
   hash-linked state, validated routing and computation handoff.
-version: 0.5.1
+version: 0.5.2
 instructions: 'Route through SKILL.md and load one primary workflow at a time. Preserve
   evidence and artifact provenance. Distinguish proposed, planned, running, completed,
   checked, validated and accepted states. Never fabricate citations, data, experiments,

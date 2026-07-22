@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Validate either legacy or canonical v2 project metadata."""
+
 from __future__ import annotations
 
 import argparse
@@ -37,27 +39,39 @@ def transition_allowed(previous: str, current: str) -> bool:
     return current in TRANSITIONS[previous]
 
 
+def _project_file(path: str | Path) -> Path:
+    value = Path(path).expanduser().resolve(strict=False)
+    if value.is_dir() or value.name == ".tsao-research":
+        value = value / "project.yaml"
+    return value
+
+
 def validate(path: str | Path) -> dict[str, Any]:
-    data = load_data(path)
+    project_path = _project_file(path)
+    data = load_data(project_path)
     if not isinstance(data, dict):
         raise ValueError("project document must be an object")
-    schema = load_data(ROOT / "schemas/research-project.schema.json")
+    version = str(data.get("schema_version", "1.0"))
+    schema_path = (
+        ROOT / "schemas/v2/project.schema.json"
+        if version == "2.0"
+        else ROOT / "schemas/research-project.schema.json"
+    )
+    schema = load_data(schema_path)
     jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
     created = datetime.fromisoformat(data["created_at"].replace("Z", "+00:00"))
     updated = datetime.fromisoformat(data["updated_at"].replace("Z", "+00:00"))
     if updated < created:
         raise ValueError("updated_at must not be earlier than created_at")
-    if data["status"] in {"validated", "accepted"} and not (
-        data.get("hypotheses") or str(data.get("rationale", "")).strip()
-    ):
-        raise ValueError("validated/accepted project requires hypotheses or an explicit rationale")
+    if data["status"] in {"validated", "accepted"} and not str(data.get("rationale", "")).strip():
+        raise ValueError("validated/accepted project requires an explicit rationale")
     if data["status"] == "accepted" and not data.get("approvals"):
         raise ValueError("accepted project requires at least one recorded approval")
     return data
 
 
 def main(argv: Sequence[str] | None = None) -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project")
     parser.add_argument("--from-status")
     args = parser.parse_args(argv)
@@ -67,7 +81,12 @@ def main(argv: Sequence[str] | None = None) -> None:
             raise ValueError(f"illegal transition {args.from_status} -> {data['status']}")
         print(
             json.dumps(
-                {"valid": True, "project_id": data["project_id"], "status": data["status"]},
+                {
+                    "valid": True,
+                    "schema_version": data.get("schema_version"),
+                    "project_id": data["project_id"],
+                    "status": data["status"],
+                },
                 ensure_ascii=False,
             )
         )

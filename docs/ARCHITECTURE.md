@@ -1,6 +1,6 @@
 # Architecture
 
-TsaoSciResearcher v0.5.1 separates scientific policy, deterministic runtime services and external execution. The repository is a real source tree: no bootstrap payload or self-modifying workflow is required to install or run it.
+TsaoSciResearcher v0.5.2 separates scientific policy, deterministic runtime services and external execution. The repository is a real source tree: no bootstrap payload or self-modifying workflow is required to install or run it.
 
 ```mermaid
 flowchart TD
@@ -10,8 +10,8 @@ positive + negative semantics]
     R --> W[One primary workflow]
     W --> C[Machine workflow contract]
     C --> G[Entry / blocking / completion gates]
-    G --> K[340 v2 capabilities
-158 legacy-compatible capabilities]
+    G --> K[340 v2 contracts
+322 named catalog + 18 runtime]
     K --> D[7 domain packs]
     D --> S[Hash-linked project state]
     S --> V{Validation and approval}
@@ -26,8 +26,8 @@ positive + negative semantics]
 
 - `tsao_researcher/router.py` — cached deterministic routing, negative-intent handling, bounded input and reproducible tie-breaking.
 - `tsao_researcher/capabilities.py` — validated 340-record catalog, normalized search index and defensive cached reads.
-- `tsao_researcher/state.py` — managed project lifecycle, atomic writes, bounded locks and SHA-256 event chaining.
-- `tsao_researcher/handoff.py` — regular-file inputs, path containment, streaming checksums and explicit verification requirements.
+- `tsao_researcher/state.py` — one canonical design-compatible project layout, atomic writes, bounded locks, decisions/approvals logs and SHA-256 event chaining.
+- `tsao_researcher/handoff.py` — regular-file inputs, path containment, streaming checksums, explicit verification requirements and atomic registration in project/artifact state.
 - `tsao_researcher/io.py` — finite JSON, bounded reads, append-only JSONL, atomic replacement and lock recovery.
 - `scripts/` — compatibility APIs, evidence/claim validators, installer, repository audit, tests, performance and deterministic release tooling.
 
@@ -37,7 +37,7 @@ positive + negative semantics]
 2. Machine workflow contract: `workflows/*/workflow.yaml.json`.
 3. Blocking and completion gates: `workflows/*/gates.yaml`.
 4. Input/output contracts: `schemas/` and `schemas/v2/`.
-5. Capability contracts: `capabilities/v2/capabilities.json`.
+5. Capability contracts: 322 named catalog contracts plus 18 runtime/core contracts in `capabilities/v2/capabilities.json`.
 6. Domain-specific method and validation guidance: `domain-packs/`.
 
 ## Native, orchestrated and external execution

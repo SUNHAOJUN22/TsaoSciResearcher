@@ -13,14 +13,15 @@ Indexed capabilities routed here: **6**.
 
 ## Required outputs
 
-- `research_question`
-- `hypotheses`
+- `research_question_tree`
+- `candidate_hypothesis_matrix`
 - `scope`
 - `falsification_criteria`
+- `experiment_computation_analysis_route`
 
 ## Blocking scoping gate
 
-Do not draft a paper or full protocol from a broad topic alone. Produce 1-3 candidate research questions, each with object, variables, boundary conditions, outcome, falsification criterion and feasible evidence route. Distinguish descriptive, explanatory, predictive, causal, design and mechanistic questions.
+Do not draft a paper or full protocol from a broad topic alone. Produce a question tree and 1-3 candidate research questions, each with object, variables, boundary conditions, outcome, falsification criterion and feasible evidence route. For each question, create a candidate-hypothesis matrix that labels prior fact, user hypothesis, model inference and unresolved claim. Distinguish descriptive, explanatory, predictive, causal, design and mechanistic questions.
 
 
 ## Universal execution order

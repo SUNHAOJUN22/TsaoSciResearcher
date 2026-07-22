@@ -10,12 +10,14 @@ description: >
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
   through the structured computation-handoff workflow.
-version: 0.5.1
+version: 0.5.2
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher
   capability_count: 340
+  workbook_named_capability_count: 322
   legacy_capability_count: 158
+  domain_named_capability_count: 164
   workflow_count: 15
   schema_count: 15
   domain_pack_count: 7
@@ -31,7 +33,7 @@ Convert a broad scientific objective into a testable, traceable and reviewable r
 
 ## First rule: route before loading
 
-Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Use `capabilities/v2/index.json` and the cached `tsao-researcher search` CLI for v2 discovery; load the 158-record `capability-index/capabilities.json` only for legacy compatibility.
+Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Use `capabilities/v2/index.json` and the cached `tsao-researcher search` CLI for discovery. The v2 catalog contains 322 exact named AI-for-Science contracts plus 18 runtime/core contracts; load the 158-record `capability-index/capabilities.json` only for legacy integrations.
 
 | User intent | Primary workflow |
 |---|---|
@@ -84,11 +86,15 @@ The following states are distinct and must not be collapsed:
 ## Default project state
 
 ```bash
-python scripts/init_project.py --name "my-project" --question "What is being tested?" --output .
-python scripts/validate_project.py .tsao-research/project.yaml
+python -m tsao_researcher init \
+  --name "my-project" \
+  --question "What is being tested?" \
+  --research-type mechanistic \
+  --output .
+python scripts/validate_project.py .tsao-research
 ```
 
-The `.tsao-research/` directory is the durable source of truth for questions, hypotheses, evidence, claims, decisions, artifacts, risks and approvals.
+The CLI and compatibility initializer use one canonical `.tsao-research/` layout containing questions, hypotheses, evidence, claims, decisions, artifacts, risks, approvals and a hash-linked event chain.
 
 ## Scientific figures
 
@@ -99,7 +105,18 @@ For every quantitative figure, load `workflows/scientific-figure/WORKFLOW.md` an
 TsaoSciResearcher may design a computational study and interpret validated outputs, but it must not simulate execution. Create a handoff with:
 
 ```bash
-python scripts/handoff_to_computation.py --project .tsao-research --out .tsao-research/computation-handoff.json
+python scripts/handoff_to_computation.py \
+  --project .tsao-research \
+  --out computation/handoff.json \
+  --question "What property must be computed?" \
+  --property "target property" \
+  --profile MD \
+  --scale atomistic \
+  --method "candidate method" \
+  --boundary-condition "periodic box" \
+  --metric "convergence metric" \
+  --expected-output "validated result artifact" \
+  --input-file data/input.dat
 ```
 
 Route real quantum chemistry, molecular dynamics, finite-element, CFD and process-simulation execution to TsaoSciComputation.

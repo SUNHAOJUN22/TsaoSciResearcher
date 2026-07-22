@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -23,6 +24,21 @@ from .io import (
 
 STATE_DIR = ".tsao-research"
 MANAGED_MARKER = "This directory is managed by TsaoSciResearcher."
+RESEARCH_TYPES = frozenset(
+    {"descriptive", "explanatory", "predictive", "causal", "design", "mechanistic", "mixed"}
+)
+COMPATIBILITY_JSON = {
+    "questions.json": "questions",
+    "hypotheses.json": "hypotheses",
+    "risks.json": "risks",
+}
+COMPATIBILITY_JSONL = (
+    "evidence.jsonl",
+    "claims.jsonl",
+    "decisions.jsonl",
+    "artifacts.jsonl",
+    "approvals.jsonl",
+)
 TRANSITIONS: dict[str, frozenset[str]] = {
     "proposed": frozenset({"planned", "rejected", "superseded"}),
     "planned": frozenset({"running", "rejected", "superseded"}),
@@ -83,11 +99,25 @@ def _write_project(path: Path, project: dict[str, Any]) -> None:
     atomic_write_text(path, yaml.safe_dump(project, sort_keys=False, allow_unicode=True))
 
 
-def initialize(name: str, question: str, output: str | Path = ".", *, force: bool = False) -> Path:
+def _write_json(path: Path, value: dict[str, Any]) -> None:
+    atomic_write_text(path, json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+def initialize(
+    name: str,
+    question: str,
+    output: str | Path = ".",
+    *,
+    research_type: str = "mixed",
+    force: bool = False,
+) -> Path:
     clean_name = name.strip()
     clean_question = question.strip()
+    clean_type = research_type.strip().casefold()
     if not clean_name or len(clean_question) < 3:
         raise ValidationError("project name and a substantive scientific question are required")
+    if clean_type not in RESEARCH_TYPES:
+        raise ValidationError(f"unsupported research type: {research_type}")
     root = project_root(output)
     if root.is_symlink():
         raise ValidationError(f"project state directory cannot be a symbolic link: {root}")
@@ -110,7 +140,15 @@ def initialize(name: str, question: str, output: str | Path = ".", *, force: boo
         "updated_at": instant,
         "status": "proposed",
         "scientific_question": clean_question,
+        "research_type": clean_type,
+        "scope": {"included": [], "excluded": []},
+        "rationale": "Initial project definition; hypotheses and evidence remain to be registered.",
+        "evidence_policy": {
+            "material_claims_require_evidence": True,
+            "inferences_require_assumptions": True,
+        },
         "approvals": [],
+        "computation_handoffs": [],
         "latest_event_hash": None,
     }
     try:
@@ -127,15 +165,35 @@ def initialize(name: str, question: str, output: str | Path = ".", *, force: boo
         ):
             (stage / directory).mkdir()
         _write_project(stage / "project.yaml", project)
+        _write_json(
+            stage / "questions.json",
+            {
+                "questions": [
+                    {
+                        "question_id": "Q-001",
+                        "text": clean_question,
+                        "status": "active",
+                        "created_at": instant,
+                    }
+                ]
+            },
+        )
+        _write_json(stage / "hypotheses.json", {"hypotheses": []})
+        _write_json(stage / "risks.json", {"risks": []})
+        for filename in COMPATIBILITY_JSONL:
+            atomic_write_text(stage / filename, "")
         atomic_write_text(stage / "state" / "events.jsonl", "")
-        atomic_write_text(stage / "README.md", f"# Research state\n\n{MANAGED_MARKER}\n")
+        atomic_write_text(
+            stage / "README.md",
+            f"# Research state\n\n{MANAGED_MARKER}\n",
+        )
         event = _event_payload(
             project_id,
             "project.initialized",
             None,
             "proposed",
             "project initialized",
-            [project_id],
+            [project_id, "Q-001"],
             None,
         )
         append_jsonl(stage / "state" / "events.jsonl", event)
@@ -168,25 +226,52 @@ def transition(
         existing_approvals = project.get("approvals", [])
         if not isinstance(existing_approvals, list):
             raise ValidationError("project approvals must be a list")
+        requested = sorted({str(value).strip() for value in approvals or [] if str(value).strip()})
         merged_approvals = sorted(
-            {str(value).strip() for value in [*existing_approvals, *(approvals or [])] if str(value).strip()}
+            {str(value).strip() for value in [*existing_approvals, *requested] if str(value).strip()}
         )
         if next_state == "accepted" and not merged_approvals:
             raise StateTransitionError("accepted state requires a recorded human approval")
+        project_id = str(project.get("project_id", ""))
+        timestamp = utc_now()
+        new_approvals = [value for value in requested if value not in existing_approvals]
+        for reference in new_approvals:
+            append_jsonl(
+                state_root / "approvals.jsonl",
+                {
+                    "approval_id": new_id("APR"),
+                    "project_id": project_id,
+                    "timestamp": timestamp,
+                    "reference": reference,
+                    "transition": next_state,
+                },
+            )
+        append_jsonl(
+            state_root / "decisions.jsonl",
+            {
+                "decision_id": new_id("DEC"),
+                "project_id": project_id,
+                "timestamp": timestamp,
+                "previous_state": current,
+                "next_state": next_state,
+                "reason": clean_reason,
+                "approvals": requested,
+            },
+        )
         events_path = state_root / "state" / "events.jsonl"
         previous_hash = project.get("latest_event_hash")
         event = _event_payload(
-            str(project.get("project_id", "")),
+            project_id,
             "project.transition",
             current,
             next_state,
             clean_reason,
-            approvals or [],
+            requested,
             previous_hash if isinstance(previous_hash, str) else None,
         )
         append_jsonl(events_path, event)
         project["status"] = next_state
-        project["updated_at"] = utc_now()
+        project["updated_at"] = timestamp
         project["latest_event_hash"] = event["event_hash"]
         project["approvals"] = merged_approvals
         _write_project(state_root / "project.yaml", project)
@@ -196,6 +281,35 @@ def transition(
 def verify(root: str | Path) -> dict[str, Any]:
     state_root = project_root(root)
     project = load_project(state_root)
+    for filename, key in COMPATIBILITY_JSON.items():
+        path = state_root / filename
+        if path.is_symlink() or not path.is_file():
+            raise IntegrityError(f"required project registry missing or unsafe: {filename}")
+        value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
+        if not isinstance(value, dict) or not isinstance(value.get(key), list):
+            raise IntegrityError(f"invalid project registry: {filename}")
+    for filename in COMPATIBILITY_JSONL:
+        path = state_root / filename
+        if path.is_symlink() or not path.is_file():
+            raise IntegrityError(f"required project log missing or unsafe: {filename}")
+        list(read_jsonl(path))
+
+    handoffs = project.get("computation_handoffs")
+    if not isinstance(handoffs, list) or any(not isinstance(value, str) for value in handoffs):
+        raise IntegrityError("project computation_handoffs must be a list of paths")
+    if len(handoffs) != len(set(handoffs)):
+        raise IntegrityError("project computation_handoffs contains duplicate paths")
+    resolved_root = state_root.resolve()
+    for relative in handoffs:
+        candidate = (state_root / relative).resolve(strict=False)
+        if candidate == resolved_root or not candidate.is_relative_to(resolved_root):
+            raise IntegrityError(f"computation handoff escapes project state: {relative}")
+        if candidate.is_symlink() or not candidate.is_file():
+            raise IntegrityError(f"registered computation handoff missing or unsafe: {relative}")
+        value = json.loads(candidate.read_text(encoding="utf-8", errors="strict"))
+        if not isinstance(value, dict) or value.get("project_id") != project.get("project_id"):
+            raise IntegrityError(f"registered computation handoff is invalid: {relative}")
+
     previous_hash: str | None = None
     count = 0
     last_state: str | None = None
@@ -216,4 +330,10 @@ def verify(root: str | Path) -> dict[str, Any]:
         raise IntegrityError("project latest_event_hash does not match event-chain head")
     if last_state != project.get("status"):
         raise IntegrityError("project status does not match the final event")
-    return {"valid": True, "events": count, "head": previous_hash, "status": last_state}
+    return {
+        "valid": True,
+        "events": count,
+        "head": previous_hash,
+        "status": last_state,
+        "registries": len(COMPATIBILITY_JSON) + len(COMPATIBILITY_JSONL),
+    }

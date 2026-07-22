@@ -1,5 +1,19 @@
 # Capability model
 
-The catalog contains 158 records from eight research-facing categories. A record is discoverable metadata, not a promise that every external database or software package is installed. Each record identifies its workflow, inputs, outputs, risk, approval requirement, computation boundary and references.
+The v2 catalog contains **340 records**:
 
-Maturity `indexed-orchestration` means the root skill can route and govern the task, while execution may depend on connected tools, user data or a specialist environment.
+```text
+322 named AI-for-Science catalog contracts
++ 18 native runtime/core contracts
+= 340 total records
+```
+
+The 322 named records comprise 158 general research contracts and 164 computation/engineering domain contracts. Each record preserves a stable internal ID, a public slug/name, routing metadata, inputs/outputs, validators, failure/recovery guidance, approval points, references and a computation boundary.
+
+Implementation levels mean:
+
+- `native-research` — executed by the deterministic core or repository validators;
+- `human-review` — structured support with a mandatory qualified decision;
+- `computation-delegated` — method and validation contract requiring a real external tool or TsaoSciComputation handoff.
+
+A named record is discoverable and testable metadata. It is not proof that a database, model, solver or instrument is installed or that a scientific task ran.

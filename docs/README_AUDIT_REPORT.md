@@ -1,75 +1,63 @@
-# Bilingual README audit report
+# TsaoSciResearcher design and README audit
 
 **Audit date:** 2026-07-22  
-**Release audited:** v0.5.1  
-**Scope:** current `main` source, executable CLI/installers, 15 workflows, 15 schemas, capability catalogs, domain packs, tests, GitHub Actions evidence, the uploaded design specification and the uploaded 322-skill workbook.
+**Target release:** v0.5.2  
+**Inputs:** current source tree, uploaded design specification, uploaded 322-entry AI for Science workbook, executable scripts and CI configuration.
 
-## Method
+## Conclusion
 
-The audit used code and generated artifacts as the source of truth:
+The original design is implemented as a **research control and orchestration layer**, not as a bundle of external databases, solvers or instruments. This audit found and fixed five concrete inconsistencies:
 
-1. parsed `VERSION`, `manifest.json`, `pyproject.toml`, capability indexes and workflow/schema inventories;
-2. read the actual CLI parsers and installer path mapping;
-3. compared all 322 workbook slugs against the 340-record v2 catalog;
-4. read GitHub Actions JUnit, mutation and performance artifacts;
-5. checked public README claims against the implementation and scientific-execution boundaries.
+1. 164 computation/engineering records used generic numbered slugs; they now preserve the exact workbook names and slugs.
+2. The CLI initializer and compatibility initializer produced two different `.tsao-research/` layouts; both now use one v2 implementation.
+3. The design-required question, hypothesis, evidence, claim, decision, artifact, risk and approval registries were not all created by the v2 CLI; they now are.
+4. The public computation-handoff script still emitted the legacy v1 contract and did not register the artifact in project state; it now delegates to the canonical v2 runtime and records the handoff in `project.yaml` and `artifacts.jsonl`.
+5. README and CI contained release-specific repetition; README is shorter and CI derives the archive name from `VERSION`.
 
-## Findings before this rewrite
+## Requirement-by-requirement result
 
-| Finding | Risk | Resolution |
+| Design requirement | Evidence | Result |
 |---|---|---|
-| `README.md` was primarily Chinese while `pyproject.toml` used it as the canonical package page | International users received an incomplete project entry point | Replaced it with a complete English canonical README and retained a full Chinese edition |
-| `README.zh-CN.md` was only a short redirect/summary | Chinese users did not receive a complete standalone manual | Rewritten as a full Chinese README |
-| `README_EN.md` was a short summary rather than a mirror | Three README files could drift | It is now byte-identical to `README.md` and checked in tests |
-| “340 capabilities” was not decomposed | Could be read as 340 individually named workbook skills | Now disclosed as 158 named research capabilities + 164 domain slots + 18 runtime/core capabilities |
-| No explicit 322-skill comparison existed | Coverage could not be independently understood | Added `docs/CAPABILITY_COVERAGE_MATRIX.md` |
-| Performance design was described without the verified release measurements | Readers could not distinguish architecture claims from measured results | Added actual GitHub Actions smoke metrics with platform and threshold caveats |
-| CI descriptions were spread across README and validation docs | Evidence could become stale | Added `docs/VALIDATION_EVIDENCE.json` and machine-generated `docs/README_FACTS.json` |
-| README facts were handwritten | Counts could silently drift after code changes | Added `scripts/build_readme_facts.py --check` and regression tests |
+| Comprehensive research-method hub | 15 workflows, 322 named research/domain contracts and 18 runtime contracts | Done |
+| Single entry router | `SKILL.md`, `tsao_researcher/router.py` | Done |
+| Progressive loading | Root Skill selects one workflow and its references | Done |
+| Scientific question and falsifiable hypotheses | `research-question`, question/hypothesis registries | Done |
+| Deep research, systematic review and evidence synthesis | `deep-research`, `systematic-review`, evidence/claim validators | Done; retrieval uses host tools |
+| Research and experiment design | `research-design`, `experiment-design`, DOE/power references | Done |
+| Data quality, statistics, causal/UQ/ML planning | `data-analysis` and named contracts | Done; libraries depend on environment |
+| Figure contract before plotting | figure schema/template/validator/export checker | Done |
+| Scientific writing, reports and review responses | writing, peer-review and technical-report workflows/templates | Done |
+| Research integrity and read-only audit | integrity workflow, citation/claim/evidence checks | Done |
+| TsaoSciComputation collaboration | canonical v2 contract with scale, boundaries, metrics, outputs, evidence level, checksums, project registration and artifact log | Done |
+| Exact project status sequence | hash-linked state machine and human approval for `accepted` | Done |
+| Design-specified `.tsao-research/` registries | unified initializer creates all nine root registries plus event chain/directories | Done |
+| At least 150 machine-readable capabilities | 322 named catalog contracts + 18 runtime contracts | Done |
+| All 322 workbook skills named one-to-one | exact workbook slugs/names and catalog IDs in lineage | Done |
+| Deterministic validators with non-zero failures | schema, project, evidence, claim, citation, figure, export, structure, release and audit CLIs | Done |
+| Generic JSON Schema validator | `scripts/validate_schemas.py` | Done |
+| Codex/Claude/Open Agent installation | managed cross-platform installer | Done |
+| Windows/Linux/macOS support | CI compatibility matrix | Done |
+| Independent deterministic ZIP | two-build byte comparison and safe archive validation | Done |
+| License separation | original Apache-2.0 code; upstream sources documented, not bundled | Done |
+| Real DFT/MD/FEM/CFD/process/lab execution | intentionally delegated, never fabricated | Boundary by design |
+| Native DOCX/PPT renderer | not embedded; uses host document tools | Host-dependent boundary |
 
-## Verified implementation facts
+## Priority-list check
 
-- Version: **0.5.1**
-- v2 capability records: **340**
-- Composition: **158 named compatibility capabilities + 164 domain slots + 18 runtime/core capabilities**
-- Workflows: **15**
-- JSON Schemas: **15**
-- Domain packs: **7**
-- Reference files: **22**
-- Templates: **13**
-- Test modules before this documentation test was added: **18**
-- GitHub Actions full regression: **96 tests, 0 failures, 0 errors, 0 skipped**
-- Critical mutation smoke: **15/15 killed**
-- Compatibility matrix: Ubuntu/Python 3.10 and 3.13, Windows/Python 3.12, macOS/Python 3.12
+| Workbook priority item | Current status |
+|---|---|
+| Scientific Validation Gate | Implemented in workflow gates, state, evidence and audit checks |
+| Academic research and scientific-agent suites | Ideas absorbed into original contracts; upstream packages are not silently vendored |
+| Chinese research and Office production | Routed through host tools; no false native renderer claim |
+| GROMACS/MD analysis | Exact named contracts, MD domain pack and computation handoff; execution remains external |
+| Computational materials and catalysis | Exact named contracts and domain guidance; solvers remain external |
+| Polymer kinetics | Named contracts across catalysis/polymer and process/kinetics packs |
+| OpenFOAM extrusion/CFD | Named contracts and CFD validation pack; OpenFOAM is not bundled |
+| DOLFINx multiphysics | Named contracts and FEM/multiphysics validation pack; DOLFINx is not bundled |
+| DWSIM/IDAES digital twin | Named process/digital-twin contracts; engines remain external |
+| Autonomous experiment loops | Planning, state and provenance exist; unattended external execution requires adapters and approval |
+| Research supply chain/version governance | pinned CI, checksums, provenance, deterministic packaging and single-main governance |
 
-## README changes
+## README policy after this audit
 
-The rewritten bilingual documentation now:
-
-- distinguishes native runtime behavior, tool-orchestrated work, external execution and qualified-human decisions;
-- documents every CLI subcommand that actually exists;
-- documents all installer agents/scopes and their real target paths;
-- gives a complete lifecycle and state model without equating `completed`, `checked`, `validated` and `accepted`;
-- makes computation handoff boundaries explicit;
-- exposes the exact capability-composition limitation;
-- reports measured performance only with environment and threshold context;
-- links design-to-code, capability coverage and validation evidence.
-
-## Residual limitations
-
-1. The 164 domain slots are count-aligned but not one-to-one named implementations of the 164 computational workbook skills.
-2. External databases, instruments and solvers are not bundled.
-3. Research retrieval, plotting and office-document production depend on tools available to the host agent.
-4. Software checks validate contracts and implementation behavior; they do not scientifically accept a calculation, experiment or manuscript.
-5. The GitHub Actions evidence is a dated release record, not a promise that every future commit remains green.
-
-## Maintenance rule
-
-Any change to capability counts, workflows, schemas, domain packs or README structure must run:
-
-```bash
-python scripts/build_readme_facts.py --write
-python scripts/build_readme_facts.py --check
-python scripts/generate_checksums.py --write
-python scripts/audit_repository.py
-```
+The README reports only verified code facts, keeps operational steps short, and sends detailed evidence to dedicated documents. External software names are described as integration targets rather than installed capabilities.

@@ -1,8 +1,8 @@
 {
   "name": "TsaoSciResearcher",
   "slug": "tsao-sci-researcher",
-  "version": "0.5.1",
-  "description": "Evidence-first, full-lifecycle scientific research platform with traceable state, deterministic routing, 340 v2 capabilities and guarded computation handoffs.",
+  "version": "0.5.2",
+  "description": "Evidence-first scientific research control layer with 322 named AI-for-Science capability contracts, 18 runtime capabilities, unified project state and guarded computation handoffs.",
   "license": "Apache-2.0",
   "capability_count": 340,
   "workflow_count": 15,
@@ -11,7 +11,7 @@
   "agent_metadata": "agents/openai.yaml",
   "capability_index": "capabilities/v2/index.json",
   "project_state_dir": ".tsao-research",
-  "generated_at": "2026-07-21T00:00:00Z",
+  "generated_at": "2026-07-22T00:00:00Z",
   "compatibility": {
     "codex": true,
     "claude_code": true,
@@ -36,5 +36,7 @@
   "legacy_capability_count": 158,
   "domain_pack_count": 7,
   "legacy_capability_index": "capability-index/capabilities.json",
-  "runtime_package": "tsao_researcher"
+  "runtime_package": "tsao_researcher",
+  "workbook_named_capability_count": 322,
+  "domain_named_capability_count": 164
 }

@@ -25,5 +25,10 @@
     "native-research": 147,
     "human-review": 23,
     "computation-delegated": 170
-  }
+  },
+  "workbook_reference_total": 322,
+  "workbook_named_total": 322,
+  "legacy_named": 158,
+  "domain_named": 164,
+  "generic_domain_slots": 0
 }

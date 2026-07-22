@@ -10,7 +10,7 @@ from typing import Any
 
 from .capabilities import search_capabilities
 from .router import route
-from .state import initialize, transition, verify
+from .state import RESEARCH_TYPES, initialize, transition, verify
 
 
 def _emit(value: Any) -> None:
@@ -44,6 +44,7 @@ def main() -> None:
     init_parser = sub.add_parser("init", help="initialize a traceable project")
     init_parser.add_argument("--name", required=True)
     init_parser.add_argument("--question", required=True)
+    init_parser.add_argument("--research-type", default="mixed", choices=sorted(RESEARCH_TYPES))
     init_parser.add_argument("--output", default=".")
     init_parser.add_argument("--force", action="store_true")
 
@@ -69,7 +70,15 @@ def main() -> None:
             )
         )
     elif args.command == "init":
-        print(initialize(args.name, args.question, Path(args.output), force=args.force))
+        print(
+            initialize(
+                args.name,
+                args.question,
+                Path(args.output),
+                research_type=args.research_type,
+                force=args.force,
+            )
+        )
     elif args.command == "transition":
         _emit(transition(args.project, args.state, args.reason, approvals=args.approval))
     elif args.command == "verify":

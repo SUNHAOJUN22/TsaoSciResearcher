@@ -1,24 +1,16 @@
-# Repository audit report
+# Historical repository audit
 
-**Audit date:** 2026-07-14  
-**Release:** v0.3.0  
-**Scope:** uploaded design specification, uploaded 322-skill catalog, repository structure, executable checks and public README claims.
+This file records the original v0.3.0 remediation performed on 2026-07-14. It is retained for provenance, not as the current release assessment.
 
-## Findings before remediation
+The current design/README audit is [`README_AUDIT_REPORT.md`](README_AUDIT_REPORT.md), and the current machine-readable evidence is [`VALIDATION_EVIDENCE.json`](VALIDATION_EVIDENCE.json).
 
-The public `main` branch contained a polished README and root router, but core files referenced by them were absent, including the capability index, workflows, requirements and test runner. The advertised CI command therefore could not succeed.
+## Historical finding
 
-## Remediation in v0.3.0
+The early public branch contained a polished README and root router while several referenced workflows, indexes and test assets were absent. v0.3.0 restored a complete 158-capability general research layer, workflows, schemas, validators and tests.
 
-- Published the complete 158-capability research layer derived from the research-facing categories of the 322-skill catalog.
-- Published all 15 workflows, 7 schemas, templates, references, deterministic validators and tests.
-- Added CSV capability export, compliance mapping and repository-level audit.
-- Added checks for README links, version consistency, capability references, workflow/router paths, CI targets, bytecode contamination and release metadata.
-- Kept the README's capability boundaries explicit: native, orchestrated, delegated and human-reviewed.
+## Current boundary retained from that audit
 
-## Objective limitations
-
-- Metadata coverage is not equivalent to installed external tools.
-- Automated integrity checks produce risk indicators, not misconduct findings.
-- Medical, safety, legal and patent decisions require qualified human review.
-- Real quantum chemistry, MD, FEM, CFD and process simulation execution belongs to TsaoSciComputation and actual solver environments.
+- metadata is not an installed external tool;
+- automated integrity checks are risk indicators, not misconduct findings;
+- medical, safety, legal and patent decisions require qualified review;
+- real quantum chemistry, MD, FEM, CFD and process execution requires an actual solver environment.

@@ -15,12 +15,14 @@ Indexed capabilities routed here: **16**.
 
 - `search_strategy`
 - `evidence_map`
+- `literature_matrix`
 - `source_log`
+- `citation_team_map`
 - `research_gap_report`
 
 ## Evidence rules
 
-Search broadly enough to represent competing findings. Prefer primary sources for claims about methods and results. Record search date, database, query, filters and stable locator. Never invent a DOI or infer a paper's content from title alone.
+Search broadly enough to represent competing findings. Prefer primary sources for claims about methods and results. Record search date, database, query, filters, result count, deduplication rule and stable locator. When evidence permits, analyze citation, co-citation, author, institution and research-team networks. Never invent a DOI or infer a paper's content from title alone.
 
 
 ## Universal execution order
