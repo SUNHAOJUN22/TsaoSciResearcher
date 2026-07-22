@@ -25,13 +25,16 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path("scripts/audit_repository.py")
           text = path.read_text(encoding="utf-8")
-          old = '''        if has_write and workflow.name != "cleanup-branches.yml":
-              errors.append(f"unexpected contents:write permission in {workflow.name}")
-          '''
-          new = '''        allowed_write = workflow.name == "cleanup-branches.yml"
+          pattern = re.compile(
+              r'^        if has_write and workflow\.name != "cleanup-branches\.yml":\n'
+              r'^            errors\.append\(f"unexpected contents:write permission in \{workflow\.name\}"\)\n',
+              re.MULTILINE,
+          )
+          replacement = '''        allowed_write = workflow.name == "cleanup-branches.yml"
           if workflow.name == "ci.yml" and has_write:
               guarded_markers = [
                   "permissions:\\n  contents: read",
@@ -50,9 +53,10 @@ jobs:
           if has_write and not allowed_write:
               errors.append(f"unexpected contents:write permission in {workflow.name}")
           '''
-          if text.count(old) != 1:
-              raise SystemExit("expected audit permission block was not found exactly once")
-          path.write_text(text.replace(old, new), encoding="utf-8")
+          updated, count = pattern.subn(replacement, text)
+          if count != 1:
+              raise SystemExit(f"expected one audit permission block, replaced {count}")
+          path.write_text(updated, encoding="utf-8")
           PY
           python -m py_compile scripts/audit_repository.py
           git config user.name 'github-actions[bot]'
