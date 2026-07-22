@@ -1,7 +1,7 @@
 {
   "compatibility": "failure",
-  "order_independence": "cancelled",
-  "performance_release": "cancelled",
-  "quality": "cancelled",
-  "regression": "cancelled"
+  "order_independence": "skipped",
+  "performance_release": "skipped",
+  "quality": "success",
+  "regression": "failure"
 }
