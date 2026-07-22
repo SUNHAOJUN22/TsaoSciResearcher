@@ -66,6 +66,7 @@ V2_SCHEMAS = {
 }
 REQUIRED_SCRIPTS = {
     "archive_safety.py",
+    "build_readme_facts.py",
     "audit_repository.py",
     "init_project.py",
     "install.py",
@@ -293,6 +294,26 @@ def audit() -> dict[str, Any]:
         "scripts": len(script_names),
         "package_modules": len(package_modules),
         "missing": missing_scripts + missing_modules,
+    }
+
+    required_readme_docs = {
+        "README.md",
+        "README_EN.md",
+        "README.zh-CN.md",
+        "docs/README_FACTS.json",
+        "docs/README_AUDIT_REPORT.md",
+        "docs/CAPABILITY_COVERAGE_MATRIX.md",
+        "docs/README_ARCHITECTURE_MAPPING.md",
+        "docs/VALIDATION_EVIDENCE.json",
+    }
+    missing_readme_docs = sorted(
+        relative for relative in required_readme_docs if not (ROOT / relative).is_file()
+    )
+    if missing_readme_docs:
+        errors.append(f"README evidence inventory incomplete: {missing_readme_docs}")
+    checks["readme_evidence"] = {
+        "required": len(required_readme_docs),
+        "missing": missing_readme_docs,
     }
 
     index, legacy = _legacy_capabilities()

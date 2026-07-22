@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "release": "0.5.1",
+  "evidence_date": "2026-07-22",
+  "github_actions": {
+    "workflow": "CI",
+    "run_id": 29887374398,
+    "candidate_commit": "261f8dd9787687d06b4edf8648410482504eea00",
+    "merged_main_commit": "5a3dedf816ee9b353d926f05feff8dfa120c4b9d",
+    "jobs": {
+      "complete_regression": "PASS",
+      "static_quality_security_mutation": "PASS",
+      "reverse_and_seeded_order": "PASS",
+      "performance_and_reproducible_release": "PASS",
+      "ubuntu_python_3_10": "PASS",
+      "ubuntu_python_3_13": "PASS",
+      "windows_python_3_12": "PASS",
+      "macos_python_3_12": "PASS"
+    }
+  },
+  "pytest": {
+    "tests": 96,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 5.508
+  },
+  "mutation_smoke": {
+    "killed": 15,
+    "total": 15
+  },
+  "performance_smoke": {
+    "status": "PASS",
+    "platform": "Linux-6.17.0-1020-azure-x86_64-with-glibc2.39",
+    "python": "3.12.13 (main, Jun 16 2026, 22:05:08) [GCC 13.3.0]",
+    "inputs": {
+      "route_iterations": 10000,
+      "capability_load_iterations": 100,
+      "v2_capability_records": 340,
+      "v2_search_iterations": 1000,
+      "jsonl_records": 1000,
+      "claim_records": 1000,
+      "evidence_records": 1000,
+      "zip_members": 1000
+    },
+    "seconds": {
+      "route_10000": 8.092469,
+      "v2_route_10000": 1.262027,
+      "v2_catalog_load_100": 0.911733,
+      "v2_search_1000": 0.379307,
+      "capability_load_100": 0.263347,
+      "jsonl_1000": 0.004119,
+      "claim_evidence_1000": 0.216889,
+      "schemas_all": 0.12499,
+      "zip_members_1000": 0.011462,
+      "install_uninstall": 0.049706,
+      "release_two_builds": 0.200417
+    },
+    "thresholds_seconds": {
+      "route_10000": 20.0,
+      "v2_route_10000": 8.0,
+      "v2_catalog_load_100": 4.0,
+      "v2_search_1000": 4.0,
+      "capability_load_100": 5.0,
+      "jsonl_1000": 5.0,
+      "claim_evidence_1000": 20.0,
+      "schemas_all": 5.0,
+      "zip_members_1000": 10.0,
+      "install_uninstall": 20.0,
+      "release_two_builds": 30.0
+    },
+    "peak_tracemalloc_bytes": 146088
+  },
+  "interpretation": [
+    "Thresholds are regression guards, not cross-hardware marketing benchmarks.",
+    "Software validation does not imply scientific acceptance of external calculations or experiments."
+  ]
+}
