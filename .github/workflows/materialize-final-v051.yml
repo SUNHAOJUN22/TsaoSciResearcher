@@ -164,10 +164,22 @@ jobs:
         if: steps.state.outputs.materialized != 'true'
         shell: bash
         run: |
-          set -euo pipefail
+          exec > >(tee "$RUNNER_TEMP/publish.log") 2>&1
+          set -euxo pipefail
           rm -rf dist-a dist-b artifacts .coverage
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
+          git diff --cached --stat
           git commit -m 'release: publish complete optimized TsaoSciResearcher v0.5.1 source tree'
-          git push --force-with-lease="refs/heads/$HEAD_REF:$EXPECTED_HEAD_SHA" origin HEAD:"$HEAD_REF"
+          remote_head="$(git ls-remote --heads origin "refs/heads/$HEAD_REF" | cut -f1)"
+          test "$remote_head" = "$EXPECTED_HEAD_SHA"
+          git push --force origin "HEAD:refs/heads/$HEAD_REF"
+      - name: Upload publish diagnostics
+        if: ${{ always() && steps.state.outputs.materialized != 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: final-v051-publish-diagnostics
+          path: ${{ runner.temp }}/publish.log
+          if-no-files-found: warn
+          retention-days: 7
