@@ -1,0 +1,38 @@
+name: Export current main snapshot
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.head_ref == 'agent/readme-audit-v051'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Build deterministic snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > MAIN_COMMIT.txt
+          git archive --format=tar HEAD | gzip -n > TsaoSciResearcher-main.tar.gz
+          sha256sum TsaoSciResearcher-main.tar.gz > TsaoSciResearcher-main.sha256
+      - name: Upload snapshot
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsr-current-main-snapshot
+          path: |
+            TsaoSciResearcher-main.tar.gz
+            TsaoSciResearcher-main.sha256
+            MAIN_COMMIT.txt
+          if-no-files-found: error
+          retention-days: 3
