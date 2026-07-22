@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,18 @@ from .state import initialize, transition, verify
 
 
 def _emit(value: Any) -> None:
-    print(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True))
+    """Write JSON without assuming the terminal supports Unicode.
+
+    Windows runners and legacy consoles may expose a non-UTF-8 stdout encoding.
+    Preserve readable Unicode where possible and fall back to JSON escapes rather
+    than failing an otherwise successful command.
+    """
+    payload = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True)
+    try:
+        sys.stdout.write(payload + "\n")
+    except UnicodeEncodeError:
+        escaped = json.dumps(value, ensure_ascii=True, indent=2, sort_keys=True)
+        sys.stdout.write(escaped + "\n")
 
 
 def main() -> None:
