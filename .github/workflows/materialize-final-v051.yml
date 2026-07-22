@@ -91,7 +91,7 @@ jobs:
           git apply --binary "$PATCH_DIR/primary.patch"
 
           : > "$PATCH_DIR/supplement.b64"
-          for index in $(seq -w 0 7); do
+          for index in 00 01 02 03 04 05 06 07; do
             git show "origin/main:.github/final-payload/supplement-$index.b64" \
               | tr -d '\r\n\t ' >> "$PATCH_DIR/supplement.b64"
           done
