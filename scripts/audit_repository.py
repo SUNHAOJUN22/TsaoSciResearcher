@@ -474,9 +474,7 @@ def audit() -> dict[str, Any]:
             ]
             missing_guarded_markers = [marker for marker in guarded_markers if marker not in text]
             if missing_guarded_markers:
-                errors.append(
-                    f"guarded CI write permission is incomplete: {missing_guarded_markers}"
-                )
+                errors.append(f"guarded CI write permission is incomplete: {missing_guarded_markers}")
             else:
                 allowed_write = True
         if has_write and not allowed_write:
