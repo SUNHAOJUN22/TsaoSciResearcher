@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "research-question",
+  "purpose": "形成可回答、可证伪的科学问题",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "区分事实、假设、推断和未知项",
+    "定义对象、变量、边界、结果和比较",
+    "分类描述/解释/预测/因果/设计/机理问题",
+    "构建竞争假设与区分性证据",
+    "定义证伪标准与可行性门"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

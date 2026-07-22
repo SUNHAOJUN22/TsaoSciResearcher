@@ -1,28 +1,40 @@
 {
   "name": "TsaoSciResearcher",
   "slug": "tsao-sci-researcher",
-  "version": "0.3.0",
-  "description": "Evidence-first full-lifecycle scientific research skill.",
+  "version": "0.5.1",
+  "description": "Evidence-first, full-lifecycle scientific research platform with traceable state, deterministic routing, 340 v2 capabilities and guarded computation handoffs.",
   "license": "Apache-2.0",
-  "capability_count": 158,
+  "capability_count": 340,
   "workflow_count": 15,
+  "schema_count": 15,
   "entrypoint": "SKILL.md",
   "agent_metadata": "agents/openai.yaml",
-  "capability_index": "capability-index/capabilities.json",
+  "capability_index": "capabilities/v2/index.json",
   "project_state_dir": ".tsao-research",
-  "generated_at": "2026-07-14T03:00:00Z",
+  "generated_at": "2026-07-21T00:00:00Z",
   "compatibility": {
     "codex": true,
     "claude_code": true,
     "open_agent_skills": true,
     "windows": true,
     "linux": true,
-    "macos": true
+    "macos": true,
+    "python": [
+      "3.10",
+      "3.11",
+      "3.12",
+      "3.13"
+    ]
   },
   "maturity": {
-    "routing": "native",
+    "routing": "native-v2-cached",
+    "project_state": "native-hash-linked",
     "schemas_and_validation": "native",
     "research_execution": "orchestrated",
-    "multiscale_simulation": "delegated-to-TsaoSciComputation"
-  }
+    "multiscale_simulation": "validated-handoff-only"
+  },
+  "legacy_capability_count": 158,
+  "domain_pack_count": 7,
+  "legacy_capability_index": "capability-index/capabilities.json",
+  "runtime_package": "tsao_researcher"
 }

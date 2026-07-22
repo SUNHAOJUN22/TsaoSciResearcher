@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/project.schema.json",
+  "title": "Project State",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "project_id",
+    "name",
+    "created_at",
+    "updated_at",
+    "status",
+    "scientific_question",
+    "approvals",
+    "latest_event_hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "proposed",
+        "planned",
+        "running",
+        "completed",
+        "checked",
+        "validated",
+        "accepted",
+        "rejected",
+        "superseded"
+      ]
+    },
+    "scientific_question": {
+      "type": "string",
+      "minLength": 3
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "latest_event_hash": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    }
+  }
+}

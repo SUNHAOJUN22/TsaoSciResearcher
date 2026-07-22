@@ -1,21 +1,55 @@
+[build-system]
+requires = ["setuptools>=69,<82"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "tsao-sci-researcher"
-version = "0.3.0"
-description = "Evidence-first full-lifecycle scientific research Agent Skill"
+version = "0.5.1"
+description = "Evidence-first full-lifecycle scientific research platform"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [{name = "SUNHAOJUN22"}]
-dependencies = ["PyYAML>=6.0", "jsonschema>=4.18"]
+dependencies = ["PyYAML>=6.0,<7", "jsonschema>=4.18,<5"]
 
 [project.optional-dependencies]
-plot = ["matplotlib>=3.7", "numpy>=1.24"]
-test = ["pytest>=8.0"]
+plot = ["matplotlib>=3.7,<4", "numpy>=1.24,<3"]
+test = ["pytest>=8,<10", "hypothesis>=6.100,<7"]
+quality = ["ruff>=0.9,<1", "mypy>=1.10,<2", "bandit>=1.7,<2", "types-PyYAML>=6,<7", "types-jsonschema>=4,<5"]
+
+[project.scripts]
+tsao-researcher = "tsao_researcher.__main__:main"
 
 [project.urls]
 Repository = "https://github.com/SUNHAOJUN22/TsaoSciResearcher"
 Issues = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/issues"
 
+[tool.setuptools.packages.find]
+include = ["tsao_researcher*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q --strict-markers --strict-config"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 110
+exclude = ["dist", ".tsao-research", "capabilities/v2"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "C4", "PIE", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+exclude = "(^dist/|^examples/)"
+
+[tool.bandit]
+exclude_dirs = ["tests", "dist"]
+skips = []

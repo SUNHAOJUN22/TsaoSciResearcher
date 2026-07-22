@@ -1,38 +1,59 @@
-import hashlib
-import subprocess
-import sys
-import tempfile
-import unittest
+from __future__ import annotations
+
 import zipfile
 from pathlib import Path
+
+import pytest
+
+from scripts.package_release import build_release, verify_sidecar
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-class TestRelease(unittest.TestCase):
-    def test_release_archive(self):
-        with tempfile.TemporaryDirectory() as td:
-            subprocess.run(
-                [sys.executable, 'scripts/package_release.py', '--out', td],
-                cwd=ROOT,
-                check=True,
-                env={'PATH': __import__('os').environ.get('PATH', ''), 'PYTHONDONTWRITEBYTECODE': '1'},
-            )
-            version = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
-            archive = Path(td) / f'TsaoSciResearcher-v{version}.zip'
-            self.assertTrue(archive.exists())
-            checksum_line = (Path(td) / 'SHA256SUMS').read_text(encoding='utf-8').strip()
-            self.assertEqual(checksum_line.split()[0], hashlib.sha256(archive.read_bytes()).hexdigest())
-            with zipfile.ZipFile(archive) as zf:
-                names = set(zf.namelist())
-            for required in [
-                'TsaoSciResearcher/SKILL.md',
-                'TsaoSciResearcher/manifest.json',
-                'TsaoSciResearcher/capability-index/capabilities.json',
-                'TsaoSciResearcher/scripts/run_tests.py',
-            ]:
-                self.assertIn(required, names)
+def test_release_is_byte_deterministic(tmp_path: Path) -> None:
+    first, first_sidecar = build_release(tmp_path / "first")
+    second, second_sidecar = build_release(tmp_path / "second")
+    assert first.read_bytes() == second.read_bytes()
+    verify_sidecar(first, first_sidecar)
+    verify_sidecar(second, second_sidecar)
+    with zipfile.ZipFile(first) as archive:
+        assert all(info.date_time == (1980, 1, 1, 0, 0, 0) for info in archive.infolist())
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_sidecar_detects_tampering(tmp_path: Path) -> None:
+    archive, sidecar = build_release(tmp_path / "release")
+    archive.write_bytes(archive.read_bytes() + b"tampered")
+    with pytest.raises(ValueError, match="mismatch"):
+        verify_sidecar(archive, sidecar)
+
+
+def test_release_excludes_runtime_artifacts(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "VERSION").write_text("0.4.0\n", encoding="utf-8")
+    (source / "tracked.txt").write_text("tracked\n", encoding="utf-8")
+    artifacts = source / "artifacts"
+    artifacts.mkdir()
+    (artifacts / "environment.json").write_text('{"runner":"ci"}\n', encoding="utf-8")
+
+    archive, sidecar = build_release(tmp_path / "release", root=source)
+    verify_sidecar(archive, sidecar)
+    with zipfile.ZipFile(archive) as handle:
+        names = set(handle.namelist())
+    assert "TsaoSciResearcher/tracked.txt" in names
+    assert all("/artifacts/" not in name for name in names)
+
+
+def test_release_ignores_sibling_generated_builds(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "VERSION").write_text("0.5.1\n", encoding="utf-8")
+    (source / "tracked.txt").write_text("tracked\n", encoding="utf-8")
+
+    first, _ = build_release(source / "dist-a", root=source)
+    second, _ = build_release(source / "dist-b", root=source)
+
+    assert first.read_bytes() == second.read_bytes()
+    with zipfile.ZipFile(second) as handle:
+        names = set(handle.namelist())
+    assert all("/dist-a/" not in name and "/dist-b/" not in name for name in names)

@@ -10,12 +10,15 @@ description: >
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
   through the structured computation-handoff workflow.
-version: 0.3.0
+version: 0.5.1
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher
-  capability_count: 158
+  capability_count: 340
+  legacy_capability_count: 158
   workflow_count: 15
+  schema_count: 15
+  domain_pack_count: 7
   progressive_disclosure: true
   evidence_first: true
 ---
@@ -28,7 +31,7 @@ Convert a broad scientific objective into a testable, traceable and reviewable r
 
 ## First rule: route before loading
 
-Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Load `capability-index/capabilities.json` only for exact capability discovery.
+Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Use `capabilities/v2/index.json` and the cached `tsao-researcher search` CLI for v2 discovery; load the 158-record `capability-index/capabilities.json` only for legacy compatibility.
 
 | User intent | Primary workflow |
 |---|---|
@@ -48,11 +51,14 @@ Do not load the full repository. Classify the request, read exactly one primary 
 | SOP, instrument workflow, laboratory QC and traceability | `workflows/laboratory/WORKFLOW.md` |
 | DFT, MD, FEM, CFD, process simulation or other real computation | `workflows/computation-handoff/WORKFLOW.md` |
 
-Run deterministic routing when useful:
+Run deterministic v2 routing and capability search when useful:
 
 ```bash
-python scripts/route_task.py "用户任务"
+python -m tsao_researcher route "用户任务"
+python -m tsao_researcher search "polymer molecular dynamics" --limit 10
 ```
+
+`scripts/route_task.py` remains available for v0.4-compatible integrations.
 
 ## Research lifecycle
 
@@ -76,8 +82,6 @@ The following states are distinct and must not be collapsed:
 8. **Human gate** — medical, safety, patent/FTO, high-impact causal and integrity decisions require qualified human review.
 
 ## Default project state
-
-Initialize a traceable project with:
 
 ```bash
 python scripts/init_project.py --name "my-project" --question "What is being tested?" --output .

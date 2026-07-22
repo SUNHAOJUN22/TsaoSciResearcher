@@ -1,0 +1,986 @@
+[
+  {
+    "id": "DOM-COMP-01",
+    "slug": "computational-chemistry-materials-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-02",
+    "slug": "computational-chemistry-materials-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-03",
+    "slug": "computational-chemistry-materials-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-04",
+    "slug": "computational-chemistry-materials-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-05",
+    "slug": "computational-chemistry-materials-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-06",
+    "slug": "computational-chemistry-materials-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-07",
+    "slug": "computational-chemistry-materials-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-08",
+    "slug": "computational-chemistry-materials-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-09",
+    "slug": "computational-chemistry-materials-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-10",
+    "slug": "computational-chemistry-materials-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-11",
+    "slug": "computational-chemistry-materials-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-12",
+    "slug": "computational-chemistry-materials-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-13",
+    "slug": "computational-chemistry-materials-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-14",
+    "slug": "computational-chemistry-materials-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-15",
+    "slug": "computational-chemistry-materials-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-16",
+    "slug": "computational-chemistry-materials-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-17",
+    "slug": "computational-chemistry-materials-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-18",
+    "slug": "computational-chemistry-materials-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-19",
+    "slug": "computational-chemistry-materials-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-20",
+    "slug": "computational-chemistry-materials-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-21",
+    "slug": "computational-chemistry-materials-capability-21",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-22",
+    "slug": "computational-chemistry-materials-capability-22",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-23",
+    "slug": "computational-chemistry-materials-capability-23",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-24",
+    "slug": "computational-chemistry-materials-capability-24",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-25",
+    "slug": "computational-chemistry-materials-capability-25",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-26",
+    "slug": "computational-chemistry-materials-capability-26",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-27",
+    "slug": "computational-chemistry-materials-capability-27",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-28",
+    "slug": "computational-chemistry-materials-capability-28",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-29",
+    "slug": "computational-chemistry-materials-capability-29",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-COMP-30",
+    "slug": "computational-chemistry-materials-capability-30",
+    "disposition": "computation-delegated",
+    "domain_pack": "computational-chemistry-materials"
+  },
+  {
+    "id": "DOM-MOLE-01",
+    "slug": "molecular-dynamics-multiscale-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-02",
+    "slug": "molecular-dynamics-multiscale-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-03",
+    "slug": "molecular-dynamics-multiscale-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-04",
+    "slug": "molecular-dynamics-multiscale-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-05",
+    "slug": "molecular-dynamics-multiscale-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-06",
+    "slug": "molecular-dynamics-multiscale-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-07",
+    "slug": "molecular-dynamics-multiscale-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-08",
+    "slug": "molecular-dynamics-multiscale-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-09",
+    "slug": "molecular-dynamics-multiscale-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-10",
+    "slug": "molecular-dynamics-multiscale-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-11",
+    "slug": "molecular-dynamics-multiscale-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-12",
+    "slug": "molecular-dynamics-multiscale-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-13",
+    "slug": "molecular-dynamics-multiscale-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-14",
+    "slug": "molecular-dynamics-multiscale-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-15",
+    "slug": "molecular-dynamics-multiscale-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-16",
+    "slug": "molecular-dynamics-multiscale-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-17",
+    "slug": "molecular-dynamics-multiscale-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-18",
+    "slug": "molecular-dynamics-multiscale-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-19",
+    "slug": "molecular-dynamics-multiscale-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-20",
+    "slug": "molecular-dynamics-multiscale-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-21",
+    "slug": "molecular-dynamics-multiscale-capability-21",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-22",
+    "slug": "molecular-dynamics-multiscale-capability-22",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-23",
+    "slug": "molecular-dynamics-multiscale-capability-23",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-MOLE-24",
+    "slug": "molecular-dynamics-multiscale-capability-24",
+    "disposition": "computation-delegated",
+    "domain_pack": "molecular-dynamics-multiscale"
+  },
+  {
+    "id": "DOM-CATA-01",
+    "slug": "catalysis-polymers-composites-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-02",
+    "slug": "catalysis-polymers-composites-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-03",
+    "slug": "catalysis-polymers-composites-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-04",
+    "slug": "catalysis-polymers-composites-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-05",
+    "slug": "catalysis-polymers-composites-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-06",
+    "slug": "catalysis-polymers-composites-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-07",
+    "slug": "catalysis-polymers-composites-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-08",
+    "slug": "catalysis-polymers-composites-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-09",
+    "slug": "catalysis-polymers-composites-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-10",
+    "slug": "catalysis-polymers-composites-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-11",
+    "slug": "catalysis-polymers-composites-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-12",
+    "slug": "catalysis-polymers-composites-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-13",
+    "slug": "catalysis-polymers-composites-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-14",
+    "slug": "catalysis-polymers-composites-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-15",
+    "slug": "catalysis-polymers-composites-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-16",
+    "slug": "catalysis-polymers-composites-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-17",
+    "slug": "catalysis-polymers-composites-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-18",
+    "slug": "catalysis-polymers-composites-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-19",
+    "slug": "catalysis-polymers-composites-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-20",
+    "slug": "catalysis-polymers-composites-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-21",
+    "slug": "catalysis-polymers-composites-capability-21",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-22",
+    "slug": "catalysis-polymers-composites-capability-22",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-23",
+    "slug": "catalysis-polymers-composites-capability-23",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-24",
+    "slug": "catalysis-polymers-composites-capability-24",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-25",
+    "slug": "catalysis-polymers-composites-capability-25",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-26",
+    "slug": "catalysis-polymers-composites-capability-26",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-27",
+    "slug": "catalysis-polymers-composites-capability-27",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-28",
+    "slug": "catalysis-polymers-composites-capability-28",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-29",
+    "slug": "catalysis-polymers-composites-capability-29",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-CATA-30",
+    "slug": "catalysis-polymers-composites-capability-30",
+    "disposition": "computation-delegated",
+    "domain_pack": "catalysis-polymers-composites"
+  },
+  {
+    "id": "DOM-FEM--01",
+    "slug": "fem-multiphysics-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--02",
+    "slug": "fem-multiphysics-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--03",
+    "slug": "fem-multiphysics-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--04",
+    "slug": "fem-multiphysics-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--05",
+    "slug": "fem-multiphysics-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--06",
+    "slug": "fem-multiphysics-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--07",
+    "slug": "fem-multiphysics-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--08",
+    "slug": "fem-multiphysics-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--09",
+    "slug": "fem-multiphysics-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--10",
+    "slug": "fem-multiphysics-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--11",
+    "slug": "fem-multiphysics-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--12",
+    "slug": "fem-multiphysics-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--13",
+    "slug": "fem-multiphysics-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--14",
+    "slug": "fem-multiphysics-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--15",
+    "slug": "fem-multiphysics-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--16",
+    "slug": "fem-multiphysics-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--17",
+    "slug": "fem-multiphysics-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--18",
+    "slug": "fem-multiphysics-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--19",
+    "slug": "fem-multiphysics-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-FEM--20",
+    "slug": "fem-multiphysics-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "fem-multiphysics"
+  },
+  {
+    "id": "DOM-CFD--01",
+    "slug": "cfd-particles-processing-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--02",
+    "slug": "cfd-particles-processing-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--03",
+    "slug": "cfd-particles-processing-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--04",
+    "slug": "cfd-particles-processing-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--05",
+    "slug": "cfd-particles-processing-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--06",
+    "slug": "cfd-particles-processing-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--07",
+    "slug": "cfd-particles-processing-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--08",
+    "slug": "cfd-particles-processing-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--09",
+    "slug": "cfd-particles-processing-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--10",
+    "slug": "cfd-particles-processing-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--11",
+    "slug": "cfd-particles-processing-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--12",
+    "slug": "cfd-particles-processing-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--13",
+    "slug": "cfd-particles-processing-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--14",
+    "slug": "cfd-particles-processing-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--15",
+    "slug": "cfd-particles-processing-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--16",
+    "slug": "cfd-particles-processing-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--17",
+    "slug": "cfd-particles-processing-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-CFD--18",
+    "slug": "cfd-particles-processing-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "cfd-particles-processing"
+  },
+  {
+    "id": "DOM-PROC-01",
+    "slug": "process-kinetics-digital-twin-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-02",
+    "slug": "process-kinetics-digital-twin-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-03",
+    "slug": "process-kinetics-digital-twin-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-04",
+    "slug": "process-kinetics-digital-twin-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-05",
+    "slug": "process-kinetics-digital-twin-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-06",
+    "slug": "process-kinetics-digital-twin-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-07",
+    "slug": "process-kinetics-digital-twin-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-08",
+    "slug": "process-kinetics-digital-twin-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-09",
+    "slug": "process-kinetics-digital-twin-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-10",
+    "slug": "process-kinetics-digital-twin-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-11",
+    "slug": "process-kinetics-digital-twin-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-12",
+    "slug": "process-kinetics-digital-twin-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-13",
+    "slug": "process-kinetics-digital-twin-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-14",
+    "slug": "process-kinetics-digital-twin-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-15",
+    "slug": "process-kinetics-digital-twin-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-16",
+    "slug": "process-kinetics-digital-twin-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-17",
+    "slug": "process-kinetics-digital-twin-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-18",
+    "slug": "process-kinetics-digital-twin-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-19",
+    "slug": "process-kinetics-digital-twin-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-20",
+    "slug": "process-kinetics-digital-twin-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-21",
+    "slug": "process-kinetics-digital-twin-capability-21",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-PROC-22",
+    "slug": "process-kinetics-digital-twin-capability-22",
+    "disposition": "computation-delegated",
+    "domain_pack": "process-kinetics-digital-twin"
+  },
+  {
+    "id": "DOM-HPC--01",
+    "slug": "hpc-reproducibility-capability-01",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--02",
+    "slug": "hpc-reproducibility-capability-02",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--03",
+    "slug": "hpc-reproducibility-capability-03",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--04",
+    "slug": "hpc-reproducibility-capability-04",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--05",
+    "slug": "hpc-reproducibility-capability-05",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--06",
+    "slug": "hpc-reproducibility-capability-06",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--07",
+    "slug": "hpc-reproducibility-capability-07",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--08",
+    "slug": "hpc-reproducibility-capability-08",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--09",
+    "slug": "hpc-reproducibility-capability-09",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--10",
+    "slug": "hpc-reproducibility-capability-10",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--11",
+    "slug": "hpc-reproducibility-capability-11",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--12",
+    "slug": "hpc-reproducibility-capability-12",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--13",
+    "slug": "hpc-reproducibility-capability-13",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--14",
+    "slug": "hpc-reproducibility-capability-14",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--15",
+    "slug": "hpc-reproducibility-capability-15",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--16",
+    "slug": "hpc-reproducibility-capability-16",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--17",
+    "slug": "hpc-reproducibility-capability-17",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--18",
+    "slug": "hpc-reproducibility-capability-18",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--19",
+    "slug": "hpc-reproducibility-capability-19",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  },
+  {
+    "id": "DOM-HPC--20",
+    "slug": "hpc-reproducibility-capability-20",
+    "disposition": "computation-delegated",
+    "domain_pack": "hpc-reproducibility"
+  }
+]

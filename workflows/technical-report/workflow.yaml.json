@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "technical-report",
+  "purpose": "按科研、工程、管理、客户、监管或验收受众组织证据",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "识别受众和决策",
+    "限定数据口径和时间范围",
+    "组织方法、结果、风险和替代解释",
+    "区分事实、判断和建议",
+    "生成行动项、负责人和验收条件"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

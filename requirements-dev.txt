@@ -1,4 +1,8 @@
 -r requirements.txt
-pytest>=8.0
-matplotlib>=3.7
-numpy>=1.24
+pytest>=8,<10
+hypothesis>=6.100,<7
+ruff>=0.9,<1
+mypy>=1.10,<2
+bandit>=1.7,<2
+types-PyYAML>=6,<7
+types-jsonschema>=4,<5

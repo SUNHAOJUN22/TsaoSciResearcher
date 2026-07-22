@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.5.1 - 2026-07-21
+
+- Consolidate the hardened v0.4 runtime and the broad vNext capability tree into one auditable source distribution.
+- Add a cached bilingual v2 router with explicit positive/negative semantics, deterministic tie handling and bounded input.
+- Add a 340-record v2 capability catalog with ranked search, workflow/domain filters and defensive cached reads while retaining the 158-record compatibility catalog.
+- Add hash-linked project state, validated lifecycle transitions, atomic writes, bounded locks and required human approval before acceptance.
+- Add guarded computation handoffs with path containment, regular-file checks, streaming SHA-256 inputs, convergence, uncertainty and physical-validation fields.
+- Expand all 15 workflows with machine-readable contracts and blocking gates; add seven substantive computation and engineering domain packs.
+- Add seven v2 Draft 2020-12 schemas and cross-contract repository auditing for 15 total schemas.
+- Replace duplicate CI repetition with a layered cross-platform, regression, order-independence, static-quality, mutation, performance and reproducible-release pipeline.
+- Rewrite the runtime package, CLI, README and architecture documentation; remove broken self-materializing payload/bootstrap paths.
+- Enforce post-merge single-branch governance: close obsolete pull requests, delete every non-`main` branch and verify the remaining branch set.
+
+## 0.4.0 - 2026-07-17
+
+- Restore the verified source baseline from `main` and reject opaque bootstrap/self-modifying workflow candidates.
+- Add bounded safe ZIP validation and extraction for traversal paths, links, duplicate paths and compression bombs.
+- Make source packaging byte-deterministic and generate external per-asset SHA-256 sidecars.
+- Replace destructive installer behavior with managed targets, staging, unique backups and rollback.
+- Enforce finite standard JSON, atomic state writes, collision-resistant project IDs and state-machine invariants.
+- Enforce bidirectional Claim–Evidence references and support/refute consistency.
+- Harden Unicode routing, tie-breaking, duplicate-keyword handling and input bounds.
+- Expand to eight closed Draft 2020-12 schemas, including the capability-record contract.
+- Add adversarial, property, mutation, performance, cross-platform and deterministic-release gates.
+- Pin GitHub Actions to immutable commit SHAs and keep workflow permissions read-only.
+- Rewrite validation and README claims to distinguish local, PR, main and Release evidence.
+
 ## 0.3.0 - 2026-07-14
 
 - Complete the public repository with 158 capability records, 15 workflows, 7 schemas, templates, validators and tests.

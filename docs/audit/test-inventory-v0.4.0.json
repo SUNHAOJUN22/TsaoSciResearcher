@@ -1,0 +1,237 @@
+[
+  {
+    "file": "tests/test_archive_safety.py",
+    "test_count": 10,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.archive_safety"
+    ],
+    "fixtures": [
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": true,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_capabilities.py",
+    "test_count": 2,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.capability_io"
+    ],
+    "fixtures": [],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_capability_io.py",
+    "test_count": 5,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts"
+    ],
+    "fixtures": [
+      "monkeypatch",
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": true,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_checksums.py",
+    "test_count": 3,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.generate_checksums"
+    ],
+    "fixtures": [
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": true,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_claims.py",
+    "test_count": 4,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.validate_claims"
+    ],
+    "fixtures": [
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_cli_contracts.py",
+    "test_count": 2,
+    "framework": "pytest",
+    "production_targets": [],
+    "fixtures": [],
+    "uses_subprocess": true,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_common.py",
+    "test_count": 4,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts",
+      "scripts.common"
+    ],
+    "fixtures": [
+      "monkeypatch",
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": true,
+    "mutates_global_state": false,
+    "platform_sensitive": true,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_figure_contract.py",
+    "test_count": 1,
+    "framework": "pytest",
+    "production_targets": [],
+    "fixtures": [],
+    "uses_subprocess": true,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_import_isolation.py",
+    "test_count": 39,
+    "framework": "pytest",
+    "production_targets": [],
+    "fixtures": [],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_init_project.py",
+    "test_count": 1,
+    "framework": "pytest",
+    "production_targets": [],
+    "fixtures": [],
+    "uses_subprocess": true,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_install.py",
+    "test_count": 7,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.install"
+    ],
+    "fixtures": [
+      "monkeypatch",
+      "tmp_path"
+    ],
+    "uses_subprocess": true,
+    "uses_monkeypatch": true,
+    "mutates_global_state": true,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_project_state.py",
+    "test_count": 4,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.init_project",
+      "scripts.validate_project"
+    ],
+    "fixtures": [
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_release.py",
+    "test_count": 3,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.package_release"
+    ],
+    "fixtures": [
+      "tmp_path"
+    ],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_repository_audit.py",
+    "test_count": 1,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.audit_repository"
+    ],
+    "fixtures": [],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_router.py",
+    "test_count": 22,
+    "framework": "pytest",
+    "production_targets": [
+      "scripts.route_task"
+    ],
+    "fixtures": [],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  },
+  {
+    "file": "tests/test_schemas.py",
+    "test_count": 3,
+    "framework": "pytest",
+    "production_targets": [],
+    "fixtures": [],
+    "uses_subprocess": false,
+    "uses_monkeypatch": false,
+    "mutates_global_state": false,
+    "platform_sensitive": false,
+    "current_status": "locally-validated"
+  }
+]

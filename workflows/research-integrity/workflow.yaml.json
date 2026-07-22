@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "research-integrity",
+  "purpose": "默认只读检查引用、数据、统计、图像、报告与AI风险",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "冻结只读范围",
+    "记录异常、证据、严重度和置信度",
+    "列出良性替代解释",
+    "区分筛查信号与确认发现",
+    "生成修复、升级和人工复核建议"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

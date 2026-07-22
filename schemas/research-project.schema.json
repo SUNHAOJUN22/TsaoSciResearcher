@@ -4,146 +4,21 @@
   "title": "TsaoSciResearcher project",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "project_id",
-    "name",
-    "created_at",
-    "updated_at",
-    "status",
-    "scientific_question",
-    "research_type",
-    "scope",
-    "evidence_policy"
-  ],
+  "required": ["schema_version","project_id","name","created_at","updated_at","status","scientific_question","research_type","scope","evidence_policy"],
   "properties": {
-    "schema_version": {
-      "const": "1.0"
-    },
-    "project_id": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9._-]+$"
-    },
-    "name": {
-      "type": "string",
-      "minLength": 1
-    },
-    "created_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "updated_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "status": {
-      "enum": [
-        "proposed",
-        "planned",
-        "running",
-        "completed",
-        "checked",
-        "validated",
-        "accepted",
-        "rejected",
-        "superseded"
-      ]
-    },
-    "scientific_question": {
-      "type": "string",
-      "minLength": 3
-    },
-    "research_type": {
-      "enum": [
-        "descriptive",
-        "explanatory",
-        "predictive",
-        "causal",
-        "design",
-        "mechanistic",
-        "mixed"
-      ]
-    },
-    "scope": {
-      "type": "object",
-      "required": [
-        "included",
-        "excluded"
-      ],
-      "properties": {
-        "included": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "excluded": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "hypotheses": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "id",
-          "statement",
-          "status"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "statement": {
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "proposed",
-              "planned",
-              "tested",
-              "supported",
-              "not-supported",
-              "inconclusive",
-              "superseded"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "evidence_policy": {
-      "type": "object",
-      "required": [
-        "material_claims_require_evidence",
-        "inferences_require_assumptions"
-      ],
-      "properties": {
-        "material_claims_require_evidence": {
-          "type": "boolean"
-        },
-        "inferences_require_assumptions": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "approvals": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "computation_handoffs": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
+    "schema_version": {"const":"1.0"},
+    "project_id": {"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._-]*$","maxLength":128},
+    "name": {"type":"string","minLength":1,"maxLength":500},
+    "created_at": {"type":"string","format":"date-time"},
+    "updated_at": {"type":"string","format":"date-time"},
+    "status": {"enum":["proposed","planned","running","completed","checked","validated","accepted","rejected","superseded"]},
+    "scientific_question": {"type":"string","minLength":3,"maxLength":20000},
+    "research_type": {"enum":["descriptive","explanatory","predictive","causal","design","mechanistic","mixed"]},
+    "scope": {"type":"object","additionalProperties":false,"required":["included","excluded"],"properties":{"included":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},"excluded":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}}}},
+    "hypotheses": {"type":"array","uniqueItems":true,"items":{"type":"object","additionalProperties":false,"required":["id","statement","status"],"properties":{"id":{"type":"string","minLength":1,"maxLength":128},"statement":{"type":"string","minLength":1,"maxLength":20000},"status":{"enum":["proposed","planned","tested","supported","not-supported","inconclusive","superseded"]}}}},
+    "rationale": {"type":"string","maxLength":20000},
+    "evidence_policy": {"type":"object","additionalProperties":false,"required":["material_claims_require_evidence","inferences_require_assumptions"],"properties":{"material_claims_require_evidence":{"type":"boolean"},"inferences_require_assumptions":{"type":"boolean"}}},
+    "approvals": {"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},
+    "computation_handoffs": {"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}}
   }
 }

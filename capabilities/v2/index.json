@@ -1,0 +1,29 @@
+{
+  "schema_version": "2.0",
+  "total": 340,
+  "legacy_preserved": 158,
+  "domain_added": 164,
+  "core_added": 18,
+  "by_workflow": {
+    "research-design": 10,
+    "research-question": 6,
+    "project-management": 35,
+    "deep-research": 16,
+    "systematic-review": 5,
+    "scientific-writing": 14,
+    "peer-review": 3,
+    "technical-report": 3,
+    "data-analysis": 52,
+    "experiment-design": 3,
+    "scientific-figure": 2,
+    "computation-handoff": 168,
+    "laboratory": 8,
+    "patent-and-transfer": 7,
+    "research-integrity": 8
+  },
+  "by_implementation_level": {
+    "native-research": 147,
+    "human-review": 23,
+    "computation-delegated": 170
+  }
+}
