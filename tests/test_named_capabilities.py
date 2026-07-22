@@ -9,6 +9,7 @@ import pytest
 from tsao_researcher.capabilities import load_capabilities, search_capabilities
 
 ROOT = Path(__file__).resolve().parents[1]
+GENERIC_DOMAIN_SLOT = re.compile(r"-capability-[0-9]+$")
 
 
 def test_v2_catalog_contains_322_named_contracts_and_no_generic_slots() -> None:
@@ -32,7 +33,7 @@ def test_v2_catalog_contains_322_named_contracts_and_no_generic_slots() -> None:
         )
     ]
     assert len(workbook_rows) == 322
-    assert not [row["slug"] for row in rows if re.search(r"-capability-[0-9]+$", row["slug"])]
+    assert not any(GENERIC_DOMAIN_SLOT.search(row["slug"]) for row in rows)
 
 
 @pytest.mark.parametrize(
