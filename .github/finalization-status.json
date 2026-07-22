@@ -1,5 +1,5 @@
 {
-  "compatibility": "cancelled",
+  "compatibility": "success",
   "order_independence": "skipped",
   "performance_release": "skipped",
   "quality": "failure",
