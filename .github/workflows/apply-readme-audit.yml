@@ -1,11 +1,6 @@
 name: Apply verified bilingual README audit
 
 on:
-  push:
-    branches: [agent/readme-bilingual-audit]
-    paths:
-      - .github/readme-audit-parts/**
-      - .github/workflows/apply-readme-audit.yml
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
@@ -23,10 +18,8 @@ concurrency:
 jobs:
   apply:
     if: >-
-      github.actor != 'github-actions[bot]' &&
-      (github.event_name == 'push' ||
-       (github.head_ref == 'agent/readme-bilingual-audit' &&
-        github.event.pull_request.head.repo.full_name == github.repository))
+      github.head_ref == 'agent/readme-bilingual-audit' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -51,34 +44,58 @@ jobs:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: requirements-ci.lock
-      - name: Verify and apply checksum-bound patch
+      - name: Reconstruct and verify checksum-bound patch
         if: steps.staged.outputs.apply == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/chunk-sha256" <<'EOF'
-          529414e3f6d4712e75aa25d96e98255f266a55d1f0af3f030531f5ab4f0ee7c3  .github/readme-audit-parts/part-00.b64
-          77b304caf5c3fbee5f3a54c41d33b7783c913ee3c653e663155459f5a8d59afc  .github/readme-audit-parts/part-01.b64
-          f46a1e28ef776f056559d6f81e6fada6ba544b67effc9dbe005502f586815f25  .github/readme-audit-parts/part-02.b64
-          87579c4bc0aa0a7af7e2d9c6e2eb995a0fe3837d717a945e4f183069fe5a768d  .github/readme-audit-parts/part-03.b64
-          a4d5c89e386e354ec93fa727d8fb7797ce25049bb8684ff8bd3dcc64608c4340  .github/readme-audit-parts/part-04.b64
-          bec32860cdd7ad47b5525c415c396b2597cdc4b0343560ac50d81a802a16c655  .github/readme-audit-parts/part-05.b64
-          EOF
-          sha256sum -c "$RUNNER_TEMP/chunk-sha256"
-          cat \
-            .github/readme-audit-parts/part-00.b64 \
-            .github/readme-audit-parts/part-01.b64 \
-            .github/readme-audit-parts/part-02.b64 \
-            .github/readme-audit-parts/part-03.b64 \
-            .github/readme-audit-parts/part-04.b64 \
-            .github/readme-audit-parts/part-05.b64 \
-            > "$RUNNER_TEMP/readme-audit.patch.xz.b64"
-          echo "bebe2973823ce7adbd7aa556544cec393dfa7090be779e932609a599d48b750a  $RUNNER_TEMP/readme-audit.patch.xz.b64" | sha256sum -c -
-          base64 --decode "$RUNNER_TEMP/readme-audit.patch.xz.b64" > "$RUNNER_TEMP/readme-audit.patch.xz"
-          echo "529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526  $RUNNER_TEMP/readme-audit.patch.xz" | sha256sum -c -
-          xz -dc "$RUNNER_TEMP/readme-audit.patch.xz" > "$RUNNER_TEMP/readme-audit.patch"
-          echo "cb40d57a1682619262840371f2e675692807093b6cc485f5bdccca689e50627b  $RUNNER_TEMP/readme-audit.patch" | sha256sum -c -
-          git apply --binary "$RUNNER_TEMP/readme-audit.patch"
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import lzma
+          from pathlib import Path
+
+          expected_parts = [
+              "529414e3f6d4712e75aa25d96e98255f266a55d1f0af3f030531f5ab4f0ee7c3",
+              "77b304caf5c3fbee5f3a54c41d33b7783c913ee3c653e663155459f5a8d59afc",
+              "f46a1e28ef776f056559d6f81e6fada6ba544b67effc9dbe005502f586815f25",
+              "87579c4bc0aa0a7af7e2d9c6e2eb995a0fe3837d717a945e4f183069fe5a768d",
+              "a4d5c89e386e354ec93fa727d8fb7797ce25049bb8684ff8bd3dcc64608c4340",
+              "bec32860cdd7ad47b5525c415c396b2597cdc4b0343560ac50d81a802a16c655",
+          ]
+          compact_parts: list[bytes] = []
+          for index, expected in enumerate(expected_parts):
+              path = Path(f".github/readme-audit-parts/part-{index:02d}.b64")
+              raw = path.read_bytes()
+              compact = b"".join(raw.split())
+              actual = hashlib.sha256(compact).hexdigest()
+              print(f"part={index:02d} raw_bytes={len(raw)} compact_bytes={len(compact)} sha256={actual}")
+              if actual != expected:
+                  raise SystemExit(f"part {index:02d} digest mismatch: {actual} != {expected}")
+              compact_parts.append(compact)
+
+          encoded = b"".join(compact_parts)
+          encoded_sha = hashlib.sha256(encoded).hexdigest()
+          print(f"encoded_bytes={len(encoded)} encoded_sha256={encoded_sha}")
+          if encoded_sha != "bebe2973823ce7adbd7aa556544cec393dfa7090be779e932609a599d48b750a":
+              raise SystemExit("combined Base64 digest mismatch")
+
+          compressed = base64.b64decode(encoded, validate=True)
+          compressed_sha = hashlib.sha256(compressed).hexdigest()
+          print(f"compressed_bytes={len(compressed)} compressed_sha256={compressed_sha}")
+          if compressed_sha != "529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526":
+              raise SystemExit("XZ digest mismatch")
+
+          patch = lzma.decompress(compressed)
+          patch_sha = hashlib.sha256(patch).hexdigest()
+          print(f"patch_bytes={len(patch)} patch_sha256={patch_sha}")
+          if patch_sha != "cb40d57a1682619262840371f2e675692807093b6cc485f5bdccca689e50627b":
+              raise SystemExit("raw patch digest mismatch")
+          Path("/tmp/readme-audit.patch").write_bytes(patch)
+          PY
+          git apply --3way --whitespace=nowarn /tmp/readme-audit.patch
           rm -rf .github/readme-audit-parts .github/workflows/apply-readme-audit.yml
       - name: Install exact validation dependencies
         if: steps.staged.outputs.apply == 'true'
