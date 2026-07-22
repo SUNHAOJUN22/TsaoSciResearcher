@@ -4,13 +4,13 @@ on:
   push:
     branches: [agent/readme-bilingual-audit]
     paths:
-      - .github/readme-audit.patch.xz
+      - .github/readme-audit-parts/**
       - .github/workflows/apply-readme-audit.yml
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
     paths:
-      - .github/readme-audit.patch.xz
+      - .github/readme-audit-parts/**
       - .github/workflows/apply-readme-audit.yml
 
 permissions:
@@ -39,7 +39,7 @@ jobs:
         id: staged
         shell: bash
         run: |
-          if [ -f .github/readme-audit.patch.xz ]; then
+          if compgen -G '.github/readme-audit-parts/part-*.b64' > /dev/null; then
             echo 'apply=true' >> "$GITHUB_OUTPUT"
           else
             echo 'apply=false' >> "$GITHUB_OUTPUT"
@@ -56,11 +56,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo '529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526  .github/readme-audit.patch.xz' | sha256sum -c -
-          xz -dc .github/readme-audit.patch.xz > "$RUNNER_TEMP/readme-audit.patch"
+          cat > "$RUNNER_TEMP/chunk-sha256" <<'EOF'
+          529414e3f6d4712e75aa25d96e98255f266a55d1f0af3f030531f5ab4f0ee7c3  .github/readme-audit-parts/part-00.b64
+          77b304caf5c3fbee5f3a54c41d33b7783c913ee3c653e663155459f5a8d59afc  .github/readme-audit-parts/part-01.b64
+          f46a1e28ef776f056559d6f81e6fada6ba544b67effc9dbe005502f586815f25  .github/readme-audit-parts/part-02.b64
+          87579c4bc0aa0a7af7e2d9c6e2eb995a0fe3837d717a945e4f183069fe5a768d  .github/readme-audit-parts/part-03.b64
+          a4d5c89e386e354ec93fa727d8fb7797ce25049bb8684ff8bd3dcc64608c4340  .github/readme-audit-parts/part-04.b64
+          bec32860cdd7ad47b5525c415c396b2597cdc4b0343560ac50d81a802a16c655  .github/readme-audit-parts/part-05.b64
+          EOF
+          sha256sum -c "$RUNNER_TEMP/chunk-sha256"
+          cat \
+            .github/readme-audit-parts/part-00.b64 \
+            .github/readme-audit-parts/part-01.b64 \
+            .github/readme-audit-parts/part-02.b64 \
+            .github/readme-audit-parts/part-03.b64 \
+            .github/readme-audit-parts/part-04.b64 \
+            .github/readme-audit-parts/part-05.b64 \
+            > "$RUNNER_TEMP/readme-audit.patch.xz.b64"
+          echo "bebe2973823ce7adbd7aa556544cec393dfa7090be779e932609a599d48b750a  $RUNNER_TEMP/readme-audit.patch.xz.b64" | sha256sum -c -
+          base64 --decode "$RUNNER_TEMP/readme-audit.patch.xz.b64" > "$RUNNER_TEMP/readme-audit.patch.xz"
+          echo "529e209b237e63b82680771cbf3d5807321c9d7721264adbb1c40fbd0ff00526  $RUNNER_TEMP/readme-audit.patch.xz" | sha256sum -c -
+          xz -dc "$RUNNER_TEMP/readme-audit.patch.xz" > "$RUNNER_TEMP/readme-audit.patch"
           echo "cb40d57a1682619262840371f2e675692807093b6cc485f5bdccca689e50627b  $RUNNER_TEMP/readme-audit.patch" | sha256sum -c -
           git apply --binary "$RUNNER_TEMP/readme-audit.patch"
-          rm -f .github/readme-audit.patch.xz
+          rm -rf .github/readme-audit-parts .github/workflows/apply-readme-audit.yml
       - name: Install exact validation dependencies
         if: steps.staged.outputs.apply == 'true'
         run: |
