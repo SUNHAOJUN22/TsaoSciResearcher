@@ -463,7 +463,23 @@ def audit() -> dict[str, Any]:
         if re.search(r"continue-on-error:\s*true|\|\|\s*(?:true|exit\s+0)", text, re.IGNORECASE):
             errors.append(f"failure masking in workflow: {workflow.name}")
         has_write = re.search(r"contents:\s*write", text) is not None
-        if has_write and workflow.name != "cleanup-branches.yml":
+        allowed_write = workflow.name == "cleanup-branches.yml"
+        if workflow.name == "ci.yml" and has_write:
+            guarded_markers = [
+                "permissions:\n  contents: read",
+                "record-main-validation:",
+                "always() && github.event_name == 'push' && github.ref == 'refs/heads/main'",
+                "permissions:\n      contents: write",
+                ".github/finalize-v052",
+            ]
+            missing_guarded_markers = [marker for marker in guarded_markers if marker not in text]
+            if missing_guarded_markers:
+                errors.append(
+                    f"guarded CI write permission is incomplete: {missing_guarded_markers}"
+                )
+            else:
+                allowed_write = True
+        if has_write and not allowed_write:
             errors.append(f"unexpected contents:write permission in {workflow.name}")
         if workflow.name == "cleanup-branches.yml":
             required_markers = [
