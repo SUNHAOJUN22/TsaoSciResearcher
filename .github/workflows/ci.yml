@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           if [ -f .github/finalize-v052 ]; then
-            python scripts/generate_checksums.py
+            python scripts/generate_checksums.py --write
           fi
       - name: Compile runtime
         env:
@@ -96,7 +96,7 @@ jobs:
       - name: Prepare transitional checksum
         run: |
           if [ -f .github/finalize-v052 ]; then
-            python scripts/generate_checksums.py
+            python scripts/generate_checksums.py --write
           fi
       - name: Repository and contract audit
         run: |
@@ -142,7 +142,7 @@ jobs:
       - name: Prepare transitional checksum
         run: |
           if [ -f .github/finalize-v052 ]; then
-            python scripts/generate_checksums.py
+            python scripts/generate_checksums.py --write
           fi
       - name: Reverse-order regression
         run: python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
@@ -167,7 +167,7 @@ jobs:
       - name: Prepare transitional checksum
         run: |
           if [ -f .github/finalize-v052 ]; then
-            python scripts/generate_checksums.py
+            python scripts/generate_checksums.py --write
           fi
       - name: Ruff format gate
         run: python -m ruff format --check scripts tsao_researcher tests
@@ -209,7 +209,7 @@ jobs:
       - name: Prepare transitional checksum
         run: |
           if [ -f .github/finalize-v052 ]; then
-            python scripts/generate_checksums.py
+            python scripts/generate_checksums.py --write
           fi
       - name: Bounded performance regression
         run: python scripts/performance_smoke.py --json-out artifacts/performance.json
@@ -384,7 +384,7 @@ jobs:
           rm .github/finalize-v052
           rm -f .github/finalization-status.json
           python scripts/build_readme_facts.py --write
-          python scripts/generate_checksums.py
+          python scripts/generate_checksums.py --write
           python scripts/generate_checksums.py --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
