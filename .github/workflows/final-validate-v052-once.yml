@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: final-validate-v052-once
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   PYTHONDONTWRITEBYTECODE: "1"
@@ -135,7 +135,8 @@ jobs:
           python scripts/validate_release.py
 
   finalize:
-    name: final-publish-evidence
+    name: final-publish-evidence-or-status
+    if: ${{ always() }}
     needs: [compatibility, comprehensive]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -145,23 +146,61 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+      - name: Evaluate upstream gates
+        id: evaluate
+        env:
+          COMPATIBILITY_RESULT: ${{ needs.compatibility.result }}
+          COMPREHENSIVE_RESULT: ${{ needs.comprehensive.result }}
+          VALIDATED_COMMIT: ${{ github.sha }}
+          VALIDATED_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          results = {
+              "compatibility": os.environ["COMPATIBILITY_RESULT"],
+              "comprehensive": os.environ["COMPREHENSIVE_RESULT"],
+          }
+          success = all(value == "success" for value in results.values())
+          payload = {
+              "status": "PASS" if success else "FAIL",
+              "release": "0.5.2",
+              "run_id": int(os.environ["VALIDATED_RUN_ID"]),
+              "validated_commit": os.environ["VALIDATED_COMMIT"],
+              "jobs": results,
+              "artifact": "final-v052-source" if success else None,
+          }
+          Path(".github/final-v052-once-result.json").write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
+              handle.write(f"success={'true' if success else 'false'}\n")
+          PY
       - name: Set up Python
+        if: steps.evaluate.outputs.success == 'true'
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-ci.lock
       - name: Install exact dependencies and package
+        if: steps.evaluate.outputs.success == 'true'
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
       - name: Build final evidence and source archive
+        if: steps.evaluate.outputs.success == 'true'
         env:
           VALIDATED_COMMIT: ${{ github.sha }}
           VALIDATED_RUN_ID: ${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
+          cp .github/workflows/final-validate-v052-once.yml /tmp/final-workflow.yml
+          cp .github/final-v052-once-trigger /tmp/final-trigger
           rm -f .github/workflows/final-validate-v052-once.yml
           rm -f .github/final-v052-once-trigger .github/final-v052-once-result.json
           python - <<'PY'
@@ -236,7 +275,8 @@ jobs:
           cp docs/VALIDATION_EVIDENCE.json /tmp/VALIDATION_EVIDENCE.json
           cp docs/README_FACTS.json /tmp/README_FACTS.json
           cp SHA256SUMS /tmp/SHA256SUMS
-          git checkout -- .github/workflows/final-validate-v052-once.yml .github/final-v052-once-trigger
+          mv /tmp/final-workflow.yml .github/workflows/final-validate-v052-once.yml
+          mv /tmp/final-trigger .github/final-v052-once-trigger
           cp /tmp/VALIDATION_EVIDENCE.json docs/VALIDATION_EVIDENCE.json
           cp /tmp/README_FACTS.json docs/README_FACTS.json
           cp /tmp/SHA256SUMS SHA256SUMS
@@ -251,6 +291,7 @@ jobs:
                       "release": "0.5.2",
                       "run_id": int(os.environ["VALIDATED_RUN_ID"]),
                       "validated_commit": os.environ["VALIDATED_COMMIT"],
+                      "jobs": {"compatibility": "success", "comprehensive": "success"},
                       "artifact": "final-v052-source",
                   },
                   indent=2,
@@ -260,18 +301,22 @@ jobs:
           )
           PY
       - name: Upload final source archive
+        if: steps.evaluate.outputs.success == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: final-v052-source
           path: /tmp/TsaoSciResearcher-v0.5.2-final-source.tar.gz
           if-no-files-found: error
           retention-days: 7
-      - name: Commit evidence pointer
+      - name: Commit final status and evidence
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/VALIDATION_EVIDENCE.json docs/README_FACTS.json SHA256SUMS .github/final-v052-once-result.json
-          git commit -m 'ci: publish verified v0.5.2 final evidence'
+          git add .github/final-v052-once-result.json
+          if [ "${{ steps.evaluate.outputs.success }}" = "true" ]; then
+            git add docs/VALIDATION_EVIDENCE.json docs/README_FACTS.json SHA256SUMS
+          fi
+          git commit -m 'ci: publish v0.5.2 final validation status'
           git push origin HEAD:main
