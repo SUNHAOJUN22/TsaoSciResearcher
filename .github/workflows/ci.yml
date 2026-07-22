@@ -91,6 +91,7 @@ jobs:
         run: |
           python scripts/audit_repository.py
           python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/route_task.py --self-test

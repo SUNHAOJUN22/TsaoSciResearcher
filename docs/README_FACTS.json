@@ -1,0 +1,106 @@
+{
+  "capabilities": {
+    "by_implementation_level": {
+      "computation-delegated": 170,
+      "human-review": 23,
+      "native-research": 147
+    },
+    "by_workflow": {
+      "computation-handoff": 168,
+      "data-analysis": 52,
+      "deep-research": 16,
+      "experiment-design": 3,
+      "laboratory": 8,
+      "patent-and-transfer": 7,
+      "peer-review": 3,
+      "project-management": 35,
+      "research-design": 10,
+      "research-integrity": 8,
+      "research-question": 6,
+      "scientific-figure": 2,
+      "scientific-writing": 14,
+      "systematic-review": 5,
+      "technical-report": 3
+    },
+    "domain_slots": 164,
+    "legacy_by_category": {
+      "AI与机器学习科研": 20,
+      "实验室自动化与仪器": 20,
+      "数据统计与可视化": 20,
+      "文献与知识工程": 18,
+      "生物信息与医学科研": 18,
+      "科研Agent与编排": 18,
+      "科研写作与出版": 20,
+      "科研管理、专利与诚信": 24
+    },
+    "legacy_named": 158,
+    "runtime_core": 18,
+    "v2_total": 340
+  },
+  "domain_packs": {
+    "count": 7,
+    "items": [
+      "catalysis-polymers-composites",
+      "cfd-particles-processing",
+      "computational-chemistry-materials",
+      "fem-multiphysics",
+      "hpc-reproducibility",
+      "molecular-dynamics-multiscale",
+      "process-kinetics-digital-twin"
+    ]
+  },
+  "license": "Apache-2.0",
+  "python": [
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13"
+  ],
+  "repository_assets": {
+    "references": 22,
+    "templates": 13,
+    "test_modules": 19
+  },
+  "schema_version": "1.0",
+  "schemas": {
+    "count": 15,
+    "items": [
+      "schemas/artifact-manifest.schema.json",
+      "schemas/capability.schema.json",
+      "schemas/claim.schema.json",
+      "schemas/computation-handoff.schema.json",
+      "schemas/evidence-record.schema.json",
+      "schemas/experiment-protocol.schema.json",
+      "schemas/figure-contract.schema.json",
+      "schemas/research-project.schema.json",
+      "schemas/v2/artifact.schema.json",
+      "schemas/v2/capability-invocation.schema.json",
+      "schemas/v2/handoff.schema.json",
+      "schemas/v2/project.schema.json",
+      "schemas/v2/routing.schema.json",
+      "schemas/v2/state-event.schema.json",
+      "schemas/v2/workflow.schema.json"
+    ]
+  },
+  "version": "0.5.1",
+  "workflows": {
+    "count": 15,
+    "items": [
+      "computation-handoff",
+      "data-analysis",
+      "deep-research",
+      "experiment-design",
+      "laboratory",
+      "patent-and-transfer",
+      "peer-review",
+      "project-management",
+      "research-design",
+      "research-integrity",
+      "research-question",
+      "scientific-figure",
+      "scientific-writing",
+      "systematic-review",
+      "technical-report"
+    ]
+  }
+}
