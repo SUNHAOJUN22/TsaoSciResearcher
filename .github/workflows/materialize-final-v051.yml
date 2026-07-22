@@ -167,6 +167,8 @@ jobs:
           exec > >(tee "$RUNNER_TEMP/publish.log") 2>&1
           set -euxo pipefail
           rm -rf dist-a dist-b artifacts .coverage
+          rm -rf .github/workflows
+          git checkout origin/main -- .github/workflows
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
