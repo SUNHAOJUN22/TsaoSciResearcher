@@ -37,10 +37,10 @@
       "docs/test-dashboard.html",
       "docs/test-dashboard.svg"
     ],
-    "publication_parent_commit": "b3b2bdc49116a284dd43024065effa63cec0dcc6",
+    "publication_parent_commit": "5ccbe85cb570900f5e0c480f70df7de17a4426c5",
     "validated_file_count": 300,
-    "validated_tree_sha256": "b46f0432963f8a15cad2eabd907e1ae5cb9776adc61e7459441ee763081b6b7b",
-    "workflow_run_id": 30028036431
+    "validated_tree_sha256": "ab6189e50794dfe28405b6d85cca84170d5365c2134e72b7dd09435192ba7128",
+    "workflow_run_id": 30029705214
   },
   "release": "0.5.3",
   "schema_version": "1.5",
@@ -58,7 +58,7 @@
   },
   "workflow": {
     "name": "Main-branch full integration audit",
-    "publication_parent_commit": "b3b2bdc49116a284dd43024065effa63cec0dcc6",
-    "run_id": 30028036431
+    "publication_parent_commit": "5ccbe85cb570900f5e0c480f70df7de17a4426c5",
+    "run_id": 30029705214
   }
 }

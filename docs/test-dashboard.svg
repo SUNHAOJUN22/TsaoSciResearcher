@@ -4,7 +4,7 @@
 <rect width="1200" height="100%" rx="24" fill="#f6f8fb"/>
 <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#152033}.muted{fill:#5f6b7a}.small{font-size:14px}.label{font-size:17px;font-weight:600}.value{font-size:32px;font-weight:700}.title{font-size:30px;font-weight:700}.panel{fill:#fff;stroke:#d8e0ea;stroke-width:1.5}</style>
 <text x="70" y="62" class="title">Automated test dashboard</text>
-<text x="70" y="91" class="muted small">Release 0.5.3 · current-tree evidence · 2026-07-24 · run 30028036431</text>
+<text x="70" y="91" class="muted small">Release 0.5.3 · current-tree evidence · 2026-07-24 · run 30029705214</text>
 <rect x="950" y="40" width="180" height="54" rx="27" fill="#eff6ff" stroke="#8ab4e8"/>
 <text x="1040" y="75" text-anchor="middle" class="label">PASS</text>
 <rect x="70" y="125" width="235" height="128" rx="18" class="panel"/>
