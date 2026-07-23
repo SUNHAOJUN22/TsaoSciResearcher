@@ -86,7 +86,9 @@ def _payload(evidence: dict[str, Any]) -> dict[str, Any]:
         "release": str(evidence.get("release", "unknown")),
         "status": str(evidence.get("status", "UNKNOWN")),
         "evidence_date": str(evidence.get("evidence_date", "unknown")),
-        "run_id": evidence.get("workflow", {}).get("run_id") if isinstance(evidence.get("workflow"), dict) else None,
+        "run_id": evidence.get("workflow", {}).get("run_id")
+        if isinstance(evidence.get("workflow"), dict)
+        else None,
         "platforms": platforms,
         "gates": gate_rows,
         "inventory": {
@@ -142,8 +144,8 @@ def _render_svg(payload: dict[str, Any]) -> str:
     ]
 
     cards = [
-        ("Platforms", f'{summary["platform_passes"]}/{summary["platform_total"]}', "cross-platform"),
-        ("Quality gates", f'{summary["gate_passes"]}/{summary["gate_total"]}', "all recorded"),
+        ("Platforms", f"{summary['platform_passes']}/{summary['platform_total']}", "cross-platform"),
+        ("Quality gates", f"{summary['gate_passes']}/{summary['gate_total']}", "all recorded"),
         ("Mutation", summary["mutation"], "critical killed"),
         ("Test modules", str(inventory["test_modules"]), "repository modules"),
     ]
@@ -255,7 +257,7 @@ const data = {encoded};
 let zh = false;
 const labels = {{
   en: {{platforms:'Platform compatibility',gates:'Validated gates',inventory:'Verified inventory',footer:'Recorded software evidence; not a substitute for scientific or human review.',release:'Release',evidence:'Evidence',run:'Run',capabilities:'Capabilities',named_capabilities:'Named contracts',workflows:'Workflows',schemas:'Schemas',test_modules:'Test modules',domain_packs:'Domain packs',generic_placeholders:'Placeholders'}},
-  zh: {{platforms:'平台兼容性',gates:'已验证门禁',inventory:'已核实清单',footer:'展示已记录的软件证据，不替代科学判断或人工评审。',release:'版本',evidence:'证据日期',run:'运行',capabilities:'能力合同',named_capabilities:'具名合同',workflows:'工作流',schemas:'Schema',test_modules:'测试模块',domain_packs:'领域包',generic_placeholders:'占位项'}}
+  zh: {{platforms:'平台兼容性',gates:'已验证门禁',inventory:'已核实清单',footer:'展示已记录的软件证据,不替代科学判断或人工评审。',release:'版本',evidence:'证据日期',run:'运行',capabilities:'能力合同',named_capabilities:'具名合同',workflows:'工作流',schemas:'Schema',test_modules:'测试模块',domain_packs:'领域包',generic_placeholders:'占位项'}}
 }};
 function row(item) {{
   const node=document.createElement('div'); node.className='row';

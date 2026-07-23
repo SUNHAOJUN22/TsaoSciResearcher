@@ -18,6 +18,11 @@ TEMPORARY_PATHS = (
     ".github/finalize-test-dashboard-trigger",
     ".github/finalize-test-dashboard-v2-trigger",
     ".github/finalize-test-dashboard-status.json",
+    ".github/workflows/diagnose-dashboard-ruff.yml",
+    ".github/diagnose-dashboard-ruff-trigger",
+    ".github/dashboard-ruff-diagnostics.txt",
+    ".github/workflows/fix-dashboard-source.yml",
+    ".github/fix-dashboard-source-trigger",
     "scripts/finalize_test_dashboard.py",
 )
 
@@ -44,7 +49,7 @@ CHINESE_SECTION = textwrap.dedent(
     - [打开可交互 HTML 仪表板](docs/test-dashboard.html)
     - [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)
 
-    仪表板由已记录的验证证据自动生成并由 CI 校验。它展示软件门禁结果，不替代科学结论或人工审批。
+    仪表板由已记录的验证证据自动生成并由 CI 校验。它展示软件门禁结果,不替代科学结论或人工审批。
 
     """
 )
