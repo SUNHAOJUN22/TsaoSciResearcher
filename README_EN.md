@@ -178,6 +178,7 @@ Run the same core checks locally:
 ```bash
 python scripts/validate_schemas.py
 python scripts/build_readme_facts.py --check
+python scripts/build_test_dashboard.py --check
 python scripts/audit_repository.py
 python scripts/validate_structure.py
 python scripts/generate_checksums.py --check

@@ -67,6 +67,7 @@ V2_SCHEMAS = {
 REQUIRED_SCRIPTS = {
     "archive_safety.py",
     "build_readme_facts.py",
+    "build_test_dashboard.py",
     "audit_repository.py",
     "init_project.py",
     "install.py",
@@ -306,6 +307,8 @@ def audit() -> dict[str, Any]:
         "docs/CAPABILITY_COVERAGE_MATRIX.md",
         "docs/README_ARCHITECTURE_MAPPING.md",
         "docs/VALIDATION_EVIDENCE.json",
+        "docs/test-dashboard.html",
+        "docs/test-dashboard.svg",
     }
     missing_readme_docs = sorted(
         relative for relative in required_readme_docs if not (ROOT / relative).is_file()
@@ -514,6 +517,7 @@ def audit() -> dict[str, Any]:
         "python -m ruff format --check scripts tsao_researcher tests",
         "python -m ruff check scripts tsao_researcher tests",
         "python -m mypy scripts tsao_researcher",
+        "python scripts/build_test_dashboard.py --check",
         "tests.random_order_plugin",
         "tests.reverse_order_plugin",
         "run_mutation_smoke.py",
