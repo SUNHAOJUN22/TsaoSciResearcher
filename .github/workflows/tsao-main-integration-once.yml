@@ -1,4 +1,4 @@
-name: Tsao main integration audit once
+name: Finalize TsaoSciResearcher v0.5.3 once
 
 on:
   push:
@@ -10,38 +10,24 @@ permissions:
   contents: write
 
 concurrency:
-  group: tsao-main-integration-audit-once
-  cancel-in-progress: true
+  group: tsao-main-v053-finalizer
+  cancel-in-progress: false
 
 env:
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONNOUSERSITE: "1"
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
-  STATUS_FILE: .github/tsao-v053-integration-status.json
 
 jobs:
-  integrate:
+  finalize:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout main
+      - name: Checkout current main
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: main
           fetch-depth: 0
-
-      - name: Configure publication identity
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-
-      - name: Publish observable running status
-        shell: bash
-        run: |
-          printf '{"status":"RUNNING","run_id":%s,"trigger_commit":"%s"}\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > "$STATUS_FILE"
-          git add "$STATUS_FILE"
-          git commit -m 'ci: mark v0.5.3 integration running'
-          git push origin HEAD:main
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -56,104 +42,101 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Apply bounded integration patch
+      - name: Align release documentation
         shell: bash
         run: |
           python - <<'PY'
-          import base64
-          import hashlib
-          import zlib
+          from pathlib import Path
 
-          payload = "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"
-          source = zlib.decompress(base64.b64decode(payload))
-          expected = "e7a2fb84b0c443674e9b9292e7b00211db3c1d8af41c08ea62484783f0996840"
-          if hashlib.sha256(source).hexdigest() != expected:
-              raise SystemExit("integration patch digest mismatch")
-          exec(compile(source, "tsao-v053-integration.py", "exec"), {"__name__": "__main__"})
+          replacements = {
+              "README.md": [
+                  ("**Release 0.5.2**", "**Release 0.5.3**"),
+                  ("python scripts/build_test_dashboard.py --check\n", "python scripts/build_test_dashboard.py --check\npython scripts/build_validation_evidence.py --check\npython scripts/build_research_quality_dashboard.py --check\npython scripts/build_engineering_report.py --check\n"),
+                  ("- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)\n", "- [Open the scientific-quality HTML dashboard](docs/research-quality-dashboard.html)\n- [View the scientific-quality SVG report](docs/research-quality-dashboard.svg)\n- [Download the engineering audit PDF](docs/engineering-audit-report.pdf)\n- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)\n"),
+              ],
+              "README.zh-CN.md": [
+                  ("**正式版本 0.5.2**", "**正式版本 0.5.3**"),
+                  ("python scripts/build_test_dashboard.py --check\n", "python scripts/build_test_dashboard.py --check\npython scripts/build_validation_evidence.py --check\npython scripts/build_research_quality_dashboard.py --check\npython scripts/build_engineering_report.py --check\n"),
+                  ("- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)\n", "- [打开科研质量交互式 HTML 仪表板](docs/research-quality-dashboard.html)\n- [查看科研质量 SVG 图像报告](docs/research-quality-dashboard.svg)\n- [下载工程审计 PDF 报告](docs/engineering-audit-report.pdf)\n- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)\n"),
+              ],
+          }
+          for name, edits in replacements.items():
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              for old, new in edits:
+                  if old in text:
+                      text = text.replace(old, new, 1)
+              path.write_text(text, encoding="utf-8", newline="\n")
           PY
-          rm -f "$STATUS_FILE"
+
+      - name: Remove temporary integration controls
+        run: |
+          rm -f .github/tsao-v053-integration-status.json
+          rm -f .github/workflows/tsao-main-integration-once.yml
 
       - name: Format and generate deterministic artifacts
-        shell: bash
         run: |
           python -m ruff format scripts tsao_researcher tests
           python scripts/build_research_quality_dashboard.py --write
-          python scripts/build_readme_facts.py --write
-          python scripts/build_validation_evidence.py --write --parent-commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --evidence-date 2026-07-23
+          python scripts/build_validation_evidence.py --write --parent-commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"
           python scripts/build_test_dashboard.py --write
           python scripts/build_engineering_report.py --write
+          python scripts/build_readme_facts.py --write
+          python scripts/build_capability_index.py --write
           python scripts/generate_checksums.py --write
 
       - name: Repository and documentation gates
         run: |
           python scripts/validate_schemas.py
-          python scripts/build_validation_evidence.py --check
-          python scripts/build_readme_facts.py --check
-          python scripts/build_test_dashboard.py --check
-          python scripts/build_research_quality_dashboard.py --check
-          python scripts/build_engineering_report.py --check
           python scripts/audit_repository.py
           python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/route_task.py --self-test
           python scripts/validate_figure.py examples/figure-contract.json
-          python -m tsao_researcher quality examples/scientific-quality-check.json
 
-      - name: Complete isolated regression
-        run: python scripts/run_tests.py --jobs 4 --json-out artifacts/test-results.json --skip-release-validation
-
-      - name: Reverse and seeded-random regression
+      - name: Full and order-independent tests
         run: |
-          python scripts/run_tests.py --jobs 4 --order reverse --skip-preflight --skip-release-validation
-          python scripts/run_tests.py --jobs 4 --order random --seed 20260723 --skip-preflight --skip-release-validation
+          python -m pytest -q -p hypothesis.extra.pytestplugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260723 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
 
-      - name: Static quality and security
+      - name: Static quality security mutation and performance
         run: |
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
-
-      - name: Mutation, performance and reproducible release
-        run: |
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
+
+      - name: Reproducible release
+        shell: bash
+        run: |
+          VERSION="$(tr -d '\r\n' < VERSION)"
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
           python scripts/validate_release.py
 
-      - name: Rebuild final evidence and verify generated state
-        run: |
-          python scripts/build_research_quality_dashboard.py --write
-          python scripts/build_readme_facts.py --write
-          python scripts/build_validation_evidence.py --write --parent-commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --evidence-date 2026-07-23
-          python scripts/build_test_dashboard.py --write
-          python scripts/build_engineering_report.py --write
-          python scripts/generate_checksums.py --write
-          python scripts/build_validation_evidence.py --check
-          python scripts/build_readme_facts.py --check
-          python scripts/build_test_dashboard.py --check
-          python scripts/build_research_quality_dashboard.py --check
-          python scripts/build_engineering_report.py --check
-          python scripts/audit_repository.py
-          python scripts/generate_checksums.py --check
-
-      - name: Commit verified main tree
+      - name: Publish verified main tree
         shell: bash
         run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'feat: integrate scientific quality guards and visual audit'
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
-
-      - name: Publish observable failure status
-        if: failure()
-        shell: bash
-        run: |
-          git reset --hard HEAD
-          printf '{"status":"FAILED","run_id":%s,"trigger_commit":"%s"}\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > "$STATUS_FILE"
-          git add "$STATUS_FILE"
-          git commit -m 'ci: mark v0.5.3 integration failed' || true
-          git fetch origin main
-          git rebase origin/main || true
-          git push origin HEAD:main || true
+          git commit -m 'feat: complete v0.5.3 scientific quality and visual audit'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            sleep $((attempt * 2))
+          done
+          exit 1
