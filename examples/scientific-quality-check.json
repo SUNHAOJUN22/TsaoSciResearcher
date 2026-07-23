@@ -1,12 +1,14 @@
 {
   "kind": "causality-guard",
   "spec": {
-    "claim": "The morphology causes the breakdown improvement.",
-    "design": "cross-sectional observational comparison",
+    "claim": "The controlled treatment causes the measured response within the tested material and processing boundary.",
+    "design": "randomized controlled experiment",
     "temporal_order": true,
-    "confounders_addressed": false,
-    "intervention_or_natural_experiment": false,
-    "mechanism_tested": false,
+    "confounders_addressed": true,
+    "intervention_or_natural_experiment": true,
+    "comparison_or_control": true,
+    "replication": true,
+    "mechanism_tested": true,
     "uncertainty_reported": true
   }
 }
