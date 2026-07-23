@@ -10,6 +10,7 @@ from typing import Any
 
 from .capabilities import search_capabilities
 from .router import route
+from .scientific_quality import evaluate_quality
 from .state import RESEARCH_TYPES, initialize, transition, verify
 
 
@@ -28,6 +29,13 @@ def _emit(value: Any) -> None:
         sys.stdout.write(escaped + "\n")
 
 
+def _load_quality_request(path: str) -> dict[str, Any]:
+    value = json.loads(Path(path).read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError("quality request root must be a JSON object")
+    return value
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="python -m tsao_researcher")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -40,6 +48,9 @@ def main() -> None:
     search_parser.add_argument("--workflow")
     search_parser.add_argument("--domain", action="append", default=[])
     search_parser.add_argument("--limit", type=int, default=20)
+
+    quality_parser = sub.add_parser("quality", help="evaluate a scientific-quality JSON request")
+    quality_parser.add_argument("input", help="path to a quality request JSON file")
 
     init_parser = sub.add_parser("init", help="initialize a traceable project")
     init_parser.add_argument("--name", required=True)
@@ -69,6 +80,11 @@ def main() -> None:
                 limit=args.limit,
             )
         )
+    elif args.command == "quality":
+        result = evaluate_quality(_load_quality_request(args.input))
+        _emit(result)
+        if result["status"] == "BLOCK":
+            raise SystemExit(2)
     elif args.command == "init":
         print(
             initialize(
