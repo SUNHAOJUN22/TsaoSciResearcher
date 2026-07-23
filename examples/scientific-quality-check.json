@@ -1,0 +1,12 @@
+{
+  "kind": "causality-guard",
+  "spec": {
+    "claim": "The morphology causes the breakdown improvement.",
+    "design": "cross-sectional observational comparison",
+    "temporal_order": true,
+    "confounders_addressed": false,
+    "intervention_or_natural_experiment": false,
+    "mechanism_tested": false,
+    "uncertainty_reported": true
+  }
+}
