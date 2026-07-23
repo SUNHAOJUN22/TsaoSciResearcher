@@ -81,7 +81,7 @@ def _page_one(evidence: dict[str, Any]) -> str:
         [
             "1. Current-main traceability and non-self-referential validation evidence",
             "2. Cross-platform CI, regression, security, mutation and reproducible release",
-            "3. Executable measurement-boundary, structure-property and causality guards",
+            "3. Measurement, structure-property, causality and evidence-traceability guards",
             "4. Deterministic HTML/SVG dashboards and a reproducible PDF report",
         ]
     ):
@@ -118,29 +118,44 @@ def _page_two(evidence: dict[str, Any]) -> str:
     return content
 
 
-def _page_three(rows: list[dict[str, Any]]) -> str:
+def _guard_card(x: float, y: float, row: dict[str, Any]) -> str:
+    result = row["result"]
+    score = int(result.get("details", {}).get("completeness_score", 0))
+    content = _rect(x, y, 245, 275, 0.98)
+    content += _text(x + 16, y + 242, row["title"][:34], 13, True)
+    content += _text(x + 188, y + 242, result["status"], 11, True)
+    content += _text(x + 16, y + 218, f"Declared completeness: {score}%", 9)
+    content += _bar(x + 16, y + 198, 210, score / 100)
+    content += _text(x + 16, y + 173, row["summary"][:46], 8)
+    finding_y = y + 145
+    for finding in result["findings"][:4]:
+        content += _text(x + 20, finding_y, f"{finding['code']}: {finding['message'][:37]}", 7)
+        finding_y -= 25
+    content += _text(x + 16, y + 22, f"Kind: {result['kind']}", 7)
+    return content
+
+
+def _page_three(rows: list[dict[str, Any]], summary: dict[str, Any]) -> str:
     content = _text(46, 790, "Scientific quality controls", 22, True)
-    y = 710
-    for row in rows:
-        result = row["result"]
-        content += _rect(46, y - 145, 500, 135, 0.98)
-        content += _text(64, y - 38, row["title"], 15, True)
-        content += _text(430, y - 38, result["status"], 13, True)
-        content += _text(64, y - 62, row["summary"][:78], 9)
-        finding_y = y - 88
-        for finding in result["findings"][:3]:
-            content += _text(
-                74,
-                finding_y,
-                f"{finding['code']}: {finding['message'][:66]}",
-                8,
-            )
-            finding_y -= 19
-        y -= 170
-    content += _text(46, 126, "Guard behavior", 14, True)
-    content += _text(60, 100, "PASS: declared boundary or inference level is internally complete.", 9)
-    content += _text(60, 80, "WARN: the output remains usable but an uncertainty or alternative is missing.", 9)
-    content += _text(60, 60, "BLOCK: the claim exceeds the method, boundary or study design.", 9)
+    statuses = summary.get("statuses", {})
+    content += _text(
+        46,
+        762,
+        "Four deterministic contracts: measurement, multiscale reasoning, causal claims and evidence provenance.",
+        9,
+    )
+    content += _text(
+        46,
+        738,
+        f"Examples: PASS {statuses.get('PASS', 0)} | WARN {statuses.get('WARN', 0)} | BLOCK {statuses.get('BLOCK', 0)} | average completeness {summary.get('average_completeness', 0)}%",
+        9,
+        True,
+    )
+    positions = [(46, 430), (304, 430), (46, 135), (304, 135)]
+    for position, row in zip(positions, rows[:4], strict=True):
+        content += _guard_card(position[0], position[1], row)
+    content += _text(46, 82, "BLOCK is intentional when wording exceeds evidence or an execution claim lacks a receipt.", 8)
+    content += _text(46, 62, "The guards remain configurable and do not hard-code material-specific trends.", 8)
     return content
 
 
@@ -239,14 +254,17 @@ def build() -> bytes:
     evidence = _load_object(EVIDENCE)
     quality = _load_object(QUALITY)
     rows = quality.get("guards")
+    summary = quality.get("summary")
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
         raise ValueError("scientific-quality examples must contain guard objects")
+    if not isinstance(summary, dict):
+        raise ValueError("scientific-quality examples must contain a summary object")
     guard_rows = [dict(row) for row in rows]
     return _pdf(
         [
             _page_one(evidence),
             _page_two(evidence),
-            _page_three(guard_rows),
+            _page_three(guard_rows, summary),
             _page_four(evidence),
         ]
     )
