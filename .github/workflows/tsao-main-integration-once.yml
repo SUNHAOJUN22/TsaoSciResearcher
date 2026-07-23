@@ -17,6 +17,7 @@ env:
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONNOUSERSITE: "1"
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+  STATUS_FILE: .github/tsao-v053-integration-status.json
 
 jobs:
   finalize:
@@ -28,6 +29,37 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
+      - name: Publish observable running status
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["STATUS_FILE"])
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(
+              json.dumps(
+                  {
+                      "status": "RUNNING",
+                      "run_id": int(os.environ["GITHUB_RUN_ID"]),
+                      "trigger_commit": os.environ["GITHUB_SHA"],
+                  },
+                  indent=2,
+                  sort_keys=True,
+              )
+              + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          PY
+          git add "$STATUS_FILE"
+          git commit -m 'ci: mark v0.5.3 integration running [skip ci]'
+          git push origin HEAD:main
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -48,37 +80,124 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          replacements = {
-              "README.md": [
-                  ("**Release 0.5.2**", "**Release 0.5.3**"),
-                  ("python scripts/build_test_dashboard.py --check\n", "python scripts/build_test_dashboard.py --check\npython scripts/build_validation_evidence.py --check\npython scripts/build_research_quality_dashboard.py --check\npython scripts/build_engineering_report.py --check\n"),
-                  ("- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)\n", "- [Open the scientific-quality HTML dashboard](docs/research-quality-dashboard.html)\n- [View the scientific-quality SVG report](docs/research-quality-dashboard.svg)\n- [Download the engineering audit PDF](docs/engineering-audit-report.pdf)\n- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)\n"),
-              ],
-              "README.zh-CN.md": [
-                  ("**正式版本 0.5.2**", "**正式版本 0.5.3**"),
-                  ("python scripts/build_test_dashboard.py --check\n", "python scripts/build_test_dashboard.py --check\npython scripts/build_validation_evidence.py --check\npython scripts/build_research_quality_dashboard.py --check\npython scripts/build_engineering_report.py --check\n"),
-                  ("- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)\n", "- [打开科研质量交互式 HTML 仪表板](docs/research-quality-dashboard.html)\n- [查看科研质量 SVG 图像报告](docs/research-quality-dashboard.svg)\n- [下载工程审计 PDF 报告](docs/engineering-audit-report.pdf)\n- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)\n"),
-              ],
-          }
-          for name, edits in replacements.items():
+          english_section = """## Executable scientific-quality guards
+
+The `quality` command exposes four deterministic controls:
+
+| Guard | Purpose |
+|---|---|
+| Measurement Boundary | Declares measurand, method, sample, conditions, units, calibration/reference, uncertainty, applicability and exclusions. |
+| Structure-Property Planner | Records intervention, structure, measurable mediator, response, confounders, alternatives, validation, scale bridge and statistical basis. |
+| Causality Guard | Separates association, mechanism-consistent inference and bounded causal claims, including English and Chinese causal wording. |
+| Evidence Traceability | Links claims to evidence locators and blocks execution claims that lack execution receipts. |
+
+```bash
+python -m tsao_researcher quality examples/scientific-quality-check.json
+```
+
+These guards are configurable research controls. They do not hard-code a material-specific trend or replace qualified scientific review.
+
+"""
+          chinese_section = """## 可执行科研质量门控
+
+`quality` 命令提供四类确定性检查：
+
+| 门控 | 作用 |
+|---|---|
+| Measurement Boundary | 明确被测量、方法、样品、条件、单位、校准/参考、不确定度、适用域和排除项。 |
+| Structure-Property Planner | 记录干预变量、结构、可测中介、响应、混杂因素、备择解释、验证策略、尺度桥接和统计基础。 |
+| Causality Guard | 区分相关性、机制一致推断和有边界的因果结论，并检查中英文因果措辞。 |
+| Evidence Traceability | 建立论断与证据定位的关联，并阻止没有执行凭据的“已完成”表述。 |
+
+```bash
+python -m tsao_researcher quality examples/scientific-quality-check.json
+```
+
+这些门控是可配置的科研约束，不会把某一材料体系的趋势硬编码为通用结论，也不能代替合格人员的科学审查。
+
+"""
+          validation_commands = """python scripts/build_test_dashboard.py --check
+python scripts/build_validation_evidence.py --check
+python scripts/build_research_quality_dashboard.py --check
+python scripts/build_engineering_report.py --check
+"""
+          english_links = """- [Open the interactive HTML dashboard](docs/test-dashboard.html)
+- [Open the scientific-quality HTML dashboard](docs/research-quality-dashboard.html)
+- [View the scientific-quality SVG report](docs/research-quality-dashboard.svg)
+- [Download the engineering audit PDF](docs/engineering-audit-report.pdf)
+- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)
+"""
+          chinese_links = """- [打开可交互 HTML 仪表板](docs/test-dashboard.html)
+- [打开科研质量交互式 HTML 仪表板](docs/research-quality-dashboard.html)
+- [查看科研质量 SVG 图像报告](docs/research-quality-dashboard.svg)
+- [下载工程审计 PDF 报告](docs/engineering-audit-report.pdf)
+- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)
+"""
+
+          for name in ("README.md", "README_EN.md"):
               path = Path(name)
               text = path.read_text(encoding="utf-8")
-              for old, new in edits:
-                  if old in text:
-                      text = text.replace(old, new, 1)
+              text = text.replace("**Release 0.5.2**", "**Release 0.5.3**")
+              marker = "The 32 engines listed in the uploaded AI-for-Science workbook are ecosystem targets, not bundled executors.\n\n"
+              if "## Executable scientific-quality guards" not in text:
+                  text = text.replace(marker, marker + english_section, 1)
+              if "python scripts/build_validation_evidence.py --check" not in text:
+                  text = text.replace("python scripts/build_test_dashboard.py --check\n", validation_commands, 1)
+              if "docs/research-quality-dashboard.html" not in text:
+                  text = text.replace(
+                      "- [Open the interactive HTML dashboard](docs/test-dashboard.html)\n- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)\n",
+                      english_links,
+                      1,
+                  )
               path.write_text(text, encoding="utf-8", newline="\n")
+
+          path = Path("README.zh-CN.md")
+          text = path.read_text(encoding="utf-8")
+          text = text.replace("**正式版本 0.5.2**", "**正式版本 0.5.3**")
+          marker = "上传目录中的 32 个科学计算引擎是生态集成目标，不是本仓库内置求解器。\n\n"
+          if "## 可执行科研质量门控" not in text:
+              text = text.replace(marker, marker + chinese_section, 1)
+          if "python scripts/build_validation_evidence.py --check" not in text:
+              text = text.replace("python scripts/build_test_dashboard.py --check\n", validation_commands, 1)
+          if "docs/research-quality-dashboard.html" not in text:
+              text = text.replace(
+                  "- [打开可交互 HTML 仪表板](docs/test-dashboard.html)\n- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)\n",
+                  chinese_links,
+                  1,
+              )
+          path.write_text(text, encoding="utf-8", newline="\n")
+
+          integration = Path("docs/PROJECT_INTEGRATION_2026-07-23.md")
+          if integration.is_file():
+              text = integration.read_text(encoding="utf-8")
+              if "## Implemented corrections" not in text:
+                  text += """
+
+## Implemented corrections
+
+- fixed the scientific-quality JSON/PDF contract mismatch that prevented deterministic report generation;
+- expanded Measurement Boundary completeness metadata;
+- expanded Structure-Property planning with intervention, confounder, validation, uncertainty, scale and statistical fields;
+- added bilingual causal-overclaim detection and strict boolean validation;
+- added claim-to-evidence locator and execution-receipt checks;
+- added regression tests for the JSON, HTML/SVG and PDF report interfaces.
+"""
+              integration.write_text(text, encoding="utf-8", newline="\n")
           PY
 
-      - name: Remove temporary integration controls
+      - name: Remove superseded manual and temporary controls
         run: |
-          rm -f .github/tsao-v053-integration-status.json
+          rm -f docs/v053-audit-summary.html docs/v053-audit-summary.svg
+          rm -f "$STATUS_FILE"
           rm -f .github/workflows/tsao-main-integration-once.yml
 
       - name: Format and generate deterministic artifacts
+        shell: bash
         run: |
           python -m ruff format scripts tsao_researcher tests
           python scripts/build_research_quality_dashboard.py --write
-          python scripts/build_validation_evidence.py --write --parent-commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"
+          PARENT_COMMIT="$(git rev-parse HEAD)"
+          python scripts/build_validation_evidence.py --write --parent-commit "$PARENT_COMMIT" --run-id "$GITHUB_RUN_ID"
           python scripts/build_test_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/build_readme_facts.py --write
@@ -102,7 +221,7 @@ jobs:
 
       - name: Full and order-independent tests
         run: |
-          python -m pytest -q -p hypothesis.extra.pytestplugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
           TSR_TEST_ORDER_SEED=20260723 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
 
@@ -124,7 +243,26 @@ jobs:
           cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
           python scripts/validate_release.py
 
+      - name: Upload audit evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-v053-main-audit-${{ github.run_id }}
+          path: |
+            artifacts
+            docs/VALIDATION_EVIDENCE.json
+            docs/SCIENTIFIC_QUALITY_EXAMPLES.json
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
+            docs/engineering-audit-report.pdf
+            dist-a
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Publish verified main tree
+        if: ${{ success() }}
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
@@ -140,3 +278,36 @@ jobs:
             sleep $((attempt * 2))
           done
           exit 1
+
+      - name: Publish failure status
+        if: ${{ failure() }}
+        shell: bash
+        run: |
+          git reset --hard HEAD
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["STATUS_FILE"])
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(
+              json.dumps(
+                  {
+                      "status": "FAILED",
+                      "run_id": int(os.environ["GITHUB_RUN_ID"]),
+                      "trigger_commit": os.environ["GITHUB_SHA"],
+                  },
+                  indent=2,
+                  sort_keys=True,
+              )
+              + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          PY
+          git add "$STATUS_FILE"
+          git commit -m 'ci: record v0.5.3 integration failure [skip ci]' || true
+          git push origin HEAD:main || true
