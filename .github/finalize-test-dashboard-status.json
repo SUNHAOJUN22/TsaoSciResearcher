@@ -1,5 +1,9 @@
 {
+  "jobs": {
+    "compatibility": "success",
+    "finalize": "failure"
+  },
   "run_id": 29994491337,
-  "status": "RUNNING",
+  "status": "FAIL",
   "validated_commit": "5e268d774e0fb0ce61492a2ea967eb26f9279f0f"
 }
