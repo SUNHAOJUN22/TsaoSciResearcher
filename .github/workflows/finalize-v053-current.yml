@@ -162,19 +162,97 @@ jobs:
           cmp dist-a/TsaoSciResearcher-v0.5.3.zip dist-b/TsaoSciResearcher-v0.5.3.zip
           python scripts/validate_release.py
 
-      - name: Publish verified permanent tree directly to main
+      - name: Publish verified permanent tree atomically to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'chore: finalize v0.5.3 evidence and visual reports'
-          for attempt in 1 2 3 4; do
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            git fetch origin main
-            git rebase origin/main
-            sleep $((attempt * 2))
-          done
-          exit 1
+          python - <<'PY'
+          import base64
+          import json
+          import os
+          import stat
+          import subprocess
+          import time
+          import urllib.error
+          import urllib.request
+          from pathlib import Path
+
+          repository = os.environ["REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          api_base = f"https://api.github.com/repos/{repository}"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TsaoSciResearcher-v053-finalizer",
+          }
+
+          def request(method: str, path: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(api_base + path, data=body, headers=headers, method=method)
+              with urllib.request.urlopen(req, timeout=60) as response:
+                  raw = response.read()
+              return json.loads(raw) if raw else {}
+
+          raw_names = subprocess.check_output(
+              ["git", "diff", "--cached", "--name-only", "-z", "HEAD"]
+          )
+          paths = [item.decode("utf-8") for item in raw_names.split(b"\0") if item]
+          if not paths:
+              raise SystemExit("no verified changes to publish")
+
+          entries: list[dict] = []
+          for relative in paths:
+              path = Path(relative)
+              if not path.exists():
+                  entries.append({"path": relative, "mode": "100644", "type": "blob", "sha": None})
+                  continue
+              if path.is_symlink():
+                  raise SystemExit(f"symbolic link is forbidden: {relative}")
+              blob = request(
+                  "POST",
+                  "/git/blobs",
+                  {
+                      "content": base64.b64encode(path.read_bytes()).decode("ascii"),
+                      "encoding": "base64",
+                  },
+              )
+              mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
+              entries.append({"path": relative, "mode": mode, "type": "blob", "sha": blob["sha"]})
+
+          for attempt in range(1, 6):
+              try:
+                  ref = request("GET", "/git/ref/heads/main")
+                  parent = ref["object"]["sha"]
+                  parent_commit = request("GET", f"/git/commits/{parent}")
+                  tree = request(
+                      "POST",
+                      "/git/trees",
+                      {"base_tree": parent_commit["tree"]["sha"], "tree": entries},
+                  )
+                  commit = request(
+                      "POST",
+                      "/git/commits",
+                      {
+                          "message": "chore: finalize v0.5.3 evidence and visual reports",
+                          "tree": tree["sha"],
+                          "parents": [parent],
+                      },
+                  )
+                  request(
+                      "PATCH",
+                      "/git/refs/heads/main",
+                      {"sha": commit["sha"], "force": False},
+                  )
+                  print(f"published verified commit {commit['sha']} over parent {parent}")
+                  break
+              except urllib.error.HTTPError as exc:
+                  if exc.code not in {409, 422} or attempt == 5:
+                      raise
+                  time.sleep(attempt * 2)
+          else:
+              raise SystemExit("failed to publish verified tree")
+          PY
