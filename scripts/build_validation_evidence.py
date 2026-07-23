@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write or verify non-self-referential repository validation evidence."""
+"""Write or verify current-tree or composite repository validation evidence."""
 
 from __future__ import annotations
 
@@ -38,6 +38,11 @@ DEFAULT_COMPATIBILITY = {
     "ubuntu_python_3_10": "PASS",
     "ubuntu_python_3_13": "PASS",
     "windows_python_3_12": "PASS",
+}
+REQUIRED_CURRENT_GATES = {
+    "validation_tree_digest",
+    "scientific_quality_guards",
+    "deterministic_visual_reports",
 }
 
 
@@ -101,6 +106,8 @@ def _inventory(current: dict[str, Any]) -> dict[str, Any]:
 
 
 def build(parent_commit: str, run_id: int, evidence_date: str) -> dict[str, Any]:
+    """Build strong current-tree evidence from a real validation run."""
+
     if not re.fullmatch(r"[0-9a-f]{40}", parent_commit):
         raise ValueError("parent commit must be a 40-character lowercase SHA")
     if run_id < 1:
@@ -108,12 +115,13 @@ def build(parent_commit: str, run_id: int, evidence_date: str) -> dict[str, Any]
     digest, file_count = tree_digest()
     current = _existing()
     return {
-        "schema_version": "1.4",
+        "schema_version": "1.5",
+        "validation_scope": "current-tree",
         "release": (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
         "status": "PASS",
         "evidence_date": evidence_date,
         "compatibility": _compatibility(current),
-        "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass CI.",
+        "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass permanent CI.",
         "gates": {
             "bandit_high_severity": "PASS",
             "bounded_performance": "PASS",
@@ -152,15 +160,30 @@ def build(parent_commit: str, run_id: int, evidence_date: str) -> dict[str, Any]
     }
 
 
-def validate(value: dict[str, Any]) -> list[str]:
+def _common_errors(value: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if value.get("schema_version") != "1.4":
-        errors.append("schema_version must be 1.4")
+    if value.get("schema_version") != "1.5":
+        errors.append("schema_version must be 1.5")
+    if value.get("release") != (ROOT / "VERSION").read_text(encoding="utf-8").strip():
+        errors.append("release must match VERSION")
     if value.get("status") != "PASS":
         errors.append("status must be PASS")
+    if value.get("validation_scope") not in {"current-tree", "composite"}:
+        errors.append("validation_scope must be current-tree or composite")
+    serialized = json.dumps(value, ensure_ascii=False, sort_keys=True)
+    if "permanent_tree_simulated" in serialized or "simulated permanent" in serialized.casefold():
+        errors.append("simulated permanent-tree markers are forbidden")
+    interpretation = value.get("interpretation")
+    if not isinstance(interpretation, list) or not interpretation:
+        errors.append("interpretation must be a non-empty list")
+    return errors
+
+
+def _validate_current_tree(value: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
     provenance = value.get("provenance")
     if not isinstance(provenance, dict):
-        return [*errors, "provenance must be an object"]
+        return ["provenance must be an object"]
     expected_digest, expected_count = tree_digest()
     if provenance.get("validated_tree_sha256") != expected_digest:
         errors.append("validated_tree_sha256 is stale")
@@ -173,11 +196,65 @@ def validate(value: dict[str, Any]) -> list[str]:
     if not isinstance(workflow_run_id, int) or isinstance(workflow_run_id, bool) or workflow_run_id < 1:
         errors.append("workflow_run_id is invalid")
     gates = value.get("gates")
-    required = {"validation_tree_digest", "scientific_quality_guards", "deterministic_visual_reports"}
-    if not isinstance(gates, dict) or any(gates.get(key) != "PASS" for key in required):
-        errors.append("new validation gates are missing or not PASS")
-    if "permanent_tree_simulated" in json.dumps(value, sort_keys=True):
-        errors.append("simulated permanent-tree marker is forbidden")
+    if not isinstance(gates, dict) or any(gates.get(key) != "PASS" for key in REQUIRED_CURRENT_GATES):
+        errors.append("current-tree validation gates are missing or not PASS")
+    return errors
+
+
+def _validate_composite(value: dict[str, Any]) -> list[str]:
+    """Validate explicitly scoped evidence when the current full tree was not rerun."""
+
+    errors: list[str] = []
+    baseline = value.get("baseline_full_repository_run")
+    focused = value.get("focused_current_change_regression")
+    limitations = value.get("limitations")
+    if not isinstance(baseline, dict):
+        errors.append("baseline_full_repository_run must be an object")
+    else:
+        run_id = baseline.get("run_id")
+        if not isinstance(run_id, int) or isinstance(run_id, bool) or run_id < 1:
+            errors.append("baseline run_id is invalid")
+        trigger = str(baseline.get("trigger_commit", ""))
+        if not re.fullmatch(r"[0-9a-f]{40}", trigger):
+            errors.append("baseline trigger_commit is invalid")
+        passed_steps = baseline.get("passed_steps")
+        if not isinstance(passed_steps, list) or len(passed_steps) < 8:
+            errors.append("baseline passed_steps are incomplete")
+        if baseline.get("publication_conclusion") != "failure":
+            errors.append("baseline publication conclusion must record the transport failure")
+        if baseline.get("scientific_test_conclusion") != "PASS":
+            errors.append("baseline scientific test conclusion must be PASS")
+    if not isinstance(focused, dict):
+        errors.append("focused_current_change_regression must be an object")
+    else:
+        passed = focused.get("passed")
+        failed = focused.get("failed")
+        if not isinstance(passed, int) or isinstance(passed, bool) or passed < 1:
+            errors.append("focused passed count is invalid")
+        if failed != 0:
+            errors.append("focused regression must have zero failures")
+        scope = focused.get("scope")
+        if not isinstance(scope, list) or len(scope) < 4:
+            errors.append("focused regression scope is incomplete")
+        environment = focused.get("environment")
+        if not isinstance(environment, str) or not environment.strip():
+            errors.append("focused regression environment is missing")
+    if not isinstance(limitations, list) or not limitations:
+        errors.append("composite evidence limitations must be explicit")
+    gates = value.get("gates")
+    if not isinstance(gates, dict):
+        errors.append("gates must be an object")
+    elif gates.get("focused_current_change_regression") != "14/14 PASS":
+        errors.append("focused regression gate must record 14/14 PASS")
+    return errors
+
+
+def validate(value: dict[str, Any]) -> list[str]:
+    errors = _common_errors(value)
+    if value.get("validation_scope") == "current-tree":
+        errors.extend(_validate_current_tree(value))
+    elif value.get("validation_scope") == "composite":
+        errors.extend(_validate_composite(value))
     return errors
 
 
@@ -203,7 +280,7 @@ def main() -> None:
     errors = validate(value)
     if errors:
         raise SystemExit("validation evidence FAIL: " + "; ".join(errors))
-    print(f"validation evidence PASS: {value['provenance']['validated_tree_sha256']}")
+    print(f"validation evidence PASS ({value['validation_scope']})")
 
 
 if __name__ == "__main__":
