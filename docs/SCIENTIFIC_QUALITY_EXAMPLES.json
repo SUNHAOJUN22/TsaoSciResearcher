@@ -1,0 +1,272 @@
+{
+  "guards": [
+    {
+      "payload": {
+        "kind": "measurement-boundary",
+        "spec": {
+          "applicability": "same thermal history and baseline protocol",
+          "calibration_or_reference": "indium calibration and declared reference enthalpy",
+          "conditions": [
+            "10 K/min",
+            "nitrogen"
+          ],
+          "data_reduction": "declared baseline and integration limits",
+          "detection_limit": "method-specific reporting threshold",
+          "exclusions": "not a direct phase-fraction measurement",
+          "measurand": "crystallinity",
+          "method": "DSC first-heating enthalpy",
+          "replication": "three independently prepared specimens",
+          "sample": "conditioned polymer specimen",
+          "traceability": "raw thermogram and analysis record",
+          "uncertainty": "repeatability and reference-enthalpy contribution",
+          "unit": "%"
+        }
+      },
+      "result": {
+        "details": {
+          "applicability": "same thermal history and baseline protocol",
+          "calibration_or_reference": "indium calibration and declared reference enthalpy",
+          "completeness_score": 100,
+          "conditions": [
+            "10 K/min",
+            "nitrogen"
+          ],
+          "data_reduction": "declared baseline and integration limits",
+          "detection_limit": "method-specific reporting threshold",
+          "exclusions": "not a direct phase-fraction measurement",
+          "measurand": "crystallinity",
+          "method": "DSC first-heating enthalpy",
+          "replication": "three independently prepared specimens",
+          "sample": "conditioned polymer specimen",
+          "traceability": "raw thermogram and analysis record",
+          "uncertainty": "repeatability and reference-enthalpy contribution",
+          "unit": "%"
+        },
+        "finding_counts": {
+          "BLOCK": 0,
+          "PASS": 1,
+          "WARN": 0
+        },
+        "findings": [
+          {
+            "code": "MB-COMPLETE",
+            "message": "Operational measurement boundary is explicit.",
+            "status": "PASS"
+          }
+        ],
+        "kind": "measurement-boundary",
+        "status": "PASS"
+      },
+      "summary": "Operational definition, calibration, uncertainty and applicability are explicit.",
+      "title": "Measurement boundary"
+    },
+    {
+      "payload": {
+        "kind": "structure-property-plan",
+        "spec": {
+          "alternative_explanations": [
+            "crystallinity",
+            "thermal history"
+          ],
+          "applicability": "tested material family and cooling window",
+          "confounders": [
+            "specimen thickness",
+            "electrode contact"
+          ],
+          "conservation_constraints": [
+            "mass balance",
+            "dimensionally consistent units"
+          ],
+          "evidence": [
+            "SAXS",
+            "PEA"
+          ],
+          "mediator": "higher interfacial density",
+          "processing_or_intervention": "controlled cooling protocol",
+          "property": "charge transport response",
+          "scale_bridge": "lamellar organization to mesoscopic interfaces",
+          "statistical_basis": "replicate distributions, not single-point values",
+          "structure": "reduced long period",
+          "testable_prediction": "interfacial metrics should covary with charge response",
+          "uncertainty": "replicate dispersion and model sensitivity",
+          "validation_strategy": "independent morphology and electrical measurements"
+        }
+      },
+      "result": {
+        "details": {
+          "alternative_explanations": [
+            "crystallinity",
+            "thermal history"
+          ],
+          "applicability": "tested material family and cooling window",
+          "chain": [
+            "reduced long period",
+            "higher interfacial density",
+            "charge transport response"
+          ],
+          "completeness_score": 100,
+          "confounders": [
+            "specimen thickness",
+            "electrode contact"
+          ],
+          "conservation_constraints": [
+            "mass balance",
+            "dimensionally consistent units"
+          ],
+          "evidence": [
+            "SAXS",
+            "PEA"
+          ],
+          "processing_or_intervention": "controlled cooling protocol",
+          "scale_bridge": "lamellar organization to mesoscopic interfaces",
+          "statistical_basis": "replicate distributions, not single-point values",
+          "testable_prediction": "interfacial metrics should covary with charge response",
+          "uncertainty": "replicate dispersion and model sensitivity",
+          "validation_strategy": "independent morphology and electrical measurements"
+        },
+        "finding_counts": {
+          "BLOCK": 0,
+          "PASS": 1,
+          "WARN": 0
+        },
+        "findings": [
+          {
+            "code": "SP-CHAIN",
+            "message": "Structure, mediator and property are all explicit.",
+            "status": "PASS"
+          }
+        ],
+        "kind": "structure-property-plan",
+        "status": "PASS"
+      },
+      "summary": "The chain records intervention, structure, mediator, response and competing explanations.",
+      "title": "Structure-property planner"
+    },
+    {
+      "payload": {
+        "kind": "causality-guard",
+        "spec": {
+          "claim": "The morphology causes the breakdown improvement.",
+          "comparison_or_control": true,
+          "confounders_addressed": false,
+          "design": "cross-sectional observational comparison",
+          "intervention_or_natural_experiment": false,
+          "mechanism_tested": false,
+          "replication": true,
+          "temporal_order": true,
+          "uncertainty_reported": true
+        }
+      },
+      "result": {
+        "details": {
+          "causal_wording_detected": true,
+          "claim": "The morphology causes the breakdown improvement.",
+          "comparison_or_control": true,
+          "completeness_score": 57,
+          "confounders_addressed": false,
+          "design": "cross-sectional observational comparison",
+          "intervention_or_natural_experiment": false,
+          "mechanism_tested": false,
+          "replication": true,
+          "temporal_order": true,
+          "uncertainty_reported": true,
+          "verdict": "association-only"
+        },
+        "finding_counts": {
+          "BLOCK": 1,
+          "PASS": 0,
+          "WARN": 0
+        },
+        "findings": [
+          {
+            "code": "CG-OVERCLAIM",
+            "message": "Causal wording exceeds the declared study design.",
+            "status": "BLOCK"
+          }
+        ],
+        "kind": "causality-guard",
+        "status": "BLOCK"
+      },
+      "summary": "Association-only evidence blocks causal wording in English and Chinese.",
+      "title": "Causality guard"
+    },
+    {
+      "payload": {
+        "kind": "evidence-traceability",
+        "spec": {
+          "claim": "The recorded workflow completed successfully.",
+          "claim_id": "CLM-001",
+          "evidence_ids": [
+            "EVD-001",
+            "RUN-001"
+          ],
+          "evidence_roles": [
+            "direct",
+            "execution-receipt"
+          ],
+          "execution_claim": true,
+          "execution_receipts": [
+            "actions/run/123"
+          ],
+          "source_locators": [
+            "paper.pdf#page=4",
+            "actions/run/123"
+          ],
+          "uncertainty": "Software completion does not imply scientific acceptance."
+        }
+      },
+      "result": {
+        "details": {
+          "bidirectional_traceability": true,
+          "claim": "The recorded workflow completed successfully.",
+          "claim_id": "CLM-001",
+          "completeness_score": 100,
+          "evidence_ids": [
+            "EVD-001",
+            "RUN-001"
+          ],
+          "evidence_roles": [
+            "direct",
+            "execution-receipt"
+          ],
+          "execution_claim": true,
+          "execution_receipts": [
+            "actions/run/123"
+          ],
+          "source_locators": [
+            "paper.pdf#page=4",
+            "actions/run/123"
+          ],
+          "uncertainty": "Software completion does not imply scientific acceptance."
+        },
+        "finding_counts": {
+          "BLOCK": 0,
+          "PASS": 1,
+          "WARN": 0
+        },
+        "findings": [
+          {
+            "code": "ET-COMPLETE",
+            "message": "Claim, evidence, locators and execution boundary are traceable.",
+            "status": "PASS"
+          }
+        ],
+        "kind": "evidence-traceability",
+        "status": "PASS"
+      },
+      "summary": "Claims link to evidence locators and execution claims require receipts.",
+      "title": "Evidence traceability"
+    }
+  ],
+  "schema_version": "1.1",
+  "summary": {
+    "average_completeness": 89,
+    "guard_count": 4,
+    "statuses": {
+      "BLOCK": 1,
+      "PASS": 3,
+      "WARN": 0
+    },
+    "truth_boundary": "Software guards constrain claims; they do not grant scientific acceptance."
+  }
+}
