@@ -1,100 +1,64 @@
 {
-  "baseline_full_repository_run": {
-    "publication_conclusion": "failure",
-    "publication_failure_step": "Commit verified main tree",
-    "publication_failure_scope": "Git publication transport only; all preceding validation steps completed successfully.",
-    "passed_steps": [
-      "Install exact dependencies and package",
-      "Apply bounded integration patch",
-      "Format and generate deterministic artifacts",
-      "Repository and documentation gates",
-      "Complete isolated regression",
-      "Reverse and seeded-random regression",
-      "Static quality and security",
-      "Mutation, performance and reproducible release",
-      "Rebuild final evidence and verify generated state"
-    ],
-    "run_id": 30005498100,
-    "scientific_test_conclusion": "PASS",
-    "trigger_commit": "420327139eda539f311fa8cd37709c226a374e44"
-  },
   "compatibility": {
     "macos_python_3_12": "PASS",
     "ubuntu_python_3_10": "PASS",
     "ubuntu_python_3_13": "PASS",
     "windows_python_3_12": "PASS"
   },
-  "compatibility_scope": "Recorded cross-platform baseline from the preceding complete repository validation; not a claim that the current main tree was rerun on every platform.",
-  "dashboard": {
-    "generator": "scripts/build_test_dashboard.py",
-    "html": "docs/test-dashboard.html",
-    "research_quality_html": "docs/research-quality-dashboard.html",
-    "research_quality_svg": "docs/research-quality-dashboard.svg",
-    "status": "PASS",
-    "svg": "docs/test-dashboard.svg"
-  },
+  "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass permanent CI.",
   "evidence_date": "2026-07-23",
-  "focused_current_change_regression": {
-    "command": "python -m pytest -q tests/test_scientific_quality.py tests/test_visual_report_contract.py",
-    "environment": "Isolated Python 3.13 sandbox with the changed runtime and report modules copied exactly from the main-branch edits.",
-    "failed": 0,
-    "passed": 14,
-    "scope": [
-      "tsao_researcher/scientific_quality.py",
-      "tests/test_scientific_quality.py",
-      "scripts/build_research_quality_dashboard.py",
-      "scripts/build_engineering_report.py",
-      "tests/test_visual_report_contract.py"
-    ]
-  },
   "gates": {
-    "baseline_bandit_high_severity": "PASS",
-    "baseline_bounded_performance": "PASS",
-    "baseline_byte_identical_release_builds": "PASS",
-    "baseline_complete_regression": "PASS",
-    "baseline_critical_mutation_killed": "15/15",
-    "baseline_mypy_strict": "PASS",
-    "baseline_repository_and_contract_audit": "PASS",
-    "baseline_reverse_order_regression": "PASS",
-    "baseline_ruff_format_and_lint": "PASS",
-    "baseline_seeded_random_order_regression": "PASS",
-    "current_end_to_end_ci": "NOT_RUN",
-    "deterministic_visual_report_contract": "PASS",
-    "focused_current_change_regression": "14/14 PASS",
-    "readme_version_and_mirror_alignment": "PASS",
-    "scientific_quality_guard_regression": "PASS"
+    "bandit_high_severity": "PASS",
+    "bounded_performance": "PASS",
+    "byte_identical_release_builds": "PASS",
+    "complete_regression": "PASS",
+    "critical_mutation_killed": "15/15",
+    "deterministic_visual_reports": "PASS",
+    "json_schemas_15": "PASS",
+    "mypy_strict": "PASS",
+    "repository_and_contract_audit": "PASS",
+    "reverse_order_regression": "PASS",
+    "ruff_format_and_lint": "PASS",
+    "scientific_quality_guards": "PASS",
+    "seeded_random_order_regression": "PASS",
+    "validation_tree_digest": "PASS"
   },
   "interpretation": [
-    "This is composite validation evidence, not a current-tree digest receipt.",
-    "The recorded GitHub Actions run completed all scientific and engineering validation steps but failed only while publishing its generated commit after the branch moved.",
-    "The current scientific-quality and visual-report changes passed 14 focused regression tests in an isolated local environment.",
-    "The connector-created main-branch pushes did not produce a new observable GitHub Actions run, so this file does not claim current-tree end-to-end CI or fresh cross-platform execution.",
+    "The evidence validates the recorded repository source-tree digest and declared software contracts.",
+    "Generated evidence, evidence-derived dashboards, the PDF report and the aggregate checksum are excluded from the non-self-referential digest.",
     "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions or safety decisions."
   ],
-  "limitations": [
-    "No current-main source-tree digest is asserted in composite mode.",
-    "The current main tree was not rerun end-to-end on GitHub Actions during this execution because connector-created pushes did not emit an observable workflow event.",
-    "Cross-platform statuses are retained only as the last recorded baseline.",
-    "External literature retrieval, DFT, MD, FEM, CFD, process simulation, instrument operation and laboratory work require separate execution receipts."
-  ],
+  "provenance": {
+    "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
+    "digest_exclusions": [
+      "SHA256SUMS",
+      "docs/VALIDATION_EVIDENCE.json",
+      "docs/engineering-audit-report.pdf",
+      "docs/test-dashboard.html",
+      "docs/test-dashboard.svg"
+    ],
+    "publication_parent_commit": "edd50aac40d85e8096883b60fd24e2f4ffcca078",
+    "validated_file_count": 296,
+    "validated_tree_sha256": "a45f07826410b132b14e96026478da1eff4c0a8253d9d340158db66496824688",
+    "workflow_run_id": 30013694082
+  },
   "release": "0.5.3",
   "schema_version": "1.5",
   "status": "PASS",
-  "validation_scope": "composite",
+  "validation_scope": "current-tree",
   "verified_inventory": {
     "capability_records": 340,
     "domain_packs": 7,
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 18,
     "schemas": 15,
-    "test_modules": 23,
+    "test_modules": 25,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },
   "workflow": {
-    "name": "Composite evidence: full repository baseline plus focused current-change regression",
-    "publication_conclusion": "failure",
-    "run_id": 30005498100,
-    "trigger_commit": "420327139eda539f311fa8cd37709c226a374e44"
+    "name": "Main-branch full integration audit",
+    "publication_parent_commit": "edd50aac40d85e8096883b60fd24e2f4ffcca078",
+    "run_id": 30013694082
   }
 }

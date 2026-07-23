@@ -1,0 +1,244 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2186 >>
+stream
+BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.5.3 | current-tree evidence | 2026-07-23) Tj ET
+q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
+BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
+BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
+BT /F1 10 Tf 1 0 0 1 66.0 660.0 Tm (Truth boundary: a contract or handoff is not an execution receipt.) Tj ET
+q 0.980 g 0.750 G 46.0 590.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 62.0 629.0 Tm (340) Tj ET
+BT /F1 9 Tf 1 0 0 1 62.0 607.0 Tm (Capability contracts) Tj ET
+q 0.980 g 0.750 G 301.0 590.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 317.0 629.0 Tm (322) Tj ET
+BT /F1 9 Tf 1 0 0 1 317.0 607.0 Tm (Named catalog contracts) Tj ET
+q 0.980 g 0.750 G 46.0 504.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 62.0 543.0 Tm (15) Tj ET
+BT /F1 9 Tf 1 0 0 1 62.0 521.0 Tm (Workflows) Tj ET
+q 0.980 g 0.750 G 301.0 504.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (15) Tj ET
+BT /F1 9 Tf 1 0 0 1 317.0 521.0 Tm (Schemas) Tj ET
+q 0.980 g 0.750 G 46.0 418.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (25) Tj ET
+BT /F1 9 Tf 1 0 0 1 62.0 435.0 Tm (Test modules) Tj ET
+q 0.980 g 0.750 G 301.0 418.0 235.0 64.0 re B Q
+BT /F2 20 Tf 1 0 0 1 317.0 457.0 Tm (7) Tj ET
+BT /F1 9 Tf 1 0 0 1 317.0 435.0 Tm (Domain packs) Tj ET
+BT /F2 15 Tf 1 0 0 1 46.0 270.0 Tm (Delivered integration) Tj ET
+BT /F1 9 Tf 1 0 0 1 60.0 240.0 Tm (1. Measurement Boundary with calibration, uncertainty and applicability fields) Tj ET
+BT /F1 9 Tf 1 0 0 1 60.0 212.0 Tm (2. Structure-Property planning with confounders, alternatives and scale bridges) Tj ET
+BT /F1 9 Tf 1 0 0 1 60.0 184.0 Tm (3. Bilingual causality guard and evidence-to-source execution-receipt checks) Tj ET
+BT /F1 9 Tf 1 0 0 1 60.0 156.0 Tm (4. Deterministic test/quality HTML-SVG interfaces and this four-page PDF) Tj ET
+BT /F2 13 Tf 1 0 0 1 46.0 105.0 Tm (Repository operation) Tj ET
+BT /F1 9 Tf 1 0 0 1 60.0 80.0 Tm (All changes were written directly to main; no branch and no pull request were created.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 3852 >>
+stream
+BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scoped software validation matrix) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 760.0 Tm (Recorded cross-platform baseline) Tj ET
+BT /F1 8 Tf 1 0 0 1 46.0 742.0 Tm (These platform results are the last complete baseline, not a fresh current-tree run.) Tj ET
+BT /F1 9 Tf 1 0 0 1 56.0 710.0 Tm (macos python 3 12) Tj ET
+q 0.92 g 330.0 703.0 150.0 10 re f Q
+q 0.30 g 330.0 703.0 150.0 10 re f Q
+BT /F2 9 Tf 1 0 0 1 492.0 710.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 56.0 684.0 Tm (ubuntu python 3 10) Tj ET
+q 0.92 g 330.0 677.0 150.0 10 re f Q
+q 0.30 g 330.0 677.0 150.0 10 re f Q
+BT /F2 9 Tf 1 0 0 1 492.0 684.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 56.0 658.0 Tm (ubuntu python 3 13) Tj ET
+q 0.92 g 330.0 651.0 150.0 10 re f Q
+q 0.30 g 330.0 651.0 150.0 10 re f Q
+BT /F2 9 Tf 1 0 0 1 492.0 658.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 56.0 632.0 Tm (windows python 3 12) Tj ET
+q 0.92 g 330.0 625.0 150.0 10 re f Q
+q 0.30 g 330.0 625.0 150.0 10 re f Q
+BT /F2 9 Tf 1 0 0 1 492.0 632.0 Tm (PASS) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 601.0 Tm (Baseline and focused current-change gates) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 569.0 Tm (bandit high severity) Tj ET
+q 0.92 g 330.0 562.0 150.0 10 re f Q
+q 0.30 g 330.0 562.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 569.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 547.0 Tm (bounded performance) Tj ET
+q 0.92 g 330.0 540.0 150.0 10 re f Q
+q 0.30 g 330.0 540.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 547.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 525.0 Tm (byte identical release builds) Tj ET
+q 0.92 g 330.0 518.0 150.0 10 re f Q
+q 0.30 g 330.0 518.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 525.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 503.0 Tm (complete regression) Tj ET
+q 0.92 g 330.0 496.0 150.0 10 re f Q
+q 0.30 g 330.0 496.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 503.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 481.0 Tm (critical mutation killed) Tj ET
+q 0.92 g 330.0 474.0 150.0 10 re f Q
+q 0.30 g 330.0 474.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 481.0 Tm (15/15) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 459.0 Tm (deterministic visual reports) Tj ET
+q 0.92 g 330.0 452.0 150.0 10 re f Q
+q 0.30 g 330.0 452.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 459.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 437.0 Tm (json schemas 15) Tj ET
+q 0.92 g 330.0 430.0 150.0 10 re f Q
+q 0.30 g 330.0 430.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 437.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 415.0 Tm (mypy strict) Tj ET
+q 0.92 g 330.0 408.0 150.0 10 re f Q
+q 0.30 g 330.0 408.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 415.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 393.0 Tm (repository and contract audit) Tj ET
+q 0.92 g 330.0 386.0 150.0 10 re f Q
+q 0.30 g 330.0 386.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 393.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 371.0 Tm (reverse order regression) Tj ET
+q 0.92 g 330.0 364.0 150.0 10 re f Q
+q 0.30 g 330.0 364.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 371.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 349.0 Tm (ruff format and lint) Tj ET
+q 0.92 g 330.0 342.0 150.0 10 re f Q
+q 0.30 g 330.0 342.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (scientific quality guards) Tj ET
+q 0.92 g 330.0 320.0 150.0 10 re f Q
+q 0.30 g 330.0 320.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 327.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 305.0 Tm (seeded random order regression) Tj ET
+q 0.92 g 330.0 298.0 150.0 10 re f Q
+q 0.30 g 330.0 298.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 305.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 283.0 Tm (validation tree digest) Tj ET
+q 0.92 g 330.0 276.0 150.0 10 re f Q
+q 0.30 g 330.0 276.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 283.0 Tm (PASS) Tj ET
+BT /F2 9 Tf 1 0 0 1 46.0 68.0 Tm (Composite PASS means the declared scopes passed; current end-to-end CI remains NOT RUN.) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 3318 >>
+stream
+BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scientific quality controls) Tj ET
+BT /F1 9 Tf 1 0 0 1 46.0 762.0 Tm (Four deterministic contracts: measurement, multiscale reasoning, causal claims and evidence provenance.) Tj ET
+BT /F2 9 Tf 1 0 0 1 46.0 738.0 Tm (Examples: PASS 3 | WARN 0 | BLOCK 1 | average completeness 89%) Tj ET
+q 0.980 g 0.750 G 46.0 430.0 245.0 275.0 re B Q
+BT /F2 13 Tf 1 0 0 1 62.0 672.0 Tm (Measurement boundary) Tj ET
+BT /F2 11 Tf 1 0 0 1 234.0 672.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 62.0 648.0 Tm (Declared completeness: 100%) Tj ET
+q 0.92 g 62.0 628.0 210.0 10 re f Q
+q 0.30 g 62.0 628.0 210.0 10 re f Q
+BT /F1 8 Tf 1 0 0 1 62.0 603.0 Tm (Operational definition, calibration,) Tj ET
+BT /F1 8 Tf 1 0 0 1 62.0 591.0 Tm (uncertainty and applicability are explicit.) Tj ET
+BT /F1 7 Tf 1 0 0 1 66.0 563.0 Tm (MB-COMPLETE: Operational measurement boundary is) Tj ET
+BT /F1 7 Tf 1 0 0 1 66.0 552.0 Tm (explicit.) Tj ET
+BT /F1 7 Tf 1 0 0 1 62.0 452.0 Tm (Kind: measurement-boundary) Tj ET
+q 0.980 g 0.750 G 304.0 430.0 245.0 275.0 re B Q
+BT /F2 13 Tf 1 0 0 1 320.0 672.0 Tm (Structure-property planner) Tj ET
+BT /F2 11 Tf 1 0 0 1 492.0 672.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 320.0 648.0 Tm (Declared completeness: 100%) Tj ET
+q 0.92 g 320.0 628.0 210.0 10 re f Q
+q 0.30 g 320.0 628.0 210.0 10 re f Q
+BT /F1 8 Tf 1 0 0 1 320.0 603.0 Tm (The chain records intervention, structure,) Tj ET
+BT /F1 8 Tf 1 0 0 1 320.0 591.0 Tm (mediator, response and competing...) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 563.0 Tm (SP-CHAIN: Structure, mediator and property are) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 552.0 Tm (all explicit.) Tj ET
+BT /F1 7 Tf 1 0 0 1 320.0 452.0 Tm (Kind: structure-property-plan) Tj ET
+q 0.980 g 0.750 G 46.0 135.0 245.0 275.0 re B Q
+BT /F2 13 Tf 1 0 0 1 62.0 377.0 Tm (Causality guard) Tj ET
+BT /F2 11 Tf 1 0 0 1 234.0 377.0 Tm (BLOCK) Tj ET
+BT /F1 9 Tf 1 0 0 1 62.0 353.0 Tm (Declared completeness: 57%) Tj ET
+q 0.92 g 62.0 333.0 210.0 10 re f Q
+q 0.30 g 62.0 333.0 119.7 10 re f Q
+BT /F1 8 Tf 1 0 0 1 62.0 308.0 Tm (Association-only evidence blocks causal) Tj ET
+BT /F1 8 Tf 1 0 0 1 62.0 296.0 Tm (wording in English and Chinese.) Tj ET
+BT /F1 7 Tf 1 0 0 1 66.0 268.0 Tm (CG-OVERCLAIM: Causal wording exceeds the) Tj ET
+BT /F1 7 Tf 1 0 0 1 66.0 257.0 Tm (declared study design.) Tj ET
+BT /F1 7 Tf 1 0 0 1 62.0 157.0 Tm (Kind: causality-guard) Tj ET
+q 0.980 g 0.750 G 304.0 135.0 245.0 275.0 re B Q
+BT /F2 13 Tf 1 0 0 1 320.0 377.0 Tm (Evidence traceability) Tj ET
+BT /F2 11 Tf 1 0 0 1 492.0 377.0 Tm (PASS) Tj ET
+BT /F1 9 Tf 1 0 0 1 320.0 353.0 Tm (Declared completeness: 100%) Tj ET
+q 0.92 g 320.0 333.0 210.0 10 re f Q
+q 0.30 g 320.0 333.0 210.0 10 re f Q
+BT /F1 8 Tf 1 0 0 1 320.0 308.0 Tm (Claims link to evidence locators and) Tj ET
+BT /F1 8 Tf 1 0 0 1 320.0 296.0 Tm (execution claims require receipts.) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 268.0 Tm (ET-COMPLETE: Claim, evidence, locators and) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 257.0 Tm (execution boundary are traceable.) Tj ET
+BT /F1 7 Tf 1 0 0 1 320.0 157.0 Tm (Kind: evidence-traceability) Tj ET
+BT /F1 8 Tf 1 0 0 1 46.0 82.0 Tm (BLOCK is intentional when wording exceeds evidence or an execution claim lacks a receipt.) Tj ET
+BT /F1 8 Tf 1 0 0 1 46.0 62.0 Tm (The guards remain configurable and do not hard-code material-specific trends.) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 1759 >>
+stream
+BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Closed-loop evidence and limitations) Tj ET
+q 0.980 g 0.750 G 46.0 650.0 500.0 92.0 re B Q
+BT /F2 14 Tf 1 0 0 1 64.0 712.0 Tm (Recorded full-repository baseline) Tj ET
+BT /F1 9 Tf 1 0 0 1 64.0 687.0 Tm (GitHub Actions run: not recorded) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 668.0 Tm (All engineering/scientific gates passed before publication transport failed.) Tj ET
+q 0.980 g 0.750 G 46.0 525.0 500.0 92.0 re B Q
+BT /F2 14 Tf 1 0 0 1 64.0 587.0 Tm (Focused current-change regression) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 562.0 Tm (Tests: 0 passed / 0 failed | environment not recorded) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 543.0 Tm (Scope: scientific quality, report generators and visual data contract.) Tj ET
+q 0.980 g 0.750 G 46.0 400.0 500.0 92.0 re B Q
+BT /F2 14 Tf 1 0 0 1 64.0 462.0 Tm (Current-tree end-to-end CI) Tj ET
+BT /F2 10 Tf 1 0 0 1 64.0 437.0 Tm (Status: not recorded) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 418.0 Tm (No current source-tree digest or fresh cross-platform receipt is asserted.) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 352.0 Tm (Explicit limitations) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 155.0 Tm (Reproduction entry points) Tj ET
+BT /F1 7 Tf 1 0 0 1 60.0 128.0 Tm (python -m pytest -q tests/test_scientific_quality.py) Tj ET
+BT /F1 7 Tf 1 0 0 1 60.0 118.0 Tm (tests/test_visual_report_contract.py) Tj ET
+BT /F1 7 Tf 1 0 0 1 60.0 102.0 Tm (python scripts/build_test_dashboard.py --check) Tj ET
+BT /F1 7 Tf 1 0 0 1 60.0 86.0 Tm (python scripts/build_research_quality_dashboard.py --check) Tj ET
+BT /F1 7 Tf 1 0 0 1 60.0 70.0 Tm (python scripts/build_engineering_report.py --check) Tj ET
+BT /F2 8 Tf 1 0 0 1 46.0 42.0 Tm (Software validation is not acceptance of experiments, external calculations, legal or safety claims.) Tj ET
+endstream
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000140 00000 n 
+0000000210 00000 n 
+0000000285 00000 n 
+0000000421 00000 n 
+0000002658 00000 n 
+0000002794 00000 n 
+0000006697 00000 n 
+0000006834 00000 n 
+0000010204 00000 n 
+0000010342 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+12153
+%%EOF

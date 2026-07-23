@@ -4,7 +4,7 @@
 <rect width="1200" height="100%" rx="24" fill="#f6f8fb"/>
 <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#152033}.muted{fill:#5f6b7a}.small{font-size:14px}.label{font-size:17px;font-weight:600}.value{font-size:32px;font-weight:700}.title{font-size:30px;font-weight:700}.panel{fill:#fff;stroke:#d8e0ea;stroke-width:1.5}</style>
 <text x="70" y="62" class="title">Automated test dashboard</text>
-<text x="70" y="91" class="muted small">Release 0.5.3 · composite evidence · 2026-07-23 · run 30005498100</text>
+<text x="70" y="91" class="muted small">Release 0.5.3 · current-tree evidence · 2026-07-23 · run 30013694082</text>
 <rect x="950" y="40" width="180" height="54" rx="27" fill="#eff6ff" stroke="#8ab4e8"/>
 <text x="1040" y="75" text-anchor="middle" class="label">PASS</text>
 <rect x="70" y="125" width="235" height="128" rx="18" class="panel"/>
@@ -13,15 +13,15 @@
 <text x="92" y="232" class="muted small">recorded passes</text>
 <rect x="335" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="357" y="160" class="muted small">Quality gates</text>
-<text x="357" y="207" class="value">14/15</text>
+<text x="357" y="207" class="value">14/14</text>
 <text x="357" y="232" class="muted small">scoped passes</text>
 <rect x="600" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="622" y="160" class="muted small">Not run</text>
-<text x="622" y="207" class="value">1</text>
+<text x="622" y="207" class="value">0</text>
 <text x="622" y="232" class="muted small">explicitly disclosed</text>
 <rect x="865" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="887" y="160" class="muted small">Test modules</text>
-<text x="887" y="207" class="value">23</text>
+<text x="887" y="207" class="value">25</text>
 <text x="887" y="232" class="muted small">repository modules</text>
 <text x="70" y="302" class="label">Recorded platform baseline</text>
 <rect x="70" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
@@ -37,51 +37,48 @@
 <circle cx="888" cy="345" r="7" fill="#247a48"/>
 <text x="905" y="351" class="small">Windows / Python 3.12</text>
 <text x="70" y="407" class="label">Scoped validation gates</text>
-<text x="70" y="442" class="small">Baseline repository and contract audit</text>
+<text x="70" y="442" class="small">Bandit High Severity</text>
 <rect x="510" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="484" class="small">Baseline complete regression</text>
+<text x="70" y="484" class="small">Bounded Performance</text>
 <rect x="510" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="526" class="small">Baseline reverse-order regression</text>
+<text x="70" y="526" class="small">Byte Identical Release Builds</text>
 <rect x="510" y="501" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="519" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="568" class="small">Baseline seeded-random regression</text>
+<text x="70" y="568" class="small">Complete Regression</text>
 <rect x="510" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="610" class="small">Baseline Ruff format and lint</text>
+<text x="70" y="610" class="small">Critical Mutation Killed</text>
 <rect x="510" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
-<text x="558" y="603" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="652" class="small">Baseline strict Mypy</text>
+<text x="558" y="603" text-anchor="middle" class="small" fill="#247a48">15/15</text>
+<text x="70" y="652" class="small">Deterministic Visual Reports</text>
 <rect x="510" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="694" class="small">Baseline Bandit high-severity scan</text>
+<text x="70" y="694" class="small">Json Schemas 15</text>
 <rect x="510" y="669" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="558" y="687" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="736" class="small">Baseline critical mutation gate</text>
-<rect x="510" y="711" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
-<text x="558" y="729" text-anchor="middle" class="small" fill="#247a48">15/15</text>
-<text x="620" y="442" class="small">Baseline bounded performance</text>
+<text x="620" y="442" class="small">Mypy Strict</text>
 <rect x="1060" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="484" class="small">Baseline byte-identical release</text>
+<text x="620" y="484" class="small">Repository And Contract Audit</text>
 <rect x="1060" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="526" class="small">Current scientific-quality guards</text>
+<text x="620" y="526" class="small">Reverse Order Regression</text>
 <rect x="1060" y="501" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="519" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="568" class="small">Current visual-report contract</text>
+<text x="620" y="568" class="small">Ruff Format And Lint</text>
 <rect x="1060" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="610" class="small">README version and mirror alignment</text>
+<text x="620" y="610" class="small">Scientific Quality Guards</text>
 <rect x="1060" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="603" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="652" class="small">Focused current-change regression</text>
+<text x="620" y="652" class="small">Seeded Random Order Regression</text>
 <rect x="1060" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
-<text x="1108" y="645" text-anchor="middle" class="small" fill="#247a48">14/14 PASS</text>
-<text x="620" y="694" class="small">Current-tree end-to-end CI</text>
-<rect x="1060" y="669" width="96" height="27" rx="13" fill="#fff7dd" stroke="#9a6700"/>
-<text x="1108" y="687" text-anchor="middle" class="small" fill="#9a6700">NOT_RUN</text>
+<text x="1108" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="694" class="small">Validation Tree Digest</text>
+<rect x="1060" y="669" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="687" text-anchor="middle" class="small" fill="#247a48">PASS</text>
 <rect x="70" y="750" width="1060" height="1" fill="#d8e0ea"/>
 <text x="70" y="778" class="muted small">Inventory: 340 capability contracts · 322 named contracts · 15 workflows · 15 schemas · 7 domain packs · 0 placeholders</text>
 </svg>
