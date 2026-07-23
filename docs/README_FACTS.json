@@ -61,7 +61,7 @@
   "repository_assets": {
     "references": 22,
     "templates": 13,
-    "test_modules": 22
+    "test_modules": 23
   },
   "schema_version": "1.0",
   "schemas": {
@@ -84,7 +84,7 @@
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.5.2",
+  "version": "0.5.3",
   "workflows": {
     "count": 15,
     "items": [
