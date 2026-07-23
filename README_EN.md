@@ -178,6 +178,7 @@ cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" \
 - [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)
 
 The dashboards are deterministic generated artifacts. They visualize software and research-method gates; they do not replace scientific review or prove external execution.
+The engineering audit PDF is generated from the same current-tree validation evidence and checked byte-for-byte in CI.
 
 ## Design and audit evidence
 

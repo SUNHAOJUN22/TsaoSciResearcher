@@ -19,7 +19,7 @@ endobj
 << /Length 2186 >>
 stream
 BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
-BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.5.3 | current-tree evidence | 2026-07-23) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.5.3 | current-tree evidence | 2026-07-24) Tj ET
 q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
 BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
@@ -55,11 +55,11 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
 endobj
 8 0 obj
-<< /Length 3852 >>
+<< /Length 3866 >>
 stream
-BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scoped software validation matrix) Tj ET
-BT /F2 14 Tf 1 0 0 1 46.0 760.0 Tm (Recorded cross-platform baseline) Tj ET
-BT /F1 8 Tf 1 0 0 1 46.0 742.0 Tm (These platform results are the last complete baseline, not a fresh current-tree run.) Tj ET
+BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Current-tree software validation matrix) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 760.0 Tm (Current-tree cross-platform validation) Tj ET
+BT /F1 8 Tf 1 0 0 1 46.0 742.0 Tm (The current full integration run passed the declared repository and engineering gates.) Tj ET
 BT /F1 9 Tf 1 0 0 1 56.0 710.0 Tm (macos python 3 12) Tj ET
 q 0.92 g 330.0 703.0 150.0 10 re f Q
 q 0.30 g 330.0 703.0 150.0 10 re f Q
@@ -76,7 +76,7 @@ BT /F1 9 Tf 1 0 0 1 56.0 632.0 Tm (windows python 3 12) Tj ET
 q 0.92 g 330.0 625.0 150.0 10 re f Q
 q 0.30 g 330.0 625.0 150.0 10 re f Q
 BT /F2 9 Tf 1 0 0 1 492.0 632.0 Tm (PASS) Tj ET
-BT /F2 14 Tf 1 0 0 1 46.0 601.0 Tm (Baseline and focused current-change gates) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 601.0 Tm (Current-tree validation gates) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 569.0 Tm (bandit high severity) Tj ET
 q 0.92 g 330.0 562.0 150.0 10 re f Q
 q 0.30 g 330.0 562.0 150.0 10 re f Q
@@ -133,7 +133,7 @@ BT /F1 8 Tf 1 0 0 1 56.0 283.0 Tm (validation tree digest) Tj ET
 q 0.92 g 330.0 276.0 150.0 10 re f Q
 q 0.30 g 330.0 276.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 283.0 Tm (PASS) Tj ET
-BT /F2 9 Tf 1 0 0 1 46.0 68.0 Tm (Composite PASS means the declared scopes passed; current end-to-end CI remains NOT RUN.) Tj ET
+BT /F2 9 Tf 1 0 0 1 46.0 68.0 Tm (Current-tree PASS records end-to-end repository validation; scientific acceptance remains separate.) Tj ET
 endstream
 endobj
 9 0 obj
@@ -197,29 +197,32 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 12 0 R >>
 endobj
 12 0 obj
-<< /Length 1759 >>
+<< /Length 2064 >>
 stream
-BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Closed-loop evidence and limitations) Tj ET
+BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Current-tree validation and reproducibility) Tj ET
 q 0.980 g 0.750 G 46.0 650.0 500.0 92.0 re B Q
-BT /F2 14 Tf 1 0 0 1 64.0 712.0 Tm (Recorded full-repository baseline) Tj ET
-BT /F1 9 Tf 1 0 0 1 64.0 687.0 Tm (GitHub Actions run: not recorded) Tj ET
-BT /F1 8 Tf 1 0 0 1 64.0 668.0 Tm (All engineering/scientific gates passed before publication transport failed.) Tj ET
+BT /F2 14 Tf 1 0 0 1 64.0 712.0 Tm (Current-tree full integration) Tj ET
+BT /F1 9 Tf 1 0 0 1 64.0 687.0 Tm (GitHub Actions run: 30028036431) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 668.0 Tm (Repository, regression, static, mutation, performance and release gates passed.) Tj ET
 q 0.980 g 0.750 G 46.0 525.0 500.0 92.0 re B Q
-BT /F2 14 Tf 1 0 0 1 64.0 587.0 Tm (Focused current-change regression) Tj ET
-BT /F1 8 Tf 1 0 0 1 64.0 562.0 Tm (Tests: 0 passed / 0 failed | environment not recorded) Tj ET
-BT /F1 8 Tf 1 0 0 1 64.0 543.0 Tm (Scope: scientific quality, report generators and visual data contract.) Tj ET
+BT /F2 14 Tf 1 0 0 1 64.0 587.0 Tm (Validated source tree) Tj ET
+BT /F1 7 Tf 1 0 0 1 64.0 562.0 Tm (SHA-256: b46f0432963f8a15cad2eabd907e1ae5cb9776adc61e7459441ee763081b6b7b) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 543.0 Tm (Validated files: 300) Tj ET
 q 0.980 g 0.750 G 46.0 400.0 500.0 92.0 re B Q
-BT /F2 14 Tf 1 0 0 1 64.0 462.0 Tm (Current-tree end-to-end CI) Tj ET
-BT /F2 10 Tf 1 0 0 1 64.0 437.0 Tm (Status: not recorded) Tj ET
-BT /F1 8 Tf 1 0 0 1 64.0 418.0 Tm (No current source-tree digest or fresh cross-platform receipt is asserted.) Tj ET
-BT /F2 14 Tf 1 0 0 1 46.0 352.0 Tm (Explicit limitations) Tj ET
-BT /F2 14 Tf 1 0 0 1 46.0 155.0 Tm (Reproduction entry points) Tj ET
-BT /F1 7 Tf 1 0 0 1 60.0 128.0 Tm (python -m pytest -q tests/test_scientific_quality.py) Tj ET
-BT /F1 7 Tf 1 0 0 1 60.0 118.0 Tm (tests/test_visual_report_contract.py) Tj ET
-BT /F1 7 Tf 1 0 0 1 60.0 102.0 Tm (python scripts/build_test_dashboard.py --check) Tj ET
-BT /F1 7 Tf 1 0 0 1 60.0 86.0 Tm (python scripts/build_research_quality_dashboard.py --check) Tj ET
-BT /F1 7 Tf 1 0 0 1 60.0 70.0 Tm (python scripts/build_engineering_report.py --check) Tj ET
-BT /F2 8 Tf 1 0 0 1 46.0 42.0 Tm (Software validation is not acceptance of experiments, external calculations, legal or safety claims.) Tj ET
+BT /F2 14 Tf 1 0 0 1 64.0 462.0 Tm (Permanent generated artifacts) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 437.0 Tm (Test dashboard, scientific-quality dashboard, PDF and checksum: PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 64.0 418.0 Tm (Critical mutations killed: 15/15) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 352.0 Tm (Reproduction entry points) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 325.0 Tm (python scripts/audit_repository.py) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 305.0 Tm (python -m pytest -q -p hypothesis.extra.pytestplugin) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 285.0 Tm (python scripts/build_test_dashboard.py --check) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 265.0 Tm (python scripts/build_research_quality_dashboard.py --check) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 245.0 Tm (python scripts/build_engineering_report.py --check) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 225.0 Tm (python scripts/generate_checksums.py --check) Tj ET
+BT /F2 14 Tf 1 0 0 1 46.0 150.0 Tm (Scientific boundary) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 122.0 Tm (Software PASS validates the declared repository controls and source-tree digest.) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 102.0 Tm (It does not certify external experiments, calculations, legal conclusions or safety decisions.) Tj ET
+BT /F2 8 Tf 1 0 0 1 46.0 48.0 Tm (All changes were published directly to main; no branch and no pull request were created.) Tj ET
 endstream
 endobj
 xref
@@ -233,12 +236,12 @@ xref
 0000000421 00000 n 
 0000002658 00000 n 
 0000002794 00000 n 
-0000006697 00000 n 
-0000006834 00000 n 
-0000010204 00000 n 
-0000010342 00000 n 
+0000006711 00000 n 
+0000006848 00000 n 
+0000010218 00000 n 
+0000010356 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-12153
+12472
 %%EOF

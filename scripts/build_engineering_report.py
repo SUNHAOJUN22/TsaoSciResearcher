@@ -128,13 +128,25 @@ def _status_ratio(value: Any) -> tuple[float, str]:
 
 
 def _page_two(evidence: dict[str, Any]) -> str:
-    content = _text(46, 790, "Scoped software validation matrix", 22, True)
+    scope = str(evidence.get("validation_scope", "unknown"))
+    current_tree = scope == "current-tree"
+    title = "Current-tree software validation matrix" if current_tree else "Scoped software validation matrix"
+    content = _text(46, 790, title, 22, True)
     platforms = evidence.get("compatibility", {})
     gates = evidence.get("gates", {})
-    content += _text(46, 760, "Recorded cross-platform baseline", 14, True)
-    content += _text(
-        46, 742, "These platform results are the last complete baseline, not a fresh current-tree run.", 8
-    )
+    if current_tree:
+        content += _text(46, 760, "Current-tree cross-platform validation", 14, True)
+        content += _text(
+            46,
+            742,
+            "The current full integration run passed the declared repository and engineering gates.",
+            8,
+        )
+    else:
+        content += _text(46, 760, "Recorded cross-platform baseline", 14, True)
+        content += _text(
+            46, 742, "These platform results are a recorded baseline, not a fresh current-tree run.", 8
+        )
     y = 710
     for label, value in sorted(platforms.items()):
         content += _text(56, y, label.replace("_", " "), 9)
@@ -142,7 +154,8 @@ def _page_two(evidence: dict[str, Any]) -> str:
         content += _bar(330, y - 7, 150, ratio)
         content += _text(492, y, shown, 9, True)
         y -= 26
-    content += _text(46, y - 5, "Baseline and focused current-change gates", 14, True)
+    gate_heading = "Current-tree validation gates" if current_tree else "Scoped validation gates"
+    content += _text(46, y - 5, gate_heading, 14, True)
     y -= 37
     for label, value in gates.items():
         if y < 95:
@@ -153,13 +166,12 @@ def _page_two(evidence: dict[str, Any]) -> str:
         content += _bar(330, y - 7, 150, ratio, shade)
         content += _text(492, y, shown[:16], 8, True)
         y -= 22
-    content += _text(
-        46,
-        68,
-        "Composite PASS means the declared scopes passed; current end-to-end CI remains NOT RUN.",
-        9,
-        True,
+    footer = (
+        "Current-tree PASS records end-to-end repository validation; scientific acceptance remains separate."
+        if current_tree
+        else "Scoped PASS applies only to the evidence levels explicitly recorded above."
     )
+    content += _text(46, 68, footer, 9, True)
     return content
 
 
@@ -218,42 +230,83 @@ def _page_three(rows: list[dict[str, Any]], summary: dict[str, Any]) -> str:
     return content
 
 
-def _page_four(evidence: dict[str, Any]) -> str:
-    content = _text(46, 790, "Closed-loop evidence and limitations", 22, True)
-    baseline = evidence.get("baseline_full_repository_run", {})
-    focused = evidence.get("focused_current_change_regression", {})
+def _page_four_current_tree(evidence: dict[str, Any]) -> str:
+    content = _text(46, 790, "Current-tree validation and reproducibility", 22, True)
+    provenance = evidence.get("provenance", {})
     gates = evidence.get("gates", {})
     content += _rect(46, 650, 500, 92, 0.98)
-    content += _text(64, 712, "Recorded full-repository baseline", 14, True)
-    content += _text(64, 687, f"GitHub Actions run: {baseline.get('run_id', 'not recorded')}", 9)
+    content += _text(64, 712, "Current-tree full integration", 14, True)
+    content += _text(64, 687, f"GitHub Actions run: {provenance.get('workflow_run_id', 'not recorded')}", 9)
     content += _text(
-        64, 668, "All engineering/scientific gates passed before publication transport failed.", 8
+        64, 668, "Repository, regression, static, mutation, performance and release gates passed.", 8
     )
     content += _rect(46, 525, 500, 92, 0.98)
-    content += _text(64, 587, "Focused current-change regression", 14, True)
+    content += _text(64, 587, "Validated source tree", 14, True)
+    digest = str(provenance.get("validated_tree_sha256", "not recorded"))
+    content += _text(64, 562, f"SHA-256: {digest[:64]}", 7)
+    content += _text(64, 543, f"Validated files: {provenance.get('validated_file_count', 'not recorded')}", 8)
+    content += _rect(46, 400, 500, 92, 0.98)
+    content += _text(64, 462, "Permanent generated artifacts", 14, True)
+    content += _text(64, 437, "Test dashboard, scientific-quality dashboard, PDF and checksum: PASS", 8)
     content += _text(
-        64,
-        562,
-        f"Tests: {focused.get('passed', 0)} passed / {focused.get('failed', 0)} failed | {focused.get('environment', 'environment not recorded')[:53]}",
+        64, 418, f"Critical mutations killed: {gates.get('critical_mutation_killed', 'not recorded')}", 8
+    )
+    content += _text(46, 352, "Reproduction entry points", 14, True)
+    command_y = 325.0
+    for command in [
+        "python scripts/audit_repository.py",
+        "python -m pytest -q -p hypothesis.extra.pytestplugin",
+        "python scripts/build_test_dashboard.py --check",
+        "python scripts/build_research_quality_dashboard.py --check",
+        "python scripts/build_engineering_report.py --check",
+        "python scripts/generate_checksums.py --check",
+    ]:
+        wrapped, command_y = _wrapped(60, command_y, command, width=88, size=8, leading=12, max_lines=2)
+        content += wrapped
+        command_y -= 8
+    content += _text(46, 150, "Scientific boundary", 14, True)
+    content += _text(
+        60, 122, "Software PASS validates the declared repository controls and source-tree digest.", 8
+    )
+    content += _text(
+        60,
+        102,
+        "It does not certify external experiments, calculations, legal conclusions or safety decisions.",
         8,
     )
-    content += _text(64, 543, "Scope: scientific quality, report generators and visual data contract.", 8)
-    content += _rect(46, 400, 500, 92, 0.98)
-    content += _text(64, 462, "Current-tree end-to-end CI", 14, True)
-    content += _text(64, 437, f"Status: {gates.get('current_end_to_end_ci', 'not recorded')}", 10, True)
-    content += _text(64, 418, "No current source-tree digest or fresh cross-platform receipt is asserted.", 8)
-    content += _text(46, 352, "Explicit limitations", 14, True)
-    y = 325.0
+    content += _text(
+        46,
+        48,
+        "All changes were published directly to main; no branch and no pull request were created.",
+        8,
+        True,
+    )
+    return content
+
+
+def _page_four_scoped(evidence: dict[str, Any]) -> str:
+    content = _text(46, 790, "Scoped evidence and limitations", 22, True)
+    gates = evidence.get("gates", {})
+    content += _rect(46, 650, 500, 92, 0.98)
+    content += _text(64, 712, "Recorded validation scope", 14, True)
+    content += _text(64, 687, f"Scope: {evidence.get('validation_scope', 'unknown')}", 9)
+    content += _text(64, 668, "Only the explicitly recorded checks may be interpreted as passing.", 8)
+    content += _rect(46, 525, 500, 92, 0.98)
+    content += _text(64, 587, "Current-tree end-to-end CI", 14, True)
+    content += _text(64, 562, f"Status: {gates.get('current_end_to_end_ci', 'not recorded')}", 9)
+    content += _text(64, 543, "No current source-tree digest is asserted unless provenance records it.", 8)
+    content += _text(46, 470, "Explicit limitations", 14, True)
+    y = 442.0
     limitations = evidence.get("limitations", [])
     if isinstance(limitations, list):
-        for index, item in enumerate(limitations[:4], 1):
+        for index, item in enumerate(limitations[:5], 1):
             wrapped, y = _wrapped(60, y, f"{index}. {item!s}", width=82, size=8, leading=12, max_lines=2)
             content += wrapped
             y -= 10
     content += _text(46, 155, "Reproduction entry points", 14, True)
     command_y = 128.0
     for command in [
-        "python -m pytest -q tests/test_scientific_quality.py tests/test_visual_report_contract.py",
+        "python scripts/build_validation_evidence.py --check",
         "python scripts/build_test_dashboard.py --check",
         "python scripts/build_research_quality_dashboard.py --check",
         "python scripts/build_engineering_report.py --check",
@@ -269,6 +322,12 @@ def _page_four(evidence: dict[str, Any]) -> str:
         True,
     )
     return content
+
+
+def _page_four(evidence: dict[str, Any]) -> str:
+    if evidence.get("validation_scope") == "current-tree":
+        return _page_four_current_tree(evidence)
+    return _page_four_scoped(evidence)
 
 
 def _pdf(pages: list[str]) -> bytes:

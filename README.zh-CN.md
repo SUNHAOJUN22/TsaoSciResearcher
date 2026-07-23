@@ -176,6 +176,7 @@ cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" \
 - [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)
 
 仪表板是确定性生成产物，用于展示软件门禁和科研方法约束；它们不能代替科学审查，也不能证明外部任务已经执行。
+工程审计 PDF 与当前树验证证据同源生成，并由 CI 进行逐字节一致性检查。
 
 ## 设计和审计证据
 

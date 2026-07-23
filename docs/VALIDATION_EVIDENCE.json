@@ -6,7 +6,7 @@
     "windows_python_3_12": "PASS"
   },
   "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass permanent CI.",
-  "evidence_date": "2026-07-23",
+  "evidence_date": "2026-07-24",
   "gates": {
     "bandit_high_severity": "PASS",
     "bounded_performance": "PASS",
@@ -37,10 +37,10 @@
       "docs/test-dashboard.html",
       "docs/test-dashboard.svg"
     ],
-    "publication_parent_commit": "edd50aac40d85e8096883b60fd24e2f4ffcca078",
-    "validated_file_count": 296,
-    "validated_tree_sha256": "a45f07826410b132b14e96026478da1eff4c0a8253d9d340158db66496824688",
-    "workflow_run_id": 30013694082
+    "publication_parent_commit": "b3b2bdc49116a284dd43024065effa63cec0dcc6",
+    "validated_file_count": 300,
+    "validated_tree_sha256": "b46f0432963f8a15cad2eabd907e1ae5cb9776adc61e7459441ee763081b6b7b",
+    "workflow_run_id": 30028036431
   },
   "release": "0.5.3",
   "schema_version": "1.5",
@@ -58,7 +58,7 @@
   },
   "workflow": {
     "name": "Main-branch full integration audit",
-    "publication_parent_commit": "edd50aac40d85e8096883b60fd24e2f4ffcca078",
-    "run_id": 30013694082
+    "publication_parent_commit": "b3b2bdc49116a284dd43024065effa63cec0dcc6",
+    "run_id": 30028036431
   }
 }
