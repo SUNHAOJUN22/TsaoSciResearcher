@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">TsaoSciResearcher v0.5.3 audit summary</title>
+  <desc id="desc">Visual summary of repository capabilities, scientific quality guards, engineering gates, and truth boundaries.</desc>
+  <rect width="1200" height="760" fill="#0b1020"/>
+  <text x="70" y="85" fill="#f7f9fc" font-family="Arial, sans-serif" font-size="40" font-weight="700">TsaoSciResearcher v0.5.3</text>
+  <text x="70" y="125" fill="#a9b7d0" font-family="Arial, sans-serif" font-size="21">Evidence-first scientific research control layer - main branch audit</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="70" y="175" width="330" height="130" rx="18" fill="#17213a"/>
+    <text x="100" y="225" fill="#7ee787" font-size="38" font-weight="700">340</text>
+    <text x="100" y="266" fill="#e6edf3" font-size="19">capability contracts</text>
+    <rect x="435" y="175" width="330" height="130" rx="18" fill="#17213a"/>
+    <text x="465" y="225" fill="#79c0ff" font-size="38" font-weight="700">15</text>
+    <text x="465" y="266" fill="#e6edf3" font-size="19">gated workflows and schemas</text>
+    <rect x="800" y="175" width="330" height="130" rx="18" fill="#17213a"/>
+    <text x="830" y="225" fill="#d2a8ff" font-size="38" font-weight="700">0</text>
+    <text x="830" y="266" fill="#e6edf3" font-size="19">generic domain placeholders</text>
+
+    <text x="70" y="365" fill="#f7f9fc" font-size="26" font-weight="700">Executable scientific-quality controls</text>
+    <rect x="70" y="395" width="330" height="105" rx="14" fill="#132b25"/>
+    <text x="95" y="435" fill="#7ee787" font-size="21" font-weight="700">Measurement Boundary</text>
+    <text x="95" y="469" fill="#c9d1d9" font-size="16">measurand, method, calibration,</text>
+    <text x="95" y="491" fill="#c9d1d9" font-size="16">uncertainty and applicability</text>
+    <rect x="435" y="395" width="330" height="105" rx="14" fill="#14253b"/>
+    <text x="460" y="435" fill="#79c0ff" font-size="21" font-weight="700">Structure-Property</text>
+    <text x="460" y="469" fill="#c9d1d9" font-size="16">structure descriptors, response,</text>
+    <text x="460" y="491" fill="#c9d1d9" font-size="16">confounders and validation</text>
+    <rect x="800" y="395" width="330" height="105" rx="14" fill="#2b2039"/>
+    <text x="825" y="435" fill="#d2a8ff" font-size="21" font-weight="700">Causality Guard</text>
+    <text x="825" y="469" fill="#c9d1d9" font-size="16">association vs mechanism vs</text>
+    <text x="825" y="491" fill="#c9d1d9" font-size="16">causal claim boundaries</text>
+
+    <text x="70" y="565" fill="#f7f9fc" font-size="26" font-weight="700">Recorded engineering gates</text>
+    <text x="82" y="610" fill="#7ee787" font-size="18">PASS</text><text x="150" y="610" fill="#d8dee9" font-size="17">schema, repository, structure, full regression, reverse/random order</text>
+    <text x="82" y="644" fill="#7ee787" font-size="18">PASS</text><text x="150" y="644" fill="#d8dee9" font-size="17">Ruff, strict Mypy, Bandit, mutation, bounded performance, reproducible release</text>
+    <text x="82" y="678" fill="#f2cc60" font-size="18">BOUNDARY</text><text x="190" y="678" fill="#d8dee9" font-size="17">software validation is not scientific acceptance or an execution receipt</text>
+  </g>
+</svg>
