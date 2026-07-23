@@ -78,6 +78,8 @@ jobs:
         run: |
           rm -f .github/workflows/finalize-v053-current.yml
           rm -f .github/v053-finalize-trigger "$STATUS_FILE"
+          rm -f .github/workflows/diagnose-v053-audit.yml
+          rm -f .github/v053-audit-diagnose-trigger .github/v053-audit-result.json
           rm -f .github/workflows/tsao-main-integration-once.yml
           rm -f .github/tsao-v053-integration-status.json
           rm -f .github/workflows/finalize-test-dashboard.yml
