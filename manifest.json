@@ -1,7 +1,7 @@
 {
   "name": "TsaoSciResearcher",
   "slug": "tsao-sci-researcher",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Evidence-first scientific research control layer with 322 named AI-for-Science capability contracts, 18 runtime capabilities, unified project state and guarded computation handoffs.",
   "license": "Apache-2.0",
   "capability_count": 340,
