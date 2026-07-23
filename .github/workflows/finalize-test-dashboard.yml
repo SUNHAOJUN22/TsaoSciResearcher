@@ -19,7 +19,43 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
+  heartbeat:
+    name: dashboard-validation-heartbeat
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Publish running state
+        env:
+          RUN_ID: ${{ github.run_id }}
+          VALIDATED_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          python - <<'PY2'
+          import json
+          import os
+          from pathlib import Path
+          Path('.github/finalize-test-dashboard-status.json').write_text(
+              json.dumps({
+                  'status': 'RUNNING',
+                  'run_id': int(os.environ['RUN_ID']),
+                  'validated_commit': os.environ['VALIDATED_COMMIT'],
+              }, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY2
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/finalize-test-dashboard-status.json
+          git commit -m 'ci: mark test-dashboard validation running'
+          git push origin HEAD:main
+
   compatibility:
+    needs: heartbeat
     name: dashboard-compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
@@ -95,6 +131,7 @@ jobs:
           set -euo pipefail
           rm -f .github/workflows/finalize-test-dashboard.yml
           rm -f .github/finalize-test-dashboard-trigger
+          rm -f .github/finalize-test-dashboard-status.json
           python - <<'PY'
           from __future__ import annotations
 
@@ -256,4 +293,47 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'docs: add verified automated-test dashboard'
+          git push origin HEAD:main
+
+  failure-report:
+    name: dashboard-validation-failure-report
+    if: ${{ always() && (needs.compatibility.result != 'success' || needs.finalize.result != 'success') }}
+    needs: [heartbeat, compatibility, finalize]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Publish failure state
+        env:
+          COMPATIBILITY: ${{ needs.compatibility.result }}
+          FINALIZE: ${{ needs.finalize.result }}
+          RUN_ID: ${{ github.run_id }}
+          VALIDATED_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          python - <<'PY2'
+          import json
+          import os
+          from pathlib import Path
+          Path('.github/finalize-test-dashboard-status.json').write_text(
+              json.dumps({
+                  'status': 'FAIL',
+                  'run_id': int(os.environ['RUN_ID']),
+                  'validated_commit': os.environ['VALIDATED_COMMIT'],
+                  'jobs': {
+                      'compatibility': os.environ['COMPATIBILITY'],
+                      'finalize': os.environ['FINALIZE'],
+                  },
+              }, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY2
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/finalize-test-dashboard-status.json
+          git commit -m 'ci: report test-dashboard validation failure'
           git push origin HEAD:main
