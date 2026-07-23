@@ -110,9 +110,7 @@ def _score(present: int, total: int) -> int:
 
 def _result(kind: str, findings: Sequence[QualityFinding], details: Mapping[str, Any]) -> dict[str, Any]:
     rank = {"PASS": 0, "WARN": 1, "BLOCK": 2}
-    status: QualityStatus = max(
-        (item.status for item in findings), key=rank.__getitem__, default="PASS"
-    )
+    status: QualityStatus = max((item.status for item in findings), key=rank.__getitem__, default="PASS")
     counts = {name: sum(item.status == name for item in findings) for name in rank}
     return {
         "kind": kind,
@@ -152,9 +150,21 @@ def check_measurement_boundary(spec: Mapping[str, Any]) -> dict[str, Any]:
     if exclusions is None:
         findings.append(QualityFinding("WARN", "MB-EXCLUSIONS", "Known exclusions are not explicit."))
     if not findings:
-        findings.append(QualityFinding("PASS", "MB-COMPLETE", "Operational measurement boundary is explicit."))
+        findings.append(
+            QualityFinding("PASS", "MB-COMPLETE", "Operational measurement boundary is explicit.")
+        )
 
-    core_values = (measurand, method, sample, conditions, unit, calibration, uncertainty, applicability, exclusions)
+    core_values = (
+        measurand,
+        method,
+        sample,
+        conditions,
+        unit,
+        calibration,
+        uncertainty,
+        applicability,
+        exclusions,
+    )
     return _result(
         "measurement-boundary",
         findings,
@@ -204,13 +214,17 @@ def plan_structure_property(spec: Mapping[str, Any]) -> dict[str, Any]:
 
     findings = [QualityFinding("PASS", "SP-CHAIN", "Structure, mediator and property are all explicit.")]
     if len(evidence) < 2:
-        findings.append(QualityFinding("WARN", "SP-EVIDENCE", "The chain has fewer than two evidence classes."))
+        findings.append(
+            QualityFinding("WARN", "SP-EVIDENCE", "The chain has fewer than two evidence classes.")
+        )
     if not alternatives:
         findings.append(QualityFinding("WARN", "SP-ALTERNATIVES", "No competing explanation is recorded."))
     if not confounders:
         findings.append(QualityFinding("WARN", "SP-CONFOUNDERS", "No confounder is recorded."))
     if optional["processing_or_intervention"] is None:
-        findings.append(QualityFinding("WARN", "SP-INTERVENTION", "Processing or intervention variable is missing."))
+        findings.append(
+            QualityFinding("WARN", "SP-INTERVENTION", "Processing or intervention variable is missing.")
+        )
     if optional["testable_prediction"] is None:
         findings.append(QualityFinding("WARN", "SP-PREDICTION", "No falsifiable prediction is recorded."))
     if optional["validation_strategy"] is None:
@@ -271,30 +285,53 @@ def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
     causal_wording = _contains_causal_wording(claim)
     mechanism_wording = any(token in claim.casefold() for token in _MECHANISM_TOKENS)
     experimental_design = any(token in design for token in _EXPERIMENTAL_DESIGN_TOKENS)
-    support = temporal_order and confounders_addressed and comparison_or_control and (
-        intervention_or_natural_experiment or experimental_design
+    support = (
+        temporal_order
+        and confounders_addressed
+        and comparison_or_control
+        and (intervention_or_natural_experiment or experimental_design)
     )
     mechanism_consistent = temporal_order and confounders_addressed and mechanism_tested
 
     findings: list[QualityFinding] = []
     if causal_wording and not support:
-        findings.append(QualityFinding("BLOCK", "CG-OVERCLAIM", "Causal wording exceeds the declared study design."))
+        findings.append(
+            QualityFinding("BLOCK", "CG-OVERCLAIM", "Causal wording exceeds the declared study design.")
+        )
     elif support:
-        findings.append(QualityFinding("PASS", "CG-DESIGN", "The declared design supports bounded causal inference."))
+        findings.append(
+            QualityFinding("PASS", "CG-DESIGN", "The declared design supports bounded causal inference.")
+        )
     elif mechanism_consistent:
         findings.append(
-            QualityFinding("PASS", "CG-MECHANISM-CONSISTENT", "The claim is bounded to a mechanism-consistent inference.")
+            QualityFinding(
+                "PASS", "CG-MECHANISM-CONSISTENT", "The claim is bounded to a mechanism-consistent inference."
+            )
         )
     else:
         findings.append(QualityFinding("PASS", "CG-ASSOCIATION", "Claim remains at association level."))
     if mechanism_wording and not mechanism_tested:
-        findings.append(QualityFinding("WARN", "CG-MECHANISM", "Mechanistic wording is not backed by a direct mechanism test."))
+        findings.append(
+            QualityFinding(
+                "WARN", "CG-MECHANISM", "Mechanistic wording is not backed by a direct mechanism test."
+            )
+        )
     if support and not replication:
-        findings.append(QualityFinding("WARN", "CG-REPLICATION", "Causal support is not accompanied by declared replication."))
+        findings.append(
+            QualityFinding(
+                "WARN", "CG-REPLICATION", "Causal support is not accompanied by declared replication."
+            )
+        )
     if not uncertainty_reported:
         findings.append(QualityFinding("WARN", "CG-UNCERTAINTY", "Uncertainty is not reported."))
 
-    verdict = "causal-supported" if support else "mechanism-consistent" if mechanism_consistent else "association-only"
+    verdict = (
+        "causal-supported"
+        if support
+        else "mechanism-consistent"
+        if mechanism_consistent
+        else "association-only"
+    )
     declared_fields = (
         temporal_order,
         confounders_addressed,
@@ -340,17 +377,35 @@ def check_evidence_traceability(spec: Mapping[str, Any]) -> dict[str, Any]:
     if len(set(evidence_ids)) != len(evidence_ids):
         findings.append(QualityFinding("BLOCK", "ET-DUPLICATE", "Evidence identifiers must be unique."))
     if len(source_locators) != len(evidence_ids):
-        findings.append(QualityFinding("BLOCK", "ET-LOCATORS", "Each evidence identifier requires one source locator."))
+        findings.append(
+            QualityFinding("BLOCK", "ET-LOCATORS", "Each evidence identifier requires one source locator.")
+        )
     if evidence_roles and len(evidence_roles) != len(evidence_ids):
-        findings.append(QualityFinding("BLOCK", "ET-ROLES", "Evidence roles must align one-to-one with evidence identifiers."))
+        findings.append(
+            QualityFinding(
+                "BLOCK", "ET-ROLES", "Evidence roles must align one-to-one with evidence identifiers."
+            )
+        )
     if execution_claim and not execution_receipts:
-        findings.append(QualityFinding("BLOCK", "ET-RECEIPT", "An execution claim requires an execution receipt."))
+        findings.append(
+            QualityFinding("BLOCK", "ET-RECEIPT", "An execution claim requires an execution receipt.")
+        )
     if not evidence_roles:
-        findings.append(QualityFinding("WARN", "ET-DIRECTNESS", "Direct, indirect or background evidence roles are missing."))
+        findings.append(
+            QualityFinding(
+                "WARN", "ET-DIRECTNESS", "Direct, indirect or background evidence roles are missing."
+            )
+        )
     if uncertainty is None:
-        findings.append(QualityFinding("WARN", "ET-UNCERTAINTY", "Claim uncertainty or limitation is not recorded."))
+        findings.append(
+            QualityFinding("WARN", "ET-UNCERTAINTY", "Claim uncertainty or limitation is not recorded.")
+        )
     if not findings:
-        findings.append(QualityFinding("PASS", "ET-COMPLETE", "Claim, evidence, locators and execution boundary are traceable."))
+        findings.append(
+            QualityFinding(
+                "PASS", "ET-COMPLETE", "Claim, evidence, locators and execution boundary are traceable."
+            )
+        )
 
     traceable = (
         len(set(evidence_ids)) == len(evidence_ids)
@@ -358,7 +413,12 @@ def check_evidence_traceability(spec: Mapping[str, Any]) -> dict[str, Any]:
         and (not evidence_roles or len(evidence_roles) == len(evidence_ids))
         and (not execution_claim or bool(execution_receipts))
     )
-    present = 4 + int(bool(evidence_roles)) + int(bool(execution_receipts) or not execution_claim) + int(uncertainty is not None)
+    present = (
+        4
+        + int(bool(evidence_roles))
+        + int(bool(execution_receipts) or not execution_claim)
+        + int(uncertainty is not None)
+    )
     return _result(
         "evidence-traceability",
         findings,

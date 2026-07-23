@@ -111,7 +111,9 @@ def _page_one(evidence: dict[str, Any]) -> str:
     ):
         content += _text(60, 240 - offset * 28, item, 9)
     content += _text(46, 105, "Repository operation", 13, True)
-    content += _text(60, 80, "All changes were written directly to main; no branch and no pull request were created.", 9)
+    content += _text(
+        60, 80, "All changes were written directly to main; no branch and no pull request were created.", 9
+    )
     return content
 
 
@@ -130,7 +132,9 @@ def _page_two(evidence: dict[str, Any]) -> str:
     platforms = evidence.get("compatibility", {})
     gates = evidence.get("gates", {})
     content += _text(46, 760, "Recorded cross-platform baseline", 14, True)
-    content += _text(46, 742, "These platform results are the last complete baseline, not a fresh current-tree run.", 8)
+    content += _text(
+        46, 742, "These platform results are the last complete baseline, not a fresh current-tree run.", 8
+    )
     y = 710
     for label, value in sorted(platforms.items()):
         content += _text(56, y, label.replace("_", " "), 9)
@@ -149,7 +153,13 @@ def _page_two(evidence: dict[str, Any]) -> str:
         content += _bar(330, y - 7, 150, ratio, shade)
         content += _text(492, y, shown[:16], 8, True)
         y -= 22
-    content += _text(46, 68, "Composite PASS means the declared scopes passed; current end-to-end CI remains NOT RUN.", 9, True)
+    content += _text(
+        46,
+        68,
+        "Composite PASS means the declared scopes passed; current end-to-end CI remains NOT RUN.",
+        9,
+        True,
+    )
     return content
 
 
@@ -161,9 +171,7 @@ def _guard_card(x: float, y: float, row: dict[str, Any]) -> str:
     content += _text(x + 188, y + 242, result["status"], 11, True)
     content += _text(x + 16, y + 218, f"Declared completeness: {score}%", 9)
     content += _bar(x + 16, y + 198, 210, score / 100)
-    summary_text, _ = _wrapped(
-        x + 16, y + 173, row["summary"], width=43, size=8, leading=12, max_lines=2
-    )
+    summary_text, _ = _wrapped(x + 16, y + 173, row["summary"], width=43, size=8, leading=12, max_lines=2)
     content += summary_text
     finding_y = y + 133
     for finding in result["findings"][:3]:
@@ -201,8 +209,12 @@ def _page_three(rows: list[dict[str, Any]], summary: dict[str, Any]) -> str:
     positions = [(46, 430), (304, 430), (46, 135), (304, 135)]
     for position, row in zip(positions, rows[:4], strict=True):
         content += _guard_card(position[0], position[1], row)
-    content += _text(46, 82, "BLOCK is intentional when wording exceeds evidence or an execution claim lacks a receipt.", 8)
-    content += _text(46, 62, "The guards remain configurable and do not hard-code material-specific trends.", 8)
+    content += _text(
+        46, 82, "BLOCK is intentional when wording exceeds evidence or an execution claim lacks a receipt.", 8
+    )
+    content += _text(
+        46, 62, "The guards remain configurable and do not hard-code material-specific trends.", 8
+    )
     return content
 
 
@@ -214,7 +226,9 @@ def _page_four(evidence: dict[str, Any]) -> str:
     content += _rect(46, 650, 500, 92, 0.98)
     content += _text(64, 712, "Recorded full-repository baseline", 14, True)
     content += _text(64, 687, f"GitHub Actions run: {baseline.get('run_id', 'not recorded')}", 9)
-    content += _text(64, 668, "All engineering/scientific gates passed before publication transport failed.", 8)
+    content += _text(
+        64, 668, "All engineering/scientific gates passed before publication transport failed.", 8
+    )
     content += _rect(46, 525, 500, 92, 0.98)
     content += _text(64, 587, "Focused current-change regression", 14, True)
     content += _text(
@@ -229,17 +243,15 @@ def _page_four(evidence: dict[str, Any]) -> str:
     content += _text(64, 437, f"Status: {gates.get('current_end_to_end_ci', 'not recorded')}", 10, True)
     content += _text(64, 418, "No current source-tree digest or fresh cross-platform receipt is asserted.", 8)
     content += _text(46, 352, "Explicit limitations", 14, True)
-    y = 325
+    y = 325.0
     limitations = evidence.get("limitations", [])
     if isinstance(limitations, list):
         for index, item in enumerate(limitations[:4], 1):
-            wrapped, y = _wrapped(
-                60, y, f"{index}. {str(item)}", width=82, size=8, leading=12, max_lines=2
-            )
+            wrapped, y = _wrapped(60, y, f"{index}. {item!s}", width=82, size=8, leading=12, max_lines=2)
             content += wrapped
             y -= 10
     content += _text(46, 155, "Reproduction entry points", 14, True)
-    command_y = 128
+    command_y = 128.0
     for command in [
         "python -m pytest -q tests/test_scientific_quality.py tests/test_visual_report_contract.py",
         "python scripts/build_test_dashboard.py --check",
@@ -249,7 +261,13 @@ def _page_four(evidence: dict[str, Any]) -> str:
         wrapped, command_y = _wrapped(60, command_y, command, width=88, size=7, leading=10, max_lines=2)
         content += wrapped
         command_y -= 6
-    content += _text(46, 42, "Software validation is not acceptance of experiments, external calculations, legal or safety claims.", 8, True)
+    content += _text(
+        46,
+        42,
+        "Software validation is not acceptance of experiments, external calculations, legal or safety claims.",
+        8,
+        True,
+    )
     return content
 
 
@@ -280,9 +298,7 @@ def _pdf(pages: list[str]) -> bytes:
     output.extend(b"0000000000 65535 f \n")
     for offset in offsets[1:]:
         output.extend(f"{offset:010d} 00000 n \n".encode())
-    output.extend(
-        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode()
-    )
+    output.extend(f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode())
     return bytes(output)
 
 
