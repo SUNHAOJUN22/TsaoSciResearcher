@@ -3,3 +3,4 @@ split audit rerun
 version sources aligned
 diagnostic controls included in cleanup
 scientific quality example fixed
+quality CLI exposed and tested
