@@ -116,11 +116,12 @@ jobs:
           python scripts/package_release.py --out /tmp/dist-b
           cmp "/tmp/dist-a/TsaoSciResearcher-v${VERSION}.zip" "/tmp/dist-b/TsaoSciResearcher-v${VERSION}.zip"
           python scripts/validate_release.py
-      - name: Commit verified candidate without workflow deletions
+      - name: Commit verified candidate without workflow changes
         shell: bash
         run: |
           set -euo pipefail
           for path in \
+            .github/workflows/ci.yml \
             .github/workflows/finalize-test-dashboard.yml \
             .github/workflows/finalize-test-dashboard-v2.yml \
             .github/workflows/diagnose-dashboard-ruff.yml \
