@@ -61,12 +61,14 @@ jobs:
           tests/test_install.py
           tests/test_project_state.py
           tests/test_runtime_v2.py
+          tests/test_scientific_quality.py
           tests/test_handoff_cli.py
           tests/test_named_capabilities.py
       - name: CLI and schema smoke
         run: |
           python -m tsao_researcher route "run an actual DFT calculation"
           python -m tsao_researcher search "polymer molecular dynamics" --limit 3
+          python -m tsao_researcher quality examples/scientific-quality-check.json
           python scripts/validate_schemas.py
 
   regression:
@@ -94,6 +96,9 @@ jobs:
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
           python scripts/build_test_dashboard.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/route_task.py --self-test
