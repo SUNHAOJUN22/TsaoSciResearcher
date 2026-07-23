@@ -1,0 +1,118 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "inventory": {
+      "files_by_suffix": {
+        ".cff": 1,
+        ".csv": 3,
+        ".html": 2,
+        ".json": 73,
+        ".lock": 1,
+        ".md": 109,
+        ".pdf": 1,
+        ".ps1": 1,
+        ".py": 71,
+        ".sh": 1,
+        ".svg": 4,
+        ".toml": 1,
+        ".txt": 2,
+        ".yaml": 21,
+        ".yml": 4,
+        "<none>": 5
+      },
+      "total_bytes": 1475643,
+      "newlines": {
+        "lf": 287,
+        "crlf": 0,
+        "mixed": 0
+      },
+      "executable_files": [
+        "scripts/audit_repository.py",
+        "scripts/build_capability_index.py",
+        "scripts/build_readme_facts.py",
+        "scripts/build_test_dashboard.py",
+        "scripts/generate_checksums.py",
+        "scripts/init_project.py",
+        "scripts/install.py",
+        "scripts/package_release.py",
+        "scripts/performance_smoke.py",
+        "scripts/route_task.py",
+        "scripts/run_mutation_smoke.py",
+        "scripts/run_tests.py",
+        "scripts/validate_claims.py",
+        "scripts/validate_evidence.py",
+        "scripts/validate_project.py",
+        "scripts/validate_release.py",
+        "scripts/validate_schemas.py",
+        "scripts/validate_structure.py",
+        "tsao_researcher/state.py"
+      ]
+    },
+    "versions": {
+      "VERSION": "0.5.3",
+      "manifest": "0.5.2",
+      "SKILL": "0.5.2",
+      "agent": "0.5.2",
+      "pyproject": "0.5.3"
+    },
+    "workflows": {
+      "count": 15,
+      "missing": [],
+      "contracts": 15
+    },
+    "schemas": {
+      "count": 8,
+      "v2_count": 7,
+      "total": 15,
+      "missing": []
+    },
+    "runtime": {
+      "scripts": 30,
+      "package_modules": 10,
+      "missing": []
+    },
+    "readme_evidence": {
+      "required": 10,
+      "missing": []
+    },
+    "capabilities": {
+      "loaded": 158,
+      "legacy_unique": 158,
+      "v2_loaded": 340,
+      "v2_unique": 340,
+      "workbook_named": 322,
+      "domain_named": 164,
+      "runtime_core": 18,
+      "generic_domain_slots": 0
+    },
+    "domain_packs": {
+      "count": 7,
+      "files": 35
+    },
+    "routers": 2,
+    "readme_links": 69,
+    "workflow_files": 2,
+    "tests": {
+      "modules": 24,
+      "support_files": 4
+    },
+    "ci_coverage_markers": {
+      "required": 13,
+      "missing": []
+    },
+    "manifest": {
+      "capability_count": 340,
+      "legacy_capability_count": 158,
+      "workbook_named_capability_count": 322,
+      "domain_named_capability_count": 164,
+      "workflow_count": 15,
+      "schema_count": 15,
+      "domain_pack_count": 7
+    },
+    "status": "FAIL"
+  },
+  "errors": [
+    "version mismatch: {'VERSION': '0.5.3', 'manifest': '0.5.2', 'SKILL': '0.5.2', 'agent': '0.5.2', 'pyproject': '0.5.3'}"
+  ],
+  "warnings": []
+}
