@@ -97,6 +97,8 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
         "docs/CAPABILITY_COVERAGE_MATRIX.md",
         "docs/README_ARCHITECTURE_MAPPING.md",
         "docs/VALIDATION_EVIDENCE.json",
+        "docs/test-dashboard.html",
+        "docs/test-dashboard.svg",
     ]
     for relative in required_docs:
         if not (root / relative).is_file():

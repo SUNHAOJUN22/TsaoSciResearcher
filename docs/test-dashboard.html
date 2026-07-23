@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TsaoSciResearcher test dashboard</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f5f7fb; --panel:#fff; --text:#172033; --muted:#647084; --border:#d8e0ea; --ok:#247a48; --ok-bg:#eaf8ef; --accent:#245fa8; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#111827; --panel:#172033; --text:#f3f6fb; --muted:#a9b4c4; --border:#334155; --ok:#79d29b; --ok-bg:#153824; --accent:#8ab4e8; } }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width:1100px; margin:0 auto; padding:32px 20px 48px; }
+    header { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+    h1 { margin:0 0 8px; font-size:clamp(1.8rem,4vw,2.6rem); }
+    p { color:var(--muted); }
+    .badge { padding:10px 18px; border-radius:999px; background:var(--ok-bg); color:var(--ok); font-weight:700; border:1px solid var(--ok); }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:28px 0; }
+    .metric { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:18px; }
+    .metric span { color:var(--muted); font-size:.9rem; }
+    .metric strong { display:block; font-size:2rem; margin:8px 0 2px; }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+    button { border:1px solid var(--border); background:var(--panel); color:var(--text); border-radius:10px; padding:10px 14px; cursor:pointer; font:inherit; }
+    button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); font-weight:700; }
+    section { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; margin-top:16px; }
+    h2 { margin:0 0 14px; font-size:1.15rem; }
+    .list { display:grid; gap:10px; }
+    .row { display:grid; grid-template-columns:minmax(180px,1fr) minmax(130px,240px) auto; gap:14px; align-items:center; }
+    .track { height:10px; background:color-mix(in srgb,var(--border) 65%,transparent); border-radius:999px; overflow:hidden; }
+    .fill { height:100%; width:100%; background:var(--ok); }
+    .status { color:var(--ok); font-weight:700; text-align:right; }
+    .inventory { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:10px; }
+    .inventory div { border:1px solid var(--border); border-radius:12px; padding:12px; }
+    .inventory strong { display:block; font-size:1.35rem; }
+    footer { margin-top:22px; color:var(--muted); font-size:.9rem; }
+    [hidden] { display:none !important; }
+    @media (max-width:650px) { .row { grid-template-columns:1fr auto; } .track { grid-column:1 / -1; grid-row:2; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 data-en="Automated test dashboard" data-zh="自动测试仪表板">Automated test dashboard</h1><p id="subtitle"></p></div>
+    <div class="badge" id="overall"></div>
+  </header>
+  <div class="metrics" id="metrics"></div>
+  <div class="controls" aria-label="Dashboard controls">
+    <button type="button" data-view="all" aria-pressed="true">All</button>
+    <button type="button" data-view="platforms" aria-pressed="false">Platforms</button>
+    <button type="button" data-view="gates" aria-pressed="false">Quality gates</button>
+    <button type="button" id="language" aria-pressed="false">中文</button>
+  </div>
+  <section id="platforms"><h2>Platform compatibility</h2><div class="list" id="platform-list"></div></section>
+  <section id="gates"><h2>Validated gates</h2><div class="list" id="gate-list"></div></section>
+  <section id="inventory"><h2>Verified inventory</h2><div class="inventory" id="inventory-list"></div></section>
+  <footer id="footer"></footer>
+</main>
+<script>
+const data = {"evidence_date": "2026-07-23", "gates": [{"id": "repository_and_contract_audit", "label": "Repository and contract audit", "status": "PASS"}, {"id": "complete_regression", "label": "Complete regression", "status": "PASS"}, {"id": "reverse_order_regression", "label": "Reverse-order regression", "status": "PASS"}, {"id": "seeded_random_order_regression", "label": "Seeded random-order regression", "status": "PASS"}, {"id": "ruff_format_and_lint", "label": "Ruff format and lint", "status": "PASS"}, {"id": "mypy_strict", "label": "Strict Mypy", "status": "PASS"}, {"id": "bandit_high_severity", "label": "Bandit high-severity scan", "status": "PASS"}, {"id": "critical_mutation_killed", "label": "Critical mutation gate", "status": "15/15"}, {"id": "bounded_performance", "label": "Bounded performance", "status": "PASS"}, {"id": "byte_identical_release_builds", "label": "Byte-identical release builds", "status": "PASS"}, {"id": "json_schemas_15", "label": "15 JSON Schemas", "status": "PASS"}], "inventory": {"capabilities": 340, "domain_packs": 7, "generic_placeholders": 0, "named_capabilities": 322, "schemas": 15, "test_modules": 22, "workflows": 15}, "platforms": [{"id": "macos_python_3_12", "label": "macOS / Python 3.12", "status": "PASS"}, {"id": "ubuntu_python_3_10", "label": "Ubuntu / Python 3.10", "status": "PASS"}, {"id": "ubuntu_python_3_13", "label": "Ubuntu / Python 3.13", "status": "PASS"}, {"id": "windows_python_3_12", "label": "Windows / Python 3.12", "status": "PASS"}], "release": "0.5.2", "run_id": 29996825743, "status": "PASS", "summary": {"gate_passes": 11, "gate_total": 11, "mutation": "15/15", "platform_passes": 4, "platform_total": 4}};
+let zh = false;
+const labels = {
+  en: {platforms:'Platform compatibility',gates:'Validated gates',inventory:'Verified inventory',footer:'Recorded software evidence; not a substitute for scientific or human review.',release:'Release',evidence:'Evidence',run:'Run',capabilities:'Capabilities',named_capabilities:'Named contracts',workflows:'Workflows',schemas:'Schemas',test_modules:'Test modules',domain_packs:'Domain packs',generic_placeholders:'Placeholders'},
+  zh: {platforms:'平台兼容性',gates:'已验证门禁',inventory:'已核实清单',footer:'展示已记录的软件证据,不替代科学判断或人工评审。',release:'版本',evidence:'证据日期',run:'运行',capabilities:'能力合同',named_capabilities:'具名合同',workflows:'工作流',schemas:'Schema',test_modules:'测试模块',domain_packs:'领域包',generic_placeholders:'占位项'}
+};
+function row(item) {
+  const node=document.createElement('div'); node.className='row';
+  node.innerHTML=`<span>${item.label}</span><div class="track"><div class="fill"></div></div><span class="status">${item.status}</span>`;
+  return node;
+}
+function render() {
+  const t=labels[zh?'zh':'en'];
+  document.documentElement.lang=zh?'zh-CN':'en';
+  document.querySelector('h1').textContent=zh?document.querySelector('h1').dataset.zh:document.querySelector('h1').dataset.en;
+  document.getElementById('subtitle').textContent=`${t.release} ${data.release} · ${t.evidence} ${data.evidence_date} · ${t.run} ${data.run_id ?? 'n/a'}`;
+  document.getElementById('overall').textContent=data.status;
+  const metrics=[
+    [t.platforms,`${data.summary.platform_passes}/${data.summary.platform_total}`],
+    [t.gates,`${data.summary.gate_passes}/${data.summary.gate_total}`],
+    ['Mutation',data.summary.mutation],
+    [t.test_modules,String(data.inventory.test_modules)]
+  ];
+  document.getElementById('metrics').innerHTML=metrics.map(([k,v])=>`<div class="metric"><span>${k}</span><strong>${v}</strong></div>`).join('');
+  document.querySelector('#platforms h2').textContent=t.platforms;
+  document.querySelector('#gates h2').textContent=t.gates;
+  document.querySelector('#inventory h2').textContent=t.inventory;
+  document.getElementById('platform-list').replaceChildren(...data.platforms.map(row));
+  document.getElementById('gate-list').replaceChildren(...data.gates.map(row));
+  const inventory=document.getElementById('inventory-list'); inventory.innerHTML='';
+  Object.entries(data.inventory).forEach(([key,value])=>{ const box=document.createElement('div'); box.innerHTML=`<strong>${value}</strong><span>${t[key] ?? key.replaceAll('_',' ')}</span>`; inventory.appendChild(box); });
+  document.getElementById('footer').textContent=t.footer;
+  document.getElementById('language').textContent=zh?'English':'中文';
+}
+document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{
+  document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  const view=button.dataset.view;
+  document.getElementById('platforms').hidden=view==='gates';
+  document.getElementById('gates').hidden=view==='platforms';
+}));
+document.getElementById('language').addEventListener('click',()=>{zh=!zh;render();});
+render();
+</script>
+</body>
+</html>

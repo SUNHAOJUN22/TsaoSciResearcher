@@ -197,6 +197,15 @@ cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" \
 
 CI additionally runs Ruff, strict Mypy, Bandit, critical mutation tests, reverse/seeded-random test order and compatibility jobs on Windows, Linux and macOS.
 
+## Test dashboard
+
+![Automated test dashboard](docs/test-dashboard.svg)
+
+- [Open the interactive HTML dashboard](docs/test-dashboard.html)
+- [Read the machine-readable validation evidence](docs/VALIDATION_EVIDENCE.json)
+
+The dashboard is generated from recorded validation evidence and checked in CI. It visualizes software gates; it does not replace scientific review or human approval.
+
 ## Design verification
 
 Detailed evidence is kept outside the README so this page stays short:

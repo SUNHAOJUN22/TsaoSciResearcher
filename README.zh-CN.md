@@ -195,6 +195,15 @@ cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" \
 
 CI 还执行 Ruff、严格 Mypy、Bandit、关键突变测试、逆序与固定随机种子测试，以及 Windows、Linux、macOS 兼容测试。
 
+## 测试可视化
+
+![自动测试仪表板](docs/test-dashboard.svg)
+
+- [打开可交互 HTML 仪表板](docs/test-dashboard.html)
+- [查看机器可读验证证据](docs/VALIDATION_EVIDENCE.json)
+
+仪表板由已记录的验证证据自动生成并由 CI 校验。它展示软件门禁结果,不替代科学结论或人工审批。
+
 ## 详细对照证据
 
 README 保持简洁，详细检查放在独立文件中：

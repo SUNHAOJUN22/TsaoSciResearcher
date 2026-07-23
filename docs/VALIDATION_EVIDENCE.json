@@ -5,6 +5,12 @@
     "ubuntu_python_3_13": "PASS",
     "windows_python_3_12": "PASS"
   },
+  "dashboard": {
+    "generator": "scripts/build_test_dashboard.py",
+    "html": "docs/test-dashboard.html",
+    "status": "PASS",
+    "svg": "docs/test-dashboard.svg"
+  },
   "evidence_date": "2026-07-23",
   "gates": {
     "bandit_high_severity": "PASS",
@@ -25,7 +31,7 @@
     "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions, or safety decisions."
   ],
   "release": "0.5.2",
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "status": "PASS",
   "verified_inventory": {
     "capability_records": 340,
@@ -38,10 +44,10 @@
     "workflows": 15
   },
   "workflow": {
-    "name": "Final validate TsaoSciResearcher v0.5.2 once",
+    "name": "Finalize verified test dashboard v2 once",
     "permanent_tree_simulated": true,
-    "result_commit": "b53cd5ce20fa72f66a9999abd172a84b01278317",
-    "run_id": 29940827319,
-    "validated_commit": "131cf1d8dfa8b969f662a14a6a3568e72ecaaa9a"
+    "result_commit": null,
+    "run_id": 29996825743,
+    "validated_commit": "879363ff6bd2f0997775406c348418c28c905439"
   }
 }
