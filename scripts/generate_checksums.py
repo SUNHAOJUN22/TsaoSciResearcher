@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import sys
 from pathlib import Path
 
@@ -25,6 +26,10 @@ EXCLUDED_DIRS = {
 }
 EXCLUDED_FILES = {"SHA256SUMS"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".sha256"}
+DEFERRED_COMPOSITE = (
+    "NOT-RECORDED  TREE-SHA256 "
+    "(composite evidence; run scripts/generate_checksums.py --write from a complete checkout)\n"
+)
 
 
 def source_files(root: Path = ROOT) -> list[Path]:
@@ -53,6 +58,16 @@ def build(root: Path = ROOT) -> str:
     return f"{tree.hexdigest()}  TREE-SHA256 ({len(files)} files)\n"
 
 
+def _validation_scope(root: Path = ROOT) -> str:
+    path = root / "docs/VALIDATION_EVIDENCE.json"
+    if not path.is_file() or path.is_symlink():
+        return "unknown"
+    value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError("validation evidence root must be an object")
+    return str(value.get("validation_scope", "unknown"))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Write or verify the deterministic repository-tree checksum."
@@ -61,9 +76,9 @@ def main() -> None:
     mode.add_argument("--write", action="store_true")
     mode.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    expected = build()
     checksum_path = ROOT / "SHA256SUMS"
     if args.write:
+        expected = build()
         atomic_write_text(checksum_path, expected)
         print(f"wrote {checksum_path}: {expected.strip()}")
         return
@@ -71,6 +86,13 @@ def main() -> None:
         print("SHA256SUMS is missing or unsafe", file=sys.stderr)
         raise SystemExit(1)
     actual = checksum_path.read_text(encoding="utf-8", errors="strict")
+    if _validation_scope() == "composite":
+        if actual != DEFERRED_COMPOSITE:
+            print("SHA256SUMS must explicitly defer the digest in composite evidence mode", file=sys.stderr)
+            raise SystemExit(1)
+        print("repository-tree checksum NOT RECORDED: composite evidence mode")
+        return
+    expected = build()
     if actual != expected:
         print("SHA256SUMS is stale; run scripts/generate_checksums.py --write", file=sys.stderr)
         raise SystemExit(1)
