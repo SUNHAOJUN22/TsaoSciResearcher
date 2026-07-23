@@ -108,21 +108,32 @@ jobs:
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
 
-      - name: Repository and generated-artifact audit
-        run: |
-          python scripts/validate_schemas.py
-          python scripts/audit_repository.py
-          python scripts/validate_structure.py
-          python scripts/build_readme_facts.py --check
-          python scripts/build_validation_evidence.py --check
-          python scripts/build_test_dashboard.py --check
-          python scripts/build_research_quality_dashboard.py --check
-          python scripts/build_engineering_report.py --check
-          python scripts/generate_checksums.py --check
-          python scripts/build_capability_index.py --check
-          python scripts/route_task.py --self-test
-          python scripts/validate_figure.py examples/figure-contract.json
-          python -m tsao_researcher quality examples/scientific-quality-check.json
+      - name: Validate JSON Schemas
+        run: python scripts/validate_schemas.py
+      - name: Audit repository and contracts
+        run: python scripts/audit_repository.py
+      - name: Validate repository structure
+        run: python scripts/validate_structure.py
+      - name: Check README facts
+        run: python scripts/build_readme_facts.py --check
+      - name: Check validation evidence
+        run: python scripts/build_validation_evidence.py --check
+      - name: Check automated-test dashboard
+        run: python scripts/build_test_dashboard.py --check
+      - name: Check scientific-quality dashboard
+        run: python scripts/build_research_quality_dashboard.py --check
+      - name: Check engineering PDF report
+        run: python scripts/build_engineering_report.py --check
+      - name: Check repository checksum
+        run: python scripts/generate_checksums.py --check
+      - name: Check capability index
+        run: python scripts/build_capability_index.py --check
+      - name: Run routing self-test
+        run: python scripts/route_task.py --self-test
+      - name: Validate Figure Contract
+        run: python scripts/validate_figure.py examples/figure-contract.json
+      - name: Validate scientific-quality example
+        run: python -m tsao_researcher quality examples/scientific-quality-check.json
 
       - name: Full and order-independent regression
         shell: bash
