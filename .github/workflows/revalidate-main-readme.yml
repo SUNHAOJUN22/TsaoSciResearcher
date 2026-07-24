@@ -1,0 +1,317 @@
+name: Revalidate main and README once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/revalidate-main-readme.trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: revalidate-main-readme
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+  STATUS_FILE: .github/revalidate-main-readme.status.json
+
+jobs:
+  revalidate:
+    name: update-readme-test-and-publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Publish observable running state
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          Path(os.environ["STATUS_FILE"]).write_text(
+              json.dumps(
+                  {
+                      "status": "RUNNING",
+                      "run_id": int(os.environ["GITHUB_RUN_ID"]),
+                      "trigger_commit": os.environ["GITHUB_SHA"],
+                  },
+                  indent=2,
+                  sort_keys=True,
+              ) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$STATUS_FILE"
+          git commit -m 'ci: mark README revalidation running [skip ci]'
+          git push origin HEAD:main
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Expand README local validation commands
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          english_anchor = (
+              "CI additionally runs Python compatibility jobs on Windows, Linux and macOS, Ruff formatting/lint, "
+              "strict Mypy, Bandit, critical mutation checks, reverse and seeded-random test order, bounded "
+              "performance and byte-identical release packaging.\n"
+          )
+          english_block = '''
+
+Full local release gates:
+
+```bash
+python -m compileall -q scripts tsao_researcher tests
+python -m ruff format --check scripts tsao_researcher tests
+python -m ruff check scripts tsao_researcher tests
+python -m mypy scripts tsao_researcher
+python -m bandit -q -lll -r scripts tsao_researcher
+mkdir -p artifacts
+python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+python scripts/performance_smoke.py --json-out artifacts/performance.json
+```
+'''
+          marker = "Full local release gates:"
+          readmes = []
+          for name in ("README.md", "README_EN.md"):
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              if marker not in text:
+                  if english_anchor not in text:
+                      raise SystemExit(f"README validation anchor missing: {name}")
+                  text = text.replace(english_anchor, english_anchor + english_block, 1)
+              path.write_text(text, encoding="utf-8", newline="\n")
+              readmes.append(text)
+          if readmes[0] != readmes[1]:
+              raise SystemExit("README.md and README_EN.md must remain byte-identical")
+
+          chinese_anchor = (
+              "CI 还执行 Windows、Linux、macOS 的 Python 兼容性测试、Ruff 格式/静态检查、严格 Mypy、Bandit、"
+              "关键突变测试、逆序与固定随机种子测试、性能门和逐字节一致发布。\n"
+          )
+          chinese_block = '''
+
+完整本地发布门禁：
+
+```bash
+python -m compileall -q scripts tsao_researcher tests
+python -m ruff format --check scripts tsao_researcher tests
+python -m ruff check scripts tsao_researcher tests
+python -m mypy scripts tsao_researcher
+python -m bandit -q -lll -r scripts tsao_researcher
+mkdir -p artifacts
+python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+python scripts/performance_smoke.py --json-out artifacts/performance.json
+```
+'''
+          path = Path("README.zh-CN.md")
+          text = path.read_text(encoding="utf-8")
+          if "完整本地发布门禁：" not in text:
+              if chinese_anchor not in text:
+                  raise SystemExit("Chinese README validation anchor missing")
+              text = text.replace(chinese_anchor, chinese_anchor + chinese_block, 1)
+          path.write_text(text, encoding="utf-8", newline="\n")
+          PY
+
+      - name: Remove one-shot controls and regenerate evidence
+        shell: bash
+        run: |
+          rm -f .github/workflows/revalidate-main-readme.yml
+          rm -f .github/revalidate-main-readme.trigger "$STATUS_FILE"
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_readme_facts.py --write
+          python scripts/build_validation_evidence.py --write \
+            --parent-commit "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --evidence-date "2026-07-24"
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Compile repository
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
+        run: python -m compileall -q scripts tsao_researcher tests
+
+      - name: Repository documentation and artifact gates
+        shell: bash
+        run: |
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python -m tsao_researcher route "run an actual DFT calculation"
+          python -m tsao_researcher search "polymer molecular dynamics" --limit 3
+          python -m tsao_researcher quality examples/scientific-quality-check.json
+
+      - name: Full and order-independent regression
+        shell: bash
+        run: |
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static quality and security
+        shell: bash
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+
+      - name: Mutation and performance
+        shell: bash
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+
+      - name: Reproducible release
+        shell: bash
+        run: |
+          rm -rf dist-a dist-b
+          VERSION="$(tr -d '\r\n' < VERSION)"
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
+          python scripts/validate_release.py
+          sha256sum "dist-a/TsaoSciResearcher-v${VERSION}.zip" > artifacts/release.sha256
+
+      - name: Upload final audit artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-readme-main-audit-${{ github.run_id }}
+          path: |
+            README.md
+            README_EN.md
+            README.zh-CN.md
+            docs/VALIDATION_EVIDENCE.json
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
+            docs/SCIENTIFIC_QUALITY_EXAMPLES.json
+            docs/engineering-audit-report.pdf
+            SHA256SUMS
+            artifacts
+            dist-a
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish verified clean tree atomically to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          git add -A
+          python - <<'PY'
+          import base64
+          import json
+          import os
+          import stat
+          import subprocess
+          import time
+          import urllib.error
+          import urllib.request
+          from pathlib import Path
+
+          repository = os.environ["REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          api_base = f"https://api.github.com/repos/{repository}"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TsaoSciResearcher-readme-revalidator",
+          }
+
+          def request(method: str, path: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(api_base + path, data=body, headers=headers, method=method)
+              with urllib.request.urlopen(req, timeout=60) as response:
+                  raw = response.read()
+              return json.loads(raw) if raw else {}
+
+          raw_names = subprocess.check_output(["git", "diff", "--cached", "--name-only", "-z", "HEAD"])
+          paths = [item.decode("utf-8") for item in raw_names.split(b"\0") if item]
+          if not paths:
+              raise SystemExit("no verified changes to publish")
+
+          entries: list[dict] = []
+          for relative in paths:
+              path = Path(relative)
+              if not path.exists():
+                  entries.append({"path": relative, "mode": "100644", "type": "blob", "sha": None})
+                  continue
+              if path.is_symlink():
+                  raise SystemExit(f"symbolic link is forbidden: {relative}")
+              blob = request(
+                  "POST",
+                  "/git/blobs",
+                  {"content": base64.b64encode(path.read_bytes()).decode("ascii"), "encoding": "base64"},
+              )
+              mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
+              entries.append({"path": relative, "mode": mode, "type": "blob", "sha": blob["sha"]})
+
+          for attempt in range(1, 6):
+              try:
+                  ref = request("GET", "/git/ref/heads/main")
+                  parent = ref["object"]["sha"]
+                  parent_commit = request("GET", f"/git/commits/{parent}")
+                  tree = request(
+                      "POST",
+                      "/git/trees",
+                      {"base_tree": parent_commit["tree"]["sha"], "tree": entries},
+                  )
+                  commit = request(
+                      "POST",
+                      "/git/commits",
+                      {
+                          "message": "docs: expand README validation commands and refresh evidence",
+                          "tree": tree["sha"],
+                          "parents": [parent],
+                      },
+                  )
+                  request("PATCH", "/git/refs/heads/main", {"sha": commit["sha"], "force": False})
+                  print(f"published verified commit {commit['sha']} over parent {parent}")
+                  break
+              except urllib.error.HTTPError as exc:
+                  if exc.code not in {409, 422} or attempt == 5:
+                      raise
+                  time.sleep(attempt * 2)
+          PY
