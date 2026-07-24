@@ -155,6 +155,19 @@ python scripts/performance_smoke.py
 
 CI additionally runs Python compatibility jobs on Windows, Linux and macOS, Ruff formatting/lint, strict Mypy, Bandit, critical mutation checks, reverse and seeded-random test order, bounded performance and byte-identical release packaging.
 
+Full local release gates:
+
+```bash
+python -m compileall -q scripts tsao_researcher tests
+python -m ruff format --check scripts tsao_researcher tests
+python -m ruff check scripts tsao_researcher tests
+python -m mypy scripts tsao_researcher
+python -m bandit -q -lll -r scripts tsao_researcher
+mkdir -p artifacts
+python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+python scripts/performance_smoke.py --json-out artifacts/performance.json
+```
+
 Reproducible release check:
 
 ```bash
