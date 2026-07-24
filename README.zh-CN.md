@@ -153,6 +153,19 @@ python scripts/performance_smoke.py
 
 CI 还执行 Windows、Linux、macOS 的 Python 兼容性测试、Ruff 格式/静态检查、严格 Mypy、Bandit、关键突变测试、逆序与固定随机种子测试、性能门和逐字节一致发布。
 
+完整本地发布门禁：
+
+```bash
+python -m compileall -q scripts tsao_researcher tests
+python -m ruff format --check scripts tsao_researcher tests
+python -m ruff check scripts tsao_researcher tests
+python -m mypy scripts tsao_researcher
+python -m bandit -q -lll -r scripts tsao_researcher
+mkdir -p artifacts
+python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+python scripts/performance_smoke.py --json-out artifacts/performance.json
+```
+
 可重复发布检查：
 
 ```bash
