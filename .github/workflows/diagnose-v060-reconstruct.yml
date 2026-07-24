@@ -17,31 +17,28 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Diagnose checksum-pinned blob sequence
+      - name: Diagnose canonical transport manifest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          set +e
-          python - <<'PY' > /tmp/v060-diagnose.log 2>&1
-          import base64, hashlib, json, os, re, urllib.request
+          python - <<'PY'
+          import base64, hashlib, json, os, urllib.error, urllib.request
           from pathlib import Path
 
-          controller = Path('.github/workflows/apply-v060-blobs.yml').read_text(encoding='utf-8')
-          block = controller.split('blob_shas = [', 1)[1].split(']', 1)[0]
-          shas = re.findall(r'"([0-9a-f]{40})"', block)
-          match = re.search(r'expected = "([0-9a-f]{64})"', controller)
-          expected = match.group(1) if match else None
-          print(f'blob_count={len(shas)} expected={expected}')
+          manifest = json.loads(Path('.github/v060-clean-transport.json').read_text(encoding='utf-8'))
+          shas = manifest['blob_shas']
+          expected = manifest['payload_sha256']
           headers = {
               'Accept': 'application/vnd.github+json',
               'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
               'X-GitHub-Api-Version': '2022-11-28',
-              'User-Agent': 'TsaoSciResearcher-v060-diagnostic',
+              'User-Agent': 'TsaoSciResearcher-v060-canonical-diagnostic',
           }
           parts = []
+          missing = []
+          invalid = []
           for index, sha in enumerate(shas):
-              print(f'fetch index={index} sha={sha}', flush=True)
               req = urllib.request.Request(
                   f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/git/blobs/{sha}",
                   headers=headers,
@@ -49,43 +46,60 @@ jobs:
               try:
                   with urllib.request.urlopen(req, timeout=60) as response:
                       payload = json.load(response)
+              except urllib.error.HTTPError as exc:
+                  missing.append({'index': index, 'sha': sha, 'http_status': exc.code})
+                  parts.append(None)
+                  continue
               except Exception as exc:
-                  raise RuntimeError(f'blob fetch failed index={index} sha={sha}: {exc!r}') from exc
+                  missing.append({'index': index, 'sha': sha, 'error': repr(exc)})
+                  parts.append(None)
+                  continue
               if payload.get('sha') != sha or payload.get('encoding') != 'base64':
-                  raise RuntimeError(f'blob contract mismatch index={index} sha={sha} payload_sha={payload.get("sha")} encoding={payload.get("encoding")}')
-              compact = ''.join(payload['content'].split())
-              raw = base64.b64decode(compact, validate=True)
+                  invalid.append({'index': index, 'sha': sha, 'payload_sha': payload.get('sha'), 'encoding': payload.get('encoding')})
+                  parts.append(None)
+                  continue
               try:
-                  parts.append(raw.decode('ascii'))
-              except UnicodeDecodeError as exc:
-                  raise RuntimeError(f'blob is not ASCII transport index={index} sha={sha}') from exc
-          encoded = ''.join(parts).replace('\r', '').replace('\n', '')
-          archive = base64.b64decode(encoded, validate=True)
-          actual = hashlib.sha256(archive).hexdigest()
-          print(f'archive_bytes={len(archive)} actual={actual} expected={expected}')
-          if actual != expected:
-              raise RuntimeError(f'payload digest mismatch actual={actual} expected={expected}')
-          print('RECONSTRUCT_PASS')
-          PY
-          rc=$?
-          export RC="$rc"
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          log = Path('/tmp/v060-diagnose.log').read_text(encoding='utf-8', errors='replace')
+                  compact = ''.join(payload['content'].split())
+                  parts.append(base64.b64decode(compact, validate=True).decode('ascii'))
+              except Exception as exc:
+                  invalid.append({'index': index, 'sha': sha, 'decode_error': repr(exc)})
+                  parts.append(None)
+
+          actual = None
+          archive_bytes = None
+          digest_matches = False
+          reconstruction_error = None
+          if not missing and not invalid:
+              try:
+                  encoded = ''.join(parts).replace('\r', '').replace('\n', '')
+                  archive = base64.b64decode(encoded, validate=True)
+                  archive_bytes = len(archive)
+                  actual = hashlib.sha256(archive).hexdigest()
+                  digest_matches = actual == expected
+              except Exception as exc:
+                  reconstruction_error = repr(exc)
+
+          status = 'PASS' if not missing and not invalid and digest_matches else 'FAIL'
           result = {
-              'status': 'PASS' if os.environ['RC'] == '0' else 'FAIL',
-              'return_code': int(os.environ['RC']),
+              'status': status,
               'run_id': int(os.environ['GITHUB_RUN_ID']),
               'attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
               'head_sha': os.environ['GITHUB_SHA'],
-              'log_tail': log[-12000:],
+              'transport_parts': len(shas),
+              'missing': missing,
+              'invalid': invalid,
+              'expected_payload_sha256': expected,
+              'actual_payload_sha256': actual,
+              'archive_bytes': archive_bytes,
+              'digest_matches': digest_matches,
+              'reconstruction_error': reconstruction_error,
           }
           Path('.github/v060-diagnose-status.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(result, ensure_ascii=False, indent=2))
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .github/v060-diagnose-status.json
-          git commit -m 'ci: record v0.6.0 reconstruction diagnosis'
+          git commit -m 'ci: record canonical v0.6.0 transport diagnosis'
           git pull --rebase origin main
           git push origin HEAD:main
