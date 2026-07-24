@@ -1,0 +1,32 @@
+name: Create missing v0.6.0 transport blobs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-create-missing.trigger
+
+permissions:
+  contents: write
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Materialize missing canonical chunks as Git blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+
+          source_roots = [
+              Path('.github/v060-payload-source'),
+          ]
+          raise SystemExit('source payload chunks are not checked in; use connector blob creation')
+          PY
