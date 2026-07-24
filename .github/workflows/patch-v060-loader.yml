@@ -1,0 +1,61 @@
+name: Patch v0.6.0 blob loader
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-patch.trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Patch whitespace-safe GitHub blob decoding
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          paths = [
+              Path('.github/workflows/apply-v060-blobs.yml'),
+              Path('.github/workflows/apply-v060-observable.yml'),
+              Path('.github/workflows/diagnose-v060-reconstruct.yml'),
+          ]
+          old = 'base64.b64decode(payload["content"], validate=True)'
+          new = 'base64.b64decode("".join(payload["content"].split()), validate=True)'
+          old_single = "base64.b64decode(payload['content'], validate=True)"
+          new_single = "base64.b64decode(''.join(payload['content'].split()), validate=True)"
+          for path in paths:
+              text = path.read_text(encoding='utf-8')
+              updated = text.replace(old, new).replace(old_single, new_single)
+              if updated == text:
+                  raise SystemExit(f'expected decode expression not found in {path}')
+              path.write_text(updated, encoding='utf-8')
+
+          observable = Path('.github/workflows/apply-v060-observable.yml')
+          text = observable.read_text(encoding='utf-8')
+          text = text.replace(
+              'rm -f .github/v060-observable-status.json',
+              'rm -f .github/v060-observable-status.json .github/v060-diagnose-status.json .github/v060-diagnose.trigger',
+          )
+          text = text.replace(
+              'rm -f .github/workflows/apply-v060-deep.yml .github/workflows/apply-v060-blobs.yml .github/workflows/apply-v060-observable.yml',
+              'rm -f .github/workflows/apply-v060-deep.yml .github/workflows/apply-v060-blobs.yml .github/workflows/apply-v060-observable.yml .github/workflows/diagnose-v060-reconstruct.yml',
+          )
+          observable.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/v060-patch.trigger .github/workflows/patch-v060-loader.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix: make v0.6.0 blob reconstruction whitespace-safe'
+          git pull --rebase origin main
+          git push origin HEAD:main
