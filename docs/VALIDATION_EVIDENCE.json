@@ -39,7 +39,7 @@
     ],
     "publication_parent_commit": "5ccbe85cb570900f5e0c480f70df7de17a4426c5",
     "validated_file_count": 300,
-    "validated_tree_sha256": "ab6189e50794dfe28405b6d85cca84170d5365c2134e72b7dd09435192ba7128",
+    "validated_tree_sha256": "220c2f2a73a39aebce15106ff3647be32f4e093eeb641b2b38e21aa799003c46",
     "workflow_run_id": 30029705214
   },
   "release": "0.5.3",
