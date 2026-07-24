@@ -59,7 +59,8 @@ jobs:
                   payload = json.load(response)
               if payload.get("sha") != sha or payload.get("encoding") != "base64":
                   raise SystemExit(f"blob contract mismatch index={index} sha={sha}")
-              encoded_parts.append(base64.b64decode(payload["content"], validate=True).decode("ascii"))
+              compact = "".join(payload["content"].split())
+              encoded_parts.append(base64.b64decode(compact, validate=True).decode("ascii"))
 
           archive = base64.b64decode("".join(encoded_parts).replace("\r", "").replace("\n", ""), validate=True)
           actual = hashlib.sha256(archive).hexdigest()
@@ -98,8 +99,10 @@ jobs:
           PY
           rm -rf .github/v060-payload .github/v060-payload4k-test
           rm -f .github/v060-deep.trigger .github/v060-blobs.trigger .github/v060-observable.trigger
-          rm -f .github/v060-observable-status.json
+          rm -f .github/v060-observable-status.json .github/v060-diagnose-status.json .github/v060-diagnose.trigger
+          rm -f .github/v060-patch.trigger .github/v060-patch2.trigger .github/v060-patch2-status.json
           rm -f .github/workflows/apply-v060-deep.yml .github/workflows/apply-v060-blobs.yml .github/workflows/apply-v060-observable.yml
+          rm -f .github/workflows/diagnose-v060-reconstruct.yml .github/workflows/patch-v060-loader.yml .github/workflows/patch-v060-observable2.yml
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
