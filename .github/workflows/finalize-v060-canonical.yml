@@ -1,0 +1,286 @@
+name: Finalize canonical v0.6.0 on main
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-finalize.trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finalize-v060-canonical-main
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  finalize:
+    name: reconstruct-validate-publish-main
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reconstruct and verify canonical payload
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import io
+          import json
+          import os
+          import stat
+          import urllib.request
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          transport = json.loads((root / ".github/v060-clean-transport.json").read_text(encoding="utf-8"))
+          if transport.get("schema_version") != "1.0":
+              raise SystemExit("unsupported transport manifest")
+          shas = transport.get("blob_shas")
+          if not isinstance(shas, list) or len(shas) != int(transport.get("transport_parts", -1)):
+              raise SystemExit("transport inventory is invalid")
+
+          def git_blob_sha(raw: bytes) -> str:
+              prefix = f"blob {len(raw)}\0".encode("ascii")
+              return hashlib.sha1(prefix + raw, usedforsecurity=False).hexdigest()
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TsaoSciResearcher-v060-finalizer",
+          }
+          parts: list[bytes] = []
+          sources: list[str] = []
+          for index, expected_sha in enumerate(shas):
+              if not isinstance(expected_sha, str) or len(expected_sha) != 40:
+                  raise SystemExit(f"invalid expected blob SHA at index {index}")
+              materialized = root / ".github/v060-canonical" / f"part-{index:03d}"
+              if materialized.is_file() and not materialized.is_symlink():
+                  raw = materialized.read_bytes()
+                  source = materialized.relative_to(root).as_posix()
+              else:
+                  request = urllib.request.Request(
+                      f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/git/blobs/{expected_sha}",
+                      headers=headers,
+                  )
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      value = json.load(response)
+                  if value.get("sha") != expected_sha or value.get("encoding") != "base64":
+                      raise SystemExit(f"Git blob contract mismatch at index {index}")
+                  raw = base64.b64decode("".join(str(value["content"]).split()), validate=True)
+                  source = f"git-blob:{expected_sha}"
+              actual_sha = git_blob_sha(raw)
+              if actual_sha != expected_sha:
+                  raise SystemExit(
+                      f"canonical part mismatch index={index} source={source} actual={actual_sha} expected={expected_sha}"
+                  )
+              try:
+                  raw.decode("ascii")
+              except UnicodeDecodeError as exc:
+                  raise SystemExit(f"transport part {index} is not ASCII") from exc
+              parts.append(raw)
+              sources.append(source)
+
+          encoded = b"".join(parts)
+          if len(encoded) != int(transport.get("encoded_bytes", -1)):
+              raise SystemExit("encoded transport size mismatch")
+          archive = base64.b64decode(encoded, validate=True)
+          if len(archive) != int(transport.get("archive_bytes", -1)):
+              raise SystemExit("archive size mismatch")
+          digest = hashlib.sha256(archive).hexdigest()
+          if digest != transport.get("payload_sha256"):
+              raise SystemExit(f"payload SHA-256 mismatch: {digest}")
+
+          staging = Path("/tmp/tsao-v060-staging")
+          if staging.exists():
+              import shutil
+              shutil.rmtree(staging)
+          staging.mkdir(parents=True)
+
+          with zipfile.ZipFile(io.BytesIO(archive)) as package:
+              infos = package.infolist()
+              names = [info.filename for info in infos]
+              if len(names) != len(set(names)) or "manifest.json" not in names:
+                  raise SystemExit("payload ZIP member inventory is invalid")
+              payload_manifest = json.loads(package.read("manifest.json"))
+              rows = payload_manifest.get("files") if isinstance(payload_manifest, dict) else None
+              if payload_manifest.get("schema_version") != "1.0" or not isinstance(rows, list):
+                  raise SystemExit("payload manifest contract is invalid")
+              expected_members = {"manifest.json"}
+              total = 0
+              for row in rows:
+                  if not isinstance(row, dict):
+                      raise SystemExit("payload manifest row is invalid")
+                  relative = str(row.get("path", ""))
+                  pure = PurePosixPath(relative)
+                  if not relative or pure.is_absolute() or any(part in {"", ".", ".."} for part in pure.parts):
+                      raise SystemExit(f"unsafe payload path: {relative}")
+                  member = "payload/" + pure.as_posix()
+                  expected_members.add(member)
+                  info = package.getinfo(member)
+                  if info.is_dir() or info.file_size > 64 * 1024 * 1024:
+                      raise SystemExit(f"invalid payload member: {member}")
+                  mode_type = (info.external_attr >> 16) & 0o170000
+                  if mode_type == stat.S_IFLNK:
+                      raise SystemExit(f"symbolic link payload member: {member}")
+                  raw = package.read(member)
+                  total += len(raw)
+                  if len(raw) != int(row.get("size", -1)):
+                      raise SystemExit(f"payload size mismatch: {relative}")
+                  if hashlib.sha256(raw).hexdigest() != row.get("sha256"):
+                      raise SystemExit(f"payload checksum mismatch: {relative}")
+                  target = (staging / pure.as_posix()).resolve()
+                  if not target.is_relative_to(staging.resolve()):
+                      raise SystemExit(f"payload path escaped staging: {relative}")
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(raw)
+                  target.chmod(0o755 if str(row.get("mode")) == "100755" else 0o644)
+              if set(names) != expected_members:
+                  raise SystemExit("payload ZIP differs from its manifest")
+              if len(rows) < 50 or len(rows) > 500 or total > 8_000_000:
+                  raise SystemExit("payload safety limit exceeded")
+
+          summary = {
+              "status": "PASS",
+              "payload_sha256": digest,
+              "transport_parts": len(parts),
+              "materialized_parts": sum(source.startswith(".github/") for source in sources),
+              "payload_files": len(rows),
+              "payload_bytes": total,
+          }
+          Path("/tmp/v060-reconstruction.json").write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Apply payload and remove every transport control
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a /tmp/tsao-v060-staging/. .
+          find .github -maxdepth 1 -mindepth 1 -name 'v060*' -exec rm -rf {} +
+          find .github/workflows -maxdepth 1 -type f -name '*v060*' -delete
+          git status --short
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact v0.6.0 toolchain and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Repository metadata schema documentation and generated-artifact gates
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python -m tsao_researcher --version
+          python -m tsao_researcher quality examples/scientific-quality-check.json
+          mkdocs build --strict
+
+      - name: Complete regression coverage and order independence
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static type source and dependency security gates
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+
+      - name: Mutation performance quality and deterministic distribution
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          VERSION="$(tr -d '\r\n' < VERSION)"
+          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+
+      - name: Upload pre-publication validation artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: v060-finalizer-${{ github.run_id }}
+          path: |
+            /tmp/v060-reconstruction.json
+            artifacts
+            dist-a
+            dist-python
+            docs/VALIDATION_EVIDENCE.json
+            docs/SBOM.cdx.json
+            docs/QUALITY_HISTORY.json
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
+            docs/engineering-audit-report.pdf
+            site
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish clean validated v0.6.0 directly to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts dist-a dist-b dist-python site build .coverage .pytest_cache .mypy_cache .ruff_cache
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No v0.6.0 changes to publish.'
+            exit 1
+          fi
+          git commit -m 'feat: release v0.6.0 research reproducibility hardening'
+          git pull --rebase origin main
+          git push origin HEAD:main
