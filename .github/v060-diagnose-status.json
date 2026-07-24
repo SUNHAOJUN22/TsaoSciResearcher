@@ -1,8 +1,115 @@
 {
   "status": "FAIL",
-  "return_code": 1,
-  "run_id": 30075894648,
+  "run_id": 30076382215,
   "attempt": 1,
-  "head_sha": "38cc177246c636b1762eb172a6b68276bb25b8f3",
-  "log_tail": "blob_count=64 expected=f16ca6d03228d0adf29141b9b3952033d7855feba2e159e026584d52e4cd91da\nfetch index=0 sha=27c7e49028f82753d4e6e65477687db77750ac22\nfetch index=1 sha=4a3d9b41d2c146e4900b864eeacb2d1b199950da\nfetch index=2 sha=e56498b14dfe8314316a2311602638c6710b2331\nfetch index=3 sha=ef80084f77bf04263bfd21354b01ae4b521606d7\nfetch index=4 sha=62d43450e432f4bcf09a5caad5d0e5dc7e69f68a\nfetch index=5 sha=e715fec2fba961c85d0520f88d08e5b65d16ebdf\nfetch index=6 sha=4fc8c2ed06cf54e7791d0297e2ee0ad5aceb335a\nfetch index=7 sha=7dc29fa16d320423e2aa7b4f20dde39f6451e6d7\nfetch index=8 sha=6cd4573482204c70929246373ccf966166ed79db\nfetch index=9 sha=cf678cb3d40cc1d6de5ed4dbe9aae95b5ce7d421\nfetch index=10 sha=fc32d90241979ad9667c5153ad3b4822f9e956c7\nfetch index=11 sha=e0e67558d0e8fe522c9aaa38befad1192f6543c1\nfetch index=12 sha=cc80ee404132ec4e6df47ce9eb56939491a534f0\nfetch index=13 sha=5263ee3612cb652a24f25c26d1f46f2867527dbe\nfetch index=14 sha=f6b463402cd76012e5d53c08e2361640354da5f3\nfetch index=15 sha=a5506ef55122694f7f4922b92c0505030ecbe9fa\nfetch index=16 sha=f8652c06ab58259ee4ef9e2004e320ee2ef43c17\nfetch index=17 sha=e11d03f816d817173b7195c21d90b64c7afb501d\nfetch index=18 sha=73c9b82d22852a46a27fa0d6ea5e2003e82d088b\nfetch index=19 sha=bc43e638df2122b2d97510e8be216ffada87c74e\nfetch index=20 sha=6a5de3fa69e66177f8c2069b4356801ac91199e8\nfetch index=21 sha=ae1a2dda863ab18d97f54cbad9e8ee06155790e4\nfetch index=22 sha=5402567560b043f9ba61aaed9f9849857e6bc3b5\nfetch index=23 sha=31ec4277df38978ecfb5c141659e7e656c438e47\nfetch index=24 sha=d62ce3bd1a216c9e68992b555503ca6f05ba8a9b\nTraceback (most recent call last):\n  File \"<stdin>\", line 24, in <module>\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 639, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 404: Not Found\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"<stdin>\", line 27, in <module>\nRuntimeError: blob fetch failed index=24 sha=d62ce3bd1a216c9e68992b555503ca6f05ba8a9b: <HTTPError 404: 'Not Found'>\n"
+  "head_sha": "306a6e48bd4231d3819caad6e2e8a9bb8974a5bf",
+  "transport_parts": 79,
+  "missing": [
+    {
+      "index": 24,
+      "sha": "d62ce3bd1a216c9e68992b555503ca6f05ba8a9b",
+      "http_status": 404
+    },
+    {
+      "index": 25,
+      "sha": "726dd1613d44574f58dd53b2d9b6a4e866517242",
+      "http_status": 404
+    },
+    {
+      "index": 26,
+      "sha": "dfbe10ff3a433826f00696f0cd652de7a0e45cd7",
+      "http_status": 404
+    },
+    {
+      "index": 27,
+      "sha": "0ba0ad07a687a769f07dbe73fb85f747cb5734f5",
+      "http_status": 404
+    },
+    {
+      "index": 63,
+      "sha": "3007672f22fc171db2def17269b9d3b361cb9975",
+      "http_status": 404
+    },
+    {
+      "index": 64,
+      "sha": "3a6e9d2c342027d12b847c938780d32e90ba2382",
+      "http_status": 404
+    },
+    {
+      "index": 65,
+      "sha": "1d486951aabb221a4d02e67c0d9d18454c1fec1e",
+      "http_status": 404
+    },
+    {
+      "index": 66,
+      "sha": "306d2f1c2adf39cb0d92b8e2dd6f089814394803",
+      "http_status": 404
+    },
+    {
+      "index": 67,
+      "sha": "6849c9c4bd84f8b253632cf8a7c200644b894da4",
+      "http_status": 404
+    },
+    {
+      "index": 68,
+      "sha": "73f687912d14c61891cf99cddb18ad653381098e",
+      "http_status": 404
+    },
+    {
+      "index": 69,
+      "sha": "9d98bd76140b4659d4c0dc623be5c0f2aca905c2",
+      "http_status": 404
+    },
+    {
+      "index": 70,
+      "sha": "acd4369836c5f4ace83afe95f8591f68c88887d4",
+      "http_status": 404
+    },
+    {
+      "index": 71,
+      "sha": "88eb429450c8eb58567dc59f954eb40c39b09b64",
+      "http_status": 404
+    },
+    {
+      "index": 72,
+      "sha": "43404cc4dd960e9f3b5585aab7fb2d8b9f5755b8",
+      "http_status": 404
+    },
+    {
+      "index": 73,
+      "sha": "c5f002f5bbd7227878182145e75948a9dcd2384d",
+      "http_status": 404
+    },
+    {
+      "index": 74,
+      "sha": "d8efdf9a80ada37696b71be635c4712cd53fad0d",
+      "http_status": 404
+    },
+    {
+      "index": 75,
+      "sha": "bba3dccf7c26fa8d6e144b1a475cab18b5c8df4b",
+      "http_status": 404
+    },
+    {
+      "index": 76,
+      "sha": "a598e3deb685013d2e36818a6c76692316e7e7aa",
+      "http_status": 404
+    },
+    {
+      "index": 77,
+      "sha": "7f04dc7dc01bf3c85f619fc111fc6e93a1aed735",
+      "http_status": 404
+    },
+    {
+      "index": 78,
+      "sha": "9a71a5519981337d1ca5c523d86c775d522cbd22",
+      "http_status": 404
+    }
+  ],
+  "invalid": [],
+  "expected_payload_sha256": "f16ca6d03228d0adf29141b9b3952033d7855feba2e159e026584d52e4cd91da",
+  "actual_payload_sha256": null,
+  "archive_bytes": null,
+  "digest_matches": false,
+  "reconstruction_error": null
 }
