@@ -1,0 +1,90 @@
+name: Diagnose v0.6.0 reconstruction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-diagnose.trigger
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Diagnose checksum-pinned blob sequence
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set +e
+          python - <<'PY' > /tmp/v060-diagnose.log 2>&1
+          import base64, hashlib, json, os, re, urllib.request
+          from pathlib import Path
+
+          controller = Path('.github/workflows/apply-v060-blobs.yml').read_text(encoding='utf-8')
+          block = controller.split('blob_shas = [', 1)[1].split(']', 1)[0]
+          shas = re.findall(r'"([0-9a-f]{40})"', block)
+          match = re.search(r'expected = "([0-9a-f]{64})"', controller)
+          expected = match.group(1) if match else None
+          print(f'blob_count={len(shas)} expected={expected}')
+          headers = {
+              'Accept': 'application/vnd.github+json',
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'X-GitHub-Api-Version': '2022-11-28',
+              'User-Agent': 'TsaoSciResearcher-v060-diagnostic',
+          }
+          parts = []
+          for index, sha in enumerate(shas):
+              print(f'fetch index={index} sha={sha}', flush=True)
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/git/blobs/{sha}",
+                  headers=headers,
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as response:
+                      payload = json.load(response)
+              except Exception as exc:
+                  raise RuntimeError(f'blob fetch failed index={index} sha={sha}: {exc!r}') from exc
+              if payload.get('sha') != sha or payload.get('encoding') != 'base64':
+                  raise RuntimeError(f'blob contract mismatch index={index} sha={sha} payload_sha={payload.get("sha")} encoding={payload.get("encoding")}')
+              raw = base64.b64decode(payload['content'], validate=True)
+              try:
+                  parts.append(raw.decode('ascii'))
+              except UnicodeDecodeError as exc:
+                  raise RuntimeError(f'blob is not ASCII transport index={index} sha={sha}') from exc
+          encoded = ''.join(parts).replace('\r', '').replace('\n', '')
+          archive = base64.b64decode(encoded, validate=True)
+          actual = hashlib.sha256(archive).hexdigest()
+          print(f'archive_bytes={len(archive)} actual={actual} expected={expected}')
+          if actual != expected:
+              raise RuntimeError(f'payload digest mismatch actual={actual} expected={expected}')
+          print('RECONSTRUCT_PASS')
+          PY
+          rc=$?
+          export RC="$rc"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          log = Path('/tmp/v060-diagnose.log').read_text(encoding='utf-8', errors='replace')
+          result = {
+              'status': 'PASS' if os.environ['RC'] == '0' else 'FAIL',
+              'return_code': int(os.environ['RC']),
+              'run_id': int(os.environ['GITHUB_RUN_ID']),
+              'attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
+              'head_sha': os.environ['GITHUB_SHA'],
+              'log_tail': log[-12000:],
+          }
+          Path('.github/v060-diagnose-status.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/v060-diagnose-status.json
+          git commit -m 'ci: record v0.6.0 reconstruction diagnosis'
+          git pull --rebase origin main
+          git push origin HEAD:main
