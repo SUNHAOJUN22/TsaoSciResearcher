@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "return_code": 1,
+  "run_id": 30075254444,
+  "attempt": 1,
+  "head_sha": "f66fd92dd7e3319669e3a863ca3dc931b7d37523",
+  "log_tail": "blob_count=64 expected=f16ca6d03228d0adf29141b9b3952033d7855feba2e159e026584d52e4cd91da\nfetch index=0 sha=27c7e49028f82753d4e6e65477687db77750ac22\nTraceback (most recent call last):\n  File \"<stdin>\", line 30, in <module>\n  File \"/usr/lib/python3.12/base64.py\", line 88, in b64decode\n    return binascii.a2b_base64(s, strict_mode=validate)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nbinascii.Error: Only base64 data is allowed\n"
+}
