@@ -1,0 +1,54 @@
+name: Patch observable v0.6.0 decoder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-patch2.trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Patch decoder and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/apply-v060-observable.yml')
+          text = path.read_text(encoding='utf-8')
+          old = 'base64.b64decode(payload["content"], validate=True).decode("ascii")'
+          new = 'base64.b64decode("".join(payload["content"].split()), validate=True).decode("ascii")'
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one decoder expression, found {text.count(old)}')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          rm -f .github/v060-patch2.trigger .github/v060-patch2-status.json
+          rm -f .github/workflows/patch-v060-observable2.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix: normalize GitHub blob Base64 before strict decoding'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Persist patch failure
+        if: ${{ failure() }}
+        shell: bash
+        run: |
+          git reset --hard "$GITHUB_SHA"
+          printf '{\n  "status": "FAIL",\n  "run_id": %s,\n  "attempt": %s,\n  "head_sha": "%s"\n}\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_SHA" > .github/v060-patch2-status.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/v060-patch2-status.json
+          git commit -m 'ci: record v0.6.0 decoder patch failure'
+          git pull --rebase origin main
+          git push origin HEAD:main
