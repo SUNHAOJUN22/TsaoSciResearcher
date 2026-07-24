@@ -1,0 +1,269 @@
+name: Apply verified v0.6.0 deep hardening once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-blobs.trigger
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  apply:
+    name: reconstruct-test-and-publish-v060
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reconstruct checksum-pinned payload from Git blobs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64
+          import hashlib
+          import io
+          import json
+          import os
+          import stat
+          import urllib.request
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          blob_shas = [
+              "27c7e49028f82753d4e6e65477687db77750ac22",
+              "4a3d9b41d2c146e4900b864eeacb2d1b199950da",
+              "e56498b14dfe8314316a2311602638c6710b2331",
+              "ef80084f77bf04263bfd21354b01ae4b521606d7",
+              "62d43450e432f4bcf09a5caad5d0e5dc7e69f68a",
+              "e715fec2fba961c85d0520f88d08e5b65d16ebdf",
+              "4fc8c2ed06cf54e7791d0297e2ee0ad5aceb335a",
+              "7dc29fa16d320423e2aa7b4f20dde39f6451e6d7",
+              "6cd4573482204c70929246373ccf966166ed79db",
+              "cf678cb3d40cc1d6de5ed4dbe9aae95b5ce7d421",
+              "fc32d90241979ad9667c5153ad3b4822f9e956c7",
+              "e0e67558d0e8fe522c9aaa38befad1192f6543c1",
+              "cc80ee404132ec4e6df47ce9eb56939491a534f0",
+              "5263ee3612cb652a24f25c26d1f46f2867527dbe",
+              "f6b463402cd76012e5d53c08e2361640354da5f3",
+              "a5506ef55122694f7f4922b92c0505030ecbe9fa",
+              "f8652c06ab58259ee4ef9e2004e320ee2ef43c17",
+              "e11d03f816d817173b7195c21d90b64c7afb501d",
+              "73c9b82d22852a46a27fa0d6ea5e2003e82d088b",
+              "bc43e638df2122b2d97510e8be216ffada87c74e",
+              "6a5de3fa69e66177f8c2069b4356801ac91199e8",
+              "ae1a2dda863ab18d97f54cbad9e8ee06155790e4",
+              "5402567560b043f9ba61aaed9f9849857e6bc3b5",
+              "31ec4277df38978ecfb5c141659e7e656c438e47",
+              "d62ce3bd1a216c9e68992b555503ca6f05ba8a9b",
+              "726dd1613d44574f58dd53b2d9b6a4e866517242",
+              "dfbe10ff3a433826f00696f0cd652de7a0e45cd7",
+              "0ba0ad07a687a769f07dbe73fb85f747cb5734f5",
+              "8d08667179aad6018e9085824785dcfcc4a281d5",
+              "a41461cc150947df8b25d7f8cddb02adcba71bb7",
+              "197e044730849705dc3a9fcee94659e641b7f1fe",
+              "7779977a12c7348d9320d68f6a8b86c4e2d53eb9",
+              "43cf09cbdcd66626bd1324f78533c494907c3338",
+              "1ce784e2ff95af4f760f08a7e451337529f21320",
+              "eeb80b2e7d5800cbd7465da2936afc897e1f27dc",
+              "5a101383b540ea63995f0abb2e7bcdb4b1c87e93",
+              "cec1331c807bc623d34cab3dd8cc6a9372ddb44f",
+              "4b991725f5202a44b9cd60db1ca6b2e654454177",
+              "a679d6ce10b8707eeddcccf4ccdeca4bbcf71d84",
+              "80d7b04ef94d5a3828b404b96f3845cf9d8ae6e4",
+              "831c6996d71dfb6cbab6f0c82a46379dcc29a88f",
+              "213bd941532af30d06a248c4e86154fe1ba5f41a",
+              "0082e30c9025588f117ff26ae1164eb8cf7588a9",
+              "c5e15af17dd6d8b7c747b7ba6a683f6a47af3e1f",
+              "6d7aab3773221d3a3a40fcc65165db84bd2b15fa",
+              "0f92695656c9fa9423e5507386e94829eb295149",
+              "21c6d3344186b4fdd26729072d1e6917849b294f",
+              "df3e7b7bab09a010c2edafa460fc04c218774e93",
+              "c362288ca7e99dd156bd3944058de6dd61a6a09c",
+              "674d54911da11d9904e9dd6ef92e884e51525191",
+              "4d124f3053e068ca44d5af9c6d8126468be1fe30",
+              "995697be3c7590fac6152cf78395241360174ff5",
+              "2d2d12b570eced8750462f9c3f629248283ffad4",
+              "b26229c4297307a7cd9f92d9ba7be1f0bc20f839",
+              "991835f4876743e2aae5d1a1e07ee5dfefd34b5f",
+              "80a8f29a84a0dab186475c94a80ae58851e784fe",
+              "45c519a6e6c01e6a560b2f7ec4fdf0617b1761ff",
+              "d9b18aa1ac7992adff30ec46bf728dd7140a00fb",
+              "2a619917efed3b84787520fbbe0f25aed4ba1bce",
+              "2731769f1025891b2e5c3e880aa7fdd371528dd3",
+              "736b287626103714b9c6bcab1d1c483e8e651f9f",
+              "0b84b48ef394fc7e4c6744bbfb2c5d5459ded1d6",
+              "c17720547ea501bc189482f131e680f972872a8c",
+              "9dcbf791d6d05d4c97c366e3f16f696620625e7c",
+          ]
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TsaoSciResearcher-v060-blob-loader",
+          }
+          encoded_parts: list[str] = []
+          for index, sha in enumerate(blob_shas):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repository}/git/blobs/{sha}", headers=headers
+              )
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  payload = json.load(response)
+              if payload.get("sha") != sha or payload.get("encoding") != "base64":
+                  raise SystemExit(f"blob contract mismatch at {index}: {sha}")
+              raw = base64.b64decode(payload["content"], validate=True)
+              encoded_parts.append(raw.decode("ascii"))
+
+          encoded = "".join(encoded_parts).replace("\r", "").replace("\n", "")
+          archive = base64.b64decode(encoded, validate=True)
+          digest = hashlib.sha256(archive).hexdigest()
+          expected = "f16ca6d03228d0adf29141b9b3952033d7855feba2e159e026584d52e4cd91da"
+          if digest != expected:
+              raise SystemExit(f"payload SHA-256 mismatch: {digest}")
+
+          destination = Path("/tmp/tsao-v060")
+          destination.mkdir(parents=True, exist_ok=True)
+          count = 0
+          total = 0
+          with zipfile.ZipFile(io.BytesIO(archive)) as package:
+              for info in package.infolist():
+                  name = PurePosixPath(info.filename)
+                  if info.is_dir() or not info.filename.startswith("payload/"):
+                      continue
+                  relative = PurePosixPath(*name.parts[1:])
+                  if not relative.parts or relative.is_absolute() or ".." in relative.parts:
+                      raise SystemExit(f"unsafe archive path: {info.filename}")
+                  mode = info.external_attr >> 16
+                  if stat.S_ISLNK(mode):
+                      raise SystemExit(f"symbolic link forbidden: {info.filename}")
+                  count += 1
+                  total += info.file_size
+                  if count > 500 or total > 8_000_000:
+                      raise SystemExit("payload safety limit exceeded")
+                  target = destination.joinpath(*relative.parts)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(package.read(info))
+                  if mode & stat.S_IXUSR:
+                      target.chmod(target.stat().st_mode | stat.S_IXUSR)
+          if count < 50:
+              raise SystemExit(f"payload unexpectedly small: {count} files")
+          print(f"verified payload sha256={digest} files={count} bytes={total}")
+          PY
+
+      - name: Apply payload and remove all transport controls
+        shell: bash
+        run: |
+          cp -a /tmp/tsao-v060/. .
+          rm -rf .github/v060-payload .github/v060-payload4k-test
+          rm -f .github/v060-deep.trigger .github/v060-blobs.trigger
+          rm -f .github/workflows/apply-v060-deep.yml .github/workflows/apply-v060-blobs.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Repository, schema, evidence and documentation gates
+        shell: bash
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python -m tsao_researcher quality examples/scientific-quality-check.json
+          mkdocs build --strict
+
+      - name: Full and order-independent regression
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static, type, security and dependency gates
+        shell: bash
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip_audit -r requirements-ci.lock
+
+      - name: Mutation, performance and deterministic distribution
+        shell: bash
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          rm -rf dist-a dist-b wheelhouse
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          VERSION="$(tr -d '\r\n' < VERSION)"
+          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
+          python -m build --sdist --wheel --outdir wheelhouse
+          python scripts/validate_release.py
+          python scripts/validate_distribution.py wheelhouse
+
+      - name: Upload v0.6.0 validation artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-v060-deep-validation-${{ github.run_id }}
+          path: |
+            artifacts
+            dist-a
+            wheelhouse
+            docs/VALIDATION_EVIDENCE.json
+            docs/SBOM.cdx.json
+            docs/QUALITY_HISTORY.json
+            docs/test-dashboard.html
+            docs/research-quality-dashboard.html
+            docs/engineering-audit-report.pdf
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish validated v0.6.0 directly to main
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No validated changes to publish.'
+            exit 1
+          fi
+          git commit -m 'feat: add v0.6.0 reproducibility and release hardening'
+          git push origin HEAD:main
