@@ -53,7 +53,8 @@ jobs:
                   raise RuntimeError(f'blob fetch failed index={index} sha={sha}: {exc!r}') from exc
               if payload.get('sha') != sha or payload.get('encoding') != 'base64':
                   raise RuntimeError(f'blob contract mismatch index={index} sha={sha} payload_sha={payload.get("sha")} encoding={payload.get("encoding")}')
-              raw = base64.b64decode(payload['content'], validate=True)
+              compact = ''.join(payload['content'].split())
+              raw = base64.b64decode(compact, validate=True)
               try:
                   parts.append(raw.decode('ascii'))
               except UnicodeDecodeError as exc:
