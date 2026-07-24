@@ -1,0 +1,206 @@
+name: Apply v0.6.0 deep hardening once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/v060-deep.trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-v060-deep
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  apply-validate-publish:
+    name: apply-validate-and-publish-main
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply checksum-verified delta and remove transport controls
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import os
+          import stat
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          archive_path = root / ".github/v060-delta.zip"
+          archive_path.write_bytes(base64.b64decode("".join(path.read_text(encoding="ascii") for path in sorted((root / ".github/v060-payload").glob("part-*"))), validate=True))
+          with zipfile.ZipFile(archive_path) as archive:
+              names = [info.filename for info in archive.infolist()]
+              if len(names) != len(set(names)):
+                  raise SystemExit("duplicate payload member")
+              if "manifest.json" not in names:
+                  raise SystemExit("payload manifest is missing")
+              manifest = json.loads(archive.read("manifest.json"))
+              rows = manifest.get("files") if isinstance(manifest, dict) else None
+              if manifest.get("schema_version") != "1.0" or not isinstance(rows, list):
+                  raise SystemExit("payload manifest contract is invalid")
+              expected_members = {"manifest.json"}
+              validated = []
+              for row in rows:
+                  if not isinstance(row, dict):
+                      raise SystemExit("payload row is not an object")
+                  relative = str(row.get("path", ""))
+                  pure = PurePosixPath(relative)
+                  if not relative or pure.is_absolute() or any(part in {"", ".", ".."} for part in pure.parts):
+                      raise SystemExit(f"unsafe payload path: {relative}")
+                  member = "payload/" + pure.as_posix()
+                  expected_members.add(member)
+                  info = archive.getinfo(member)
+                  if info.is_dir() or info.file_size > 64 * 1024 * 1024:
+                      raise SystemExit(f"invalid payload member: {member}")
+                  mode = (info.external_attr >> 16) & 0o170000
+                  if mode == stat.S_IFLNK:
+                      raise SystemExit(f"symbolic link payload member: {member}")
+                  payload = archive.read(member)
+                  if len(payload) != int(row.get("size", -1)):
+                      raise SystemExit(f"payload size mismatch: {relative}")
+                  if hashlib.sha256(payload).hexdigest() != row.get("sha256"):
+                      raise SystemExit(f"payload checksum mismatch: {relative}")
+                  target = (root / pure.as_posix()).resolve()
+                  if not target.is_relative_to(root):
+                      raise SystemExit(f"payload path escaped repository: {relative}")
+                  validated.append((target, payload, str(row.get("mode"))))
+              if set(names) != expected_members:
+                  raise SystemExit("payload member inventory differs from manifest")
+              if len(validated) > 500:
+                  raise SystemExit("payload contains too many files")
+              for target, payload, mode in validated:
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(payload)
+                  target.chmod(0o755 if mode == "100755" else 0o644)
+          archive_path.unlink()
+          for relative in (
+              ".github/workflows/apply-v060-deep.yml",
+              ".github/v060-deep.trigger",
+          ):
+              path = root / relative
+              if path.exists():
+                  path.unlink()
+          payload_dir = root / ".github/v060-payload"
+          if payload_dir.exists():
+              for path in payload_dir.glob("part-*"):
+                  path.unlink()
+              payload_dir.rmdir()
+          PY
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact direct toolchain and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Repository metadata schema and generated-artifact gates
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          mkdocs build --strict
+
+      - name: Complete regression and isolated coverage
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static type source and dependency security
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+
+      - name: Mutation performance quality history and attested evidence
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          python scripts/build_publication_attestation.py
+
+      - name: Deterministic source and Python distribution validation
+        run: |
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+
+      - name: Upload v0.6.0 validation evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: v060-deep-validation-${{ github.run_id }}
+          path: |
+            artifacts
+            docs/VALIDATION_EVIDENCE.json
+            docs/QUALITY_HISTORY.json
+            docs/SBOM.cdx.json
+            docs/engineering-audit-report.pdf
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
+            SHA256SUMS
+            dist-a
+            dist-python
+            site
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish verified v0.6.0 directly to main
+        shell: bash
+        run: |
+          rm -rf artifacts dist-a dist-b dist-python site build .coverage .pytest_cache .mypy_cache .ruff_cache
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: add v0.6.0 reproducibility and release hardening'
+          git pull --rebase origin main
+          git push origin HEAD:main
