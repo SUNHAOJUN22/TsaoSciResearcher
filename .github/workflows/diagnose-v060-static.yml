@@ -56,18 +56,20 @@ jobs:
 
           history = Path('scripts/record_quality_history.py')
           text = history.read_text(encoding='utf-8')
-          old = '''    if not all(isinstance(item, dict) for item in (coverage, mutation, tests, performance)):
-              raise ValueError("quality-current sections must be objects")
-          '''
-          new = '''    if not isinstance(coverage, dict):
-              raise ValueError("quality-current coverage must be an object")
-          if not isinstance(mutation, dict):
-              raise ValueError("quality-current mutation must be an object")
-          if not isinstance(tests, dict):
-              raise ValueError("quality-current tests must be an object")
-          if not isinstance(performance, dict):
-              raise ValueError("quality-current performance must be an object")
-          '''
+          old = (
+              '    if not all(isinstance(item, dict) for item in (coverage, mutation, tests, performance)):\n'
+              '        raise ValueError("quality-current sections must be objects")\n'
+          )
+          new = (
+              '    if not isinstance(coverage, dict):\n'
+              '        raise ValueError("quality-current coverage must be an object")\n'
+              '    if not isinstance(mutation, dict):\n'
+              '        raise ValueError("quality-current mutation must be an object")\n'
+              '    if not isinstance(tests, dict):\n'
+              '        raise ValueError("quality-current tests must be an object")\n'
+              '    if not isinstance(performance, dict):\n'
+              '        raise ValueError("quality-current performance must be an object")\n'
+          )
           if old not in text:
               raise SystemExit('record_quality_history typing anchor not found')
           history.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
@@ -128,10 +130,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          BODY="$(tail -n 220 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
+          if [ -f /tmp/v060-static-diagnostic.txt ]; then
+            BODY="$(tail -n 220 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
+          else
+            BODY='diagnostic did not reach the static command loop'
+          fi
           gh issue comment "$ISSUE_NUMBER" --body "\`\`\`text
           ${BODY}
           \`\`\`"
-          if grep -q '^STATIC_DIAGNOSTIC=PASS$' /tmp/v060-static-diagnostic.txt; then
+          if grep -q '^STATIC_DIAGNOSTIC=PASS$' /tmp/v060-static-diagnostic.txt 2>/dev/null; then
             gh issue close "$ISSUE_NUMBER" --reason completed
           fi
