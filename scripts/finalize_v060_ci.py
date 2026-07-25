@@ -107,6 +107,46 @@ def _replace_required(relative: str, old: str, new: str) -> None:
     path.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
 
 
+def _ensure_capsule_tree_digest_test() -> None:
+    path = ROOT / "tests/test_receipts_capsules.py"
+    text = path.read_text(encoding="utf-8")
+    marker = "def test_capsule_detects_tree_digest_tampering_with_consistent_identifier"
+    if marker in text:
+        return
+    test = '''
+
+
+def test_capsule_detects_tree_digest_tampering_with_consistent_identifier(
+    tmp_path: Path,
+) -> None:
+    import hashlib
+
+    from tsao_researcher.io import canonical_json
+
+    project = _project(tmp_path)
+    original = tmp_path / "tree-original.zip"
+    tampered = tmp_path / "tree-tampered.zip"
+    export_capsule(project, original, mode="full")
+    with zipfile.ZipFile(original) as source, zipfile.ZipFile(tampered, "w") as target:
+        for info in source.infolist():
+            payload = source.read(info.filename)
+            if info.filename == "capsule/manifest.json":
+                manifest = json.loads(payload)
+                manifest["tree_sha256"] = "0" * 64
+                identity = dict(manifest)
+                identity.pop("capsule_id", None)
+                manifest["capsule_id"] = (
+                    "CAP-"
+                    + hashlib.sha256(canonical_json(identity).encode("utf-8")).hexdigest()[:24]
+                )
+                payload = (canonical_json(manifest) + "\\n").encode("utf-8")
+            target.writestr(info, payload)
+    with pytest.raises(IntegrityError, match="tree digest mismatch"):
+        verify_capsule(tampered)
+'''
+    path.write_text(text.rstrip() + test + "\n", encoding="utf-8", newline="\n")
+
+
 def _cleanup() -> None:
     report = ROOT / "scripts/build_engineering_report.py"
     if report.is_file():
@@ -128,6 +168,7 @@ def _cleanup() -> None:
         receipt_anchor,
         receipt_anchor + "  # fmt: skip",
     )
+    _ensure_capsule_tree_digest_test()
 
     github = ROOT / ".github"
     for path in sorted(github.rglob("*"), key=lambda item: len(item.parts), reverse=True):
