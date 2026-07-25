@@ -13,7 +13,7 @@ jobs:
     if: >-
       github.actor == 'SUNHAOJUN22' &&
       github.event.issue.title == '[TSR] finalize README visual atlas' &&
-      github.event.comment.body == '[TSR] diagnose visual static command v2'
+      github.event.comment.body == '[TSR] diagnose visual static command v3'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -79,7 +79,8 @@ jobs:
           gate ruff-check python -m ruff check scripts tsao_researcher tests
           gate mypy python -m mypy scripts tsao_researcher
           gate bandit python -m bandit -q -lll -r scripts tsao_researcher
-          gate pip-audit python -m pip_audit --strict --skip-editable
+          gate resolved-lock bash -c 'python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock'
+          gate pip-audit python -m pip_audit --strict -r artifacts/resolved-environment.lock
           gate mutation python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           gate performance python scripts/performance_smoke.py --json-out artifacts/performance.json
           gate quality-baseline python scripts/check_quality_baseline.py
