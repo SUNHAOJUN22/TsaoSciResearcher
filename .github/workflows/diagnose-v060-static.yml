@@ -61,6 +61,7 @@ jobs:
 
           commands = [
               "python -m ruff format scripts tsao_researcher tests",
+              "python -m ruff check --fix scripts tsao_researcher tests",
               "python -m ruff format --check scripts tsao_researcher tests",
               "python -m ruff check scripts tsao_researcher tests",
               "python -m mypy scripts tsao_researcher",
@@ -74,10 +75,10 @@ jobs:
               proc = subprocess.run(command, shell=True, text=True, capture_output=True)
               lines.append(f"[{index:02d}] rc={proc.returncode} {command}")
               if proc.stdout:
-                  lines.extend(proc.stdout.rstrip().splitlines()[-50:])
+                  lines.extend(proc.stdout.rstrip().splitlines()[-70:])
               if proc.stderr:
-                  lines.extend(proc.stderr.rstrip().splitlines()[-50:])
-              if proc.returncode:
+                  lines.extend(proc.stderr.rstrip().splitlines()[-70:])
+              if proc.returncode and "--fix" not in command:
                   status = proc.returncode
                   lines.append("STATIC_DIAGNOSTIC=FAIL")
                   break
@@ -93,7 +94,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          BODY="$(tail -n 110 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
+          BODY="$(tail -n 150 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
           gh issue comment "$ISSUE_NUMBER" --body "\`\`\`text
           ${BODY}
           \`\`\`"
