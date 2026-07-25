@@ -23,7 +23,9 @@ EXCLUDED_DIRS = {
     "__pycache__",
     "build",
     "dist",
+    "site",
 }
+GENERATED_PREFIXES = ("dist-", "dist_", "build-", "build_", "release-", "release_")
 EXCLUDED_FILES = {"SHA256SUMS"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".sha256"}
 DEFERRED_COMPOSITE = (
@@ -37,6 +39,8 @@ def source_files(root: Path = ROOT) -> list[Path]:
     for path in root.rglob("*"):
         relative = path.relative_to(root)
         if any(part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts):
+            continue
+        if relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES):
             continue
         if path.is_symlink():
             raise ValueError(f"source tree contains symbolic link: {relative.as_posix()}")

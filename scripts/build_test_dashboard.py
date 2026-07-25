@@ -55,7 +55,7 @@ def _state(status: str) -> str:
     folded = status.strip().upper()
     if folded in {"PASS", "PASSED"} or folded.endswith(" PASS") or "/" in folded:
         return "PASS"
-    if folded in {"NOT_RUN", "NOT RUN", "PENDING", "UNKNOWN", "N/A"}:
+    if folded in {"NOT_RUN", "NOT RUN", "PENDING", "UNKNOWN", "N/A", "PARTIAL", "LOCAL_PREFLIGHT"}:
         return "NOT_RUN"
     return "FAIL"
 

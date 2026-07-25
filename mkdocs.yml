@@ -1,0 +1,16 @@
+site_name: TsaoSciResearcher
+site_description: Evidence-first scientific research control layer
+repo_url: https://github.com/SUNHAOJUN22/TsaoSciResearcher
+strict: true
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md
+  - Architecture: ARCHITECTURE.md
+  - CLI: CLI.md
+  - Validation: VALIDATION.md
+  - Scientific quality: SCIENTIFIC_QUALITY.md
+  - Reproducibility capsule: REPRODUCIBILITY_CAPSULE.md
+  - Execution receipts: EXECUTION_RECEIPTS.md
+  - Supply chain: SUPPLY_CHAIN.md
+  - Release process: RELEASE_PROCESS.md

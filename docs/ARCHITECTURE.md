@@ -1,55 +1,36 @@
 # Architecture
 
-TsaoSciResearcher v0.5.2 separates scientific policy, deterministic runtime services and external execution. The repository is a real source tree: no bootstrap payload or self-modifying workflow is required to install or run it.
+TsaoSciResearcher v0.6.0 separates scientific policy, deterministic runtime services, external execution evidence and final human acceptance.
 
 ```mermaid
 flowchart TD
-    U[Research request] --> N[Unicode NFKC normalization]
-    N --> R[Cached bilingual router
-positive + negative semantics]
-    R --> W[One primary workflow]
-    W --> C[Machine workflow contract]
-    C --> G[Entry / blocking / completion gates]
-    G --> K[340 v2 contracts
-322 named catalog + 18 runtime]
-    K --> D[7 domain packs]
-    D --> S[Hash-linked project state]
-    S --> V{Validation and approval}
-    V -->|research artifact| A[Traceable artifact]
-    V -->|real computation| H[Guarded computation handoff]
-    H --> E[External solver / laboratory / HPC]
-    E --> P[Checksummed execution artifacts]
-    P --> V
+  U[Research request] --> R[Deterministic bilingual router]
+  R --> W[One primary workflow and gates]
+  W --> C[340 capability contracts]
+  C --> S[Hash-linked project state]
+  S --> H[Guarded computation handoff]
+  H --> X[External engine or laboratory]
+  X --> E[Checksum-verified execution receipt]
+  E --> K[Claim and evidence controls]
+  K --> P[Reproducibility capsule]
+  P --> V[Software validation and external attestation]
+  V --> A{Qualified scientific acceptance}
 ```
 
-## Runtime boundaries
+## Runtime modules
 
-- `tsao_researcher/router.py` — cached deterministic routing, negative-intent handling, bounded input and reproducible tie-breaking.
-- `tsao_researcher/capabilities.py` — validated 340-record catalog, normalized search index and defensive cached reads.
-- `tsao_researcher/state.py` — one canonical design-compatible project layout, atomic writes, bounded locks, decisions/approvals logs and SHA-256 event chaining.
-- `tsao_researcher/handoff.py` — regular-file inputs, path containment, streaming checksums, explicit verification requirements and atomic registration in project/artifact state.
-- `tsao_researcher/io.py` — finite JSON, bounded reads, append-only JSONL, atomic replacement and lock recovery.
-- `scripts/` — compatibility APIs, evidence/claim validators, installer, repository audit, tests, performance and deterministic release tooling.
+- `router.py` and `capabilities.py`: bounded deterministic routing and capability discovery.
+- `state.py`: atomic project lifecycle, registries, approvals and SHA-256 event chain.
+- `handoff.py`: contained, checksummed computation preparation; never an execution claim.
+- `receipts.py`: external execution provenance with handoff identity, timestamps and output hashes.
+- `capsule.py`: deterministic metadata/full ZIPs with per-file and tree integrity.
+- `scientific_quality.py`: measurement, structure-property, causal and evidence-traceability guards.
+- `version.py`: one version source in a checkout and installed metadata in a distribution.
 
-## Contract layers
+## Validation and supply chain
 
-1. Human-readable method policy: `workflows/*/WORKFLOW.md`.
-2. Machine workflow contract: `workflows/*/workflow.yaml.json`.
-3. Blocking and completion gates: `workflows/*/gates.yaml`.
-4. Input/output contracts: `schemas/` and `schemas/v2/`.
-5. Capability contracts: 322 named catalog contracts plus 18 runtime/core contracts in `capabilities/v2/capabilities.json`.
-6. Domain-specific method and validation guidance: `domain-packs/`.
+Permanent CI is read-only and idempotent. Manual audit and nightly health runs do not mutate the repository. Tag release is the only publication workflow with content write permission besides single-main branch governance. Coverage, order independence, mutation, performance, SBOM, vulnerability audit, docs, source ZIP, wheel and sdist are all gated.
 
-## Native, orchestrated and external execution
+## Truth boundaries
 
-- **Native**: routing, capability discovery, project state, schemas, validators, installation, packaging and audit.
-- **Orchestrated**: retrieval, statistical analysis, plotting and document generation through tools available to the active agent.
-- **External execution**: DFT, molecular dynamics, FEM, CFD, Aspen/process simulation, laboratory instruments and HPC jobs. These require a guarded handoff and real execution artifacts; an unexecuted plan is never labelled completed.
-
-## Performance model
-
-Rules and catalogs are cached by file identity; regexes and search tokens are built once; JSON and checksum operations are bounded and streamed; project mutations are atomic. CI separates compatibility, full regression, order independence, static/security, mutation and performance/release gates so expensive checks are not duplicated across every operating-system matrix cell.
-
-## Branch governance
-
-`main` is the only durable branch. After a verified merge, `.github/workflows/cleanup-branches.yml` closes obsolete pull requests, deletes every non-`main` branch through the GitHub API and verifies the final branch set.
+Native software controls verify internal structure and provenance. External calculations and experiments require guarded handoff plus an execution receipt. Scientific acceptance remains a separate qualified decision.

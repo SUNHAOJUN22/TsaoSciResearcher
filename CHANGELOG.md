@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 - 2026-07-24
+
+- Added deterministic metadata/full reproducibility capsules with archive-safety and tamper verification.
+- Added external execution receipts bound to guarded handoffs, timestamps and output SHA-256 hashes.
+- Upgraded validation evidence to schema 1.6 with source-tree digest, lock digest and external commit attestation.
+- Added line/branch coverage baselines, 18 critical mutation checks and quality evidence artifacts.
+- Added deterministic CycloneDX 1.6 SBOM, resolved-environment vulnerability audit and release checksums.
+- Added source ZIP, wheel, sdist, typed-package and isolated-install validation.
+- Added permanent idempotent CI, manual audit, weekly health and tag release workflows.
+- Expanded security, contribution, architecture, CLI, supply-chain and release documentation.
+
+
 ## 0.5.2 - 2026-07-22
 
 - Replace 164 generic domain-slot slugs with the exact named contracts from the 322-entry AI-for-Science catalog while preserving stable internal IDs and delegated-execution boundaries.

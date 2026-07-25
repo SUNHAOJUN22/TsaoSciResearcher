@@ -1,4 +1,4 @@
-"""Command-line entry point for the v2 runtime."""
+"""Command-line entry point for the evidence-first runtime."""
 
 from __future__ import annotations
 
@@ -9,18 +9,15 @@ from pathlib import Path
 from typing import Any
 
 from .capabilities import search_capabilities
+from .capsule import export_capsule, verify_capsule
+from .receipts import record_receipt, verify_receipts
 from .router import route
 from .scientific_quality import evaluate_quality
 from .state import RESEARCH_TYPES, initialize, transition, verify
+from .version import __version__
 
 
 def _emit(value: Any) -> None:
-    """Write JSON without assuming the terminal supports Unicode.
-
-    Windows runners and legacy consoles may expose a non-UTF-8 stdout encoding.
-    Preserve readable Unicode where possible and fall back to JSON escapes rather
-    than failing an otherwise successful command.
-    """
     payload = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True)
     try:
         sys.stdout.write(payload + "\n")
@@ -38,6 +35,7 @@ def _load_quality_request(path: str) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="python -m tsao_researcher")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     route_parser = sub.add_parser("route", help="route a scientific task")
@@ -65,8 +63,34 @@ def main() -> None:
     transition_parser.add_argument("--reason", required=True)
     transition_parser.add_argument("--approval", action="append", default=[])
 
-    verify_parser = sub.add_parser("verify", help="verify the project event chain")
+    verify_parser = sub.add_parser("verify", help="verify the project event chain and registries")
     verify_parser.add_argument("project")
+
+    receipt_parser = sub.add_parser("receipt", help="record or verify external execution receipts")
+    receipt_sub = receipt_parser.add_subparsers(dest="receipt_command", required=True)
+    receipt_record = receipt_sub.add_parser("record", help="record user-supplied execution evidence")
+    receipt_record.add_argument("project")
+    receipt_record.add_argument("--handoff", required=True)
+    receipt_record.add_argument("--engine", required=True)
+    receipt_record.add_argument("--engine-version", default="")
+    receipt_record.add_argument("--command", dest="command_vector", action="append", required=True)
+    receipt_record.add_argument("--exit-code", type=int, required=True)
+    receipt_record.add_argument("--output", action="append", default=[])
+    receipt_record.add_argument("--started-at", required=True)
+    receipt_record.add_argument("--finished-at", required=True)
+    receipt_record.add_argument("--environment", action="append", default=[])
+    receipt_record.add_argument("--notes", default="")
+    receipt_verify = receipt_sub.add_parser("verify", help="verify receipt records and output hashes")
+    receipt_verify.add_argument("project")
+
+    capsule_parser = sub.add_parser("capsule", help="export or verify a reproducibility capsule")
+    capsule_sub = capsule_parser.add_subparsers(dest="capsule_command", required=True)
+    capsule_export = capsule_sub.add_parser("export", help="export project state to a deterministic ZIP")
+    capsule_export.add_argument("project")
+    capsule_export.add_argument("--output", required=True)
+    capsule_export.add_argument("--mode", choices=["metadata", "full"], default="metadata")
+    capsule_verify = capsule_sub.add_parser("verify", help="verify a reproducibility capsule")
+    capsule_verify.add_argument("capsule")
 
     args = parser.parse_args()
     if args.command == "route":
@@ -99,6 +123,28 @@ def main() -> None:
         _emit(transition(args.project, args.state, args.reason, approvals=args.approval))
     elif args.command == "verify":
         _emit(verify(args.project))
+    elif args.command == "receipt" and args.receipt_command == "record":
+        _emit(
+            record_receipt(
+                args.project,
+                args.handoff,
+                args.engine,
+                args.command_vector,
+                args.exit_code,
+                args.output,
+                args.started_at,
+                args.finished_at,
+                engine_version=args.engine_version,
+                environment=args.environment,
+                notes=args.notes,
+            )
+        )
+    elif args.command == "receipt" and args.receipt_command == "verify":
+        _emit(verify_receipts(args.project))
+    elif args.command == "capsule" and args.capsule_command == "export":
+        _emit(export_capsule(args.project, args.output, mode=args.mode))
+    elif args.command == "capsule" and args.capsule_command == "verify":
+        _emit(verify_capsule(args.capsule))
 
 
 if __name__ == "__main__":

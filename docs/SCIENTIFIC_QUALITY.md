@@ -1,37 +1,31 @@
-# Executable scientific quality guards
+# Executable scientific-quality guards
 
-TsaoSciResearcher 0.5.3 adds three deterministic, host-independent checks. They are deliberately narrow: they prevent missing boundaries and unsupported wording, but they do not decide whether the underlying scientific evidence is true.
+TsaoSciResearcher 0.6.0 provides four deterministic, host-independent controls. They constrain operational completeness and claim strength; they do not decide whether the underlying science is true.
 
 ## Measurement Boundary
 
-Requires an explicit measurand, method, sample, conditions, unit, calibration/reference and uncertainty. Missing calibration or uncertainty blocks the result; missing applicability or exclusions produces a warning.
+Requires the measurand, method, sample, conditions, unit, calibration/reference, uncertainty, applicability, exclusions, replication, data reduction, detection limit and traceability.
 
-## Structure-Property Planner
+## Structure–Property Planner
 
-Requires a three-stage chain:
-
-```text
-measured structure -> measurable mediator -> target property
-```
-
-This prevents a direct jump from a structural observation to a performance claim. The planner records evidence classes, alternative explanations and a testable prediction.
+Records processing/intervention, structure, measurable mediator, target response, evidence, confounders, alternative explanations, validation strategy, uncertainty, scale bridge, statistical basis and conservation constraints.
 
 ## Causality Guard
 
-Compares claim wording with the declared design. Causal wording is blocked when the record is observational and does not address confounding or intervention. Mechanism and uncertainty omissions are reported independently.
+Compares English or Chinese causal wording with the declared design. Observational evidence cannot silently become an intervention-supported causal conclusion. Confounding, temporal order, replication, mechanism testing and uncertainty are represented separately.
 
-## CLI
+## Evidence Traceability
+
+Links claim IDs to evidence IDs, source locators, roles and uncertainty. A claim that an external task completed is blocked unless execution receipts are present.
+
+## CLI and visual evidence
 
 ```bash
 python -m tsao_researcher quality examples/scientific-quality-check.json
 ```
 
-The output is JSON with `PASS`, `WARN` or `BLOCK`, stable finding codes and machine-readable details.
-
-## Visual verification
-
 - [`research-quality-dashboard.html`](research-quality-dashboard.html)
 - [`research-quality-dashboard.svg`](research-quality-dashboard.svg)
 - [`engineering-audit-report.pdf`](engineering-audit-report.pdf)
 
-These artifacts are generated and checked in CI. They are demonstrations of software guard behavior, not approval of a scientific conclusion.
+PASS/WARN/BLOCK results demonstrate software guard behavior, not scientific approval.

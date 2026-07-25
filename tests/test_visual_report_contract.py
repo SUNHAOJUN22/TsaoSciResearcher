@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from scripts import build_engineering_report, build_research_quality_dashboard
+from scripts import build_engineering_report, build_research_quality_dashboard, build_validation_evidence
 
 
 def test_scientific_quality_json_is_object_contract() -> None:
@@ -27,8 +27,27 @@ def test_engineering_report_consumes_quality_contract() -> None:
 
 
 def test_current_tree_report_uses_current_tree_wording() -> None:
-    expected = build_engineering_report.build()
+    evidence = build_validation_evidence.build(
+        "1" * 40,
+        "2" * 40,
+        123,
+        2,
+        "2026-07-24",
+        attested=True,
+    )
+    expected = build_engineering_report._pdf(
+        [
+            build_engineering_report._page_one(evidence),
+            build_engineering_report._page_two(evidence),
+            build_engineering_report._page_four(evidence),
+        ]
+    )
     assert b"Current-tree full integration" in expected
     assert b"Validated source tree" in expected
-    assert b"current end-to-end CI remains NOT RUN" not in expected
-    assert b"not a fresh current-tree run" not in expected
+    assert b"NOT RUN" not in expected
+
+
+def test_checked_in_preflight_report_discloses_scope() -> None:
+    expected = build_engineering_report.build()
+    assert b"Scoped software validation matrix" in expected
+    assert b"Current-tree full integration" not in expected

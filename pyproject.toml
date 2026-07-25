@@ -4,18 +4,48 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tsao-sci-researcher"
-version = "0.5.3"
-description = "Evidence-first full-lifecycle scientific research platform"
+version = "0.6.0"
+description = "Evidence-first full-lifecycle scientific research control layer"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [{name = "SUNHAOJUN22"}]
+keywords = [
+  "scientific-research",
+  "reproducibility",
+  "evidence-traceability",
+  "research-workflow",
+  "materials-science",
+  "ai-for-science",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed",
+]
 dependencies = ["PyYAML>=6.0,<7", "jsonschema>=4.18,<5"]
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.7,<4", "numpy>=1.24,<3"]
-test = ["pytest>=8,<10", "hypothesis>=6.100,<7"]
-quality = ["ruff>=0.9,<1", "mypy>=1.10,<2", "bandit>=1.7,<2", "types-PyYAML>=6,<7", "types-jsonschema>=4,<5"]
+test = ["pytest>=9.0.3,<10", "hypothesis>=6.100,<7", "coverage>=7.15,<8", "pytest-cov>=7,<8"]
+quality = [
+  "ruff>=0.9,<1",
+  "mypy>=1.10,<2",
+  "bandit>=1.7,<2",
+  "pip-audit>=2.10,<3",
+  "types-PyYAML>=6,<7",
+  "types-jsonschema>=4,<5",
+]
+docs = ["mkdocs>=1.6,<2"]
+build = ["build>=1.5,<2"]
 
 [project.scripts]
 tsao-researcher = "tsao_researcher.__main__:main"
@@ -23,9 +53,15 @@ tsao-researcher = "tsao_researcher.__main__:main"
 [project.urls]
 Repository = "https://github.com/SUNHAOJUN22/TsaoSciResearcher"
 Issues = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/issues"
+Documentation = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/tree/main/docs"
+Changelog = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/CHANGELOG.md"
+Security = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/SECURITY.md"
 
 [tool.setuptools.packages.find]
 include = ["tsao_researcher*"]
+
+[tool.setuptools.package-data]
+tsao_researcher = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -34,7 +70,7 @@ addopts = "-q --strict-markers --strict-config"
 [tool.ruff]
 target-version = "py310"
 line-length = 110
-exclude = ["dist", ".tsao-research", "capabilities/v2"]
+exclude = ["dist", ".tsao-research", "capabilities/v2", "site"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "C4", "PIE", "RUF"]
@@ -48,8 +84,22 @@ python_version = "3.10"
 strict = true
 warn_unreachable = true
 show_error_codes = true
-exclude = "(^dist/|^examples/)"
+exclude = "(^dist/|^examples/|^site/)"
 
 [tool.bandit]
-exclude_dirs = ["tests", "dist"]
+exclude_dirs = ["tests", "dist", "site"]
 skips = []
+
+[tool.coverage.run]
+branch = true
+source = ["tsao_researcher"]
+parallel = false
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = false
+precision = 2
+
+[tool.coverage.json]
+output = "artifacts/coverage.json"

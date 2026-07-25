@@ -26,6 +26,7 @@ IGNORED_DIRS = {
     "artifacts",
     "__pycache__",
     "dist",
+    "site",
     "build",
 }
 REQUIRED_WORKFLOWS = {
@@ -58,10 +59,13 @@ LEGACY_SCHEMAS = {
 V2_SCHEMAS = {
     "artifact.schema.json",
     "capability-invocation.schema.json",
+    "execution-receipt.schema.json",
     "handoff.schema.json",
     "project.schema.json",
+    "reproducibility-capsule.schema.json",
     "routing.schema.json",
     "state-event.schema.json",
+    "validation-evidence.schema.json",
     "workflow.schema.json",
 }
 REQUIRED_SCRIPTS = {
@@ -81,6 +85,13 @@ REQUIRED_SCRIPTS = {
     "validate_schemas.py",
     "run_mutation_smoke.py",
     "performance_smoke.py",
+    "build_publication_attestation.py",
+    "build_sbom.py",
+    "check_quality_baseline.py",
+    "record_quality_history.py",
+    "sync_version.py",
+    "bump_version.py",
+    "validate_distribution.py",
 }
 REQUIRED_PACKAGE_MODULES = {
     "__init__.py",
@@ -92,6 +103,9 @@ REQUIRED_PACKAGE_MODULES = {
     "router.py",
     "state.py",
     "vnext.py",
+    "capsule.py",
+    "receipts.py",
+    "version.py",
 }
 DOMAIN_PACK_FILES = {
     "README.md",
@@ -108,10 +122,13 @@ SECRET_PATTERNS = [
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
 ]
 FORBIDDEN_SOURCE_PATHS = {".v050-payload", ".github/consolidation"}
+GENERATED_PREFIXES = ("dist-", "dist_", "build-", "build_", "release-", "release_")
 
 
 def _is_ignored(relative: Path) -> bool:
-    return any(part in IGNORED_DIRS or part.endswith(".egg-info") for part in relative.parts)
+    return any(part in IGNORED_DIRS or part.endswith(".egg-info") for part in relative.parts) or bool(
+        relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES)
+    )
 
 
 def _source_files() -> list[Path]:
@@ -227,12 +244,14 @@ def audit() -> dict[str, Any]:
     manifest = _load_json(ROOT / "manifest.json")
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     agent = yaml.safe_load((ROOT / "agents/openai.yaml").read_text(encoding="utf-8"))
+    citation = yaml.safe_load((ROOT / "CITATION.cff").read_text(encoding="utf-8"))
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     versions = {
         "VERSION": version,
         "manifest": str(manifest.get("version")),
         "SKILL": (re.search(r"^version:\s*[\"']?([^\s\"']+)", skill, re.MULTILINE) or [None, None])[1],
         "agent": str(agent.get("version")),
+        "citation": str(citation.get("version")) if isinstance(citation, dict) else "invalid",
         "pyproject": (re.search(r"^version\s*=\s*[\"']([^\"']+)", pyproject, re.MULTILINE) or [None, None])[
             1
         ],
@@ -309,6 +328,15 @@ def audit() -> dict[str, Any]:
         "docs/VALIDATION_EVIDENCE.json",
         "docs/test-dashboard.html",
         "docs/test-dashboard.svg",
+        "docs/SBOM.cdx.json",
+        "docs/QUALITY_BASELINE.json",
+        "docs/REPRODUCIBILITY_CAPSULE.md",
+        "docs/EXECUTION_RECEIPTS.md",
+        "docs/SUPPLY_CHAIN.md",
+        "docs/RELEASE_PROCESS.md",
+        "docs/CLI.md",
+        "docs/index.md",
+        "mkdocs.yml",
     }
     missing_readme_docs = sorted(
         relative for relative in required_readme_docs if not (ROOT / relative).is_file()
@@ -467,17 +495,17 @@ def audit() -> dict[str, Any]:
             errors.append(f"failure masking in workflow: {workflow.name}")
         has_write = re.search(r"contents:\s*write", text) is not None
         allowed_write = workflow.name == "cleanup-branches.yml"
-        if workflow.name == "ci.yml" and has_write:
-            guarded_markers = [
-                "permissions:\n  contents: read",
-                "record-main-validation:",
-                "always() && github.event_name == 'push' && github.ref == 'refs/heads/main'",
-                "permissions:\n      contents: write",
-                ".github/finalize-v052",
+        if workflow.name == "release.yml":
+            release_markers = [
+                "tags:",
+                "contents: write",
+                "python -m build",
+                "gh release",
+                "build_publication_attestation.py",
             ]
-            missing_guarded_markers = [marker for marker in guarded_markers if marker not in text]
-            if missing_guarded_markers:
-                errors.append(f"guarded CI write permission is incomplete: {missing_guarded_markers}")
+            missing_release = [marker for marker in release_markers if marker not in text]
+            if missing_release:
+                errors.append(f"release workflow guard missing: {missing_release}")
             else:
                 allowed_write = True
         if has_write and not allowed_write:
@@ -493,6 +521,17 @@ def audit() -> dict[str, Any]:
             for marker in required_markers:
                 if marker not in text:
                     errors.append(f"branch cleanup guard missing {marker!r}")
+    permanent = {path.name for path in workflow_files}
+    required_automation = {"ci.yml", "audit.yml", "nightly.yml", "release.yml", "cleanup-branches.yml"}
+    missing_automation = sorted(required_automation - permanent)
+    if missing_automation:
+        errors.append(f"permanent workflow inventory missing: {missing_automation}")
+    for name in ("ci.yml", "audit.yml", "nightly.yml"):
+        path = ROOT / ".github/workflows" / name
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            if "contents: read" not in text or "contents: write" in text or "git push" in text:
+                errors.append(f"validation workflow is not read-only/idempotent: {name}")
     checks["workflow_files"] = len(workflow_files)
 
     test_directory = ROOT / "tests"
@@ -518,6 +557,12 @@ def audit() -> dict[str, Any]:
         "python -m ruff check scripts tsao_researcher tests",
         "python -m mypy scripts tsao_researcher",
         "python scripts/build_test_dashboard.py --check",
+        "python scripts/sync_version.py --check",
+        "python scripts/build_sbom.py --check",
+        "pytest_cov",
+        "pip_audit",
+        "python -m build",
+        "mkdocs build --strict",
         "tests.random_order_plugin",
         "tests.reverse_order_plugin",
         "run_mutation_smoke.py",
@@ -535,7 +580,7 @@ def audit() -> dict[str, Any]:
         "workbook_named_capability_count": 322,
         "domain_named_capability_count": 164,
         "workflow_count": 15,
-        "schema_count": 15,
+        "schema_count": 18,
         "domain_pack_count": 7,
     }
     for key, expected in manifest_expectations.items():

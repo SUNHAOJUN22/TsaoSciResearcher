@@ -9,8 +9,8 @@ description: >
   biomedical research and research integrity. Use when a user asks to design,
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
-  through the structured computation-handoff workflow.
-version: 0.5.3
+  through the structured computation-handoff workflow. Record external execution receipts and export deterministic reproducibility capsules when provenance is required.
+version: 0.6.0
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher
@@ -19,7 +19,7 @@ metadata:
   legacy_capability_count: 158
   domain_named_capability_count: 164
   workflow_count: 15
-  schema_count: 15
+  schema_count: 18
   domain_pack_count: 7
   progressive_disclosure: true
   evidence_first: true

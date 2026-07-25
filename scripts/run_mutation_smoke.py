@@ -149,6 +149,27 @@ MUTATIONS = (
         "if False and actual != expected:",
         ("tests/test_release.py",),
     ),
+    Mutation(
+        "receipt-output-checksum",
+        "tsao_researcher/receipts.py",
+        'if candidate.stat().st_size != output.get("size_bytes") or sha256_file(candidate) != output.get("sha256"):',
+        'if False and (candidate.stat().st_size != output.get("size_bytes") or sha256_file(candidate) != output.get("sha256")):',
+        ("tests/test_receipts_capsules.py",),
+    ),
+    Mutation(
+        "capsule-tree-digest",
+        "tsao_researcher/capsule.py",
+        'if manifest.get("tree_sha256") != _tree_digest(normalized):',
+        'if False and manifest.get("tree_sha256") != _tree_digest(normalized):',
+        ("tests/test_receipts_capsules.py",),
+    ),
+    Mutation(
+        "version-sync-stale-detection",
+        "scripts/sync_version.py",
+        "if stale:",
+        "if False and stale:",
+        ("tests/test_versioning.py",),
+    ),
 )
 
 

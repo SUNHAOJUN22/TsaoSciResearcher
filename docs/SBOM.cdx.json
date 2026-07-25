@@ -1,0 +1,220 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:pypi/bandit@1.9.4",
+      "name": "bandit",
+      "purl": "pkg:pypi/bandit@1.9.4",
+      "scope": "required",
+      "type": "library",
+      "version": "1.9.4"
+    },
+    {
+      "bom-ref": "pkg:pypi/build@1.5.0",
+      "name": "build",
+      "purl": "pkg:pypi/build@1.5.0",
+      "scope": "required",
+      "type": "library",
+      "version": "1.5.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/coverage@7.15.2",
+      "name": "coverage",
+      "purl": "pkg:pypi/coverage@7.15.2",
+      "scope": "required",
+      "type": "library",
+      "version": "7.15.2"
+    },
+    {
+      "bom-ref": "pkg:pypi/hypothesis@6.157.2",
+      "name": "hypothesis",
+      "purl": "pkg:pypi/hypothesis@6.157.2",
+      "scope": "required",
+      "type": "library",
+      "version": "6.157.2"
+    },
+    {
+      "bom-ref": "pkg:pypi/jsonschema@4.26.0",
+      "name": "jsonschema",
+      "purl": "pkg:pypi/jsonschema@4.26.0",
+      "scope": "required",
+      "type": "library",
+      "version": "4.26.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/mkdocs@1.6.1",
+      "name": "mkdocs",
+      "purl": "pkg:pypi/mkdocs@1.6.1",
+      "scope": "required",
+      "type": "library",
+      "version": "1.6.1"
+    },
+    {
+      "bom-ref": "pkg:pypi/mypy@1.20.2",
+      "name": "mypy",
+      "purl": "pkg:pypi/mypy@1.20.2",
+      "scope": "required",
+      "type": "library",
+      "version": "1.20.2"
+    },
+    {
+      "bom-ref": "pkg:pypi/pip-audit@2.10.1",
+      "name": "pip-audit",
+      "purl": "pkg:pypi/pip-audit@2.10.1",
+      "scope": "required",
+      "type": "library",
+      "version": "2.10.1"
+    },
+    {
+      "bom-ref": "pkg:pypi/pytest@9.0.3",
+      "name": "pytest",
+      "purl": "pkg:pypi/pytest@9.0.3",
+      "scope": "required",
+      "type": "library",
+      "version": "9.0.3"
+    },
+    {
+      "bom-ref": "pkg:pypi/pytest-cov@7.1.0",
+      "name": "pytest-cov",
+      "purl": "pkg:pypi/pytest-cov@7.1.0",
+      "scope": "required",
+      "type": "library",
+      "version": "7.1.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/pyyaml@6.0.3",
+      "name": "pyyaml",
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "scope": "required",
+      "type": "library",
+      "version": "6.0.3"
+    },
+    {
+      "bom-ref": "pkg:pypi/ruff@0.15.22",
+      "name": "ruff",
+      "purl": "pkg:pypi/ruff@0.15.22",
+      "scope": "required",
+      "type": "library",
+      "version": "0.15.22"
+    },
+    {
+      "bom-ref": "pkg:pypi/types-jsonschema@4.26.0.20260518",
+      "name": "types-jsonschema",
+      "purl": "pkg:pypi/types-jsonschema@4.26.0.20260518",
+      "scope": "required",
+      "type": "library",
+      "version": "4.26.0.20260518"
+    },
+    {
+      "bom-ref": "pkg:pypi/types-pyyaml@6.0.12.20260518",
+      "name": "types-pyyaml",
+      "purl": "pkg:pypi/types-pyyaml@6.0.12.20260518",
+      "scope": "required",
+      "type": "library",
+      "version": "6.0.12.20260518"
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "pkg:pypi/bandit@1.9.4",
+        "pkg:pypi/build@1.5.0",
+        "pkg:pypi/coverage@7.15.2",
+        "pkg:pypi/hypothesis@6.157.2",
+        "pkg:pypi/jsonschema@4.26.0",
+        "pkg:pypi/mkdocs@1.6.1",
+        "pkg:pypi/mypy@1.20.2",
+        "pkg:pypi/pip-audit@2.10.1",
+        "pkg:pypi/pytest@9.0.3",
+        "pkg:pypi/pytest-cov@7.1.0",
+        "pkg:pypi/pyyaml@6.0.3",
+        "pkg:pypi/ruff@0.15.22",
+        "pkg:pypi/types-jsonschema@4.26.0.20260518",
+        "pkg:pypi/types-pyyaml@6.0.12.20260518"
+      ],
+      "ref": "pkg:pypi/tsao-sci-researcher@0.6.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/bandit@1.9.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/build@1.5.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/coverage@7.15.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/hypothesis@6.157.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/jsonschema@4.26.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/mkdocs@1.6.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/mypy@1.20.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/pip-audit@2.10.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/pytest@9.0.3"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/pytest-cov@7.1.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/pyyaml@6.0.3"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/ruff@0.15.22"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/types-jsonschema@4.26.0.20260518"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/types-pyyaml@6.0.12.20260518"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "pkg:pypi/tsao-sci-researcher@0.6.0",
+      "name": "tsao-sci-researcher",
+      "purl": "pkg:pypi/tsao-sci-researcher@0.6.0",
+      "type": "application",
+      "version": "0.6.0"
+    },
+    "properties": [
+      {
+        "name": "tsao:source",
+        "value": "requirements-ci.lock"
+      },
+      {
+        "name": "tsao:lock-sha256",
+        "value": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5"
+      },
+      {
+        "name": "tsao:truth-boundary",
+        "value": "SBOM inventory is not a vulnerability assessment."
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:0aee896d-c747-5e61-bcf0-bbb1226adcb1",
+  "specVersion": "1.6",
+  "version": 1
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write or verify current-tree or composite repository validation evidence."""
+"""Write or verify non-self-referential repository validation evidence schema 1.6."""
 
 from __future__ import annotations
 
@@ -12,8 +12,12 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import jsonschema
+
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/VALIDATION_EVIDENCE.json"
+SCHEMA = ROOT / "schemas/v2/validation-evidence.schema.json"
+LOCK_FILE = ROOT / "requirements-ci.lock"
 EXCLUDED_DIRS = {
     ".git",
     ".mypy_cache",
@@ -24,10 +28,13 @@ EXCLUDED_DIRS = {
     "artifacts",
     "build",
     "dist",
+    "site",
     "__pycache__",
 }
+GENERATED_PREFIXES = ("dist-", "dist_", "build-", "build_", "release-", "release_")
 EXCLUDED_PATHS = {
     "SHA256SUMS",
+    "docs/QUALITY_HISTORY.json",
     "docs/VALIDATION_EVIDENCE.json",
     "docs/test-dashboard.html",
     "docs/test-dashboard.svg",
@@ -43,7 +50,28 @@ REQUIRED_CURRENT_GATES = {
     "validation_tree_digest",
     "scientific_quality_guards",
     "deterministic_visual_reports",
+    "coverage_line_and_branch",
+    "dependency_vulnerability_audit",
+    "deterministic_sbom",
+    "wheel_and_sdist_install",
+    "docs_build",
+    "reproducibility_capsule",
+    "execution_receipts",
 }
+CI_ONLY_GATES = {
+    "bandit_high_severity",
+    "complete_regression",
+    "coverage_line_and_branch",
+    "critical_mutation_killed",
+    "dependency_vulnerability_audit",
+    "docs_build",
+    "mypy_strict",
+    "reverse_order_regression",
+    "ruff_format_and_lint",
+    "seeded_random_order_regression",
+    "wheel_and_sdist_install",
+}
+SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _source_files() -> list[Path]:
@@ -51,6 +79,8 @@ def _source_files() -> list[Path]:
     for path in ROOT.rglob("*"):
         relative = path.relative_to(ROOT)
         if any(part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts):
+            continue
+        if relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES):
             continue
         if not path.is_file() or path.is_symlink():
             continue
@@ -70,12 +100,16 @@ def tree_digest() -> tuple[str, int]:
     return digest.hexdigest(), len(files)
 
 
-def _existing() -> dict[str, Any]:
-    if not OUTPUT.is_file():
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _load_object(path: Path) -> dict[str, Any]:
+    if not path.is_file():
         return {}
-    value = json.loads(OUTPUT.read_text(encoding="utf-8", errors="strict"))
+    value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
     if not isinstance(value, dict):
-        raise ValueError("validation evidence root must be an object")
+        raise ValueError(f"{path} root must be an object")
     return value
 
 
@@ -87,174 +121,205 @@ def _compatibility(current: dict[str, Any]) -> dict[str, str]:
     return rows or dict(DEFAULT_COMPATIBILITY)
 
 
-def _inventory(current: dict[str, Any]) -> dict[str, Any]:
-    value = current.get("verified_inventory")
-    rows = dict(value) if isinstance(value, dict) else {}
-    rows.update(
-        {
-            "capability_records": 340,
-            "domain_packs": 7,
-            "generic_domain_placeholders": 0,
-            "runtime_core_capabilities": 18,
-            "schemas": 15,
-            "test_modules": len(list((ROOT / "tests").glob("test_*.py"))),
-            "workbook_named_capabilities": 322,
-            "workflows": 15,
-        }
-    )
-    return rows
-
-
-def build(parent_commit: str, run_id: int, evidence_date: str) -> dict[str, Any]:
-    """Build strong current-tree evidence from a real validation run."""
-
-    if not re.fullmatch(r"[0-9a-f]{40}", parent_commit):
-        raise ValueError("parent commit must be a 40-character lowercase SHA")
-    if run_id < 1:
-        raise ValueError("run id must be positive")
-    digest, file_count = tree_digest()
-    current = _existing()
+def _inventory() -> dict[str, Any]:
+    v2 = json.loads((ROOT / "capabilities/v2/index.json").read_text(encoding="utf-8"))
     return {
-        "schema_version": "1.5",
-        "validation_scope": "current-tree",
+        "capability_records": int(v2["total"]),
+        "domain_packs": len([path for path in (ROOT / "domain-packs").iterdir() if path.is_dir()]),
+        "generic_domain_placeholders": int(v2["generic_domain_slots"]),
+        "runtime_core_capabilities": int(v2["core_added"]),
+        "schemas": len(list((ROOT / "schemas").rglob("*.schema.json"))),
+        "test_modules": len(list((ROOT / "tests").glob("test_*.py"))),
+        "workbook_named_capabilities": int(v2["workbook_named_total"]),
+        "workflows": len([path for path in (ROOT / "workflows").iterdir() if path.is_dir()]),
+    }
+
+
+def _attested_gates() -> dict[str, str]:
+    return {
+        "bandit_high_severity": "PASS",
+        "bounded_performance": "PASS",
+        "byte_identical_release_builds": "PASS",
+        "complete_regression": "PASS",
+        "coverage_line_and_branch": "PASS",
+        "critical_mutation_killed": "18/18",
+        "dependency_vulnerability_audit": "PASS",
+        "deterministic_sbom": "PASS",
+        "deterministic_visual_reports": "PASS",
+        "docs_build": "PASS",
+        "execution_receipts": "PASS",
+        "json_schemas_18": "PASS",
+        "mypy_strict": "PASS",
+        "repository_and_contract_audit": "PASS",
+        "reproducibility_capsule": "PASS",
+        "reverse_order_regression": "PASS",
+        "ruff_format_and_lint": "PASS",
+        "scientific_quality_guards": "PASS",
+        "seeded_random_order_regression": "PASS",
+        "validation_tree_digest": "PASS",
+        "wheel_and_sdist_install": "PASS",
+    }
+
+
+def _preflight_gates() -> dict[str, str]:
+    return {
+        "bandit_high_severity": "NOT_RUN",
+        "bounded_performance": "LOCAL_PREFLIGHT",
+        "byte_identical_release_builds": "LOCAL_PREFLIGHT",
+        "complete_regression": "PARTIAL",
+        "coverage_line_and_branch": "LOCAL_PREFLIGHT",
+        "critical_mutation_killed": "NOT_RUN",
+        "dependency_vulnerability_audit": "NOT_RUN",
+        "deterministic_sbom": "PASS",
+        "deterministic_visual_reports": "PASS",
+        "docs_build": "NOT_RUN",
+        "execution_receipts": "LOCAL_PREFLIGHT",
+        "json_schemas_18": "PASS",
+        "mypy_strict": "NOT_RUN",
+        "repository_and_contract_audit": "PASS",
+        "reproducibility_capsule": "LOCAL_PREFLIGHT",
+        "reverse_order_regression": "NOT_RUN",
+        "ruff_format_and_lint": "NOT_RUN",
+        "scientific_quality_guards": "PASS",
+        "seeded_random_order_regression": "NOT_RUN",
+        "validation_tree_digest": "PASS",
+        "wheel_and_sdist_install": "NOT_RUN",
+    }
+
+
+def build(
+    source_commit: str = "",
+    publication_parent: str = "",
+    run_id: int = 0,
+    run_attempt: int = 0,
+    evidence_date: str = "",
+    *,
+    job_id: int | None = None,
+    attested: bool = False,
+    existing_path: Path = OUTPUT,
+) -> dict[str, Any]:
+    """Build preflight evidence or externally attested current-tree evidence."""
+
+    if attested:
+        if not SHA40.fullmatch(source_commit) or not SHA40.fullmatch(publication_parent):
+            raise ValueError("attested evidence requires lowercase 40-character commit SHAs")
+        if run_id < 1 or run_attempt < 1:
+            raise ValueError("attested evidence requires positive workflow run id and attempt")
+    digest, file_count = tree_digest()
+    current = _load_object(existing_path)
+    date_value = evidence_date or date.today().isoformat()
+    if attested:
+        scope = "current-tree"
+        status = "PASS"
+        gates = _attested_gates()
+        compatibility_scope = (
+            "The compatibility matrix completed before the dependent full-validation job and is bound "
+            "to the exact commit by the external CI attestation."
+        )
+        commit_resolution = "external-attestation"
+        external_attestation = "artifacts/publication-attestation.json"
+        workflow_name = "Main-branch full integration audit"
+        interpretation = [
+            "The source-tree digest is authoritative for the checked repository content.",
+            "A commit cannot safely contain its own SHA; the exact tested commit is linked by an external CI attestation.",
+            "Generated evidence, dashboards, the PDF report, quality history and aggregate checksum are excluded from the non-self-referential digest.",
+            "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions or safety decisions.",
+        ]
+    else:
+        scope = "preflight"
+        status = "PARTIAL"
+        gates = _preflight_gates()
+        compatibility_scope = (
+            "Recorded compatibility results are a prior release baseline. CI-only gates for this source tree "
+            "remain explicitly NOT_RUN or PARTIAL until an external attestation is created."
+        )
+        commit_resolution = "pending-external-attestation"
+        external_attestation = "NOT_AVAILABLE_UNTIL_CI_COMPLETES"
+        workflow_name = "Local preflight and generated-artifact audit"
+        interpretation = [
+            "This checked-in record is intentionally PARTIAL and must not be interpreted as a completed CI run.",
+            "The source-tree digest records the candidate content before external CI attestation.",
+            "CI-only gates remain NOT_RUN or PARTIAL until GitHub Actions produces artifacts/VALIDATION_EVIDENCE.json and publication-attestation.json.",
+            "Software checks do not grant scientific acceptance of external calculations or experiments.",
+        ]
+    return {
+        "schema_version": "1.6",
+        "validation_scope": scope,
         "release": (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
-        "status": "PASS",
-        "evidence_date": evidence_date,
+        "status": status,
+        "evidence_date": date_value,
         "compatibility": _compatibility(current),
-        "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass permanent CI.",
-        "gates": {
-            "bandit_high_severity": "PASS",
-            "bounded_performance": "PASS",
-            "byte_identical_release_builds": "PASS",
-            "complete_regression": "PASS",
-            "critical_mutation_killed": "15/15",
-            "deterministic_visual_reports": "PASS",
-            "json_schemas_15": "PASS",
-            "mypy_strict": "PASS",
-            "repository_and_contract_audit": "PASS",
-            "reverse_order_regression": "PASS",
-            "ruff_format_and_lint": "PASS",
-            "scientific_quality_guards": "PASS",
-            "seeded_random_order_regression": "PASS",
-            "validation_tree_digest": "PASS",
-        },
-        "verified_inventory": _inventory(current),
+        "compatibility_scope": compatibility_scope,
+        "gates": gates,
+        "verified_inventory": _inventory(),
         "provenance": {
             "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
             "digest_exclusions": sorted(EXCLUDED_PATHS),
-            "publication_parent_commit": parent_commit,
+            "evidence_generated_from_commit": source_commit if attested else None,
+            "publication_parent_commit": publication_parent if attested else None,
             "validated_file_count": file_count,
             "validated_tree_sha256": digest,
-            "workflow_run_id": run_id,
+            "dependency_lock_sha256": _sha256(LOCK_FILE),
+            "workflow_run_id": run_id if attested else None,
+            "workflow_run_attempt": run_attempt if attested else None,
+            "workflow_job_id": job_id if attested else None,
+            "external_attestation": external_attestation,
+            "commit_resolution": commit_resolution,
         },
         "workflow": {
-            "name": "Main-branch full integration audit",
-            "run_id": run_id,
-            "publication_parent_commit": parent_commit,
+            "name": workflow_name,
+            "run_id": run_id if attested else None,
+            "attempt": run_attempt if attested else None,
+            "source_commit_context": source_commit if attested else None,
         },
-        "interpretation": [
-            "The evidence validates the recorded repository source-tree digest and declared software contracts.",
-            "Generated evidence, evidence-derived dashboards, the PDF report and the aggregate checksum are excluded from the non-self-referential digest.",
-            "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions or safety decisions.",
+        "interpretation": interpretation,
+        "limitations": [
+            "Checked-in preflight evidence is not a substitute for the external CI attestation.",
+            "External scientific execution requires a checksum-verifiable execution receipt.",
         ],
     }
 
 
-def _common_errors(value: dict[str, Any]) -> list[str]:
+def validate(value: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if value.get("schema_version") != "1.5":
-        errors.append("schema_version must be 1.5")
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8", errors="strict"))
+    validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    for error in sorted(validator.iter_errors(value), key=lambda item: list(item.path)):
+        location = "/".join(str(part) for part in error.path) or "root"
+        errors.append(f"{location}: {error.message}")
     if value.get("release") != (ROOT / "VERSION").read_text(encoding="utf-8").strip():
         errors.append("release must match VERSION")
-    if value.get("status") != "PASS":
-        errors.append("status must be PASS")
-    if value.get("validation_scope") not in {"current-tree", "composite"}:
-        errors.append("validation_scope must be current-tree or composite")
-    serialized = json.dumps(value, ensure_ascii=False, sort_keys=True)
-    if "permanent_tree_simulated" in serialized or "simulated permanent" in serialized.casefold():
-        errors.append("simulated permanent-tree markers are forbidden")
-    interpretation = value.get("interpretation")
-    if not isinstance(interpretation, list) or not interpretation:
-        errors.append("interpretation must be a non-empty list")
-    return errors
-
-
-def _validate_current_tree(value: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
     provenance = value.get("provenance")
-    if not isinstance(provenance, dict):
-        return ["provenance must be an object"]
-    expected_digest, expected_count = tree_digest()
-    if provenance.get("validated_tree_sha256") != expected_digest:
-        errors.append("validated_tree_sha256 is stale")
-    if provenance.get("validated_file_count") != expected_count:
-        errors.append("validated_file_count is stale")
-    parent = str(provenance.get("publication_parent_commit", ""))
-    if not re.fullmatch(r"[0-9a-f]{40}", parent):
-        errors.append("publication_parent_commit is invalid")
-    workflow_run_id = provenance.get("workflow_run_id")
-    if not isinstance(workflow_run_id, int) or isinstance(workflow_run_id, bool) or workflow_run_id < 1:
-        errors.append("workflow_run_id is invalid")
+    if isinstance(provenance, dict):
+        expected_digest, expected_count = tree_digest()
+        if provenance.get("validated_tree_sha256") != expected_digest:
+            errors.append("validated_tree_sha256 is stale")
+        if provenance.get("validated_file_count") != expected_count:
+            errors.append("validated_file_count is stale")
+        if provenance.get("dependency_lock_sha256") != _sha256(LOCK_FILE):
+            errors.append("dependency_lock_sha256 is stale")
     gates = value.get("gates")
-    if not isinstance(gates, dict) or any(gates.get(key) != "PASS" for key in REQUIRED_CURRENT_GATES):
-        errors.append("current-tree validation gates are missing or not PASS")
-    return errors
-
-
-def _validate_composite(value: dict[str, Any]) -> list[str]:
-    """Validate explicitly scoped evidence when the current full tree was not rerun."""
-
-    errors: list[str] = []
-    baseline = value.get("baseline_full_repository_run")
-    focused = value.get("focused_current_change_regression")
-    limitations = value.get("limitations")
-    if not isinstance(baseline, dict):
-        errors.append("baseline_full_repository_run must be an object")
-    else:
-        run_id = baseline.get("run_id")
-        if not isinstance(run_id, int) or isinstance(run_id, bool) or run_id < 1:
-            errors.append("baseline run_id is invalid")
-        trigger = str(baseline.get("trigger_commit", ""))
-        if not re.fullmatch(r"[0-9a-f]{40}", trigger):
-            errors.append("baseline trigger_commit is invalid")
-        passed_steps = baseline.get("passed_steps")
-        if not isinstance(passed_steps, list) or len(passed_steps) < 8:
-            errors.append("baseline passed_steps are incomplete")
-        if baseline.get("publication_conclusion") != "failure":
-            errors.append("baseline publication conclusion must record the transport failure")
-        if baseline.get("scientific_test_conclusion") != "PASS":
-            errors.append("baseline scientific test conclusion must be PASS")
-    if not isinstance(focused, dict):
-        errors.append("focused_current_change_regression must be an object")
-    else:
-        passed = focused.get("passed")
-        failed = focused.get("failed")
-        if not isinstance(passed, int) or isinstance(passed, bool) or passed < 1:
-            errors.append("focused passed count is invalid")
-        if failed != 0:
-            errors.append("focused regression must have zero failures")
-        scope = focused.get("scope")
-        if not isinstance(scope, list) or len(scope) < 4:
-            errors.append("focused regression scope is incomplete")
-        environment = focused.get("environment")
-        if not isinstance(environment, str) or not environment.strip():
-            errors.append("focused regression environment is missing")
-    if not isinstance(limitations, list) or not limitations:
-        errors.append("composite evidence limitations must be explicit")
-    gates = value.get("gates")
-    if not isinstance(gates, dict):
-        errors.append("gates must be an object")
-    elif gates.get("focused_current_change_regression") != "14/14 PASS":
-        errors.append("focused regression gate must record 14/14 PASS")
-    return errors
-
-
-def validate(value: dict[str, Any]) -> list[str]:
-    errors = _common_errors(value)
-    if value.get("validation_scope") == "current-tree":
-        errors.extend(_validate_current_tree(value))
-    elif value.get("validation_scope") == "composite":
-        errors.extend(_validate_composite(value))
+    scope = value.get("validation_scope")
+    if scope == "current-tree":
+        if value.get("status") != "PASS":
+            errors.append("current-tree validation status must be PASS")
+        if not isinstance(gates, dict) or any(gates.get(key) != "PASS" for key in REQUIRED_CURRENT_GATES):
+            errors.append("current-tree validation gates are missing or not PASS")
+        if isinstance(provenance, dict) and provenance.get("commit_resolution") != "external-attestation":
+            errors.append("current-tree evidence requires external-attestation resolution")
+    elif scope == "preflight":
+        if value.get("status") != "PARTIAL":
+            errors.append("preflight validation status must be PARTIAL")
+        if isinstance(gates, dict) and any(gates.get(key) == "PASS" for key in CI_ONLY_GATES):
+            errors.append("preflight evidence cannot mark CI-only gates PASS")
+        if isinstance(provenance, dict):
+            if provenance.get("commit_resolution") != "pending-external-attestation":
+                errors.append("preflight evidence must await external attestation")
+            if provenance.get("workflow_run_id") is not None:
+                errors.append("preflight evidence cannot claim a workflow run id")
+    serialized = json.dumps(value, ensure_ascii=False, sort_keys=True).casefold()
+    if "simulated permanent" in serialized or "permanent_tree_simulated" in serialized:
+        errors.append("simulated permanent-tree markers are forbidden")
     return errors
 
 
@@ -263,20 +328,38 @@ def main() -> None:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true")
     mode.add_argument("--check", action="store_true")
-    parser.add_argument("--parent-commit", default=os.environ.get("GITHUB_SHA", ""))
+    scope = parser.add_mutually_exclusive_group()
+    scope.add_argument("--preflight", action="store_true")
+    scope.add_argument("--attested", action="store_true")
+    parser.add_argument("--source-commit", default=os.environ.get("GITHUB_SHA", ""))
+    parser.add_argument("--publication-parent", default=os.environ.get("GITHUB_SHA", ""))
     parser.add_argument("--run-id", type=int, default=int(os.environ.get("GITHUB_RUN_ID", "0")))
+    parser.add_argument("--run-attempt", type=int, default=int(os.environ.get("GITHUB_RUN_ATTEMPT", "0")))
+    parser.add_argument("--job-id", type=int)
     parser.add_argument("--evidence-date", default=date.today().isoformat())
+    parser.add_argument("--out", default=str(OUTPUT))
     args = parser.parse_args()
+    output = Path(args.out)
     if args.write:
-        value = build(args.parent_commit, args.run_id, args.evidence_date)
-        OUTPUT.write_text(
+        value = build(
+            args.source_commit,
+            args.publication_parent,
+            args.run_id,
+            args.run_attempt,
+            args.evidence_date,
+            job_id=args.job_id,
+            attested=args.attested,
+            existing_path=output if output.is_file() else OUTPUT,
+        )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
             json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
             newline="\n",
         )
-        print(f"wrote {OUTPUT.relative_to(ROOT)}: {value['provenance']['validated_tree_sha256']}")
+        print(f"wrote {output}: {value['validation_scope']} {value['provenance']['validated_tree_sha256']}")
         return
-    value = _existing()
+    value = _load_object(output)
     errors = validate(value)
     if errors:
         raise SystemExit("validation evidence FAIL: " + "; ".join(errors))

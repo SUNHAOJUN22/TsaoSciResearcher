@@ -38,6 +38,7 @@ COMPATIBILITY_JSONL = (
     "decisions.jsonl",
     "artifacts.jsonl",
     "approvals.jsonl",
+    "execution-receipts.jsonl",
 )
 TRANSITIONS: dict[str, frozenset[str]] = {
     "proposed": frozenset({"planned", "rejected", "superseded"}),
@@ -149,6 +150,7 @@ def initialize(
         },
         "approvals": [],
         "computation_handoffs": [],
+        "execution_receipts": [],
         "latest_event_hash": None,
     }
     try:
@@ -310,6 +312,18 @@ def verify(root: str | Path) -> dict[str, Any]:
         if not isinstance(value, dict) or value.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"registered computation handoff is invalid: {relative}")
 
+    receipt_ids = project.get("execution_receipts")
+    if not isinstance(receipt_ids, list) or any(not isinstance(value, str) for value in receipt_ids):
+        raise IntegrityError("project execution_receipts must be a list of receipt IDs")
+    receipts = list(read_jsonl(state_root / "execution-receipts.jsonl"))
+    actual_receipt_ids = [str(receipt.get("receipt_id", "")) for receipt in receipts]
+    if actual_receipt_ids != receipt_ids:
+        raise IntegrityError("project execution_receipts registry does not match receipt log")
+    if any(receipt.get("project_id") != project.get("project_id") for receipt in receipts):
+        raise IntegrityError("execution receipt project mismatch")
+    # Receipt output hashes are verified by the dedicated receipts module to avoid
+    # duplicating the truth boundary in two implementations.
+
     previous_hash: str | None = None
     count = 0
     last_state: str | None = None
@@ -336,4 +350,5 @@ def verify(root: str | Path) -> dict[str, Any]:
         "head": previous_hash,
         "status": last_state,
         "registries": len(COMPATIBILITY_JSON) + len(COMPATIBILITY_JSONL),
+        "execution_receipts": len(receipt_ids),
     }

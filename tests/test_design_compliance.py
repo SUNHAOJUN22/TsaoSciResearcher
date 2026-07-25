@@ -40,6 +40,6 @@ def test_canonical_project_layout_tracks_decisions_and_approvals(tmp_path: Path)
     transition(root, "planned", "approved plan", approvals=["APR-METHOD-1"])
     result = verify(root)
     assert result["valid"] is True
-    assert result["registries"] == 8
+    assert result["registries"] == 9
     assert (root / "decisions.jsonl").read_text(encoding="utf-8").strip()
     assert (root / "approvals.jsonl").read_text(encoding="utf-8").strip()

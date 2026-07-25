@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "release_floor": "0.6.0",
+  "coverage": {
+    "line_percent_minimum": 80.0,
+    "branch_percent_minimum": 70.0
+  },
+  "mutation": {
+    "critical_mutants_minimum": 18,
+    "survivors_maximum": 0
+  },
+  "performance": {
+    "status_required": "PASS"
+  },
+  "policy": {
+    "regression": "Thresholds may only decrease with an explicit rationale in CHANGELOG.md.",
+    "truth_boundary": "Coverage and mutation scores measure test strength, not scientific truth."
+  }
+}

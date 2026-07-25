@@ -169,7 +169,7 @@ def _page_two(evidence: dict[str, Any]) -> str:
     footer = (
         "Current-tree PASS records end-to-end repository validation; scientific acceptance remains separate."
         if current_tree
-        else "Scoped PASS applies only to the evidence levels explicitly recorded above."
+        else "Scoped status applies only to the evidence levels explicitly recorded above."
     )
     content += _text(46, 68, footer, 9, True)
     return content
@@ -294,7 +294,9 @@ def _page_four_scoped(evidence: dict[str, Any]) -> str:
     content += _rect(46, 525, 500, 92, 0.98)
     content += _text(64, 587, "Current-tree end-to-end CI", 14, True)
     content += _text(64, 562, f"Status: {gates.get('current_end_to_end_ci', 'not recorded')}", 9)
-    content += _text(64, 543, "No current source-tree digest is asserted unless provenance records it.", 8)
+    content += _text(
+        64, 543, "No exact commit attestation is asserted until external CI artifacts record it.", 8
+    )
     content += _text(46, 470, "Explicit limitations", 14, True)
     y = 442.0
     limitations = evidence.get("limitations", [])
@@ -345,7 +347,7 @@ def _pdf(pages: list[str]) -> bytes:
         )
         payload = stream.encode("ascii", errors="strict")
         objects.append(f"<< /Length {len(payload)} >>\nstream\n".encode() + payload + b"endstream")
-    output = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
+    output = bytearray(b"%PDF-1.4\n%TsaoSciResearcher deterministic report\n")
     offsets = [0]
     for number, obj in enumerate(objects, 1):
         offsets.append(len(output))

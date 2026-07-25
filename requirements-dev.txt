@@ -1,8 +1,13 @@
 -r requirements.txt
-pytest>=8,<10
+pytest>=9.0.3,<10
 hypothesis>=6.100,<7
+coverage>=7.15,<8
+pytest-cov>=7,<8
 ruff>=0.9,<1
 mypy>=1.10,<2
 bandit>=1.7,<2
+pip-audit>=2.10,<3
+build>=1.5,<2
+mkdocs>=1.6,<2
 types-PyYAML>=6,<7
 types-jsonschema>=4,<5

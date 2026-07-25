@@ -1,15 +1,15 @@
 # Roadmap
 
-## Current release
+## Current release — v0.6.0
 
-**v0.5.2** provides 322 named AI-for-Science capability contracts, 18 runtime/core contracts, 15 gated workflows, a unified design-compatible project state, deterministic validation and cross-platform reproducible release gates.
+The current release adds deterministic reproducibility capsules, external execution receipts, validation evidence 1.6, coverage/quality baselines, deterministic SBOM, dependency audit, wheel/sdist validation, documentation builds, external commit attestation and permanent idempotent CI/audit/nightly/release workflows.
 
-## Planned work
+## Next candidates
 
-- tested adapters and execution receipts for selected external solvers, databases and instruments;
-- richer bibliographic connectors and reproducible notebook templates;
-- journal/organization-specific reporting profiles;
-- stronger cross-scale acceptance contracts with TsaoSciComputation;
-- larger routing, adversarial and scientific-method evaluation fixtures.
+- signed in-toto/SLSA provenance using a platform-native attestation service;
+- adapter conformance kits for selected solvers and laboratory systems;
+- migration tooling for future project-state and capsule schema versions;
+- organization-specific evidence retention and data-classification profiles;
+- benchmark datasets for multilingual routing and causal-claim calibration.
 
-Roadmap items are plans, not current capabilities. External execution remains unavailable until a real adapter and environment are connected.
+Roadmap items are plans, not current capabilities. External execution remains separate from this repository until a real environment supplies verifiable receipts.

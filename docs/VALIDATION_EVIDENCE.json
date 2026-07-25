@@ -5,60 +5,80 @@
     "ubuntu_python_3_13": "PASS",
     "windows_python_3_12": "PASS"
   },
-  "compatibility_scope": "Recorded cross-platform baseline; the current main commit must also pass permanent CI.",
-  "evidence_date": "2026-07-24",
+  "compatibility_scope": "Recorded compatibility results are a prior release baseline. CI-only gates for this source tree remain explicitly NOT_RUN or PARTIAL until an external attestation is created.",
+  "evidence_date": "2026-07-25",
   "gates": {
-    "bandit_high_severity": "PASS",
-    "bounded_performance": "PASS",
-    "byte_identical_release_builds": "PASS",
-    "complete_regression": "PASS",
-    "critical_mutation_killed": "15/15",
+    "bandit_high_severity": "NOT_RUN",
+    "bounded_performance": "LOCAL_PREFLIGHT",
+    "byte_identical_release_builds": "LOCAL_PREFLIGHT",
+    "complete_regression": "PARTIAL",
+    "coverage_line_and_branch": "LOCAL_PREFLIGHT",
+    "critical_mutation_killed": "NOT_RUN",
+    "dependency_vulnerability_audit": "NOT_RUN",
+    "deterministic_sbom": "PASS",
     "deterministic_visual_reports": "PASS",
-    "json_schemas_15": "PASS",
-    "mypy_strict": "PASS",
+    "docs_build": "NOT_RUN",
+    "execution_receipts": "LOCAL_PREFLIGHT",
+    "json_schemas_18": "PASS",
+    "mypy_strict": "NOT_RUN",
     "repository_and_contract_audit": "PASS",
-    "reverse_order_regression": "PASS",
-    "ruff_format_and_lint": "PASS",
+    "reproducibility_capsule": "LOCAL_PREFLIGHT",
+    "reverse_order_regression": "NOT_RUN",
+    "ruff_format_and_lint": "NOT_RUN",
     "scientific_quality_guards": "PASS",
-    "seeded_random_order_regression": "PASS",
-    "validation_tree_digest": "PASS"
+    "seeded_random_order_regression": "NOT_RUN",
+    "validation_tree_digest": "PASS",
+    "wheel_and_sdist_install": "NOT_RUN"
   },
   "interpretation": [
-    "The evidence validates the recorded repository source-tree digest and declared software contracts.",
-    "Generated evidence, evidence-derived dashboards, the PDF report and the aggregate checksum are excluded from the non-self-referential digest.",
-    "Software validation does not imply scientific acceptance of external calculations, experiments, medical claims, legal conclusions or safety decisions."
+    "This checked-in record is intentionally PARTIAL and must not be interpreted as a completed CI run.",
+    "The source-tree digest records the candidate content before external CI attestation.",
+    "CI-only gates remain NOT_RUN or PARTIAL until GitHub Actions produces artifacts/VALIDATION_EVIDENCE.json and publication-attestation.json.",
+    "Software checks do not grant scientific acceptance of external calculations or experiments."
+  ],
+  "limitations": [
+    "Checked-in preflight evidence is not a substitute for the external CI attestation.",
+    "External scientific execution requires a checksum-verifiable execution receipt."
   ],
   "provenance": {
+    "commit_resolution": "pending-external-attestation",
+    "dependency_lock_sha256": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5",
     "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
     "digest_exclusions": [
       "SHA256SUMS",
+      "docs/QUALITY_HISTORY.json",
       "docs/VALIDATION_EVIDENCE.json",
       "docs/engineering-audit-report.pdf",
       "docs/test-dashboard.html",
       "docs/test-dashboard.svg"
     ],
-    "publication_parent_commit": "5ccbe85cb570900f5e0c480f70df7de17a4426c5",
-    "validated_file_count": 300,
-    "validated_tree_sha256": "220c2f2a73a39aebce15106ff3647be32f4e093eeb641b2b38e21aa799003c46",
-    "workflow_run_id": 30029705214
+    "evidence_generated_from_commit": null,
+    "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
+    "publication_parent_commit": null,
+    "validated_file_count": 330,
+    "validated_tree_sha256": "d2655e9d4fe891a19fe67a9cb66dbcd2ba15fb436f1cd2c2db43fc00a7c81e63",
+    "workflow_job_id": null,
+    "workflow_run_attempt": null,
+    "workflow_run_id": null
   },
-  "release": "0.5.3",
-  "schema_version": "1.5",
-  "status": "PASS",
-  "validation_scope": "current-tree",
+  "release": "0.6.0",
+  "schema_version": "1.6",
+  "status": "PARTIAL",
+  "validation_scope": "preflight",
   "verified_inventory": {
     "capability_records": 340,
     "domain_packs": 7,
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 18,
-    "schemas": 15,
-    "test_modules": 25,
+    "schemas": 18,
+    "test_modules": 32,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },
   "workflow": {
-    "name": "Main-branch full integration audit",
-    "publication_parent_commit": "5ccbe85cb570900f5e0c480f70df7de17a4426c5",
-    "run_id": 30029705214
+    "attempt": null,
+    "name": "Local preflight and generated-artifact audit",
+    "run_id": null,
+    "source_commit_context": null
   }
 }

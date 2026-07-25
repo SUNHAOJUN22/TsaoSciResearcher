@@ -1,57 +1,59 @@
 # Validation model
 
-Passing software checks does not grant scientific acceptance. TsaoSciResearcher keeps these layers separate:
+Passing software checks does not grant scientific acceptance. The validation stack is:
 
-1. source structure, links, manifests, schemas and README facts;
-2. Python compilation, Ruff and strict Mypy;
-3. filesystem/archive/security checks and Bandit;
-4. unit, integration, property and adversarial tests;
-5. state, evidence, claim, figure and computation-handoff contracts;
-6. reverse/random test order, mutation and performance guards;
-7. byte-identical release builds and safe extraction;
-8. qualified review of the actual scientific evidence or execution.
+1. version, manifests, links and schema contracts;
+2. compilation, Ruff and strict Mypy;
+3. archive/filesystem security, Bandit and dependency audit;
+4. unit, integration, property, adversarial and tamper tests;
+5. line and branch coverage thresholds;
+6. reverse/random order and critical mutation tests;
+7. bounded performance and deterministic reports;
+8. deterministic source ZIP, wheel/sdist and isolated install;
+9. SBOM, checksums and external commit attestation;
+10. qualified review of actual scientific evidence.
 
-## Canonical local validation
+## Complete local validation
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python -m pip install -e . --no-deps
-
+mkdir -p artifacts
+python scripts/sync_version.py --check
 python scripts/validate_schemas.py
-python scripts/build_readme_facts.py --check
-python scripts/build_test_dashboard.py --check
 python scripts/audit_repository.py
 python scripts/validate_structure.py
+python scripts/build_readme_facts.py --check
+python scripts/build_sbom.py --check
+python scripts/build_validation_evidence.py --check
+python scripts/build_test_dashboard.py --check
+python scripts/build_research_quality_dashboard.py --check
+python scripts/build_engineering_report.py --check
 python scripts/generate_checksums.py --check
-python scripts/build_capability_index.py --check
-python scripts/route_task.py --self-test
-python scripts/validate_figure.py examples/figure-contract.json
-
-python -m pytest -q -p hypothesis.extra.pytestplugin
+python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=json:artifacts/coverage.json
+python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
 python -m ruff format --check scripts tsao_researcher tests
 python -m ruff check scripts tsao_researcher tests
 python -m mypy scripts tsao_researcher
 python -m bandit -q -lll -r scripts tsao_researcher
-python scripts/run_mutation_smoke.py
+python -m pip_audit --strict
+python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
 python scripts/performance_smoke.py --json-out artifacts/performance.json
-```
-
-## Deterministic release
-
-```bash
-VERSION="$(cat VERSION)"
-ARCHIVE="TsaoSciResearcher-v${VERSION}.zip"
+python scripts/check_quality_baseline.py
+mkdocs build --strict
 python scripts/package_release.py --out dist-a
 python scripts/package_release.py --out dist-b
-cmp "dist-a/${ARCHIVE}" "dist-b/${ARCHIVE}"
-python scripts/validate_release.py
+cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+python -m build --sdist --wheel --outdir dist-python
+python scripts/validate_distribution.py dist-python
 ```
 
-The latest dated results are recorded in [`VALIDATION_EVIDENCE.json`](VALIDATION_EVIDENCE.json). CI runs compatibility jobs on Ubuntu/Python 3.10 and 3.13, Windows/Python 3.12 and macOS/Python 3.12, followed by full regression, static/type/security, mutation, order-independence, performance and reproducible-release gates.
+`ci.yml` runs on main and pull requests; `audit.yml` provides a manual full audit; `nightly.yml` checks environment drift weekly; `release.yml` publishes only a validated version tag.
 
-## Truth boundaries
+## Quality history
 
-- A contract is not an execution record.
-- A computation handoff is not a completed calculation.
-- A named engine is not an installed integration.
-- `completed`, `checked`, `validated` and `accepted` are distinct states.
+`docs/QUALITY_HISTORY.json` records release-scoped coverage, mutation, test and performance evidence. CI produces an idempotent current-tree history artifact; entries with `local-preflight` or missing metrics remain explicitly partial.
+
+The process-isolation test module is part of complete regression but intentionally excluded from coverage collection so its fresh subprocesses do not inherit pytest-cov state.

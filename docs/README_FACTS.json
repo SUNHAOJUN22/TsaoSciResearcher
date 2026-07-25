@@ -61,11 +61,11 @@
   "repository_assets": {
     "references": 22,
     "templates": 13,
-    "test_modules": 25
+    "test_modules": 32
   },
   "schema_version": "1.0",
   "schemas": {
-    "count": 15,
+    "count": 18,
     "items": [
       "schemas/artifact-manifest.schema.json",
       "schemas/capability.schema.json",
@@ -77,14 +77,17 @@
       "schemas/research-project.schema.json",
       "schemas/v2/artifact.schema.json",
       "schemas/v2/capability-invocation.schema.json",
+      "schemas/v2/execution-receipt.schema.json",
       "schemas/v2/handoff.schema.json",
       "schemas/v2/project.schema.json",
+      "schemas/v2/reproducibility-capsule.schema.json",
       "schemas/v2/routing.schema.json",
       "schemas/v2/state-event.schema.json",
+      "schemas/v2/validation-evidence.schema.json",
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.5.3",
+  "version": "0.6.0",
   "workflows": {
     "count": 15,
     "items": [

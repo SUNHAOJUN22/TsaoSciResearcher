@@ -1,6 +1,6 @@
 # AI for Science capability coverage
 
-**Baseline:** uploaded 322-entry workbook and TsaoSciResearcher v0.5.2.
+**Baseline:** uploaded 322-entry workbook and TsaoSciResearcher v0.6.0.
 
 ## Result
 

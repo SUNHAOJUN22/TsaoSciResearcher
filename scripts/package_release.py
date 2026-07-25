@@ -28,6 +28,7 @@ EXCLUDED_DIRS = {
     "build",
     "__pycache__",
     "dist",
+    "site",
 }
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
 EXCLUDED_ROOT_FILES = {".coverage"}
