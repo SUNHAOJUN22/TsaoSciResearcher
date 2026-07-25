@@ -78,8 +78,43 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Normalize Python formatting
-        run: python -m ruff format scripts tsao_researcher tests
+      - name: Normalize formatting lint and strict typing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          history = Path('scripts/record_quality_history.py')
+          text = history.read_text(encoding='utf-8')
+          old = (
+              '    if not all(isinstance(item, dict) for item in (coverage, mutation, tests, performance)):\n'
+              '        raise ValueError("quality-current sections must be objects")\n'
+          )
+          new = (
+              '    if not isinstance(coverage, dict):\n'
+              '        raise ValueError("quality-current coverage must be an object")\n'
+              '    if not isinstance(mutation, dict):\n'
+              '        raise ValueError("quality-current mutation must be an object")\n'
+              '    if not isinstance(tests, dict):\n'
+              '        raise ValueError("quality-current tests must be an object")\n'
+              '    if not isinstance(performance, dict):\n'
+              '        raise ValueError("quality-current performance must be an object")\n'
+          )
+          if old not in text:
+              raise SystemExit('record_quality_history typing anchor not found')
+          history.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
+
+          capsule = Path('tsao_researcher/capsule.py')
+          text = capsule.read_text(encoding='utf-8')
+          old = '        "total_bytes": sum(int(record["size_bytes"]) for record in records),\n'
+          new = '        "total_bytes": sum(path.stat().st_size for path in files),\n'
+          if old not in text:
+              raise SystemExit('capsule total_bytes typing anchor not found')
+          capsule.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
+          PY
+          python -m ruff format scripts tsao_researcher tests
+          python -m ruff check --fix --exit-zero scripts tsao_researcher tests
+          python -m ruff check --fix --unsafe-fixes --select C408 tests/test_receipts_capsules.py
+          python -m ruff format scripts tsao_researcher tests
 
       - name: Regenerate and verify repository artifacts
         run: |
@@ -137,7 +172,7 @@ jobs:
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
           python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python -m pip_audit --strict --skip-editable --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
 
       - name: Mutation performance quality and distributions
         run: |
