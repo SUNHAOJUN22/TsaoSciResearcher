@@ -99,6 +99,14 @@ def _apply_payload(archive_bytes: bytes) -> None:
         archive_path.unlink(missing_ok=True)
 
 
+def _replace_required(relative: str, old: str, new: str) -> None:
+    path = ROOT / relative
+    text = path.read_text(encoding="utf-8")
+    if old not in text:
+        raise ValueError(f"security dependency anchor missing in {relative}: {old}")
+    path.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
+
+
 def _cleanup() -> None:
     report = ROOT / "scripts/build_engineering_report.py"
     if report.is_file():
@@ -107,6 +115,10 @@ def _cleanup() -> None:
         new = 'output = bytearray(b"%PDF-1.4\\n%TsaoSciResearcher deterministic report\\n")'
         if old in text:
             report.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+
+    _replace_required("requirements-ci.lock", "pytest==9.0.2", "pytest==9.0.3")
+    _replace_required("requirements-dev.txt", "pytest>=8,<10", "pytest>=9.0.3,<10")
+    _replace_required("pyproject.toml", '"pytest>=8,<10"', '"pytest>=9.0.3,<10"')
 
     github = ROOT / ".github"
     for path in sorted(github.rglob("*"), key=lambda item: len(item.parts), reverse=True):
