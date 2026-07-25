@@ -119,7 +119,7 @@ jobs:
       - name: Dependency audit and deterministic SBOM
         run: |
           python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python -m pip_audit --strict --skip-editable --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
           python scripts/build_sbom.py --check
       - name: Mutation, performance and quality baseline
         run: |
