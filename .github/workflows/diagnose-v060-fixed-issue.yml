@@ -1,0 +1,91 @@
+name: Diagnose canonical v0.6.0 payload
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] diagnose v0.6.0 fixed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Diagnose ordered canonical blob payload
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        shell: bash
+        run: |
+          set +e
+          python - <<'PY' > /tmp/v060-diagnostic.txt 2>&1
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import os
+          import traceback
+          import urllib.request
+          from pathlib import Path
+
+          expected_encoded = 179356
+          expected_archive = 134517
+          expected_digest = "f16ca6d03228d0adf29141b9b3952033d7855feba2e159e026584d52e4cd91da"
+
+          try:
+              transport = json.loads(Path(".github/v060-clean-transport.json").read_text(encoding="utf-8"))
+              shas = transport["blob_shas"]
+              print(f"parts={len(shas)}")
+              chunks = []
+              for index, sha in enumerate(shas):
+                  req = urllib.request.Request(
+                      f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/git/blobs/{sha}",
+                      headers={
+                          "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                          "Accept": "application/vnd.github+json",
+                          "X-GitHub-Api-Version": "2022-11-28",
+                      },
+                  )
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      value = json.load(response)
+                  raw = base64.b64decode("".join(str(value["content"]).split()), validate=True)
+                  actual = hashlib.sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest()
+                  if actual != sha:
+                      raise RuntimeError(f"index={index} blob mismatch actual={actual} expected={sha}")
+                  chunks.append(raw)
+                  print(f"index={index:02d} bytes={len(raw)} sha={actual} PASS")
+              encoded = b"".join(chunks)
+              print(f"encoded_bytes={len(encoded)} expected={expected_encoded}")
+              if len(encoded) != expected_encoded:
+                  raise RuntimeError("encoded size mismatch")
+              archive = base64.b64decode(b"".join(encoded.split()), validate=True)
+              digest = hashlib.sha256(archive).hexdigest()
+              print(f"archive_bytes={len(archive)} expected={expected_archive}")
+              print(f"archive_sha256={digest} expected={expected_digest}")
+              if len(archive) != expected_archive or digest != expected_digest:
+                  raise RuntimeError("archive identity mismatch")
+              print("DIAGNOSTIC=PASS")
+          except Exception:
+              traceback.print_exc()
+              print("DIAGNOSTIC=FAIL")
+          PY
+          tail -n 20 /tmp/v060-diagnostic.txt
+          BODY="$(tail -n 20 /tmp/v060-diagnostic.txt | sed 's/`/\\`/g')"
+          gh issue comment "$ISSUE_NUMBER" --body "\`\`\`text
+          ${BODY}
+          \`\`\`"
+          if grep -q '^DIAGNOSTIC=PASS$' /tmp/v060-diagnostic.txt; then
+            gh issue close "$ISSUE_NUMBER" --reason completed
+            exit 0
+          fi
+          exit 1
