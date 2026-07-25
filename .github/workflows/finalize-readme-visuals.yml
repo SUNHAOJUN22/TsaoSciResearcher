@@ -7,6 +7,7 @@ on:
       - "docs/assets/ai/visual-atlas.zip"
       - "docs/assets/ai/visual-section-en.md"
       - "docs/assets/ai/visual-section-zh.md"
+      - ".github/visual-atlas.trigger"
 
 permissions:
   contents: write
@@ -119,6 +120,7 @@ jobs:
           rm docs/assets/ai/visual-atlas.zip
           rm docs/assets/ai/visual-section-en.md
           rm docs/assets/ai/visual-section-zh.md
+          rm .github/visual-atlas.trigger
           git rm .github/workflows/finalize-readme-visuals.yml
 
       - name: Regenerate deterministic repository evidence
