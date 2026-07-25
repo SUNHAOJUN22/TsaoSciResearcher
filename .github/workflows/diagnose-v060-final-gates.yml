@@ -8,6 +8,11 @@ permissions:
   contents: read
   issues: write
 
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
 jobs:
   diagnose:
     if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] diagnose v0.6.0 final gates'
