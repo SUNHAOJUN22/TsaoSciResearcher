@@ -16,13 +16,14 @@ env:
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONNOUSERSITE: "1"
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+  VISUAL_STAGE: triggered
 
 jobs:
   finalize:
     if: >-
       github.actor == 'SUNHAOJUN22' &&
       github.event.issue.title == '[TSR] finalize README visual atlas' &&
-      github.event.comment.body == '[TSR] run staged visual atlas'
+      github.event.comment.body == '[TSR] diagnose staged visual atlas'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -39,11 +40,15 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-ci.lock
 
+      - name: Mark checkout stage
+        run: echo "VISUAL_STAGE=checkout-pass" >> "$GITHUB_ENV"
+
       - name: Install exact validation toolchain
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
+          echo "VISUAL_STAGE=install-pass" >> "$GITHUB_ENV"
 
       - name: Verify and install the staged visual atlas
         run: |
@@ -122,6 +127,7 @@ jobs:
           rm docs/assets/ai/visual-section-zh.md
           rm -f .github/visual-atlas.trigger
           git rm .github/workflows/finalize-readme-visuals.yml
+          echo "VISUAL_STAGE=payload-pass" >> "$GITHUB_ENV"
 
       - name: Regenerate deterministic repository evidence
         run: |
@@ -133,6 +139,7 @@ jobs:
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
+          echo "VISUAL_STAGE=evidence-pass" >> "$GITHUB_ENV"
 
       - name: Validate repository documentation and contracts
         run: |
@@ -152,6 +159,7 @@ jobs:
           python scripts/route_task.py --self-test
           python scripts/validate_figure.py examples/figure-contract.json
           mkdocs build --strict
+          echo "VISUAL_STAGE=docs-pass" >> "$GITHUB_ENV"
 
       - name: Full regression coverage and order independence
         run: |
@@ -160,6 +168,7 @@ jobs:
           python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
           TSR_TEST_ORDER_SEED=20260726 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+          echo "VISUAL_STAGE=tests-pass" >> "$GITHUB_ENV"
 
       - name: Static quality security mutation and performance
         run: |
@@ -171,6 +180,7 @@ jobs:
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
           python scripts/check_quality_baseline.py
+          echo "VISUAL_STAGE=quality-pass" >> "$GITHUB_ENV"
 
       - name: Deterministic release and distribution gates
         run: |
@@ -181,6 +191,7 @@ jobs:
           python scripts/validate_release.py
           python -m build --sdist --wheel --outdir dist-python
           python scripts/validate_distribution.py dist-python
+          echo "VISUAL_STAGE=release-pass" >> "$GITHUB_ENV"
 
       - name: Create verified main candidate
         id: candidate
@@ -191,6 +202,7 @@ jobs:
           git diff --cached --check
           git commit -m 'docs: add AI-generated scientific capability visual atlas'
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "VISUAL_STAGE=candidate-pass" >> "$GITHUB_ENV"
 
       - name: Upload final validation evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -208,14 +220,18 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Mark artifact stage
+        run: echo "VISUAL_STAGE=artifact-pass" >> "$GITHUB_ENV"
+
       - name: Publish verified candidate directly to main
         run: |
           git fetch origin main
           test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/main)"
           git push origin HEAD:main
           test "$(git ls-remote origin refs/heads/main | cut -f1)" = "${{ steps.candidate.outputs.sha }}"
+          echo "VISUAL_STAGE=publish-pass" >> "$GITHUB_ENV"
 
-      - name: Report workflow outcome
+      - name: Report diagnostic outcome
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -223,4 +239,7 @@ jobs:
           CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
           JOB_STATUS: ${{ job.status }}
         run: |
-          gh issue comment "$ISSUE_NUMBER" --body "staged visual atlas status=${JOB_STATUS}; run=${GITHUB_RUN_ID}; attempt=${GITHUB_RUN_ATTEMPT}; candidate=${CANDIDATE_SHA:-not-created}"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "visual diagnostic final=${JOB_STATUS}; stage=${VISUAL_STAGE}; run=${GITHUB_RUN_ID}; attempt=${GITHUB_RUN_ATTEMPT}; candidate=${CANDIDATE_SHA:-not-created}"
+          if [ "$JOB_STATUS" = success ]; then
+            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
+          fi
