@@ -5,9 +5,8 @@ on:
     branches: [main]
     paths:
       - "docs/assets/ai/visual-atlas.zip"
-      - "README.md"
-      - "README_EN.md"
-      - "README.zh-CN.md"
+      - "docs/assets/ai/visual-section-en.md"
+      - "docs/assets/ai/visual-section-zh.md"
 
 permissions:
   contents: write
@@ -45,7 +44,7 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Verify and unpack the staged visual atlas
+      - name: Verify and install the staged visual atlas
         run: |
           python - <<'PY'
           from __future__ import annotations
@@ -54,8 +53,21 @@ jobs:
           import zipfile
           from pathlib import Path, PurePosixPath
 
-          archive_path = Path("docs/assets/ai/visual-atlas.zip")
-          expected_sha = "3442234d59c78fd38cefe0413bb36c07d116f1e76643f2a2ad1c4de1d60c8070"
+          root = Path.cwd()
+          asset_dir = root / "docs/assets/ai"
+          archive_path = asset_dir / "visual-atlas.zip"
+          en_path = asset_dir / "visual-section-en.md"
+          zh_path = asset_dir / "visual-section-zh.md"
+          expected = {
+              archive_path: "3442234d59c78fd38cefe0413bb36c07d116f1e76643f2a2ad1c4de1d60c8070",
+              en_path: "a396c5e138c7d7b719b9901286ce50d4a8ee677a92f85ce6b436ee562805ee05",
+              zh_path: "a00bc33255c7bef94cc537c8cb0b9c40609fe8c75bab5cdc731a372782fa3acf",
+          }
+          for path, expected_sha in expected.items():
+              actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual_sha != expected_sha:
+                  raise SystemExit(f"staged payload checksum mismatch for {path}: {actual_sha}")
+
           expected_names = {
               "capability_landscape.svg",
               "computation_handoff_boundary.svg",
@@ -66,11 +78,6 @@ jobs:
               "reproducibility_quality_gates.svg",
               "research_os_architecture.svg",
           }
-          actual_sha = hashlib.sha256(archive_path.read_bytes()).hexdigest()
-          if actual_sha != expected_sha:
-              raise SystemExit(f"visual archive checksum mismatch: {actual_sha}")
-
-          target = archive_path.parent
           with zipfile.ZipFile(archive_path) as archive:
               names = {info.filename for info in archive.infolist() if not info.is_dir()}
               if names != expected_names:
@@ -83,9 +90,35 @@ jobs:
                   text = data.decode("utf-8")
                   if "<svg" not in text or "<title" not in text or "<desc" not in text:
                       raise SystemExit(f"invalid accessible SVG: {name}")
-                  (target / name).write_bytes(data)
+                  (asset_dir / name).write_bytes(data)
+
+          start = "<!-- TSR-AI-VISUALS:START -->"
+          end = "<!-- TSR-AI-VISUALS:END -->"
+
+          def upsert(readme: Path, section: str, anchor: str) -> None:
+              text = readme.read_text(encoding="utf-8")
+              block = f"{start}\n{section.rstrip()}\n{end}"
+              if start in text or end in text:
+                  if text.count(start) != 1 or text.count(end) != 1:
+                      raise SystemExit(f"broken visual markers in {readme}")
+                  before, tail = text.split(start, 1)
+                  _, after = tail.split(end, 1)
+                  text = before.rstrip() + "\n\n" + block + after
+              else:
+                  if anchor not in text:
+                      raise SystemExit(f"README anchor missing in {readme}: {anchor}")
+                  text = text.replace(anchor, block + "\n\n" + anchor, 1)
+              readme.write_text(text, encoding="utf-8", newline="\n")
+
+          en = en_path.read_text(encoding="utf-8")
+          zh = zh_path.read_text(encoding="utf-8")
+          upsert(root / "README.md", en, "## Native, delegated and human-approved boundaries")
+          upsert(root / "README_EN.md", en, "## Native, delegated and human-approved boundaries")
+          upsert(root / "README.zh-CN.md", zh, "## 能力边界")
           PY
           rm docs/assets/ai/visual-atlas.zip
+          rm docs/assets/ai/visual-section-en.md
+          rm docs/assets/ai/visual-section-zh.md
           git rm .github/workflows/finalize-readme-visuals.yml
 
       - name: Regenerate deterministic repository evidence
