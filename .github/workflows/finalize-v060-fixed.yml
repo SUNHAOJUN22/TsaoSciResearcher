@@ -78,6 +78,9 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
+      - name: Normalize Python formatting
+        run: python -m ruff format scripts tsao_researcher tests
+
       - name: Regenerate and verify repository artifacts
         run: |
           python scripts/sync_version.py --write
