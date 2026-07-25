@@ -49,7 +49,7 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Run static gates one by one
+      - name: Run normalized static gates one by one
         shell: bash
         run: |
           set +e
@@ -60,6 +60,7 @@ jobs:
           from pathlib import Path
 
           commands = [
+              "python -m ruff format scripts tsao_researcher tests",
               "python -m ruff format --check scripts tsao_researcher tests",
               "python -m ruff check scripts tsao_researcher tests",
               "python -m mypy scripts tsao_researcher",
@@ -73,9 +74,9 @@ jobs:
               proc = subprocess.run(command, shell=True, text=True, capture_output=True)
               lines.append(f"[{index:02d}] rc={proc.returncode} {command}")
               if proc.stdout:
-                  lines.extend(proc.stdout.rstrip().splitlines()[-40:])
+                  lines.extend(proc.stdout.rstrip().splitlines()[-50:])
               if proc.stderr:
-                  lines.extend(proc.stderr.rstrip().splitlines()[-40:])
+                  lines.extend(proc.stderr.rstrip().splitlines()[-50:])
               if proc.returncode:
                   status = proc.returncode
                   lines.append("STATIC_DIAGNOSTIC=FAIL")
@@ -92,7 +93,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          BODY="$(tail -n 90 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
+          BODY="$(tail -n 110 /tmp/v060-static-diagnostic.txt | sed 's/`/\\`/g')"
           gh issue comment "$ISSUE_NUMBER" --body "\`\`\`text
           ${BODY}
           \`\`\`"
