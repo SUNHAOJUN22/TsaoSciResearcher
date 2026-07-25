@@ -24,7 +24,9 @@ SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 def _sequences(value: object) -> list[list[str]]:
     found: list[list[str]] = []
-    if isinstance(value, list) and len(value) == 79 and all(isinstance(x, str) and SHA40.fullmatch(x) for x in value):
+    if isinstance(value, list) and len(value) == 79 and all(
+        isinstance(x, str) and SHA40.fullmatch(x) for x in value
+    ):
         found.append(list(value))
     elif isinstance(value, dict):
         for item in value.values():
@@ -46,7 +48,7 @@ def _fetch_blob(repository: str, token: str, sha: str) -> bytes:
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         value = json.load(response)
-    raw = base64.b64decode(value["content"], validate=True)
+    raw = base64.b64decode("".join(str(value["content"]).split()), validate=True)
     actual = hashlib.sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest()
     if actual != sha:
         raise ValueError(f"Git blob identity mismatch: {actual} != {sha}")
@@ -105,17 +107,18 @@ def _cleanup() -> None:
         new = 'output = bytearray(b"%PDF-1.4\\n%TsaoSciResearcher deterministic report\\n")'
         if old in text:
             report.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+
     github = ROOT / ".github"
     for path in sorted(github.rglob("*"), key=lambda item: len(item.parts), reverse=True):
-        rel = path.relative_to(github)
-        remove = any(part.startswith("v060") or part.startswith("verify-finalize-v060") for part in rel.parts)
-        remove = remove or (path.parent.name == "workflows" and (path.name.startswith("finalize-v060") or path.name in {"apply-v060-deep.yml", "verify-finalize-v060.yml", "verify-finalize-v060-push.yml"}))
-        if remove:
+        relative = path.relative_to(github)
+        if any("v060" in part for part in relative.parts):
             if path.is_dir() and not path.is_symlink():
                 shutil.rmtree(path, ignore_errors=True)
             else:
                 path.unlink(missing_ok=True)
-    (ROOT / "scripts/finalize_v060_ci.py").unlink(missing_ok=True)
+
+    for path in (ROOT / "scripts").glob("finalize_v060_ci*.py"):
+        path.unlink(missing_ok=True)
 
 
 def main() -> None:
