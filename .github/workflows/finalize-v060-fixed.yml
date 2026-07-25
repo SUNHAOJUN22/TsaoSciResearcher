@@ -110,6 +110,8 @@ jobs:
       - name: Create local candidate commit
         id: candidate
         run: |
+          rm -rf site build htmlcov .coverage .pytest_cache .mypy_cache .ruff_cache
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
@@ -167,7 +169,6 @@ jobs:
             SHA256SUMS
             dist-a
             dist-python
-            site
           if-no-files-found: error
           retention-days: 30
 
