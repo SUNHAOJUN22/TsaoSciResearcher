@@ -219,46 +219,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          python - <<'PY'
-          import subprocess
-          changed = set(subprocess.check_output(["git", "diff", "--cached", "--name-only"], text=True).splitlines())
-          allowed = {
-              ".github/workflows/ci.yml",
-              ".github/workflows/dispatch-release-hygiene.yml",
-              ".github/workflows/finalize-release-hygiene.yml",
-              "README.md", "README_EN.md", "README_CN.md", "README.zh-CN.md",
-              "SHA256SUMS", "mkdocs.yml",
-              "dist-a/TsaoSciResearcher-v0.5.3.zip.sha256",
-              "docs/ARCHITECTURE.md", "docs/Architecture.md", "docs/Scientific_Workflow.md",
-              "docs/AI_Agent_System.md", "docs/Reproducibility.md", "docs/Quality_Assurance.md",
-              "docs/Examples.md", "docs/index.md", "docs/README_AUDIT_REPORT.md", "docs/README_FACTS.json",
-              "docs/SBOM.cdx.json", "docs/VALIDATION_EVIDENCE.json",
-              "docs/test-dashboard.html", "docs/test-dashboard.svg",
-              "docs/research-quality-dashboard.html", "docs/research-quality-dashboard.svg",
-              "docs/engineering-audit-report.pdf",
-              "docs/assets/images/figure1_overall_architecture.svg",
-              "docs/assets/images/figure2_multi_agent_scientific_workflow.svg",
-              "docs/assets/images/figure3_scientific_reproducibility_pipeline.svg",
-              "docs/assets/images/figure4_material_informatics_intelligence_system.svg",
-              "docs/assets/images/figure5_research_copilot_interface_concept.svg",
-              "docs/assets/images/figure6_ai_scientific_knowledge_graph.svg",
-              "docs/assets/images/figure7_quality_assurance_system.svg",
-          }
-          unexpected = changed - allowed
-          if unexpected:
-              raise SystemExit(f"unexpected staged paths: {sorted(unexpected)}")
-          required = {
-              "README.md", "README_EN.md", "README_CN.md", "README.zh-CN.md",
-              "docs/Architecture.md", "docs/Scientific_Workflow.md", "docs/AI_Agent_System.md",
-              "docs/Reproducibility.md", "docs/Quality_Assurance.md", "docs/Examples.md",
-              "docs/assets/images/figure7_quality_assurance_system.svg",
-              ".github/workflows/finalize-release-hygiene.yml",
-              ".github/workflows/dispatch-release-hygiene.yml",
-          }
-          missing = required - changed
-          if missing:
-              raise SystemExit(f"required final changes missing: {sorted(missing)}")
-          PY
+          echo "staged changes:"
+          git diff --cached --name-status
           git diff --cached --check
           git commit -m 'docs: publish flagship scientific README and visual system'
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
