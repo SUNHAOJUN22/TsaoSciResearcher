@@ -1,0 +1,24 @@
+name: Dispatch ultimate main verification
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+jobs:
+  dispatch:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] dispatch ultimate main verification'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch indexed verification workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh workflow run diagnose-ultimate-readonly.yml --repo "$GITHUB_REPOSITORY" --ref main
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "ultimate verification dispatch=PASS; dispatcher-run=${GITHUB_RUN_ID}; sha=${GITHUB_SHA}"
+          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
