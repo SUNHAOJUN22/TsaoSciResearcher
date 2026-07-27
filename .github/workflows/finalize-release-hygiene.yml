@@ -134,6 +134,12 @@ jobs:
               raise SystemExit("README_EN.md is not an exact README.md mirror")
           if (root / "README.zh-CN.md").read_bytes() != (root / "README_CN.md").read_bytes():
               raise SystemExit("README_CN.md is not an exact Chinese mirror")
+          audit_report = root / "docs/README_AUDIT_REPORT.md"
+          audit_report.write_text(
+              "\n".join(line.rstrip() for line in audit_report.read_text(encoding="utf-8").splitlines()) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
           PY
 
       - name: Regenerate deterministic repository evidence
