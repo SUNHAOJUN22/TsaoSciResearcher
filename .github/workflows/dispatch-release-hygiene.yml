@@ -1,0 +1,23 @@
+name: Dispatch release hygiene finalizer
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+jobs:
+  dispatch:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] dispatch release hygiene finalizer'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch indexed release hygiene workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh workflow run finalize-release-hygiene.yml --repo "$GITHUB_REPOSITORY" --ref main -f issue_number="$ISSUE_NUMBER"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "release hygiene dispatch=PASS; dispatcher-run=${GITHUB_RUN_ID}; target-status=running"
