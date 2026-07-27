@@ -2,9 +2,15 @@ name: Ultimate main read-only verification
 
 on:
   workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue receiving the final verification result
+        required: true
+        type: string
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: ultimate-main-readonly-verification
@@ -134,3 +140,22 @@ jobs:
             site
           if-no-files-found: error
           retention-days: 30
+
+  report:
+    if: always()
+    needs: [compatibility, full-validation]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report final verification
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          COMPATIBILITY: ${{ needs.compatibility.result }}
+          FULL_VALIDATION: ${{ needs.full-validation.result }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "ultimate read-only verification compatibility=${COMPATIBILITY}; full-validation=${FULL_VALIDATION}; run=${GITHUB_RUN_ID}; workflow-head=${GITHUB_SHA}; validated-source=33e492a4183b140b50b002ffbdcb4828a68eb52e"
+          if [ "$COMPATIBILITY" = success ] && [ "$FULL_VALIDATION" = success ]; then
+            gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
+          else
+            exit 1
+          fi
