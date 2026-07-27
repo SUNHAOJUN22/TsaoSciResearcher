@@ -23,9 +23,9 @@ jobs:
     if: >-
       github.actor == 'SUNHAOJUN22' &&
       github.event.issue.title == '[TSR] finalize README visual atlas' &&
-      github.event.comment.body == '[TSR] diagnose staged visual atlas'
+      github.event.comment.body == '[TSR] finalize visual atlas ultimate'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 100
     steps:
       - name: Checkout staged main
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -40,9 +40,6 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-ci.lock
 
-      - name: Mark checkout stage
-        run: echo "VISUAL_STAGE=checkout-pass" >> "$GITHUB_ENV"
-
       - name: Install exact validation toolchain
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
@@ -50,12 +47,13 @@ jobs:
           python -m pip check
           echo "VISUAL_STAGE=install-pass" >> "$GITHUB_ENV"
 
-      - name: Verify and install the staged visual atlas
+      - name: Verify, install and document the AI scientific visual atlas
         run: |
           python - <<'PY'
           from __future__ import annotations
 
           import hashlib
+          import re
           import zipfile
           from pathlib import Path, PurePosixPath
 
@@ -93,7 +91,7 @@ jobs:
                   if pure.is_absolute() or len(pure.parts) != 1 or pure.suffix != ".svg":
                       raise SystemExit(f"unsafe visual path: {name}")
                   data = archive.read(name)
-                  text = data.decode("utf-8")
+                  text = data.decode("utf-8", errors="strict")
                   if "<svg" not in text or "<title" not in text or "<desc" not in text:
                       raise SystemExit(f"invalid accessible SVG: {name}")
                   (asset_dir / name).write_bytes(data)
@@ -102,7 +100,7 @@ jobs:
           end = "<!-- TSR-AI-VISUALS:END -->"
 
           def upsert(readme: Path, section: str, anchor: str) -> None:
-              text = readme.read_text(encoding="utf-8")
+              text = readme.read_text(encoding="utf-8", errors="strict")
               block = f"{start}\n{section.rstrip()}\n{end}"
               if start in text or end in text:
                   if text.count(start) != 1 or text.count(end) != 1:
@@ -114,20 +112,62 @@ jobs:
                   if anchor not in text:
                       raise SystemExit(f"README anchor missing in {readme}: {anchor}")
                   text = text.replace(anchor, block + "\n\n" + anchor, 1)
-              readme.write_text(text, encoding="utf-8", newline="\n")
+              text = text.replace(
+                  "python -m pip_audit --strict",
+                  "python -m pip_audit --strict -r requirements-ci.lock",
+              )
+              readme.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
 
-          en = en_path.read_text(encoding="utf-8")
-          zh = zh_path.read_text(encoding="utf-8")
+          en = en_path.read_text(encoding="utf-8", errors="strict")
+          zh = zh_path.read_text(encoding="utf-8", errors="strict")
           upsert(root / "README.md", en, "## Native, delegated and human-approved boundaries")
           upsert(root / "README_EN.md", en, "## Native, delegated and human-approved boundaries")
           upsert(root / "README.zh-CN.md", zh, "## 能力边界")
+          (root / "README_CN.md").write_text(
+              (root / "README.zh-CN.md").read_text(encoding="utf-8", errors="strict"),
+              encoding="utf-8",
+              newline="\n",
+          )
+
+          workflows = root / ".github/workflows"
+          stable = ["ci.yml", "audit.yml", "nightly.yml", "release.yml"]
+          freeze_old = "python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock"
+          freeze_new = (
+              "python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort "
+              "> artifacts/resolved-environment.lock"
+          )
+          audit_line = (
+              "python -m pip_audit --strict -r artifacts/resolved-environment.lock "
+              "--format cyclonedx-json --output artifacts/resolved-environment-sbom.json"
+          )
+          for name in stable:
+              path = workflows / name
+              text = path.read_text(encoding="utf-8", errors="strict")
+              text = text.replace(freeze_old, freeze_new)
+              text = re.sub(
+                  r"(?m)^(\s*)python -m pip_audit --strict[^\n]*resolved-environment-sbom\.json\s*$",
+                  lambda match: match.group(1) + audit_line,
+                  text,
+              )
+              path.write_text(text, encoding="utf-8", newline="\n")
+
+          for path in (archive_path, en_path, zh_path, root / ".github/visual-atlas.trigger"):
+              path.unlink(missing_ok=True)
+          for path in workflows.glob("*visual*.yml"):
+              path.unlink(missing_ok=True)
+          for path in workflows.glob("*diagnose*.yml"):
+              path.unlink(missing_ok=True)
+          for pattern in ("*.trigger", "*status*.json", "*transport*.json"):
+              for path in (root / ".github").glob(pattern):
+                  path.unlink(missing_ok=True)
           PY
-          rm docs/assets/ai/visual-atlas.zip
-          rm docs/assets/ai/visual-section-en.md
-          rm docs/assets/ai/visual-section-zh.md
-          rm -f .github/visual-atlas.trigger
-          git rm .github/workflows/finalize-readme-visuals.yml
           echo "VISUAL_STAGE=payload-pass" >> "$GITHUB_ENV"
+
+      - name: Normalize Python formatting
+        run: |
+          python -m ruff format scripts tsao_researcher tests
+          python -m ruff check --fix scripts tsao_researcher tests
+          echo "VISUAL_STAGE=format-pass" >> "$GITHUB_ENV"
 
       - name: Regenerate deterministic repository evidence
         run: |
@@ -167,19 +207,21 @@ jobs:
           python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-          TSR_TEST_ORDER_SEED=20260726 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+          TSR_TEST_ORDER_SEED=20260727 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
           echo "VISUAL_STAGE=tests-pass" >> "$GITHUB_ENV"
 
-      - name: Static quality security mutation and performance
+      - name: Static quality, security, mutation and performance
         run: |
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
-          python -m pip_audit --strict
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
           python scripts/check_quality_baseline.py
+          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
           echo "VISUAL_STAGE=quality-pass" >> "$GITHUB_ENV"
 
       - name: Deterministic release and distribution gates
@@ -196,11 +238,13 @@ jobs:
       - name: Create verified main candidate
         id: candidate
         run: |
+          rm -rf site build htmlcov .coverage .pytest_cache .mypy_cache .ruff_cache
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
-          git commit -m 'docs: add AI-generated scientific capability visual atlas'
+          git commit -m 'docs: publish ultimate AI scientific visual atlas'
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "VISUAL_STAGE=candidate-pass" >> "$GITHUB_ENV"
 
@@ -212,16 +256,19 @@ jobs:
             artifacts
             docs/assets/ai
             docs/VALIDATION_EVIDENCE.json
+            docs/SBOM.cdx.json
+            docs/QUALITY_BASELINE.json
+            docs/QUALITY_HISTORY.json
             docs/engineering-audit-report.pdf
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
             SHA256SUMS
             dist-a
             dist-python
-            site
           if-no-files-found: error
           retention-days: 30
-
-      - name: Mark artifact stage
-        run: echo "VISUAL_STAGE=artifact-pass" >> "$GITHUB_ENV"
 
       - name: Publish verified candidate directly to main
         run: |
@@ -231,7 +278,7 @@ jobs:
           test "$(git ls-remote origin refs/heads/main | cut -f1)" = "${{ steps.candidate.outputs.sha }}"
           echo "VISUAL_STAGE=publish-pass" >> "$GITHUB_ENV"
 
-      - name: Report diagnostic outcome
+      - name: Report workflow outcome
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -239,7 +286,7 @@ jobs:
           CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
           JOB_STATUS: ${{ job.status }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "visual diagnostic final=${JOB_STATUS}; stage=${VISUAL_STAGE}; run=${GITHUB_RUN_ID}; attempt=${GITHUB_RUN_ATTEMPT}; candidate=${CANDIDATE_SHA:-not-created}"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "ultimate README visual atlas status=${JOB_STATUS}; stage=${VISUAL_STAGE}; run=${GITHUB_RUN_ID}; attempt=${GITHUB_RUN_ATTEMPT}; candidate=${CANDIDATE_SHA:-not-created}"
           if [ "$JOB_STATUS" = success ]; then
             gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
           fi
