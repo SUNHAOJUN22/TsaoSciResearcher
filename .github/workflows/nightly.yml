@@ -34,8 +34,8 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-          python -m pip freeze --all | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict --skip-editable --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
       - name: Deep health regression
         run: |
           mkdir -p artifacts
