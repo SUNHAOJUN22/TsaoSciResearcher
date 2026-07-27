@@ -1,6 +1,12 @@
 name: Finalize release hygiene
 
 on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue receiving the final candidate result
+        required: true
+        type: string
   issues:
     types: [opened]
 
@@ -19,7 +25,7 @@ env:
 
 jobs:
   finalize:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize release hygiene'
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize release hygiene')
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -37,7 +43,7 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Apply hygiene corrections and remove this one-shot workflow
+      - name: Apply hygiene corrections and remove one-shot controls
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -54,7 +60,11 @@ jobs:
               if text.count(old) != 1:
                   raise SystemExit(f'README fact anchor mismatch: {name}')
               path.write_text(text.replace(old, new), encoding='utf-8', newline='\n')
-          (root / '.github/workflows/finalize-release-hygiene.yml').unlink()
+          for name in (
+              '.github/workflows/finalize-release-hygiene.yml',
+              '.github/workflows/dispatch-release-hygiene.yml',
+          ):
+              (root / name).unlink(missing_ok=True)
           PY
       - name: Regenerate deterministic repository evidence
         run: |
@@ -146,7 +156,7 @@ jobs:
       - name: Report successful candidate
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: ${{ inputs.issue_number || github.event.issue.number }}
           CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
         run: |
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "release hygiene status=success; run=${GITHUB_RUN_ID}; candidate=${CANDIDATE_SHA}; tests=185; line-coverage>=85; mutations=18/18; stale-sidecar=removed"
