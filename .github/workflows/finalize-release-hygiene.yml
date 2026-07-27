@@ -1,8 +1,8 @@
 name: Finalize flagship README and repository hygiene
 
 on:
-  issues:
-    types: [opened]
+  issue_comment:
+    types: [created]
 
 permissions:
   actions: write
@@ -20,7 +20,7 @@ env:
 
 jobs:
   finalize:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README'
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_PAYLOAD_READY'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -43,9 +43,11 @@ jobs:
 
       - name: Apply verified flagship payload and remove one-shot residue
         env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           EXPECTED_PAYLOAD_SHA256: 9637599a704bd1817fc0246f6262ef991f60270d8a2530e64e74683f428ffa36
         run: |
+          gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" --paginate --jq '.[].body' > "$RUNNER_TEMP/payload-comments.txt"
           python - <<'PY'
           from __future__ import annotations
           import base64
@@ -57,7 +59,18 @@ jobs:
           from pathlib import Path
 
           root = Path.cwd().resolve()
-          encoded = os.environ["ISSUE_BODY"].strip()
+          comments = (Path(os.environ["RUNNER_TEMP"]) / "payload-comments.txt").read_text(encoding="utf-8").splitlines()
+          chunks: dict[int, str] = {}
+          for body in comments:
+              if not body.startswith("TSR_PAYLOAD_") or ":" not in body:
+                  continue
+              prefix, value = body.split(":", 1)
+              index_text = prefix.removeprefix("TSR_PAYLOAD_")
+              if index_text.isdigit():
+                  chunks[int(index_text)] = value.strip()
+          if not chunks or sorted(chunks) != list(range(1, max(chunks) + 1)):
+              raise SystemExit(f"payload comment sequence invalid: {sorted(chunks)}")
+          encoded = "".join(chunks[index] for index in sorted(chunks))
           raw = base64.b64decode(encoded, validate=True)
           actual = hashlib.sha256(raw).hexdigest()
           expected = os.environ["EXPECTED_PAYLOAD_SHA256"]
