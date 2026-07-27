@@ -96,7 +96,7 @@ source = ["tsao_researcher"]
 parallel = false
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 85
 show_missing = true
 skip_covered = false
 precision = 2
