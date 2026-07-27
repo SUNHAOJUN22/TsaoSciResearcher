@@ -1,6 +1,7 @@
 name: Ultimate main read-only verification
 
 on:
+  workflow_dispatch:
   issues:
     types: [opened]
 
@@ -19,7 +20,7 @@ env:
 
 jobs:
   compatibility:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only'
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only')
     name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
@@ -58,7 +59,7 @@ jobs:
           python scripts/validate_schemas.py
 
   full-validation:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only'
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only')
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 65
@@ -134,7 +135,7 @@ jobs:
           retention-days: 30
 
   report:
-    if: always() && github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only'
+    if: always() && github.event_name == 'issues' && github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify ultimate main read-only'
     needs: [compatibility, full-validation]
     runs-on: ubuntu-latest
     steps:
