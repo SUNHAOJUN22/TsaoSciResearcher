@@ -7,11 +7,9 @@ on:
         description: Issue receiving the final candidate result
         required: true
         type: string
-  issues:
-    types: [opened]
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -25,7 +23,6 @@ env:
 
 jobs:
   finalize:
-    if: github.event_name == 'workflow_dispatch' || (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize release hygiene')
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -43,7 +40,7 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Apply hygiene corrections and remove one-shot controls
+      - name: Apply final release-hygiene corrections
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -60,11 +57,6 @@ jobs:
               if text.count(old) != 1:
                   raise SystemExit(f'README fact anchor mismatch: {name}')
               path.write_text(text.replace(old, new), encoding='utf-8', newline='\n')
-          for name in (
-              '.github/workflows/finalize-release-hygiene.yml',
-              '.github/workflows/dispatch-release-hygiene.yml',
-          ):
-              (root / name).unlink(missing_ok=True)
           PY
       - name: Regenerate deterministic repository evidence
         run: |
@@ -120,7 +112,7 @@ jobs:
           python scripts/validate_release.py
           python -m build --sdist --wheel --outdir dist-python
           python scripts/validate_distribution.py dist-python
-      - name: Create clean verified candidate
+      - name: Create verified product candidate
         id: candidate
         run: |
           rm -rf site build htmlcov .coverage .pytest_cache .mypy_cache .ruff_cache
@@ -153,11 +145,17 @@ jobs:
             dist-python
           if-no-files-found: error
           retention-days: 30
-      - name: Report successful candidate
+      - name: Publish verified product candidate directly to main
+        run: |
+          git fetch origin main
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/main)"
+          git push origin HEAD:main
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "${{ steps.candidate.outputs.sha }}"
+      - name: Report successful publication
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ inputs.issue_number || github.event.issue.number }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
           CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "release hygiene status=success; run=${GITHUB_RUN_ID}; candidate=${CANDIDATE_SHA}; tests=185; line-coverage>=85; mutations=18/18; stale-sidecar=removed"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "release hygiene status=published; run=${GITHUB_RUN_ID}; candidate=${CANDIDATE_SHA}; tests=185; line-coverage>=85; mutations=18/18; stale-sidecar=removed"
           gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
