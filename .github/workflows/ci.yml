@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: write
@@ -21,6 +23,10 @@ env:
 
 jobs:
   compatibility:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.actor == 'SUNHAOJUN22' && github.event.issue.number == 69 &&
+       github.event.comment.body == 'TSR_RUN_FP_0_7_0')
     name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 18
@@ -39,6 +45,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
       - name: Materialize first-principles 0.7.0 candidate
         id: materialize
         shell: bash
@@ -109,8 +117,18 @@ jobs:
           python -m tsao_researcher quality examples/scientific-quality-check.json
           python scripts/validate_schemas.py
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+      - name: Report compatibility failure
+        if: failure() && steps.materialize.outputs.active == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue edit 69 --repo "$GITHUB_REPOSITORY" --body "status=first-principles-0.7.0-failed; workflow-run=${GITHUB_RUN_ID}; stage=compatibility; os=${{ matrix.os }}; python=${{ matrix.python-version }}"
 
   full-validation:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.actor == 'SUNHAOJUN22' && github.event.issue.number == 69 &&
+       github.event.comment.body == 'TSR_RUN_FP_0_7_0')
     name: full-validation-and-release-evidence
     needs: compatibility
     runs-on: ubuntu-latest
@@ -118,6 +136,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
       - name: Materialize first-principles 0.7.0 candidate
         id: materialize
         shell: bash
@@ -281,8 +301,12 @@ jobs:
           required = {'tsao_researcher/strategy.py', 'schemas/v2/computation-strategy.schema.json', 'capabilities/v2/extensions.json'}
           if not required.issubset(changed):
               raise SystemExit(f"missing product files: {sorted(required - set(changed))}")
-          if any(path.startswith('.github/fp-') or 'first-principles' in path for path in changed):
-              raise SystemExit('temporary first-principles control survived candidate cleanup')
+          unexpected_controls = [
+              path for path in changed
+              if path.startswith('.github/') and path != '.github/workflows/ci.yml'
+          ]
+          if unexpected_controls:
+              raise SystemExit(f'temporary controls survived candidate cleanup: {unexpected_controls}')
           def api(method: str, path: str, payload: dict) -> dict:
               req = urllib.request.Request(
                   f'https://api.github.com/repos/{repo}{path}',
@@ -318,4 +342,10 @@ jobs:
           CHANGED: ${{ steps.candidate.outputs.changed }}
           DELETED: ${{ steps.candidate.outputs.deleted }}
         run: |
-          gh issue edit 69 --repo "$GITHUB_REPOSITORY" --body "status=first-principles-0.7.0-candidate-ready; candidate=${CANDIDATE_SHA}; parent=${GITHUB_SHA}; version=0.7.0; changed=${CHANGED}; deleted=${DELETED}; compatibility=PASS; full-tests=PASS; coverage=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=PASS; performance=PASS; deterministic-release=PASS; wheel-sdist=PASS; solver-execution=ABSENT; temporary-controls=REMOVED"
+          gh issue edit 69 --repo "$GITHUB_REPOSITORY" --body "status=first-principles-0.7.0-candidate-ready; candidate=${CANDIDATE_SHA}; parent=${GITHUB_SHA}; workflow-run=${GITHUB_RUN_ID}; version=0.7.0; changed=${CHANGED}; deleted=${DELETED}; compatibility=PASS; full-tests=PASS; coverage=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=PASS; performance=PASS; deterministic-release=PASS; wheel-sdist=PASS; solver-execution=ABSENT; temporary-controls=REMOVED"
+      - name: Report full-validation failure
+        if: failure() && steps.materialize.outputs.active == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue edit 69 --repo "$GITHUB_REPOSITORY" --body "status=first-principles-0.7.0-failed; workflow-run=${GITHUB_RUN_ID}; stage=full-validation"
