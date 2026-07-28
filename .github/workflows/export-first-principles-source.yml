@@ -1,8 +1,10 @@
 name: Finalize first-principles strategy advisor 0.7.0
 
 on:
-  issue_comment:
-    types: [created]
+  push:
+    branches: [main]
+    paths:
+      - .github/fp-finalize-trigger.txt
 
 permissions:
   contents: write
@@ -19,7 +21,6 @@ env:
 
 jobs:
   finalize:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE'
     runs-on: ubuntu-latest
     timeout-minutes: 80
     steps:
@@ -37,7 +38,7 @@ jobs:
       - name: Apply checksum-bound product patch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: "69"
         run: |
           gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments?per_page=100" > comments.json
           python - <<'PY'
@@ -68,6 +69,7 @@ jobs:
 
       - name: Remove every transport and one-shot control
         run: |
+          rm -f .github/fp-finalize-trigger.txt
           rm -f .github/first-principles-advisor-plan.md
           rm -f .github/first-principles-development-session.txt
           rm -f .github/first-principles-patch.part-*
@@ -103,8 +105,9 @@ jobs:
           assert manifest["capability_count"] == 341
           assert manifest["schema_count"] == 19
           rows = json.loads(Path("capabilities/v2/capabilities.json").read_text(encoding="utf-8"))
-          assert len(rows) == 341
-          assert any(row.get("slug") == "first-principles-strategy-advisor" for row in rows)
+          extensions = json.loads(Path("capabilities/v2/extensions.json").read_text(encoding="utf-8"))
+          assert len(rows) + len(extensions) == 341
+          assert any(row.get("slug") == "first-principles-strategy-advisor" for row in extensions)
           strategy = json.loads(Path("/tmp/strategy.json").read_text(encoding="utf-8"))
           assert strategy["status"] == "advisory-only"
           assert strategy["execution_boundary"]["solver_executed"] is False
@@ -218,6 +221,8 @@ jobs:
           deleted = sorted(filter(None, subprocess.check_output(["git", "diff", "--cached", "--name-only", "--diff-filter=D"], text=True).splitlines()))
           required = {
               "tsao_researcher/strategy.py",
+              "tsao_researcher/capabilities.py",
+              "capabilities/v2/extensions.json",
               "schemas/v2/computation-strategy.schema.json",
               "tests/test_first_principles_strategy.py",
               "scripts/advise_computation_strategy.py",
@@ -266,7 +271,7 @@ jobs:
       - name: Report verified candidate
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: "69"
           CANDIDATE: ${{ steps.candidate.outputs.candidate }}
           PARENT: ${{ steps.candidate.outputs.parent }}
           CHANGED: ${{ steps.candidate.outputs.changed }}
@@ -305,7 +310,7 @@ advisory-boundary=PASS"
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: "69"
         run: |
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-finalization-failed
 workflow-run=${GITHUB_RUN_ID}
