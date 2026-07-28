@@ -15,3 +15,12 @@ htmlcov/
 
 # CI/runtime evidence
 artifacts/
+
+# Generated verification and release outputs
+dist-*/
+dist_*/
+build-*/
+build_*/
+release-*/
+release_*/
+site/
