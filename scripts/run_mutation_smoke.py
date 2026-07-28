@@ -170,6 +170,27 @@ MUTATIONS = (
         "if False and stale:",
         ("tests/test_versioning.py",),
     ),
+    Mutation(
+        "project-path-symlink-component",
+        "tsao_researcher/io.py",
+        "if current.is_symlink():",
+        "if False and current.is_symlink():",
+        ("tests/test_defensive_boundaries.py",),
+    ),
+    Mutation(
+        "handoff-output-symlink",
+        "tsao_researcher/handoff.py",
+        "if destination.is_symlink():",
+        "if False and destination.is_symlink():",
+        ("tests/test_defensive_boundaries.py",),
+    ),
+    Mutation(
+        "capsule-output-symlink",
+        "tsao_researcher/capsule.py",
+        "if requested_destination.is_symlink():",
+        "if False and requested_destination.is_symlink():",
+        ("tests/test_defensive_boundaries.py",),
+    ),
 )
 
 

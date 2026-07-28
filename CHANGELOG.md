@@ -60,3 +60,10 @@
 
 - Publish the initial router, README, visual assets and project governance foundation.
 - Define the evidence-first lifecycle and TsaoSciComputation handoff boundary.
+
+### Test and path-boundary hardening
+
+- Reject symbolic-link components in project inputs, handoffs, execution outputs, and capsule destinations instead of checking only the resolved target.
+- Add defensive regression coverage for corrupted state, malformed JSONL, receipt tampering, unsafe capsules, invalid routing/catalog configuration, and CLI encoding fallbacks.
+- Raise the release floor from 85% line / 70% branch coverage to 95% line / 90% branch coverage after measured coverage reached 96.37% / 93.13%.
+- Expand the critical mutation gate from 18 to 21 named mutants, adding three symlink-boundary mutations.

@@ -182,7 +182,7 @@ python -m build --sdist --wheel --outdir dist-python
 python scripts/validate_distribution.py dist-python
 ```
 
-The baseline enforces line and branch coverage, **18/18** critical mutants, bounded performance and zero JUnit failures. Threshold changes require an explicit changelog rationale.
+The baseline enforces line and branch coverage, **21/21** critical mutants, bounded performance and zero JUnit failures. Threshold changes require an explicit changelog rationale.
 
 The checked-in validation evidence is deliberately `preflight/PARTIAL`; GitHub Actions creates commit-bound `current-tree/PASS` evidence and an external publication attestation only after all gates finish.
 

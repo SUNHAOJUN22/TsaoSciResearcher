@@ -142,7 +142,7 @@ def _attested_gates() -> dict[str, str]:
         "byte_identical_release_builds": "PASS",
         "complete_regression": "PASS",
         "coverage_line_and_branch": "PASS",
-        "critical_mutation_killed": "18/18",
+        "critical_mutation_killed": "21/21",
         "dependency_vulnerability_audit": "PASS",
         "deterministic_sbom": "PASS",
         "deterministic_visual_reports": "PASS",

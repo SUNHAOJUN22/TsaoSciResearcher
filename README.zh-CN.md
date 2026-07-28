@@ -182,7 +182,7 @@ python -m build --sdist --wheel --outdir dist-python
 python scripts/validate_distribution.py dist-python
 ```
 
-质量基线约束行覆盖率、分支覆盖率、**18/18** 个关键突变、性能和零 JUnit 失败；降低阈值必须在 Changelog 中明确说明。
+质量基线约束行覆盖率、分支覆盖率、**21/21** 个关键突变、性能和零 JUnit 失败；降低阈值必须在 Changelog 中明确说明。
 
 ## 自动化模型
 

@@ -14,6 +14,7 @@ from .io import (
     atomic_write_text,
     exclusive_lock,
     new_id,
+    project_regular_file,
     sha256_file,
     utc_now,
     write_json,
@@ -32,11 +33,7 @@ def _verified_inputs(root: Path, inputs: list[str]) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     resolved_root = root.resolve()
     for relative in inputs:
-        candidate = (root / relative).resolve(strict=False)
-        if candidate == resolved_root or not candidate.is_relative_to(resolved_root):
-            raise ValidationError(f"input escapes project state directory: {relative}")
-        if candidate.is_symlink() or not candidate.is_file():
-            raise ValidationError(f"input is not a regular project file: {relative}")
+        candidate = project_regular_file(root, relative, field="input")
         records.append(
             {
                 "path": candidate.relative_to(resolved_root).as_posix(),
@@ -131,6 +128,8 @@ def create_handoff(
     destination = Path(output)
     if not destination.is_absolute():
         destination = state_root / destination
+    if destination.is_symlink():
+        raise ValidationError("handoff output cannot be a symbolic link")
     resolved = destination.resolve(strict=False)
     if resolved == state_root.resolve() or not resolved.is_relative_to(state_root.resolve()):
         raise ValidationError("handoff output must stay inside the project state directory")

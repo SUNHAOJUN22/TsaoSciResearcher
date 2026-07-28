@@ -10,7 +10,16 @@ from typing import Any
 import yaml
 
 from .errors import IntegrityError, ValidationError
-from .io import append_jsonl, atomic_write_text, exclusive_lock, new_id, read_jsonl, sha256_file, utc_now
+from .io import (
+    append_jsonl,
+    atomic_write_text,
+    exclusive_lock,
+    new_id,
+    project_regular_file,
+    read_jsonl,
+    sha256_file,
+    utc_now,
+)
 from .state import load_project, project_root
 
 RECEIPT_LOG = "execution-receipts.jsonl"
@@ -34,13 +43,7 @@ def _safe_project_file(state_root: Path, relative: str, *, field: str) -> Path:
     clean = relative.strip()
     if not clean:
         raise ValidationError(f"{field} path must not be blank")
-    resolved_root = state_root.resolve()
-    candidate = (state_root / clean).resolve(strict=False)
-    if candidate == resolved_root or not candidate.is_relative_to(resolved_root):
-        raise ValidationError(f"{field} escapes project state: {relative}")
-    if candidate.is_symlink() or not candidate.is_file():
-        raise ValidationError(f"{field} is not a regular project file: {relative}")
-    return candidate
+    return project_regular_file(state_root, clean, field=field)
 
 
 def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]]:

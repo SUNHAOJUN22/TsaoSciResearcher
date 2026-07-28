@@ -18,6 +18,7 @@ from .io import (
     canonical_json,
     exclusive_lock,
     new_id,
+    project_regular_file,
     read_jsonl,
     utc_now,
 )
@@ -153,6 +154,7 @@ def initialize(
         "execution_receipts": [],
         "latest_event_hash": None,
     }
+    committed = False
     try:
         for directory in (
             "state",
@@ -204,9 +206,10 @@ def initialize(
         if root.exists():
             shutil.rmtree(root)
         stage.replace(root)
-    except Exception:
-        shutil.rmtree(stage, ignore_errors=True)
-        raise
+        committed = True
+    finally:
+        if not committed:
+            shutil.rmtree(stage, ignore_errors=True)
     return root
 
 
@@ -301,13 +304,11 @@ def verify(root: str | Path) -> dict[str, Any]:
         raise IntegrityError("project computation_handoffs must be a list of paths")
     if len(handoffs) != len(set(handoffs)):
         raise IntegrityError("project computation_handoffs contains duplicate paths")
-    resolved_root = state_root.resolve()
     for relative in handoffs:
-        candidate = (state_root / relative).resolve(strict=False)
-        if candidate == resolved_root or not candidate.is_relative_to(resolved_root):
-            raise IntegrityError(f"computation handoff escapes project state: {relative}")
-        if candidate.is_symlink() or not candidate.is_file():
-            raise IntegrityError(f"registered computation handoff missing or unsafe: {relative}")
+        try:
+            candidate = project_regular_file(state_root, relative, field="computation handoff")
+        except ValidationError as exc:
+            raise IntegrityError(str(exc)) from exc
         value = json.loads(candidate.read_text(encoding="utf-8", errors="strict"))
         if not isinstance(value, dict) or value.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"registered computation handoff is invalid: {relative}")

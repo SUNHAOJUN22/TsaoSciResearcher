@@ -109,10 +109,11 @@ def export_capsule(
     project = load_project(state_root)
     state_result = verify(state_root)
     receipt_result = verify_receipts(state_root)
-    destination = Path(output).expanduser().resolve(strict=False)
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    if destination.is_symlink():
+    requested_destination = Path(output).expanduser()
+    if requested_destination.is_symlink():
         raise ValidationError("capsule output cannot be a symbolic link")
+    destination = requested_destination.resolve(strict=False)
+    destination.parent.mkdir(parents=True, exist_ok=True)
     files = _project_files(state_root, destination, mode)
     records = [
         {

@@ -31,7 +31,7 @@ The v0.6.0 audit closed the following gaps:
 | Transfer/reproduction | deterministic capsule manifest, tree digest and sidecar | Implemented |
 | Scientific claim discipline | four executable scientific-quality guards | Implemented |
 | Schema and metadata governance | 18 Schemas, version synchronization and repository audit | Implemented |
-| Software test strength | line/branch coverage and 18/18 critical mutations | Gated |
+| Software test strength | line/branch coverage and 21/21 critical mutations | Gated |
 | Supply-chain transparency | exact direct toolchain, SBOM, pip-audit, pinned Actions and attestation | Gated |
 | Distribution | byte-identical source ZIP, wheel, sdist and isolated import | Gated |
 | External DFT/MD/FEM/CFD/process/lab execution | real external environment | Delegated; receipt required |

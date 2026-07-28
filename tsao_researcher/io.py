@@ -68,6 +68,32 @@ def read_text(path: str | Path, *, max_bytes: int = MAX_TEXT_BYTES) -> str:
     return source.read_text(encoding="utf-8", errors="strict")
 
 
+def project_regular_file(root: str | Path, value: str | Path, *, field: str) -> Path:
+    """Resolve one project-relative regular file without following symbolic-link components."""
+
+    root_path = Path(root).resolve()
+    raw = Path(value)
+    candidate = raw if raw.is_absolute() else root_path / raw
+    absolute = candidate.absolute()
+    try:
+        relative = absolute.relative_to(root_path)
+    except ValueError as exc:
+        raise ValidationError(f"{field} escapes project state: {value}") from exc
+    if not relative.parts:
+        raise ValidationError(f"{field} escapes project state: {value}")
+    current = root_path
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValidationError(f"{field} is not a regular project file: {value}")
+    resolved = candidate.resolve(strict=False)
+    if resolved == root_path or not resolved.is_relative_to(root_path):
+        raise ValidationError(f"{field} escapes project state: {value}")
+    if not resolved.is_file():
+        raise ValidationError(f"{field} is not a regular project file: {value}")
+    return resolved
+
+
 def load_json(path: str | Path, *, max_bytes: int = MAX_TEXT_BYTES) -> Any:
     source = _regular_file(Path(path), max_bytes=max_bytes).resolve()
     stat = source.stat()
