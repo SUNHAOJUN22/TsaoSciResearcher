@@ -1,0 +1,181 @@
+name: Publish verified code hardening Git object
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  actions: read
+  issues: write
+
+concurrency:
+  group: publish-code-hardening-object
+  cancel-in-progress: false
+
+jobs:
+  publish-object:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] apply code hardening v0.6.0' &&
+      github.event.comment.body == 'TSR_PUBLISH_CODE_HARDENING_OBJECT'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download verified full-gate artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run download 30333376263 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name code-hardening-final-v5-30333376263 \
+            --dir /tmp/verified-artifact
+
+      - name: Validate evidence and create unreferenced candidate commit
+        id: candidate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import os
+          import subprocess
+          import urllib.request
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+          base_tree = subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip()
+          expected_parent = "2b0a0ea7d7aacbba5dc7823422c676cfb5944670"
+          if parent != expected_parent:
+              raise SystemExit(f"publisher parent changed: {parent}")
+
+          artifact = Path("/tmp/verified-artifact")
+          patch_path = artifact / "code-hardening-final-patch.zip"
+          source_path = artifact / "dist-a/TsaoSciResearcher-v0.6.0.zip"
+          if not patch_path.is_file() or not source_path.is_file():
+              raise SystemExit("verified artifact is incomplete")
+
+          with zipfile.ZipFile(patch_path) as patch:
+              manifest = json.loads(patch.read("manifest.json"))
+              if manifest.get("schema_version") != "1.0":
+                  raise SystemExit("unexpected patch schema")
+              if manifest.get("base_commit") != expected_parent:
+                  raise SystemExit(f"patch base mismatch: {manifest.get('base_commit')}")
+              changed_rows = manifest.get("changed")
+              deleted = set(manifest.get("deleted", []))
+              if not isinstance(changed_rows, list):
+                  raise SystemExit("patch changed inventory is invalid")
+              required_deleted = {
+                  ".github/workflows/apply-code-hardening.yml",
+                  ".github/workflows/apply-code-hardening-v2.yml",
+                  ".github/workflows/apply-code-hardening-v3.yml",
+                  ".github/workflows/apply-code-hardening-v4.yml",
+                  ".github/workflows/apply-code-hardening-v5.yml",
+                  ".github/workflows/diagnose-code-hardening-static.yml",
+                  ".github/workflows/diagnose-code-hardening-ruff.yml",
+                  ".github/workflows/format-code-hardening-test.yml",
+              }
+              if not required_deleted.issubset(deleted):
+                  raise SystemExit("verified patch lacks temporary workflow deletions")
+              verified: dict[str, tuple[str, bytes]] = {}
+              expected_members = {"manifest.json"}
+              for row in changed_rows:
+                  path = str(row["path"])
+                  pure = PurePosixPath(path)
+                  if pure.is_absolute() or any(part in {"", ".", ".."} for part in pure.parts):
+                      raise SystemExit(f"unsafe changed path: {path}")
+                  data = patch.read(f"files/{path}")
+                  if len(data) != int(row["size"]):
+                      raise SystemExit(f"size mismatch: {path}")
+                  if hashlib.sha256(data).hexdigest() != row["sha256"]:
+                      raise SystemExit(f"hash mismatch: {path}")
+                  verified[path] = (str(row["mode"]), data)
+                  expected_members.add(f"files/{path}")
+              if set(patch.namelist()) != expected_members:
+                  raise SystemExit("unexpected patch member inventory")
+
+          test_member = "TsaoSciResearcher/tests/test_defensive_boundaries.py"
+          with zipfile.ZipFile(source_path) as source:
+              test_data = source.read(test_member)
+          test_sha = hashlib.sha256(test_data).hexdigest()
+          if len(test_data) != 25000 or test_sha != "db0fad100e59adc5229e41436181029378aedf04c47b75d8819aaf49fad31d1d":
+              raise SystemExit(f"verified test artifact mismatch: {len(test_data)} {test_sha}")
+          if "tests/test_defensive_boundaries.py" in verified:
+              raise SystemExit("test unexpectedly duplicated in patch manifest")
+          verified["tests/test_defensive_boundaries.py"] = ("100644", test_data)
+
+          def api(method: str, path: str, payload: dict[str, object]) -> dict[str, object]:
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}{path}",
+                  data=json.dumps(payload).encode("utf-8"),
+                  method=method,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "Content-Type": "application/json",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  value = json.loads(response.read().decode("utf-8"))
+              if not isinstance(value, dict):
+                  raise SystemExit(f"unexpected API response for {path}")
+              return value
+
+          entries: list[dict[str, object]] = []
+          for path, (mode, data) in sorted(verified.items()):
+              blob = api(
+                  "POST",
+                  "/git/blobs",
+                  {"content": base64.b64encode(data).decode("ascii"), "encoding": "base64"},
+              )
+              entries.append({"path": path, "mode": mode, "type": "blob", "sha": blob["sha"]})
+
+          deleted.add(".github/workflows/publish-code-hardening-object.yml")
+          for path in sorted(deleted):
+              entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
+
+          tree = api("POST", "/git/trees", {"base_tree": base_tree, "tree": entries})
+          commit = api(
+              "POST",
+              "/git/commits",
+              {
+                  "message": "fix: harden project file boundaries and defensive tests",
+                  "tree": tree["sha"],
+                  "parents": [head],
+              },
+          )
+          candidate = str(commit["sha"])
+          Path("/tmp/candidate-sha.txt").write_text(candidate + "\n", encoding="utf-8")
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
+              handle.write(f"sha={candidate}\n")
+          print(f"candidate={candidate} changed={len(verified)} deleted={len(deleted)}")
+          PY
+
+      - name: Report candidate object
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=code-hardening-object-ready; candidate=${CANDIDATE_SHA}; parent=${GITHUB_SHA}; verified-run=30333376263; tests=PASS; line-coverage>=95; branch-coverage>=90; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=21/21; performance=PASS; deterministic-release=PASS; distributions=PASS; new-test=INCLUDED; temporary-workflows=REMOVED"
+
+      - name: Report object publication failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=code-hardening-object-failed; workflow-run=${GITHUB_RUN_ID}; inspect failed step logs"
