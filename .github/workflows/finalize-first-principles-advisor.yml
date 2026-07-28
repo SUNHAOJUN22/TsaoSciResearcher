@@ -51,8 +51,8 @@ jobs:
           from pathlib import Path, PurePosixPath
 
           root = Path.cwd().resolve()
-          parts = [root / f".github/first-principles-payload.part-{index:02d}" for index in range(1, 7)]
-          expected_sha = "3625370eebda6574b76a02a43fe2e74df7438fb2f03214ce22fc62c480d50116"
+          parts = [root / f".github/first-principles-payload.part-{index:02d}" for index in range(1, 21)]
+          expected_sha = "05aeda511bb04285c9849a1557d5289094703e91222cd7c250718cb70393deba"
           encoded = "".join("".join(path.read_text(encoding="ascii").split()) for path in parts)
           raw = base64.b64decode(encoded, validate=True)
           actual = hashlib.sha256(raw).hexdigest()
@@ -89,6 +89,43 @@ jobs:
           rm -f .github/workflows/export-first-principles-source.yml
           rm -f .github/workflows/finalize-first-principles-advisor.yml
           rm -f dist-b/TsaoSciResearcher-v0.5.3.zip.sha256
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("capabilities/v2/capabilities.json")
+          rows = json.loads(path.read_text(encoding="utf-8"))
+          record = {
+              "category": "vNext核心能力",
+              "computation_handoff": {"mode": "optional", "profile": "first-principles-strategy"},
+              "data_egress": "none",
+              "description": "从可观测量、自由度、守恒律、量子与统计物理、尺度分离和证伪要求出发，提出最低充分的计算或仿真策略，不执行求解器。",
+              "domains": ["general", "computational-chemistry-materials", "molecular-dynamics-multiscale", "catalysis-polymers-composites", "fem-multiphysics", "cfd-particles-processing", "process-kinetics-digital-twin"],
+              "failure_modes": ["observable undefined", "scale ambiguity", "method chosen without governing-physics rationale", "validation absent"],
+              "human_approval": {"points": ["qualified method review before external execution"], "required": false},
+              "id": "TSR-A019",
+              "implementation_level": "native-research",
+              "input_schema": "schemas/v2/capability-invocation.schema.json",
+              "maturity": "beta",
+              "name_en": "First-Principles Computation Strategy Advisor",
+              "name_zh": "第一性原理计算与仿真策略顾问",
+              "negative_triggers": ["声称已完成计算", "伪造仿真结果"],
+              "output_schema": "schemas/v2/artifact.schema.json",
+              "positive_triggers": ["第一性原理计算策略", "仿真策略", "计算方案", "method selection", "first-principles strategy", "statistical mechanics", "quantum mechanics"],
+              "recovery": ["return unresolved first-principles questions", "start from analytical bounds", "request validation observables", "remain in planned state"],
+              "references": ["references/computation/first-principles-strategy.md", "references/computation/handoff-protocol.md", "references/project-governance/scientific-validation.md"],
+              "schema_version": "2.0",
+              "slug": "first-principles-strategy-advisor",
+              "source_lineage": [{"feature": "first-principles-strategy-advisor", "source": "vNext-original"}],
+              "validators": ["strategy", "schema", "state", "provenance", "truth-boundary"],
+              "workflow": "computation-handoff"
+          }
+          rows = [row for row in rows if row.get("id") != "TSR-A019" and row.get("slug") != record["slug"]]
+          rows.append(record)
+          rows.sort(key=lambda row: row["id"])
+          path.write_text(json.dumps(rows, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+          Path("examples/first-principles-strategy.json").write_bytes(Path("templates/computation-handoff/first-principles-strategy.json").read_bytes())
+          PY
 
       - name: Regenerate deterministic repository evidence
         run: |
@@ -230,7 +267,7 @@ jobs:
               mode = mode_row.split()[0] if mode_row else ("100755" if relative.startswith("scripts/") and raw.startswith(b"#!") else "100644")
               tree.append({"path": relative, "mode": mode, "type": "blob", "sha": blob["sha"]})
           for relative in deleted:
-              tree.append({"path": relative, "mode": "100644", "type": "blob", "sha": None})
+              tree.append({"path": relative, "mode": "100644", "type": "blob", "sha": null})
           created_tree = api("POST", "/git/trees", {"base_tree": parent_tree, "tree": tree})
           commit = api("POST", "/git/commits", {"message": "feat: add first-principles strategy advisor", "tree": created_tree["sha"], "parents": [parent]})
           quality = json.loads(Path("/tmp/quality-current.json").read_text(encoding="utf-8")) if Path("/tmp/quality-current.json").exists() else {}
