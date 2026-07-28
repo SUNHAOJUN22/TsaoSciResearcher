@@ -1,0 +1,72 @@
+name: Export source for first-principles advisor development
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: export-first-principles-source
+  cancel-in-progress: false
+
+jobs:
+  export:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] first-principles advisor development' &&
+      github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Record source metadata
+        run: |
+          printf '%s\n' "${GITHUB_SHA}" > SOURCE_COMMIT
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          root = Path.cwd()
+          digest = hashlib.sha256()
+          count = 0
+          for path in sorted(root.rglob('*')):
+              relative = path.relative_to(root)
+              if '.git' in relative.parts or not path.is_file() or path.is_symlink():
+                  continue
+              data = path.read_bytes()
+              digest.update(relative.as_posix().encode() + b'\0' + hashlib.sha256(data).hexdigest().encode() + b'\n')
+              count += 1
+          Path('SOURCE_TREE_SHA256').write_text(f'{digest.hexdigest()}  {count} files\n', encoding='utf-8')
+          PY
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: first-principles-source-${{ github.run_id }}
+          path: |
+            .
+            !.git
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Report export
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=source-export-ready; workflow-run=${GITHUB_RUN_ID}; artifact=first-principles-source-${GITHUB_RUN_ID}; source-commit=${GITHUB_SHA}"
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=source-export-failed; workflow-run=${GITHUB_RUN_ID}"
