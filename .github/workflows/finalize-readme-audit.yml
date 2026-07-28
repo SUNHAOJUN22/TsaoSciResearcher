@@ -44,16 +44,40 @@ jobs:
           python -m pip check
 
       - name: Verify and install checksum-bound README candidate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments?per_page=100" > /tmp/readme-audit-comments.json
           python - <<'PY'
           from __future__ import annotations
           import base64
           import hashlib
+          import json
+          import re
           import zipfile
           from pathlib import Path, PurePosixPath
 
           root = Path.cwd().resolve()
-          payload_parts = [root / f".github/readme-audit-payload.part-{index:02d}" for index in range(1, 11)]
+          comments = json.loads(Path("/tmp/readme-audit-comments.json").read_text(encoding="utf-8"))
+          pattern = re.compile(r"TSR_README_PAYLOAD (\d+)/10")
+          pieces: dict[int, str] = {}
+          for row in comments:
+              if row.get("user", {}).get("login") != "SUNHAOJUN22":
+                  continue
+              body = str(row.get("body", ""))
+              if "\n" not in body:
+                  continue
+              header, data = body.split("\n", 1)
+              match = pattern.fullmatch(header.strip())
+              if not match:
+                  continue
+              index = int(match.group(1))
+              if index in pieces:
+                  raise SystemExit(f"duplicate payload chunk: {index}")
+              pieces[index] = "".join(data.split())
+          if sorted(pieces) != list(range(1, 11)):
+              raise SystemExit(f"payload chunks incomplete: {sorted(pieces)}")
           expected_sha = "841e1e769c117165385b9dd2dc6f9986bb50c5de5ce0ffdef37438ca9e0ac0b4"
           expected_names = {
               "README.md",
@@ -78,7 +102,7 @@ jobs:
               "docs/index.md",
               "mkdocs.yml",
           }
-          encoded = "".join("".join(path.read_text(encoding="ascii").split()) for path in payload_parts)
+          encoded = "".join(pieces[index] for index in range(1, 11))
           raw = base64.b64decode(encoded, validate=True)
           actual_sha = hashlib.sha256(raw).hexdigest()
           if actual_sha != expected_sha:
@@ -102,7 +126,6 @@ jobs:
                   target.parent.mkdir(parents=True, exist_ok=True)
                   target.write_bytes(archive.read(info.filename))
           PY
-          rm .github/readme-audit-payload.part-*
           rm .github/workflows/finalize-readme-audit.yml
 
       - name: Regenerate deterministic repository evidence
@@ -218,10 +241,7 @@ jobs:
           deleted = sorted(filter(None, subprocess.check_output(
               ["git", "diff", "--cached", "--name-only", "--diff-filter=D"], text=True
           ).splitlines()))
-          required_deleted = {
-              *(f".github/readme-audit-payload.part-{index:02d}" for index in range(1, 11)),
-              ".github/workflows/finalize-readme-audit.yml",
-          }
+          required_deleted = {".github/workflows/finalize-readme-audit.yml"}
           if not required_deleted.issubset(deleted):
               raise SystemExit(f"temporary deletion missing: {sorted(required_deleted - set(deleted))}")
 
