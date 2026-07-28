@@ -18,7 +18,7 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
-  full-validation:
+  full_validation:
     if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE'
     runs-on: ubuntu-latest
     timeout-minutes: 70
@@ -220,8 +220,13 @@ jobs:
           rm -f .github/first-principles-advisor-plan.md .github/first-principles-development-session.txt
           rm -f .github/first-principles-patch.part-* .github/first-principles-payload.part-*
           rm -f .github/transport/finalize_first_principles_advisor.py
-          rm -f .github/workflows/export-first-principles-source.yml .github/workflows/finalize-first-principles-advisor*.yml
-          rm -f .github/workflows/patch-first-principles-finalizer.yml .github/workflows/verify-first-principles-candidate.yml .github/workflows/build-first-principles-candidate.yml
+          rm -f .github/workflows/export-first-principles-source.yml
+          rm -f .github/workflows/finalize-first-principles-advisor.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v2.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v3.yml
+          rm -f .github/workflows/patch-first-principles-finalizer.yml
+          rm -f .github/workflows/verify-first-principles-candidate.yml
+          rm -f .github/workflows/build-first-principles-candidate.yml
           rmdir .github/transport 2>/dev/null || true
       - name: Install and exercise compatibility contracts
         shell: bash
@@ -234,9 +239,9 @@ jobs:
           python -m tsao_researcher strategy "Recommend a simulation strategy for polymer morphology evolution" --observable domain-size --condition "finite temperature"
           python scripts/validate_schemas.py
 
-  publish-candidate:
+  publish_candidate:
     if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE'
-    needs: [full-validation, compatibility]
+    needs: [full_validation, compatibility]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -270,8 +275,12 @@ jobs:
           rm -f .github/first-principles-patch.part-* .github/first-principles-payload.part-*
           rm -f .github/transport/finalize_first_principles_advisor.py
           rm -f .github/workflows/export-first-principles-source.yml
-          rm -f .github/workflows/finalize-first-principles-advisor.yml .github/workflows/finalize-first-principles-advisor-v2.yml .github/workflows/finalize-first-principles-advisor-v3.yml
-          rm -f .github/workflows/patch-first-principles-finalizer.yml .github/workflows/verify-first-principles-candidate.yml .github/workflows/build-first-principles-candidate.yml
+          rm -f .github/workflows/finalize-first-principles-advisor.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v2.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v3.yml
+          rm -f .github/workflows/patch-first-principles-finalizer.yml
+          rm -f .github/workflows/verify-first-principles-candidate.yml
+          rm -f .github/workflows/build-first-principles-candidate.yml
           rmdir .github/transport 2>/dev/null || true
       - name: Create verified Git object candidate
         id: candidate
@@ -322,10 +331,10 @@ jobs:
           PARENT: ${{ steps.candidate.outputs.parent }}
           CHANGED: ${{ steps.candidate.outputs.changed }}
           DELETED: ${{ steps.candidate.outputs.deleted }}
-          TESTS: ${{ needs.full-validation.outputs.tests }}
-          LINE: ${{ needs.full-validation.outputs.line }}
-          BRANCH: ${{ needs.full-validation.outputs.branch }}
-          MUTATIONS: ${{ needs.full-validation.outputs.mutations }}
+          TESTS: ${{ needs.full_validation.outputs.tests }}
+          LINE: ${{ needs.full_validation.outputs.line }}
+          BRANCH: ${{ needs.full_validation.outputs.branch }}
+          MUTATIONS: ${{ needs.full_validation.outputs.mutations }}
         run: |
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-candidate-verified
 candidate=${CANDIDATE}
@@ -349,17 +358,17 @@ transport-controls=REMOVED
 solver-execution=ABSENT
 advisory-boundary=PASS"
 
-  report-failure:
-    if: always() && github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE' && (needs.full-validation.result != 'success' || needs.compatibility.result != 'success' || needs.publish-candidate.result != 'success')
-    needs: [full-validation, compatibility, publish-candidate]
+  report_failure:
+    if: always() && github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_EXPORT_FIRST_PRINCIPLES_SOURCE' && (needs.full_validation.result != 'success' || needs.compatibility.result != 'success' || needs.publish_candidate.result != 'success')
+    needs: [full_validation, compatibility, publish_candidate]
     runs-on: ubuntu-latest
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          FULL: ${{ needs.full-validation.result }}
+          FULL: ${{ needs.full_validation.result }}
           COMPAT: ${{ needs.compatibility.result }}
-          PUBLISH: ${{ needs.publish-candidate.result }}
+          PUBLISH: ${{ needs.publish_candidate.result }}
         run: |
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-finalization-failed
 full-validation=${FULL}
