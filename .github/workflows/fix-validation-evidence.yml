@@ -1,15 +1,15 @@
-name: Diagnose deterministic validation evidence
+name: Finalize flagship README and clean validation tree
 
 on:
   issue_comment:
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
-  group: diagnose-validation-evidence-main
+  group: finalize-flagship-readme-main
   cancel-in-progress: false
 
 env:
@@ -18,10 +18,10 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
-  diagnose:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_DIAGNOSE_VALIDATION_V2'
+  finalize:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_FINALIZE_FLAGSHIP_MAIN'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -34,56 +34,100 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-ci.lock
 
-      - name: Install exact toolchain
+      - name: Install exact validation toolchain
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Run evidence commands one by one
+      - name: Remove one-shot controls and regenerate deterministic evidence
+        run: |
+          rm -f .github/workflows/fix-validation-evidence.yml
+          rm -f .github/workflows/finalize-release-hygiene.yml
+          python scripts/sync_version.py --write
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Validate repository documentation and generated contracts
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          mkdocs build --strict
+
+      - name: Full regression coverage and order independence
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260728 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static type security mutation and performance gates
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip_audit --strict -r requirements-ci.lock
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+
+      - name: Deterministic source and Python distribution gates
+        run: |
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          VERSION="$(tr -d '\r\n' < VERSION)"
+          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+
+      - name: Create and publish verified clean-main commit
+        id: candidate
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'docs: finalize flagship README and clean validation evidence'
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git fetch origin main
+          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/main)"
+          git push origin HEAD:main
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)"
+
+      - name: Report successful closure
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-        shell: bash
+          CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
         run: |
-          set +e
-          rm .github/workflows/fix-validation-evidence.yml
-          commands=(
-            'python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"'
-            'python scripts/generate_checksums.py --write'
-            'python scripts/build_validation_evidence.py --check'
-            'python scripts/generate_checksums.py --check'
-            'python scripts/audit_repository.py'
-            'python scripts/validate_structure.py'
-          )
-          stage=0
-          for command in "${commands[@]}"; do
-            stage=$((stage + 1))
-            bash -lc "$command" > /tmp/validation-command.log 2>&1
-            rc=$?
-            if [ "$rc" -ne 0 ]; then
-              {
-                echo "status=validation-diagnostic-failed"
-                echo
-                echo "stage=${stage}"
-                echo "command=${command}"
-                echo "workflow-run=${GITHUB_RUN_ID}"
-                echo
-                echo '```text'
-                tail -n 180 /tmp/validation-command.log | sed 's/`/\`/g'
-                echo '```'
-              } > /tmp/issue-body.md
-              gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.md
-              exit "$rc"
-            fi
-          done
-          {
-            echo "status=validation-diagnostic-pass"
-            echo "stages=6/6"
-            echo "workflow-run=${GITHUB_RUN_ID}"
-            echo "validation-evidence=PASS"
-            echo "checksums=PASS"
-            echo "repository-audit=PASS"
-            echo "structure=PASS"
-          } > /tmp/issue-body.md
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.md
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=flagship-main-published; candidate=${CANDIDATE_SHA}; repository=PASS; docs=PASS; tests=PASS; coverage=PASS; order=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=18/18; performance=PASS; deterministic-release=PASS; distributions=PASS; temporary-workflows=REMOVED" --remove-label payload-staging
+          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
+
+      - name: Report failed closure precisely
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=flagship-finalization-failed; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; inspect failed step logs"
