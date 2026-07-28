@@ -1,15 +1,15 @@
-name: Repair deterministic validation evidence
+name: Diagnose deterministic validation evidence
 
 on:
   issue_comment:
     types: [created]
 
 permissions:
-  contents: write
+  contents: read
   issues: write
 
 concurrency:
-  group: repair-validation-evidence-main
+  group: diagnose-validation-evidence-main
   cancel-in-progress: false
 
 env:
@@ -18,10 +18,10 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
-  repair:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_FIX_VALIDATION_READY'
+  diagnose:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_DIAGNOSE_VALIDATION_V2'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -40,43 +40,50 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Regenerate final-tree evidence without the one-shot workflow
+      - name: Run evidence commands one by one
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        shell: bash
         run: |
+          set +e
           rm .github/workflows/fix-validation-evidence.yml
-          python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"
-          python scripts/generate_checksums.py --write
-          python scripts/build_validation_evidence.py --check
-          python scripts/generate_checksums.py --check
-          python scripts/audit_repository.py
-          python scripts/validate_structure.py
-
-      - name: Commit and publish evidence repair
-        id: repair_commit
-        run: |
-          git checkout HEAD -- .github/workflows/fix-validation-evidence.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/VALIDATION_EVIDENCE.json SHA256SUMS
-          git diff --cached --check
-          git commit -m 'chore: synchronize final validation evidence'
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          git fetch origin main
-          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/main)"
-          git push origin HEAD:main
-          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)"
-
-      - name: Report evidence repair
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPAIR_SHA: ${{ steps.repair_commit.outputs.sha }}
-        run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=validation-fixed-awaiting-workflow-cleanup; candidate=${REPAIR_SHA}; validation-evidence=PASS; checksums=PASS"
-
-      - name: Report repair failure
-        if: failure()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=validation-repair-failed; workflow-run=${GITHUB_RUN_ID}; inspect Actions logs"
+          commands=(
+            'python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"'
+            'python scripts/generate_checksums.py --write'
+            'python scripts/build_validation_evidence.py --check'
+            'python scripts/generate_checksums.py --check'
+            'python scripts/audit_repository.py'
+            'python scripts/validate_structure.py'
+          )
+          stage=0
+          for command in "${commands[@]}"; do
+            stage=$((stage + 1))
+            bash -lc "$command" > /tmp/validation-command.log 2>&1
+            rc=$?
+            if [ "$rc" -ne 0 ]; then
+              {
+                echo "status=validation-diagnostic-failed"
+                echo
+                echo "stage=${stage}"
+                echo "command=${command}"
+                echo "workflow-run=${GITHUB_RUN_ID}"
+                echo
+                echo '```text'
+                tail -n 180 /tmp/validation-command.log | sed 's/`/\`/g'
+                echo '```'
+              } > /tmp/issue-body.md
+              gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.md
+              exit "$rc"
+            fi
+          done
+          {
+            echo "status=validation-diagnostic-pass"
+            echo "stages=6/6"
+            echo "workflow-run=${GITHUB_RUN_ID}"
+            echo "validation-evidence=PASS"
+            echo "checksums=PASS"
+            echo "repository-audit=PASS"
+            echo "structure=PASS"
+          } > /tmp/issue-body.md
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.md
