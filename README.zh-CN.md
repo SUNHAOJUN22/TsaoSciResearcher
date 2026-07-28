@@ -4,133 +4,70 @@
   <p><strong>证据优先的科研工作控制层</strong></p>
   <p>科学问题 → 证据 → 设计 → 受控执行 → 验证 → 可复现交付物</p>
 
-[English](README.md) · [文档](docs/index.md) · [架构](docs/ARCHITECTURE.md) · [验证](docs/VALIDATION.md) · [安全](SECURITY.md)
+[English](README.md) · [项目文档](docs/index.md) · [最初需求落实审计](docs/ORIGINAL_REQUIREMENTS_AUDIT.zh-CN.md) · [架构](docs/ARCHITECTURE.md) · [验证](docs/VALIDATION.md)
 
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
 > **正式版本 0.6.0** · Apache-2.0 · Python 3.10–3.13 · Windows、Linux、macOS
 
-## 项目定位与真实性边界
+## 实际代码到底实现了什么
 
-TsaoSciResearcher 将科研请求转换为有边界、可追溯的合同与项目状态。没有可复核的执行凭据时，它不会把检索、实验、求解器、仪器或外部计算描述为“已经完成”。软件 PASS 不等于科学事实成立，也不等于最终接受。
+TsaoSciResearcher 是一个**单入口科研路由器、项目状态系统、验证层、能力目录和可复现边界**。它不是把所有科学数据库、求解器、仪器驱动、绘图引擎和 Office 渲染器打包在一起的单体软件。
 
-## 已核实的仓库范围
+已将最初设计文档、322 项 AI for Science Skill 目录与当前源码逐项对照：
 
-| 项目 | 已核实数量 |
+| 审计事实 | 已核实结果 |
 |---|---:|
-| 能力合同总数 | **340** |
-| AI for Science 目录具名合同 | **322** |
-| 通用科研合同 | **158** |
-| 具名计算与工程合同 | **164** |
+| Excel Skill Slug 覆盖 | **322 / 322** |
+| 缺失 Skill Slug | **0** |
+| 通用科研具名合同 | **158** |
+| 计算/工程领域具名合同 | **164** |
 | 通用领域占位合同 | **0** |
-| 原生运行时/核心合同 | **18** |
-| 带 Gate 科研工作流 | **15** |
+| 运行时/核心新增能力 | **18** |
+| 能力合同总数 | **340** |
+| 原生科研/运行时合同 | **147** |
+| 外部计算委托合同 | **170** |
+| 强制人工审核合同 | **23** |
+| 带 Gate 工作流 | **15** |
 | JSON Schema | **18** |
-| 领域包 | **7** |
-| 测试模块 | **32** |
+| 确定性脚本 | **37** |
 
-```text
-340 = 322 项具名 AI for Science 合同 + 18 项运行时/核心合同
-322 = 158 项通用科研合同 + 164 项具名领域合同
-```
-
-能力合同定义路由、输入、输出、门禁、验证与委托边界，不代表外部科学引擎已经安装，更不代表已经执行。
-
-## v0.6.0 核心架构
-
-- **确定性双语路由**：有界 Unicode 规范化输入、否定意图识别与稳定决胜规则。
-- **可追溯项目状态**：原子写入、有限锁、显式生命周期转换与 SHA-256 事件链。
-- **科研质量门控**：Measurement Boundary、Structure–Property Planner、Causality Guard、Evidence Traceability。
-- **受控计算交接**：常规文件与路径约束、输入哈希、收敛/UQ 要求和审批点。
-- **Execution Receipt v2**：把真实外部运行绑定到 handoff、引擎、参数向量、时间、退出状态和输出哈希。
-- **Reproducibility Capsule**：确定性 metadata/full ZIP，逐文件哈希、树摘要、安全校验和旁路校验和。
-- **Validation Evidence 1.6**：源码树摘要、依赖锁摘要、工作流 attempt 和外部提交证明，避免自引用 SHA。
-- **供应链控制**：固定 Action 提交、精确直接 CI 工具链、解析环境 `pip-audit`、确定性直接依赖 CycloneDX 1.6 SBOM、wheel/sdist/source ZIP 验证。
-- **永久幂等自动化**：push CI、人工审计、每周健康检查和 Tag 发布；验证流程不写回仓库。
-
-<!-- TSR-AI-VISUALS:START -->
-## 科研能力可视化图谱
-
-以下为**面向本仓库功能生成的 AI 解释图**，用于展示已经实现的合同、控制流和委托边界；它们属于文档资产，不是实验观测、模拟结果，也不构成外部引擎已经运行的证明。
-
-<table>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/><br/><strong>1 · 科研操作架构</strong><br/>有边界的研究意图依次经过编排、证据控制、项目状态和验证，最终形成可接受的交付物。</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体科研编排"/><br/><strong>2 · 多智能体科研编排</strong><br/>文献、数据、模拟、制图和审查角色通过显式合同协作，而不是形成不可审计的黑箱式 Agent 群。</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="证据与论断关系图"/><br/><strong>3 · 证据—论断图</strong><br/>来源定位、证据记录、论断、冲突和验证边共同保持从文字结论回溯到支持材料的能力。</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="多尺度科研流程"/><br/><strong>4 · 多尺度科研流程</strong><br/>量子、分子、介观、连续体和工艺尺度通过可测状态变量、不确定度与守恒约束连接。</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="可复现性与质量门控"/><br/><strong>5 · 可复现质量门</strong><br/>Schema、测试、覆盖率、突变、安全、性能和确定性打包共同构成闭环工程验证。</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="计算交接边界"/><br/><strong>6 · 计算交接边界</strong><br/>TsaoSciResearcher 负责准备受控输入并核验凭据；DFT、MD、FEM、CFD、HPC 和仪器仍是外部执行器。</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/project_state_machine.svg" alt="可追溯项目状态机"/><br/><strong>7 · 可追溯项目状态</strong><br/>生命周期转换、审批和 SHA-256 事件链阻止静默跳转状态与缺乏证据的接受结论。</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/capability_landscape.svg" alt="科研能力版图"/><br/><strong>8 · 科研能力版图</strong><br/>能力目录覆盖证据、设计、计算、分析、可视化、写作、审查、科研诚信和成果转化工作流。</td>
-</tr>
-</table>
-<!-- TSR-AI-VISUALS:END -->
+完整结果见[最初功能定义落实审计](docs/ORIGINAL_REQUIREMENTS_AUDIT.zh-CN.md)。能力合同表示“可检索、可路由、可验证的任务合同”，**不代表**外部数据库、模型、求解器、仪器或计算已经安装或运行。
 
 ## 能力边界
 
-| 能力 | 状态 |
+| 层级 | 实际实现 |
 |---|---|
-| 路由、合同、状态、验证、凭据、胶囊和交付物治理 | 原生实现 |
-| 文献检索、绘图和 Office 生产 | 使用宿主 Agent 提供的工具 |
-| DFT、MD、FEM、CFD、流程模拟、HPC 和实验室执行 | 外部执行；必须有 handoff 与 receipt |
-| 医疗、安全、法律/FTO、科研诚信和最终科学接受 | 合格人员审批 |
+| **原生核心** | 确定性双语路由、能力搜索、项目初始化、状态转换、哈希事件链、Schema 验证、证据/论断检查、Figure Contract、执行凭据、可复现胶囊、安全归档和确定性打包 |
+| **科研控制层** | 科学问题、文献、综述、研究设计、实验、数据、绘图、写作、评审、报告、项目、专利、诚信、实验室和计算交接工作流及其入口/阻断/完成门 |
+| **宿主工具执行** | 实时检索、PDF 解析、数值统计/DOE/ML、绘图、DOCX/PPT/LaTeX 生产和外部应用连接 |
+| **外部科学执行** | DFT、量子化学、MD、FEM、CFD、流程模拟、HPC、云任务、仪器和实验室自动化 |
+| **合格人员审批** | 医疗、安全、专利/FTO、高影响因果、科研诚信和最终科学接受 |
 
-## 快速开始
+## 核心架构
 
-```bash
-git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
-cd TsaoSciResearcher
-python -m pip install -e .
-python -m tsao_researcher --version
-python -m tsao_researcher route "设计一个可追溯的聚烯烃多尺度研究"
-python -m tsao_researcher search "GROMACS 轨迹分析" --limit 10
+- **先路由，后加载**：先选择一个主工作流，再读取该工作流明确列出的参考资料和模板。
+- **322 项精确目录合同**：Excel 中的全部 Slug 均保留；另有 18 项路由、安全、溯源和接受控制能力。
+- **统一 `.tsao-research/` 状态**：问题、假设、证据、论断、决策、审批、风险、产物、凭据和哈希事件相互分离。
+- **受控计算交接**：真实计算前记录输入哈希、尺度、方法、条件、收敛/UQ、预期输出和审批点。
+- **Execution Receipt v2**：把真实外部执行绑定到 handoff、引擎、参数、时间、退出状态和输出哈希。
+- **Reproducibility Capsule**：确定性 metadata/full ZIP，拒绝路径逃逸、符号链接、重复成员和校验和篡改。
+- **真实性状态机**：`completed`、`checked`、`validated`、`accepted` 不能互相替代。
+
+## 科研生命周期与工作流
+
+```text
+问题形成 → 证据映射 → 研究设计 → 执行/分析 → 检查 → 验证
+        → 接受/拒绝 → 沟通 → 归档
 ```
-
-初始化并验证项目：
-
-```bash
-python -m tsao_researcher init   --name "聚烯烃多尺度研究"   --question "加工历史通过哪些机制影响结构与性能？"   --research-type mechanistic --output .
-python -m tsao_researcher verify .
-```
-
-生命周期：
 
 ```text
 proposed → planned → running → completed → checked → validated → accepted
+                                      ↘ rejected / superseded
 ```
 
-`accepted` 必须有审批记录；另支持 `rejected` 和 `superseded`。
-
-## 外部执行凭据
-
-receipt 命令只记录外部引擎真实运行后提供的证据，不负责启动引擎：
-
-```bash
-python -m tsao_researcher receipt record .   --handoff computation/job.json   --engine gromacs --engine-version 2026.1   --command gmx --command mdrun --exit-code 0   --output computation/result.dat   --started-at 2026-07-24T01:00:00Z   --finished-at 2026-07-24T01:10:00Z
-python -m tsao_researcher receipt verify .
-```
-
-成功凭据要求退出码为 0 且至少有一个输出。验证会重新读取 handoff，并复算时间、文件大小和 SHA-256。详见 [执行凭据](docs/EXECUTION_RECEIPTS.md)。
-
-## 可复现胶囊
-
-```bash
-python -m tsao_researcher capsule export . --mode metadata --output project-metadata.zip
-python -m tsao_researcher capsule export . --mode full --output project-full.zip
-python -m tsao_researcher capsule verify project-full.zip
-```
-
-metadata 模式排除原始 data/figures/artifacts 目录；full 模式包含所有满足上限的普通项目文件。两种模式均为确定性输出，并拒绝路径逃逸、符号链接、重复成员和哈希篡改。详见 [可复现胶囊](docs/REPRODUCIBILITY_CAPSULE.md)。
-
-## 15 个科研工作流
+15 个主工作流：
 
 ```text
 research-question      deep-research          systematic-review
@@ -140,95 +77,150 @@ technical-report       project-management     patent-and-transfer
 research-integrity     laboratory             computation-handoff
 ```
 
-## 验证与质量基线
+### 各工作流能力合同数量
 
-仓库核心检查：
+| 工作流 | 合同数 |
+|---|---:|
+| `computation-handoff` | 168 |
+| `data-analysis` | 52 |
+| `project-management` | 35 |
+| `deep-research` | 16 |
+| `scientific-writing` | 14 |
+| `research-design` | 10 |
+| `laboratory` | 8 |
+| `research-integrity` | 8 |
+| `patent-and-transfer` | 7 |
+| `research-question` | 6 |
+| `systematic-review` | 5 |
+| `experiment-design` | 3 |
+| `peer-review` | 3 |
+| `technical-report` | 3 |
+| `scientific-figure` | 2 |
+
+### Excel 能力类别
+
+| 一级目录 | 具名合同数 |
+|---|---:|
+| 催化、高分子与复合材料 | 30 |
+| 计算化学与材料计算 | 30 |
+| 分子动力学与多尺度 | 24 |
+| 科研管理、专利与诚信 | 24 |
+| 化工流程、动力学与数字孪生 | 22 |
+| AI与机器学习科研 | 20 |
+| HPC、云计算与可重复性 | 20 |
+| 实验室自动化与仪器 | 20 |
+| 数据统计与可视化 | 20 |
+| 有限元与多物理场 | 20 |
+| 科研写作与出版 | 20 |
+| CFD、颗粒与加工过程 | 18 |
+| 文献与知识工程 | 18 |
+| 生物信息与医学科研 | 18 |
+| 科研Agent与编排 | 18 |
+
+## 科研能力 AI 示意图谱
+
+以下为**依据当前仓库代码和能力边界生成的 AI 示意图**，用于解释合同、控制流、溯源和执行边界；它们属于文档资产，不是实验观测、模拟结果，也不是外部引擎已经运行的证明。
+
+<table>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/><br/><strong>1 · 科研操作系统架构</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体科研编排"/><br/><strong>2 · 多智能体科研编排</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="证据—论断图"/><br/><strong>3 · 证据—论断图</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="多尺度科研流程"/><br/><strong>4 · 多尺度科研流程</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="可复现质量门"/><br/><strong>5 · 可复现质量门</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="计算交接边界"/><br/><strong>6 · 计算交接边界</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/project_state_machine.svg" alt="项目状态机"/><br/><strong>7 · 项目状态机</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/capability_landscape.svg" alt="科研能力版图"/><br/><strong>8 · 科研能力版图</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/original_requirements_coverage.svg" alt="最初需求落实图"/><br/><strong>9 · 最初需求落实图</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/capability_implementation_levels.svg" alt="能力实现层级"/><br/><strong>10 · 能力实现层级</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进式路由与加载"/><br/><strong>11 · 渐进式路由与加载</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目台账与溯源"/><br/><strong>12 · 项目台账与溯源</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据与引文完整性"/><br/><strong>13 · 证据与引文完整性</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研产出流水线"/><br/><strong>14 · 科研产出流水线</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容矩阵"/><br/><strong>15 · 安装兼容矩阵</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链与发布证明"/><br/><strong>16 · 供应链与发布证明</strong></td></tr>
+</table>
+
+## 快速开始
 
 ```bash
-python scripts/sync_version.py --check
-python scripts/validate_schemas.py
-python scripts/audit_repository.py
-python scripts/validate_structure.py
-python scripts/build_readme_facts.py --check
-python scripts/build_sbom.py --check
-python scripts/build_validation_evidence.py --check
-python scripts/build_test_dashboard.py --check
-python scripts/build_research_quality_dashboard.py --check
-python scripts/build_engineering_report.py --check
-python scripts/generate_checksums.py --check
+git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
+cd TsaoSciResearcher
+python -m pip install -e .
+python -m tsao_researcher --version
+python -m tsao_researcher route "设计一个可追溯的聚烯烃多尺度研究"
+python -m tsao_researcher search "聚合物 分子动力学" --limit 10
 ```
 
-完整本地发布门禁：
+初始化并验证项目状态：
 
 ```bash
-mkdir -p artifacts
-python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
-python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov \
-  --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch \
-  --cov-report=json:artifacts/coverage.json
-python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
-python -m ruff format --check scripts tsao_researcher tests
-python -m ruff check scripts tsao_researcher tests
-python -m mypy scripts tsao_researcher
-python -m bandit -q -lll -r scripts tsao_researcher
-python -m pip_audit --strict -r requirements-ci.lock
-python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
-python scripts/performance_smoke.py --json-out artifacts/performance.json
-python scripts/check_quality_baseline.py
-mkdocs build --strict
-python scripts/package_release.py --out dist-a
-python -m build --sdist --wheel --outdir dist-python
-python scripts/validate_distribution.py dist-python
+python -m tsao_researcher init   --name "聚烯烃多尺度研究"   --question "加工历史通过哪些机制影响结构与性能？"   --research-type mechanistic   --output .
+python -m tsao_researcher verify .
 ```
 
-质量基线约束行覆盖率、分支覆盖率、**21/21** 个关键突变、性能和零 JUnit 失败；降低阈值必须在 Changelog 中明确说明。
+创建受控计算交接：
 
-## 自动化模型
+```bash
+python scripts/handoff_to_computation.py   --project .tsao-research   --out computation/handoff.json   --question "需要计算哪个性质？"   --property "目标性质"   --profile MD   --scale atomistic   --method "候选方法"   --boundary-condition "周期性边界"   --metric "收敛指标"   --expected-output "经验证的结果文件"   --input-file data/input.dat
+```
 
-- `ci.yml`：只读 push/PR 验证和四平台兼容性。
-- `audit.yml`：只读、人工触发的完整审计。
-- `nightly.yml`：每周检查依赖、覆盖率、突变、性能、文档和分发漂移。
-- `release.yml`：仅 Tag 发布 source ZIP、wheel、sdist、SBOM、证据、PDF、校验和和外部证明。
-- `cleanup-branches.yml`：维持仓库仅保留 `main` 的治理策略。
+记录并验证真实外部执行：
 
-验证、审计和夜间流程均为幂等流程，不会生成仓库提交。
+```bash
+python -m tsao_researcher receipt record .   --handoff computation/handoff.json   --engine gromacs --engine-version 2026.1   --command gmx --command mdrun --exit-code 0   --output computation/result.dat   --started-at 2026-07-24T01:00:00Z   --finished-at 2026-07-24T01:10:00Z
+python -m tsao_researcher receipt verify .
+```
 
-## 可视化与机器证据
+导出并验证可复现胶囊：
 
-![自动测试仪表板](docs/test-dashboard.svg)
+```bash
+python -m tsao_researcher capsule export . --mode metadata --output project-metadata.zip
+python -m tsao_researcher capsule export . --mode full --output project-full.zip
+python -m tsao_researcher capsule verify project-full.zip
+```
 
-- [可交互测试仪表板](docs/test-dashboard.html)
-- [科研质量仪表板](docs/research-quality-dashboard.html)
-- [科研质量 SVG](docs/research-quality-dashboard.svg)
-- [科研质量示例](docs/SCIENTIFIC_QUALITY_EXAMPLES.json)
-- [工程审计 PDF](docs/engineering-audit-report.pdf)
-- [验证证据 1.6](docs/VALIDATION_EVIDENCE.json)
-- [CycloneDX SBOM](docs/SBOM.cdx.json)
-- [质量基线](docs/QUALITY_BASELINE.json)
-- [质量历史](docs/QUALITY_HISTORY.json)
+## 安装
+
+```bash
+python install.py --agent codex --scope user --dry-run
+python install.py --agent claude --scope project --validate
+python install.py --agent open-agent --scope project --target ./skills --force
+```
+
+同时提供 `install.ps1` 和 `install.sh`。
+
+## 验证结果
+
+最近一次完整加固验证记录：
+
+| Gate | 结果 |
+|---|---:|
+| 测试 | **212 通过；0 failure；0 error** |
+| 项目综合覆盖率 | **96.371%** |
+| 分支覆盖率 | **93.128%** |
+| 质量门槛 | **95% 行 / 90% 分支** |
+| 关键 Mutation | **21 / 21 killed；0 survivor** |
+| Ruff / Mypy / Bandit | **PASS** |
+| 精确锁依赖审计 | **PASS** |
+| 性能基线 | **PASS** |
+| 两次源码 ZIP | **逐字节一致** |
+| wheel 与 sdist 隔离安装 | **PASS** |
+
+仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。
+
+## 机器可读证据与映射
+
 - [README 审计报告](docs/README_AUDIT_REPORT.md)
 - [能力覆盖矩阵](docs/CAPABILITY_COVERAGE_MATRIX.md)
-- [设计 → 代码 → 测试映射](docs/README_ARCHITECTURE_MAPPING.md)
-
-## 文档
-
-- [架构](docs/ARCHITECTURE.md)
-- [CLI 参考](docs/CLI.md)
-- [验证模型](docs/VALIDATION.md)
-- [科研质量](docs/SCIENTIFIC_QUALITY.md)
-- [供应链](docs/SUPPLY_CHAIN.md)
-- [发布流程](docs/RELEASE_PROCESS.md)
-- [路线图](docs/ROADMAP.md)
+- [README—架构映射](docs/README_ARCHITECTURE_MAPPING.md)
+- [验证证据](docs/VALIDATION_EVIDENCE.json)
+- [交互式测试仪表板](docs/test-dashboard.html)
+- [测试仪表板 SVG](docs/test-dashboard.svg)
+- [最初需求审计 JSON](docs/ORIGINAL_REQUIREMENTS_AUDIT.json)
+- [科研能力 AI 示意图谱](docs/VISUAL_ATLAS.zh-CN.md)
 
 ## 已知限制
 
-- 不内置外部科学引擎、仪器和数据库。
-- handoff 不是完成的计算；receipt 是执行证据，不是科学正确性证明。
-- SBOM 是清单，不是无漏洞保证。
-- 覆盖率和突变分数衡量测试强度，不代表科学真理。
-- 材料特定趋势和机制结论必须有项目证据、不确定度和适用域支撑。
+- 不捆绑实时文献数据库、PDF 解析器和引用网络服务。
+- 统计、因果、DOE 和 ML 属于方法合同与质量门，数值执行使用宿主工具。
+- 绘图具备合同、导出校验和可运行示例，但不捆绑通用绘图守护进程。
+- DOCX、PPTX 和 LaTeX 渲染依赖宿主能力。
+- DFT、MD、FEM、CFD、流程模拟器、HPC 调度器、仪器和实验室机器人保持外部执行。
+- 专利/FTO、医疗、安全和科研诚信的最终接受需要合格人员审批。
+- handoff 不是完成计算；receipt 是执行证据，不是科学有效性的充分证明。
 
-## 安全、贡献和许可证
+## 许可证与来源边界
 
-详见 [SECURITY.md](SECURITY.md)、[CONTRIBUTING.md](CONTRIBUTING.md)、[THIRD_PARTY.md](THIRD_PARTY.md) 和 [references/source-map.md](references/source-map.md)。TsaoSciResearcher 是 Apache-2.0 原创实现，受到公开科研 Agent 和科研工具项目启发，但不是其官方分支或替代品。
+TsaoSciResearcher 是原创的 **Apache-2.0** 实现，不捆绑上游源代码或提示词语料。公开项目仅用于架构和能力分类研究，详见 [THIRD_PARTY.md](THIRD_PARTY.md) 和 [references/source-map.md](references/source-map.md)。

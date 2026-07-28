@@ -4,133 +4,70 @@
   <p><strong>Evidence-first scientific research control layer</strong></p>
   <p>Question → evidence → design → guarded execution → validation → reproducible artifact</p>
 
-[简体中文](README.zh-CN.md) · [Documentation](docs/index.md) · [Architecture](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md) · [Security](SECURITY.md)
+[简体中文](README.zh-CN.md) · [Documentation](docs/index.md) · [Requirements Audit](docs/ORIGINAL_REQUIREMENTS_AUDIT.md) · [Architecture](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md)
 
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
 > **Release 0.6.0** · Apache-2.0 · Python 3.10–3.13 · Windows, Linux and macOS
 
-## Purpose and truth boundary
+## What the code actually implements
 
-TsaoSciResearcher converts a scientific request into bounded, traceable contracts and project state. It does not claim that a search, experiment, solver, instrument or external computation ran unless a checksum-verifiable execution receipt exists. A software PASS does not establish scientific truth or final acceptance.
+TsaoSciResearcher is a **single-entry research router, project-state system, validation layer, capability catalog, and reproducibility boundary**. It is not a bundle of every scientific database, solver, instrument driver, plotting engine, or Office renderer.
 
-## Verified repository scope
+The original design has been checked against the actual source code and the uploaded 322-entry AI-for-Science catalog:
 
-| Item | Verified value |
+| Audit fact | Verified result |
 |---|---:|
-| Capability contracts | **340** |
-| Named AI-for-Science catalog contracts | **322** |
-| General research contracts | **158** |
-| Named computation/engineering contracts | **164** |
+| Workbook Skill slugs preserved | **322 / 322** |
+| Missing workbook slugs | **0** |
+| Legacy/general named contracts | **158** |
+| Domain computation/engineering named contracts | **164** |
 | Generic domain placeholders | **0** |
-| Native runtime/core contracts | **18** |
-| Gated research workflows | **15** |
+| Runtime/core additions | **18** |
+| Total capability contracts | **340** |
+| Native-research contracts | **147** |
+| Computation-delegated contracts | **170** |
+| Human-review contracts | **23** |
+| Gated workflows | **15** |
 | JSON Schemas | **18** |
-| Domain packs | **7** |
-| Test modules | **32** |
+| Deterministic scripts | **37** |
+
+Read the full [original-requirements implementation audit](docs/ORIGINAL_REQUIREMENTS_AUDIT.md). A capability contract is discoverable, routable, and testable metadata; it is **not** evidence that an external database, model, solver, instrument, or computation has executed.
+
+## Implementation boundary
+
+| Layer | What is implemented |
+|---|---|
+| **Native core** | deterministic bilingual routing, capability search, project initialization, state transitions, hash-linked events, schema validation, evidence/claim checks, figure contracts, execution receipts, reproducibility capsules, safe archives and deterministic packaging |
+| **Research control layer** | research-question, literature, review, design, experiment, data, figure, writing, peer-review, report, project, patent, integrity, laboratory and computation-handoff workflows with entry/blocking/completion gates |
+| **Host-tool execution** | live retrieval, PDF parsing, numerical statistics/DOE/ML, plotting, DOCX/PPT/LaTeX production and external application connectors |
+| **External scientific execution** | DFT, quantum chemistry, MD, FEM, CFD, process simulation, HPC, cloud jobs, instruments and laboratory automation |
+| **Qualified human approval** | medical, safety, patent/FTO, high-impact causal, integrity and final scientific acceptance decisions |
+
+## Architecture
+
+- **Route before loading** — one primary workflow is selected before references or templates are opened.
+- **322 exact catalog contracts** — every workbook slug is retained; 18 runtime contracts add routing, safety, provenance and acceptance controls.
+- **Canonical `.tsao-research/` state** — questions, hypotheses, evidence, claims, decisions, approvals, risks, artifacts, receipts and hash-linked events remain separate.
+- **Guarded computation handoff** — input hashes, scale, method, conditions, convergence/UQ requirements, expected outputs and approval points are recorded before external execution.
+- **Execution Receipt v2** — a real external run is bound to its handoff, engine, arguments, time, exit status and output hashes.
+- **Reproducibility Capsule** — deterministic metadata/full ZIPs reject path escape, symbolic links, duplicate members and checksum tampering.
+- **Truth-preserving validation** — `completed`, `checked`, `validated`, and `accepted` are distinct states.
+
+## Research lifecycle and workflows
 
 ```text
-340 = 322 named AI-for-Science contracts + 18 runtime/core contracts
-322 = 158 general research contracts + 164 named domain contracts
+Frame → map evidence → design → execute/analyze → check → validate
+      → accept/reject → communicate → archive
 ```
-
-A capability contract defines routing, inputs, outputs, gates, validation and delegation. It is not an installed scientific engine or an execution record.
-
-## v0.6.0 architecture
-
-- **Deterministic bilingual routing** — bounded Unicode-normalized input, negative-intent handling and stable tie-breaking.
-- **Traceable project state** — atomic writes, bounded locks, explicit lifecycle transitions and a SHA-256 event chain.
-- **Scientific-quality guards** — Measurement Boundary, Structure–Property Planner, Causality Guard and Evidence Traceability.
-- **Guarded computation handoff** — contained regular-file inputs, checksums, convergence/UQ requirements and approval points.
-- **Execution Receipt v2** — binds a real external run to its handoff, engine, argument vector, timestamps, exit status and output hashes.
-- **Reproducibility Capsule** — deterministic metadata/full ZIP with per-file hashes, tree digest, safe archive validation and sidecar checksum.
-- **Validation Evidence 1.6** — source-tree digest, dependency-lock digest, workflow attempt and external commit attestation without self-referential SHA claims.
-- **Supply-chain controls** — pinned Actions, exact direct CI toolchain, resolved-environment `pip-audit`, deterministic direct-dependency CycloneDX 1.6 SBOM, wheel/sdist/source-ZIP validation.
-- **Permanent idempotent automation** — push CI, manual audit, weekly health audit and tag-bounded release; validation workflows do not write to the repository.
-
-<!-- TSR-AI-VISUALS:START -->
-## Scientific capability visual atlas
-
-The following **AI-generated, repository-specific diagrams** explain the implemented contracts, control flow and delegation boundaries. They are documentation assets—not experimental observations, simulation outputs or proof that an external engine ran.
-
-<table>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="Scientific research operating architecture"/><br/><strong>1 · Research operating architecture</strong><br/>Bounded intent is routed through orchestration, evidence controls, project state and validation before an artifact is accepted.</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="Multi-agent scientific orchestration"/><br/><strong>2 · Multi-agent orchestration</strong><br/>Specialized literature, data, simulation, figure and review roles cooperate through explicit contracts rather than an opaque agent swarm.</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Evidence and claim graph"/><br/><strong>3 · Evidence–claim graph</strong><br/>Source locators, evidence records, claims, conflicts and validation edges preserve traceability from statement back to support.</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="Multiscale science pipeline"/><br/><strong>4 · Multiscale science pipeline</strong><br/>Quantum, molecular, mesoscale, continuum and process layers are bridged by measurable state variables, uncertainty and conservation constraints.</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="Reproducibility and quality gates"/><br/><strong>5 · Reproducibility quality gates</strong><br/>Schemas, tests, coverage, mutation, security, performance and deterministic packaging form a closed engineering validation loop.</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="Computation handoff boundary"/><br/><strong>6 · Computation handoff boundary</strong><br/>TsaoSciResearcher prepares bounded inputs and verifies receipts; DFT, MD, FEM, CFD, HPC and instruments remain external executors.</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img src="docs/assets/ai/project_state_machine.svg" alt="Traceable project state machine"/><br/><strong>7 · Traceable project state</strong><br/>Lifecycle transitions, approvals and SHA-256 event chaining prevent silent state jumps and unsupported acceptance claims.</td>
-<td width="50%" valign="top"><img src="docs/assets/ai/capability_landscape.svg" alt="Scientific capability landscape"/><br/><strong>8 · Capability landscape</strong><br/>The catalog spans evidence, design, computation, analysis, visualization, writing, review, integrity and transfer workflows.</td>
-</tr>
-</table>
-<!-- TSR-AI-VISUALS:END -->
-
-## Native, delegated and human-approved boundaries
-
-| Capability | Status |
-|---|---|
-| Routing, contracts, state, validation, receipts, capsules and artifact governance | Native |
-| Retrieval, plotting and Office production | Uses tools supplied by the host agent |
-| DFT, MD, FEM, CFD, process simulation, HPC and laboratory execution | External; requires guarded handoff plus receipt |
-| Medical, safety, legal/FTO, integrity and final scientific acceptance | Qualified human approval required |
-
-## Quick start
-
-```bash
-git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
-cd TsaoSciResearcher
-python -m pip install -e .
-python -m tsao_researcher --version
-python -m tsao_researcher route "Design a traceable multiscale polymer study"
-python -m tsao_researcher search "gromacs trajectory analysis" --limit 10
-```
-
-Initialize and verify project state:
-
-```bash
-python -m tsao_researcher init   --name "Polyolefin multiscale study"   --question "Which mechanisms connect processing history to product properties?"   --research-type mechanistic --output .
-python -m tsao_researcher verify .
-```
-
-The lifecycle is:
 
 ```text
 proposed → planned → running → completed → checked → validated → accepted
+                                      ↘ rejected / superseded
 ```
 
-`accepted` requires recorded approval. `rejected` and `superseded` are also supported.
-
-## Execution receipts
-
-The receipt command records user-supplied evidence after an external engine has actually run; it never launches that engine.
-
-```bash
-python -m tsao_researcher receipt record .   --handoff computation/job.json   --engine gromacs --engine-version 2026.1   --command gmx --command mdrun --exit-code 0   --output computation/result.dat   --started-at 2026-07-24T01:00:00Z   --finished-at 2026-07-24T01:10:00Z
-python -m tsao_researcher receipt verify .
-```
-
-A successful receipt requires exit code zero and at least one output. Verification reloads the handoff and recomputes timestamps, byte sizes and SHA-256 hashes. See [Execution Receipts](docs/EXECUTION_RECEIPTS.md).
-
-## Reproducibility capsules
-
-```bash
-python -m tsao_researcher capsule export . --mode metadata --output project-metadata.zip
-python -m tsao_researcher capsule export . --mode full --output project-full.zip
-python -m tsao_researcher capsule verify project-full.zip
-```
-
-Metadata mode omits raw data/figure/artifact directories; full mode includes all bounded regular project files. Both modes are deterministic and reject path escape, symbolic links, duplicate members and checksum tampering. See [Reproducibility Capsule](docs/REPRODUCIBILITY_CAPSULE.md).
-
-## Fifteen research workflows
+The 15 primary workflows are:
 
 ```text
 research-question      deep-research          systematic-review
@@ -140,97 +77,150 @@ technical-report       project-management     patent-and-transfer
 research-integrity     laboratory             computation-handoff
 ```
 
-## Validation and quality baseline
+### Capability contracts by workflow
 
-Core repository checks:
+| Workflow | Contracts |
+|---|---:|
+| `computation-handoff` | 168 |
+| `data-analysis` | 52 |
+| `project-management` | 35 |
+| `deep-research` | 16 |
+| `scientific-writing` | 14 |
+| `research-design` | 10 |
+| `laboratory` | 8 |
+| `research-integrity` | 8 |
+| `patent-and-transfer` | 7 |
+| `research-question` | 6 |
+| `systematic-review` | 5 |
+| `experiment-design` | 3 |
+| `peer-review` | 3 |
+| `technical-report` | 3 |
+| `scientific-figure` | 2 |
+
+### Workbook capability categories
+
+| Category | Named contracts |
+|---|---:|
+| 催化、高分子与复合材料 | 30 |
+| 计算化学与材料计算 | 30 |
+| 分子动力学与多尺度 | 24 |
+| 科研管理、专利与诚信 | 24 |
+| 化工流程、动力学与数字孪生 | 22 |
+| AI与机器学习科研 | 20 |
+| HPC、云计算与可重复性 | 20 |
+| 实验室自动化与仪器 | 20 |
+| 数据统计与可视化 | 20 |
+| 有限元与多物理场 | 20 |
+| 科研写作与出版 | 20 |
+| CFD、颗粒与加工过程 | 18 |
+| 文献与知识工程 | 18 |
+| 生物信息与医学科研 | 18 |
+| 科研Agent与编排 | 18 |
+
+## Scientific capability visual atlas
+
+The following **AI-generated, repository-specific diagrams** describe the actual contracts, control flow, provenance and execution boundaries. They are documentation assets—not experimental observations, simulation outputs, or proof that an external engine ran.
+
+<table>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="Research OS architecture"/><br/><strong>1 · Research OS architecture</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="Multi-agent orchestration"/><br/><strong>2 · Multi-agent orchestration</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Evidence–claim graph"/><br/><strong>3 · Evidence–claim graph</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="Multiscale science pipeline"/><br/><strong>4 · Multiscale science pipeline</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="Reproducibility quality gates"/><br/><strong>5 · Reproducibility quality gates</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="Computation handoff boundary"/><br/><strong>6 · Computation handoff boundary</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/project_state_machine.svg" alt="Project state machine"/><br/><strong>7 · Project state machine</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/capability_landscape.svg" alt="Capability landscape"/><br/><strong>8 · Capability landscape</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/original_requirements_coverage.svg" alt="Original requirements coverage"/><br/><strong>9 · Original requirements coverage</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/capability_implementation_levels.svg" alt="Implementation levels"/><br/><strong>10 · Implementation levels</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="Progressive routing and loading"/><br/><strong>11 · Progressive routing and loading</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="Project ledgers and provenance"/><br/><strong>12 · Project ledgers and provenance</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="Evidence and citation integrity"/><br/><strong>13 · Evidence and citation integrity</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="Research production pipeline"/><br/><strong>14 · Research production pipeline</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="Installation compatibility"/><br/><strong>15 · Installation compatibility</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="Supply-chain attestation"/><br/><strong>16 · Supply-chain attestation</strong></td></tr>
+</table>
+
+## Quick start
 
 ```bash
-python scripts/sync_version.py --check
-python scripts/validate_schemas.py
-python scripts/audit_repository.py
-python scripts/validate_structure.py
-python scripts/build_readme_facts.py --check
-python scripts/build_sbom.py --check
-python scripts/build_validation_evidence.py --check
-python scripts/build_test_dashboard.py --check
-python scripts/build_research_quality_dashboard.py --check
-python scripts/build_engineering_report.py --check
-python scripts/generate_checksums.py --check
+git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
+cd TsaoSciResearcher
+python -m pip install -e .
+python -m tsao_researcher --version
+python -m tsao_researcher route "Design a traceable multiscale polymer study"
+python -m tsao_researcher search "polymer molecular dynamics" --limit 10
 ```
 
-Full local release gates:
+Initialize and verify canonical project state:
 
 ```bash
-mkdir -p artifacts
-python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
-python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov \
-  --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch \
-  --cov-report=json:artifacts/coverage.json
-python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
-python -m ruff format --check scripts tsao_researcher tests
-python -m ruff check scripts tsao_researcher tests
-python -m mypy scripts tsao_researcher
-python -m bandit -q -lll -r scripts tsao_researcher
-python -m pip_audit --strict -r requirements-ci.lock
-python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
-python scripts/performance_smoke.py --json-out artifacts/performance.json
-python scripts/check_quality_baseline.py
-mkdocs build --strict
-python scripts/package_release.py --out dist-a
-python -m build --sdist --wheel --outdir dist-python
-python scripts/validate_distribution.py dist-python
+python -m tsao_researcher init   --name "Polyolefin multiscale study"   --question "Which mechanisms connect processing history to product properties?"   --research-type mechanistic   --output .
+python -m tsao_researcher verify .
 ```
 
-The baseline enforces line and branch coverage, **21/21** critical mutants, bounded performance and zero JUnit failures. Threshold changes require an explicit changelog rationale.
+Create a guarded computation handoff:
 
-The checked-in validation evidence is deliberately `preflight/PARTIAL`; GitHub Actions creates commit-bound `current-tree/PASS` evidence and an external publication attestation only after all gates finish.
+```bash
+python scripts/handoff_to_computation.py   --project .tsao-research   --out computation/handoff.json   --question "Which property must be computed?"   --property "target property"   --profile MD   --scale atomistic   --method "candidate method"   --boundary-condition "periodic box"   --metric "convergence metric"   --expected-output "validated result artifact"   --input-file data/input.dat
+```
 
-## Automation model
+Record and verify a real external execution:
 
-- `ci.yml`: read-only push/PR validation and four-platform compatibility.
-- `audit.yml`: read-only, manually dispatched complete audit.
-- `nightly.yml`: weekly dependency, coverage, mutation, performance, docs and distribution health check.
-- `release.yml`: tag-bounded publication of source ZIP, wheel, sdist, SBOM, validation evidence, PDF, checksums and external attestation.
-- `cleanup-branches.yml`: enforces the repository's intentional single-`main` policy.
+```bash
+python -m tsao_researcher receipt record .   --handoff computation/handoff.json   --engine gromacs --engine-version 2026.1   --command gmx --command mdrun --exit-code 0   --output computation/result.dat   --started-at 2026-07-24T01:00:00Z   --finished-at 2026-07-24T01:10:00Z
+python -m tsao_researcher receipt verify .
+```
 
-Validation/audit/nightly workflows are idempotent and never create commits.
+Export and verify a reproducibility capsule:
 
-## Visual and machine-readable evidence
+```bash
+python -m tsao_researcher capsule export . --mode metadata --output project-metadata.zip
+python -m tsao_researcher capsule export . --mode full --output project-full.zip
+python -m tsao_researcher capsule verify project-full.zip
+```
 
-![Automated test dashboard](docs/test-dashboard.svg)
+## Installation
 
-- [Interactive test dashboard](docs/test-dashboard.html)
-- [Scientific-quality dashboard](docs/research-quality-dashboard.html)
-- [Scientific-quality SVG](docs/research-quality-dashboard.svg)
-- [Scientific-quality examples](docs/SCIENTIFIC_QUALITY_EXAMPLES.json)
-- [Engineering audit PDF](docs/engineering-audit-report.pdf)
-- [Validation evidence 1.6](docs/VALIDATION_EVIDENCE.json)
-- [CycloneDX SBOM](docs/SBOM.cdx.json)
-- [Quality baseline](docs/QUALITY_BASELINE.json)
-- [Quality history](docs/QUALITY_HISTORY.json)
+```bash
+python install.py --agent codex --scope user --dry-run
+python install.py --agent claude --scope project --validate
+python install.py --agent open-agent --scope project --target ./skills --force
+```
+
+PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
+
+## Validation
+
+The latest verified hardening run recorded:
+
+| Gate | Result |
+|---|---:|
+| Tests | **212 passed; 0 failed; 0 errors** |
+| Project line coverage | **96.371%** |
+| Branch coverage | **93.128%** |
+| Quality floor | **95% line / 90% branch** |
+| Critical mutation tests | **21 / 21 killed; 0 survivors** |
+| Ruff / Mypy / Bandit | **PASS** |
+| Exact-lock dependency audit | **PASS** |
+| Performance baseline | **PASS** |
+| Two source ZIP builds | **byte-identical** |
+| Wheel and sdist isolated install | **PASS** |
+
+Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.
+
+## Machine-readable evidence and mapping
+
 - [README audit report](docs/README_AUDIT_REPORT.md)
 - [Capability coverage matrix](docs/CAPABILITY_COVERAGE_MATRIX.md)
-- [Design → code → test mapping](docs/README_ARCHITECTURE_MAPPING.md)
-
-## Documentation
-
-- [Architecture](docs/ARCHITECTURE.md)
-- [CLI reference](docs/CLI.md)
-- [Validation](docs/VALIDATION.md)
-- [Scientific quality](docs/SCIENTIFIC_QUALITY.md)
-- [Supply chain](docs/SUPPLY_CHAIN.md)
-- [Release process](docs/RELEASE_PROCESS.md)
-- [Roadmap](docs/ROADMAP.md)
+- [README architecture mapping](docs/README_ARCHITECTURE_MAPPING.md)
+- [Validation evidence](docs/VALIDATION_EVIDENCE.json)
+- [Interactive test dashboard](docs/test-dashboard.html)
+- [Test dashboard SVG](docs/test-dashboard.svg)
+- [Original requirements audit JSON](docs/ORIGINAL_REQUIREMENTS_AUDIT.json)
+- [Scientific capability visual atlas](docs/VISUAL_ATLAS.md)
 
 ## Known limitations
 
-- External engines, instruments and databases are not bundled.
-- A handoff is not a completed computation; a receipt is evidence of execution, not scientific validity.
-- An SBOM is an inventory, not a vulnerability guarantee.
-- Coverage and mutation scores measure test strength, not scientific truth.
-- Material-specific trends and mechanism conclusions require project evidence, uncertainty and applicability boundaries.
+- Live literature databases, PDF parsers and citation-network services are not bundled.
+- Statistical, causal, DOE and ML methods are contracts and quality gates; numerical execution uses host tools.
+- Plotting has a validated contract and runnable example, but no universal plotting daemon is bundled.
+- DOCX, PPTX and LaTeX rendering rely on host capabilities.
+- DFT, MD, FEM, CFD, process simulators, HPC schedulers, instruments and laboratory robots remain external.
+- Patent/FTO, medical, safety and integrity acceptance require qualified human review.
+- A handoff is not a completed computation; a receipt is execution evidence, not scientific validity.
 
-## Security, contribution and license
+## License and provenance
 
-See [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md), [THIRD_PARTY.md](THIRD_PARTY.md) and [references/source-map.md](references/source-map.md). TsaoSciResearcher is an original Apache-2.0 implementation inspired by public scientific-agent and research-tool projects; it is not their official fork or replacement.
+TsaoSciResearcher is an original **Apache-2.0** implementation. No upstream source code or prompt corpus is bundled. Public projects informed architecture and taxonomy only; see [THIRD_PARTY.md](THIRD_PARTY.md) and [references/source-map.md](references/source-map.md).

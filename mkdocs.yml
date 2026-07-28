@@ -6,6 +6,8 @@ theme:
   name: mkdocs
 nav:
   - Home: index.md
+  - Original requirements audit: ORIGINAL_REQUIREMENTS_AUDIT.md
+  - Visual atlas: VISUAL_ATLAS.md
   - Architecture: ARCHITECTURE.md
   - CLI: CLI.md
   - Validation: VALIDATION.md
