@@ -19,7 +19,7 @@ env:
 
 jobs:
   verify-and-export:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_BUILD_FLAGSHIP_PATCH'
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_BUILD_FLAGSHIP_PATCH_V2'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -40,10 +40,30 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Remove one-shot controls and regenerate deterministic evidence
+      - name: Remove one-shot controls and tracked build outputs
         run: |
           rm -f .github/workflows/fix-validation-evidence.yml
           rm -f .github/workflows/finalize-release-hygiene.yml
+          rm -rf dist-a dist-b dist-python
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.gitignore')
+          text = path.read_text(encoding='utf-8')
+          block = '''
+
+# Generated verification and release outputs
+dist-*/
+dist_*/
+build-*/
+build_*/
+release-*/
+release_*/
+site/
+'''
+          if '# Generated verification and release outputs' not in text:
+              path.write_text(text.rstrip() + block, encoding='utf-8', newline='\n')
+          PY
           python scripts/sync_version.py --write
           python scripts/build_readme_facts.py --write
           python scripts/build_sbom.py --write
@@ -93,13 +113,13 @@ jobs:
 
       - name: Deterministic source and Python distribution gates
         run: |
-          python scripts/package_release.py --out dist-a
-          python scripts/package_release.py --out dist-b
+          python scripts/package_release.py --out artifacts/dist-a
+          python scripts/package_release.py --out artifacts/dist-b
           VERSION="$(tr -d '\r\n' < VERSION)"
-          cmp "dist-a/TsaoSciResearcher-v${VERSION}.zip" "dist-b/TsaoSciResearcher-v${VERSION}.zip"
+          cmp "artifacts/dist-a/TsaoSciResearcher-v${VERSION}.zip" "artifacts/dist-b/TsaoSciResearcher-v${VERSION}.zip"
           python scripts/validate_release.py
-          python -m build --sdist --wheel --outdir dist-python
-          python scripts/validate_distribution.py dist-python
+          python -m build --sdist --wheel --outdir artifacts/dist-python
+          python scripts/validate_distribution.py artifacts/dist-python
 
       - name: Build checksum-bound final-tree patch
         run: |
@@ -124,14 +144,20 @@ jobs:
                   ["git", "diff", "--name-only", "--diff-filter=D", "HEAD"], text=True
               ).splitlines() if line
           )
-          if not changed or not deleted:
-              raise SystemExit(f"expected changed and deleted paths, got changed={changed}, deleted={deleted}")
           required_deleted = {
               ".github/workflows/fix-validation-evidence.yml",
               ".github/workflows/finalize-release-hygiene.yml",
           }
           if not required_deleted.issubset(deleted):
               raise SystemExit(f"temporary workflow deletions missing: {sorted(required_deleted - set(deleted))}")
+          if ".gitignore" not in changed:
+              raise SystemExit(".gitignore release-output policy was not staged")
+          forbidden_changed_prefixes = ("dist-a/", "dist-b/", "dist-python/")
+          leaked = [path for path in changed if path.startswith(forbidden_changed_prefixes)]
+          if leaked:
+              raise SystemExit(f"generated build outputs remain modified instead of deleted: {leaked}")
+          if not any(path.startswith(forbidden_changed_prefixes) for path in deleted):
+              raise SystemExit("expected tracked build-output deletions are missing")
 
           records = []
           output = root / "artifacts/final-tree-patch.zip"
@@ -172,15 +198,15 @@ jobs:
       - name: Upload verified patch and gate evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: flagship-clean-tree-${{ github.run_id }}
+          name: flagship-clean-tree-v2-${{ github.run_id }}
           path: |
             artifacts/final-tree-patch.zip
             artifacts/junit.xml
             artifacts/coverage.json
             artifacts/mutation-results.json
             artifacts/performance.json
-            dist-a
-            dist-python
+            artifacts/dist-a
+            artifacts/dist-python
           if-no-files-found: error
           retention-days: 30
 
@@ -189,7 +215,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-clean-tree-patch-ready; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; artifact=flagship-clean-tree-${GITHUB_RUN_ID}; repository=PASS; docs=PASS; tests=PASS; coverage=PASS; order=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=18/18; performance=PASS; deterministic-release=PASS; distributions=PASS; temporary-workflows=REMOVED-IN-PATCH"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-clean-tree-v2-patch-ready; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; artifact=flagship-clean-tree-v2-${GITHUB_RUN_ID}; repository=PASS; docs=PASS; tests=PASS; coverage=PASS; order=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=18/18; performance=PASS; deterministic-release=PASS; distributions=PASS; temporary-workflows=REMOVED; tracked-build-outputs=REMOVED"
 
       - name: Report failed patch build
         if: failure()
@@ -197,4 +223,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-patch-build-failed; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; inspect failed step logs"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-v2-patch-build-failed; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; inspect failed step logs"
