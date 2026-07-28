@@ -1,0 +1,226 @@
+name: Build first-principles 0.7.0 candidate
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: build-first-principles-0-7-0
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_BUILD_FIRST_PRINCIPLES_0_7_0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Reconstruct and install checksum-bound product payload
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments?per_page=100" > /tmp/comments.json
+          python - <<'PY'
+          from __future__ import annotations
+          import base64
+          import hashlib
+          import json
+          import re
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          expected_sha = "fe64854084b5adfacd74bd5235b309470e442e134ec2768820f0058083558c37"
+          expected_chunks = 5
+          comments = json.loads(Path('/tmp/comments.json').read_text(encoding='utf-8'))
+          if not isinstance(comments, list):
+              raise SystemExit('issue comments response is not a list')
+          pattern = re.compile(r'TSR_FP_PRODUCT_PAYLOAD (\d+)/(\d+)')
+          pieces: dict[int, str] = {}
+          for row in comments:
+              if row.get('user', {}).get('login') != 'SUNHAOJUN22':
+                  continue
+              body = str(row.get('body', ''))
+              if '\n' not in body:
+                  continue
+              header, data = body.split('\n', 1)
+              match = pattern.fullmatch(header.strip())
+              if not match:
+                  continue
+              index, total = map(int, match.groups())
+              if total != expected_chunks or index in pieces:
+                  raise SystemExit('conflicting or duplicate payload chunk')
+              pieces[index] = ''.join(data.split())
+          if sorted(pieces) != list(range(1, expected_chunks + 1)):
+              raise SystemExit(f'payload chunks incomplete: {sorted(pieces)}')
+          raw = base64.b64decode(''.join(pieces[i] for i in range(1, expected_chunks + 1)), validate=True)
+          actual_sha = hashlib.sha256(raw).hexdigest()
+          if actual_sha != expected_sha:
+              raise SystemExit(f'payload checksum mismatch: {actual_sha}')
+          payload = Path('/tmp/first-principles-product.zip')
+          payload.write_bytes(raw)
+          root = Path.cwd().resolve()
+          with zipfile.ZipFile(payload) as archive:
+              names = {row.filename for row in archive.infolist() if not row.is_dir()}
+              if 'manifest.json' not in names:
+                  raise SystemExit('payload manifest missing')
+              manifest = json.loads(archive.read('manifest.json').decode('utf-8'))
+              if manifest.get('version') != '0.7.0' or len(manifest.get('files', [])) != 66:
+                  raise SystemExit('unexpected payload identity')
+              expected_names = {'manifest.json'} | {f"files/{row['path']}" for row in manifest['files']}
+              if names != expected_names:
+                  raise SystemExit('payload inventory mismatch')
+              for row in manifest['files']:
+                  relative = str(row['path'])
+                  pure = PurePosixPath(relative)
+                  if pure.is_absolute() or any(part in {'', '.', '..'} for part in pure.parts):
+                      raise SystemExit(f'unsafe payload path: {relative}')
+                  data = archive.read(f'files/{relative}')
+                  if hashlib.sha256(data).hexdigest() != row['sha256'] or len(data) != int(row['size']):
+                      raise SystemExit(f'payload file mismatch: {relative}')
+                  target = (root / pure).resolve(strict=False)
+                  if not target.is_relative_to(root):
+                      raise SystemExit(f'payload escapes repository: {relative}')
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(data)
+                  target.chmod(0o755 if row.get('mode') == '100755' else 0o644)
+          PY
+      - name: Remove all transport controls and obsolete workflow
+        run: |
+          rm -f .github/first-principles-advisor-plan.md
+          rm -f .github/first-principles-development-session.txt
+          rm -f .github/first-principles-patch.part-*
+          rm -f .github/first-principles-payload.part-*
+          rm -f .github/transport/finalize_first_principles_advisor.py
+          rm -f .github/workflows/export-first-principles-source.yml
+          rm -f .github/workflows/finalize-first-principles-advisor.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v2.yml
+          rm -f .github/workflows/finalize-first-principles-advisor-v3.yml
+          rm -f .github/workflows/patch-first-principles-finalizer.yml
+          rm -f .github/workflows/verify-first-principles-candidate.yml
+          rm -f .github/workflows/build-first-principles-candidate.yml
+          rm -f .github/workflows/dispatch-release-hygiene.yml
+          rmdir .github/transport 2>/dev/null || true
+      - name: Validate candidate tree identity before object creation
+        run: |
+          test "$(cat VERSION)" = "0.7.0"
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('manifest.json').read_text(encoding='utf-8'))
+          assert manifest['capability_count'] == 341
+          assert manifest['schema_count'] == 19
+          assert not list(Path('.github').glob('first-principles-*'))
+          assert not list(Path('.github/workflows').glob('*first-principles*'))
+          PY
+      - name: Create clean Git candidate object without moving main
+        id: candidate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add -A
+          git diff --cached --check
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from __future__ import annotations
+          import base64
+          import json
+          import os
+          import subprocess
+          import urllib.request
+          from pathlib import Path
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          parent = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          parent_tree = subprocess.check_output(['git', 'show', '-s', '--format=%T', 'HEAD'], text=True).strip()
+          changed = sorted(filter(None, subprocess.check_output(
+              ['git', 'diff', '--cached', '--name-only', '--diff-filter=ACMRTUXB'], text=True
+          ).splitlines()))
+          deleted = sorted(filter(None, subprocess.check_output(
+              ['git', 'diff', '--cached', '--name-only', '--diff-filter=D'], text=True
+          ).splitlines()))
+          if 'tsao_researcher/strategy.py' not in changed or 'schemas/v2/computation-strategy.schema.json' not in changed:
+              raise SystemExit('core product files are absent from candidate')
+          if not any(path.endswith('verify-first-principles-candidate.yml') for path in deleted):
+              raise SystemExit('candidate verifier deletion missing')
+
+          def api(method: str, path: str, payload: dict) -> dict:
+              request = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}{path}',
+                  data=json.dumps(payload).encode('utf-8'),
+                  method=method,
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'Content-Type': 'application/json',
+                  },
+              )
+              with urllib.request.urlopen(request) as response:
+                  return json.load(response)
+
+          tree = []
+          for relative in changed:
+              raw = Path(relative).read_bytes()
+              blob = api('POST', '/git/blobs', {
+                  'content': base64.b64encode(raw).decode('ascii'),
+                  'encoding': 'base64',
+              })
+              mode_row = subprocess.check_output(['git', 'ls-files', '-s', '--', relative], text=True).strip()
+              mode = mode_row.split()[0] if mode_row else '100644'
+              tree.append({'path': relative, 'mode': mode, 'type': 'blob', 'sha': blob['sha']})
+          for relative in deleted:
+              tree.append({'path': relative, 'mode': '100644', 'type': 'blob', 'sha': None})
+          created_tree = api('POST', '/git/trees', {'base_tree': parent_tree, 'tree': tree})
+          commit = api('POST', '/git/commits', {
+              'message': 'feat: add first-principles computation strategy advisor',
+              'tree': created_tree['sha'],
+              'parents': [parent],
+          })
+          print(f"candidate={commit['sha']}")
+          print(f'parent={parent}')
+          print(f'changed={len(changed)}')
+          print(f'deleted={len(deleted)}')
+          PY
+      - name: Report candidate object
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CANDIDATE: ${{ steps.candidate.outputs.candidate }}
+          PARENT: ${{ steps.candidate.outputs.parent }}
+          CHANGED: ${{ steps.candidate.outputs.changed }}
+          DELETED: ${{ steps.candidate.outputs.deleted }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-candidate-built
+candidate=${CANDIDATE}
+parent=${PARENT}
+version=0.7.0
+payload-sha256=fe64854084b5adfacd74bd5235b309470e442e134ec2768820f0058083558c37
+changed=${CHANGED}
+deleted=${DELETED}
+transport-controls=REMOVED
+solver-execution=ABSENT"
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-candidate-build-failed
+workflow-run=${GITHUB_RUN_ID}"
