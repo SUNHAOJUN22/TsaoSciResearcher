@@ -1,15 +1,15 @@
-name: Finalize flagship README and clean validation tree
+name: Build verified flagship clean-tree patch
 
 on:
   issue_comment:
     types: [created]
 
 permissions:
-  contents: write
+  contents: read
   issues: write
 
 concurrency:
-  group: finalize-flagship-readme-main
+  group: build-flagship-clean-tree-patch
   cancel-in-progress: false
 
 env:
@@ -18,8 +18,8 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
-  finalize:
-    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_FINALIZE_FLAGSHIP_MAIN'
+  verify-and-export:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize flagship README' && github.event.comment.body == 'TSR_BUILD_FLAGSHIP_PATCH'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -101,33 +101,100 @@ jobs:
           python -m build --sdist --wheel --outdir dist-python
           python scripts/validate_distribution.py dist-python
 
-      - name: Create and publish verified clean-main commit
-        id: candidate
+      - name: Build checksum-bound final-tree patch
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git diff --cached --check
-          git commit -m 'docs: finalize flagship README and clean validation evidence'
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          git fetch origin main
-          test "$(git rev-parse HEAD^)" = "$(git rev-parse origin/main)"
-          git push origin HEAD:main
-          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)"
+          python - <<'PY'
+          from __future__ import annotations
 
-      - name: Report successful closure
+          import hashlib
+          import json
+          import subprocess
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          base_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          changed = sorted(
+              line for line in subprocess.check_output(
+                  ["git", "diff", "--name-only", "--diff-filter=ACMRTUXB", "HEAD"], text=True
+              ).splitlines() if line
+          )
+          deleted = sorted(
+              line for line in subprocess.check_output(
+                  ["git", "diff", "--name-only", "--diff-filter=D", "HEAD"], text=True
+              ).splitlines() if line
+          )
+          if not changed or not deleted:
+              raise SystemExit(f"expected changed and deleted paths, got changed={changed}, deleted={deleted}")
+          required_deleted = {
+              ".github/workflows/fix-validation-evidence.yml",
+              ".github/workflows/finalize-release-hygiene.yml",
+          }
+          if not required_deleted.issubset(deleted):
+              raise SystemExit(f"temporary workflow deletions missing: {sorted(required_deleted - set(deleted))}")
+
+          records = []
+          output = root / "artifacts/final-tree-patch.zip"
+          output.parent.mkdir(parents=True, exist_ok=True)
+          with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              for relative in changed:
+                  pure = PurePosixPath(relative)
+                  if pure.is_absolute() or any(part in {"", ".", ".."} for part in pure.parts):
+                      raise SystemExit(f"unsafe changed path: {relative}")
+                  path = root / relative
+                  data = path.read_bytes()
+                  mode_result = subprocess.run(
+                      ["git", "ls-files", "-s", "--", relative], text=True, capture_output=True, check=True
+                  ).stdout.strip()
+                  mode = mode_result.split()[0] if mode_result else "100644"
+                  records.append(
+                      {
+                          "path": relative,
+                          "mode": mode,
+                          "size": len(data),
+                          "sha256": hashlib.sha256(data).hexdigest(),
+                      }
+                  )
+                  archive.writestr(f"files/{relative}", data)
+              manifest = {
+                  "schema_version": "1.0",
+                  "base_commit": base_commit,
+                  "changed": records,
+                  "deleted": deleted,
+              }
+              archive.writestr(
+                  "manifest.json",
+                  json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8") + b"\n",
+              )
+          print(f"patch={output} changed={len(changed)} deleted={len(deleted)}")
+          PY
+
+      - name: Upload verified patch and gate evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: flagship-clean-tree-${{ github.run_id }}
+          path: |
+            artifacts/final-tree-patch.zip
+            artifacts/junit.xml
+            artifacts/coverage.json
+            artifacts/mutation-results.json
+            artifacts/performance.json
+            dist-a
+            dist-python
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report verified patch ready
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=flagship-main-published; candidate=${CANDIDATE_SHA}; repository=PASS; docs=PASS; tests=PASS; coverage=PASS; order=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=18/18; performance=PASS; deterministic-release=PASS; distributions=PASS; temporary-workflows=REMOVED" --remove-label payload-staging
-          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-clean-tree-patch-ready; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; artifact=flagship-clean-tree-${GITHUB_RUN_ID}; repository=PASS; docs=PASS; tests=PASS; coverage=PASS; order=PASS; ruff=PASS; mypy=PASS; bandit=PASS; dependency-audit=PASS; mutation=18/18; performance=PASS; deterministic-release=PASS; distributions=PASS; temporary-workflows=REMOVED-IN-PATCH"
 
-      - name: Report failed closure precisely
+      - name: Report failed patch build
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=flagship-finalization-failed; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; inspect failed step logs"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-patch-build-failed; workflow-run=${GITHUB_RUN_ID}; workflow-attempt=${GITHUB_RUN_ATTEMPT}; inspect failed step logs"
