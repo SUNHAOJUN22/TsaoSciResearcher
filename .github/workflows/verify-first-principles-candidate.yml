@@ -1,0 +1,247 @@
+name: Verify first-principles 0.7.0 candidate
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: verify-first-principles-0-7-0
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  full-validation:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_VERIFY_FIRST_PRINCIPLES_0_7_0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    outputs:
+      candidate: ${{ steps.source.outputs.candidate }}
+      tests: ${{ steps.metrics.outputs.tests }}
+      line: ${{ steps.metrics.outputs.line }}
+      branch: ${{ steps.metrics.outputs.branch }}
+      mutations: ${{ steps.metrics.outputs.mutations }}
+    steps:
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - name: Download unreferenced candidate object
+        id: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BODY="$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json body --jq .body)"
+          CANDIDATE="$(printf '%s\n' "$BODY" | sed -n 's/^candidate=\([0-9a-f]\{40\}\)$/\1/p' | tail -1)"
+          test -n "$CANDIDATE"
+          curl --fail --silent --show-error --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/zipball/${CANDIDATE}" \
+            -o /tmp/candidate.zip
+          mkdir -p /tmp/candidate
+          unzip -q /tmp/candidate.zip -d /tmp/candidate
+          ROOT="$(find /tmp/candidate -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          test -f "$ROOT/pyproject.toml"
+          echo "ROOT=$ROOT" >> "$GITHUB_ENV"
+          echo "candidate=$CANDIDATE" >> "$GITHUB_OUTPUT"
+      - name: Install exact toolchain
+        run: |
+          cd "$ROOT"
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Product identity and first-principles contracts
+        run: |
+          cd "$ROOT"
+          test "$(cat VERSION)" = "0.7.0"
+          python -m tsao_researcher --version
+          python -m tsao_researcher strategy "How do defect states control dielectric breakdown?" --observable trap-depth --condition "finite temperature" --out /tmp/strategy.json
+          python scripts/validate_computation_strategy.py /tmp/strategy.json
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('.')
+          manifest = json.loads((root / 'manifest.json').read_text(encoding='utf-8'))
+          assert manifest['capability_count'] == 341
+          assert manifest['schema_count'] == 19
+          rows = json.loads((root / 'capabilities/v2/capabilities.json').read_text(encoding='utf-8'))
+          assert len(rows) == 341
+          assert any(row.get('slug') == 'first-principles-strategy-advisor' for row in rows)
+          strategy = json.loads(Path('/tmp/strategy.json').read_text(encoding='utf-8'))
+          assert strategy['execution_boundary']['solver_executed'] is False
+          assert strategy['status'] == 'advisory-only'
+          assert strategy['method_ladder']
+          PY
+      - name: Repository, documentation and generated-artifact audit
+        run: |
+          cd "$ROOT"
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          mkdocs build --strict
+      - name: Complete regression and order independence
+        run: |
+          cd "$ROOT"
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260728 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+      - name: Static, type and source security
+        run: |
+          cd "$ROOT"
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+      - name: Dependency, mutation, performance and quality gates
+        run: |
+          cd "$ROOT"
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python scripts/build_sbom.py --check
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+      - name: Deterministic source and Python distributions
+        run: |
+          cd "$ROOT"
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+      - name: Capture exact metrics
+        id: metrics
+        run: |
+          cd "$ROOT"
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          suites = ET.parse('artifacts/junit.xml').getroot()
+          nodes = suites.findall('testsuite') if suites.tag == 'testsuites' else [suites]
+          tests = sum(int(float(node.attrib.get('tests', 0))) for node in nodes)
+          coverage = json.loads(Path('artifacts/coverage.json').read_text(encoding='utf-8'))['totals']
+          branches = int(coverage.get('num_branches', 0))
+          covered = int(coverage.get('covered_branches', 0))
+          branch = 100.0 if branches == 0 else covered * 100.0 / branches
+          mutations = json.loads(Path('artifacts/mutation-results.json').read_text(encoding='utf-8'))
+          killed = sum(bool(row.get('killed')) for row in mutations)
+          print(f'tests={tests}')
+          print(f"line={float(coverage['percent_covered']):.3f}")
+          print(f'branch={branch:.3f}')
+          print(f'mutations={killed}/{len(mutations)}')
+          PY
+
+  compatibility:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_VERIFY_FIRST_PRINCIPLES_0_7_0'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+          - os: ubuntu-latest
+            python: "3.13"
+          - os: windows-latest
+            python: "3.12"
+          - os: macos-latest
+            python: "3.12"
+    steps:
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Download candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BODY="$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json body --jq .body)"
+          CANDIDATE="$(printf '%s\n' "$BODY" | sed -n 's/^candidate=\([0-9a-f]\{40\}\)$/\1/p' | tail -1)"
+          test -n "$CANDIDATE"
+          curl --fail --silent --show-error --location -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${GITHUB_REPOSITORY}/zipball/${CANDIDATE}" -o candidate.zip
+          mkdir candidate
+          unzip -q candidate.zip -d candidate
+          ROOT="$(find candidate -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          echo "ROOT=$ROOT" >> "$GITHUB_ENV"
+      - name: Install and exercise cross-platform contracts
+        shell: bash
+        run: |
+          cd "$ROOT"
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+          python -m compileall -q scripts tsao_researcher tests
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_first_principles_strategy.py tests/test_runtime_v2.py tests/test_named_capabilities.py tests/test_schemas.py tests/test_handoff_cli.py tests/test_receipts_capsules.py
+          python -m tsao_researcher strategy "Recommend a simulation strategy for polymer morphology evolution" --observable domain-size --condition "finite temperature"
+          python scripts/validate_schemas.py
+
+  report:
+    if: always() && github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] first-principles advisor development' && github.event.comment.body == 'TSR_VERIFY_FIRST_PRINCIPLES_0_7_0'
+    needs: [full-validation, compatibility]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report result
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          FULL_RESULT: ${{ needs.full-validation.result }}
+          COMPAT_RESULT: ${{ needs.compatibility.result }}
+          CANDIDATE: ${{ needs.full-validation.outputs.candidate }}
+          TESTS: ${{ needs.full-validation.outputs.tests }}
+          LINE: ${{ needs.full-validation.outputs.line }}
+          BRANCH: ${{ needs.full-validation.outputs.branch }}
+          MUTATIONS: ${{ needs.full-validation.outputs.mutations }}
+        run: |
+          if [ "$FULL_RESULT" = success ] && [ "$COMPAT_RESULT" = success ]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-candidate-verified
+candidate=${CANDIDATE}
+version=0.7.0
+full-validation=PASS
+compatibility=PASS
+tests=${TESTS}
+line-coverage=${LINE}
+branch-coverage=${BRANCH}
+mutation=${MUTATIONS}
+ruff=PASS
+mypy=PASS
+bandit=PASS
+dependency-audit=PASS
+performance=PASS
+deterministic-release=PASS
+wheel-and-sdist=PASS
+solver-execution=ABSENT
+advisory-boundary=PASS"
+          else
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=first-principles-candidate-failed
+full-validation=${FULL_RESULT}
+compatibility=${COMPAT_RESULT}
+workflow-run=${GITHUB_RUN_ID}"
+            exit 1
+          fi
