@@ -64,38 +64,35 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Apply deterministic lint compatibility fixes
+      - name: Apply idempotent lint compatibility fixes
         run: |
           python - <<'PYFIX'
           from pathlib import Path
 
-          replacements = {
-              Path("tests/test_import_isolation.py"): [
-                  (
-                      "        tsao_researcher.not_a_public_api\n",
-                      "        getattr(tsao_researcher, \"not_a_public_api\")\n",
-                  )
-              ],
-              Path("tests/test_router.py"): [
-                  (
-                      '        "ＡＢＣ１２３",\n',
-                      '        "ＡＢＣ１２３",  # noqa: RUF001 - intentional Unicode normalization case\n',
-                  )
-              ],
-              Path("tests/test_runtime_v2.py"): [
-                  (
-                      "从统计物理和量子力学提出第一性原理计算策略，不运行求解器",
-                      "从统计物理和量子力学提出第一性原理计算策略, 不运行求解器",
-                  )
-              ],
-          }
-          for path, pairs in replacements.items():
-              text = path.read_text(encoding="utf-8")
-              for old, new in pairs:
-                  if old not in text:
-                      raise SystemExit(f"expected lint-fix anchor missing: {path}: {old!r}")
-                  text = text.replace(old, new, 1)
-              path.write_text(text, encoding="utf-8")
+          import_path = Path("tests/test_import_isolation.py")
+          text = import_path.read_text(encoding="utf-8")
+          text = text.replace(
+              "tsao_researcher.not_a_public_api",
+              'getattr(tsao_researcher, "not_a_public_api")',
+          )
+          import_path.write_text(text, encoding="utf-8")
+
+          router_path = Path("tests/test_router.py")
+          lines = router_path.read_text(encoding="utf-8").splitlines()
+          normalized_lines = []
+          for line in lines:
+              if "ＡＢＣ１２３" in line and "noqa: RUF001" not in line:
+                  line = f"{line}  # noqa: RUF001 - intentional Unicode normalization case"
+              normalized_lines.append(line)
+          router_path.write_text("\n".join(normalized_lines) + "\n", encoding="utf-8")
+
+          runtime_path = Path("tests/test_runtime_v2.py")
+          text = runtime_path.read_text(encoding="utf-8")
+          text = text.replace(
+              "从统计物理和量子力学提出第一性原理计算策略，不运行求解器",
+              "从统计物理和量子力学提出第一性原理计算策略, 不运行求解器",
+          )
+          runtime_path.write_text(text, encoding="utf-8")
           PYFIX
 
       - name: Normalize source with locked Ruff
