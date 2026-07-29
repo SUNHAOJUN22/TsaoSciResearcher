@@ -74,7 +74,7 @@ jobs:
           text = import_path.read_text(encoding="utf-8")
           text = text.replace(
               "tsao_researcher.not_a_public_api",
-              "tsao_researcher.not_a_public_api  # noqa: B018 - intentional AttributeError assertion",
+              "tsao_researcher.not_a_public_api  # noqa: B018",
           )
           import_path.write_text(text, encoding="utf-8")
 
@@ -83,7 +83,7 @@ jobs:
           normalized_lines = []
           for line in lines:
               if "ＡＢＣ１２３" in line and "noqa: RUF001" not in line:
-                  line = f"{line}  # noqa: RUF001 - intentional Unicode normalization case"
+                  line = f"{line}  # noqa: RUF001"
               normalized_lines.append(line)
           router_path.write_text("\n".join(normalized_lines) + "\n", encoding="utf-8")
 
