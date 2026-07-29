@@ -74,7 +74,7 @@ jobs:
           text = import_path.read_text(encoding="utf-8")
           text = text.replace(
               "tsao_researcher.not_a_public_api",
-              'getattr(tsao_researcher, "_".join(("not", "a", "public", "api")))',
+              "tsao_researcher.not_a_public_api  # noqa: B018 - intentional AttributeError assertion",
           )
           import_path.write_text(text, encoding="utf-8")
 
