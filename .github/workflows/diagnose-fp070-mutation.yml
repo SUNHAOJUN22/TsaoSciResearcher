@@ -1,0 +1,59 @@
+name: Diagnose TsaoSciResearcher 0.7.0 mutation anchor
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] diagnose first-principles mutation anchor'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reconstruct candidate and inspect anchor
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/fp070-final-patch.part-* | tr -d '\n\r ' | base64 --decode > /tmp/tsr070.patch.xz
+          test "$(sha256sum /tmp/tsr070.patch.xz | cut -d' ' -f1)" = "fddecd88a05637a47bbdd308a1cd030ce5ff53e7a50418373a637f45c5c6136a"
+          xz --decompress --stdout /tmp/tsr070.patch.xz > /tmp/tsr070.patch
+          test "$(sha256sum /tmp/tsr070.patch | cut -d' ' -f1)" = "620d2af0a11b8c4c4267efba93dde50129b72dc6980d4461f0661191dcee648a"
+          git read-tree --reset -u 4f79afe5a895bd04fc2cee095398b2bdddac5a41
+          git apply /tmp/tsr070.patch
+          python - <<'PY'
+          from pathlib import Path
+
+          mutation_path = Path("scripts/run_mutation_smoke.py")
+          text = mutation_path.read_text(encoding="utf-8")
+          needle = "strategy-continuum-mass-conservation"
+          index = text.index(needle)
+          start = max(0, text.rfind("Mutation(", 0, index))
+          end_marker = text.find("\n        ),", index)
+          if end_marker < 0:
+              end_marker = text.find("\n    ),", index)
+          end = min(len(text), (end_marker if end_marker >= 0 else index + 2500) + 20)
+          print("=== MUTATION SPEC ===")
+          print(text[start:end])
+          print("=== NEARBY SCRIPT CONTEXT ===")
+          print(text[max(0, index - 1200):min(len(text), index + 3000)])
+          PY
+
+      - name: Mark diagnostic complete
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=diagnostic-complete
+          workflow-run=${GITHUB_RUN_ID}"
