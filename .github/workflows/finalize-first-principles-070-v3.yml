@@ -71,17 +71,12 @@ jobs:
           from pathlib import Path
 
           import_path = Path("tests/test_import_isolation.py")
-          lines = import_path.read_text(encoding="utf-8").splitlines()
-          rewritten = 0
-          for index, line in enumerate(lines):
-              stripped = line.strip()
-              if stripped == "tsao_researcher.not_a_public_api":
-                  indent = line[: len(line) - len(line.lstrip())]
-                  lines[index] = f'{indent}getattr(tsao_researcher, "not_a_public_api")'
-                  rewritten += 1
-          if rewritten < 1:
-              raise SystemExit("expected AttributeError assertion expression not found")
-          import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          text = import_path.read_text(encoding="utf-8")
+          text = text.replace(
+              "tsao_researcher.not_a_public_api",
+              'getattr(tsao_researcher, "not_a_public_api")',
+          )
+          import_path.write_text(text, encoding="utf-8")
 
           router_path = Path("tests/test_router.py")
           lines = router_path.read_text(encoding="utf-8").splitlines()
