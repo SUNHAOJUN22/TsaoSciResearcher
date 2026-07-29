@@ -74,12 +74,20 @@ jobs:
           lines = import_path.read_text(encoding="utf-8").splitlines()
           rewritten = 0
           for index, line in enumerate(lines):
-              if "tsao_researcher.not_a_public_api" in line and not line.lstrip().startswith("#"):
+              stripped = line.strip()
+              is_missing_api_expression = (
+                  stripped == 'getattr(tsao_researcher, "not_a_public_api")'
+                  or stripped == "tsao_researcher.not_a_public_api"
+              )
+              if is_missing_api_expression:
                   indent = line[: len(line) - len(line.lstrip())]
-                  lines[index] = f"{indent}assert tsao_researcher.not_a_public_api is None"
+                  lines[index] = (
+                      f'{indent}assert getattr(tsao_researcher, "not_a_public_api") is None'
+                  )
                   rewritten += 1
           if rewritten == 0:
-              raise SystemExit("missing public-API isolation assertion target")
+              candidates = [line for line in lines if "not_a_public_api" in line]
+              raise SystemExit(f"missing API assertion target; candidates={candidates!r}")
           import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
           print("rewritten public-API assertions:", rewritten)
           print("\n".join(line for line in lines if "not_a_public_api" in line))
