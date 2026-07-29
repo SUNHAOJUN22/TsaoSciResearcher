@@ -71,7 +71,7 @@ jobs:
 
           import_path = Path("tests/test_import_isolation.py")
           text = import_path.read_text(encoding="utf-8")
-          marker = "# ruff: noqa: B018 - intentional AttributeError assertion\n"
+          marker = "# ruff: noqa: B018\n"
           if not text.startswith(marker):
               text = marker + text
           import_path.write_text(text, encoding="utf-8")
