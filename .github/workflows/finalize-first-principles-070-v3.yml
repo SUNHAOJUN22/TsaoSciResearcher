@@ -48,6 +48,7 @@ jobs:
           test "$(cat VERSION)" = "0.7.0"
           test ! -e .github/fp070-final-patch.part-01
           test ! -e .github/workflows/finalize-first-principles-070-v3.yml
+          test ! -e .github/workflows/diagnose-fp070-mutation.yml
           test ! -e .github/NOOP_SHOULD_NOT_EXIST
           test ! -e .github/should-not-use.txt
           test ! -e .github/tree-probe.tmp
@@ -89,8 +90,6 @@ jobs:
               candidates = [line for line in lines if "not_a_public_api" in line]
               raise SystemExit(f"missing API assertion target; candidates={candidates!r}")
           import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-          print("rewritten public-API assertions:", rewritten)
-          print("\n".join(line for line in lines if "not_a_public_api" in line))
 
           router_path = Path("tests/test_router.py")
           lines = router_path.read_text(encoding="utf-8").splitlines()
@@ -108,6 +107,46 @@ jobs:
               "从统计物理和量子力学提出第一性原理计算策略, 不运行求解器",
           )
           runtime_path.write_text(text, encoding="utf-8")
+
+          mutation_path = Path("scripts/run_mutation_smoke.py")
+          mutation_text = mutation_path.read_text(encoding="utf-8")
+          old_before = (
+              "        '(\"mass conservation\", \"momentum balance\", \"energy balance\", "
+              "\"species conservation\", \"constitutive laws\")',"
+          )
+          old_after = (
+              "        '(\"mass balance omitted\", \"momentum balance\", \"energy balance\", "
+              "\"species conservation\", \"constitutive laws\")',"
+          )
+          formatted_before = (
+              "        '(\\n            \"mass conservation\",\\n            \"momentum balance\","
+              "\\n            \"energy balance\",\\n            \"species conservation\","
+              "\\n            \"constitutive laws\",\\n        )',"
+          )
+          formatted_after = (
+              "        '(\\n            \"mass balance omitted\",\\n            \"momentum balance\","
+              "\\n            \"energy balance\",\\n            \"species conservation\","
+              "\\n            \"constitutive laws\",\\n        )',"
+          )
+          if mutation_text.count(old_before) != 1 or mutation_text.count(old_after) != 1:
+              raise SystemExit("unexpected continuum mutation specification shape")
+          mutation_text = mutation_text.replace(old_before, formatted_before, 1)
+          mutation_text = mutation_text.replace(old_after, formatted_after, 1)
+          old_guard = (
+              "    if source.count(mutation.before) != 1:\n"
+              "        raise RuntimeError(f\"mutation anchor is not unique: {mutation.name}\")"
+          )
+          new_guard = (
+              "    anchor_count = source.count(mutation.before)\n"
+              "    if anchor_count != 1:\n"
+              "        raise RuntimeError(\n"
+              "            f\"mutation anchor count={anchor_count}: {mutation.name}\"\n"
+              "        )"
+          )
+          if mutation_text.count(old_guard) != 1:
+              raise SystemExit("unexpected mutation anchor guard shape")
+          mutation_text = mutation_text.replace(old_guard, new_guard, 1)
+          mutation_path.write_text(mutation_text, encoding="utf-8")
           PYFIX
 
       - name: Normalize source with locked Ruff
@@ -116,6 +155,15 @@ jobs:
           python -m ruff format scripts tsao_researcher tests
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
+          python - <<'PY'
+          from pathlib import Path
+
+          anchor = '(\n            "mass conservation",\n            "momentum balance",\n            "energy balance",\n            "species conservation",\n            "constitutive laws",\n        )'
+          count = Path("tsao_researcher/strategy.py").read_text(encoding="utf-8").count(anchor)
+          if count != 1:
+              raise SystemExit(f"formatted continuum anchor count={count}")
+          print("formatted continuum mutation anchor PASS")
+          PY
 
       - name: Refresh deterministic evidence
         run: |
@@ -227,6 +275,7 @@ jobs:
               ".github/fp070-final-patch",
               ".github/NOOP_SHOULD_NOT_EXIST",
               ".github/workflows/finalize-first-principles-070-v3.yml",
+              ".github/workflows/diagnose-fp070-mutation.yml",
           )
           if any(path.startswith(forbidden) for path in changed):
               raise SystemExit("transport artifact leaked into candidate")
