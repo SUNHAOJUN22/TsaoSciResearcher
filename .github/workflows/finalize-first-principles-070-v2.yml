@@ -70,14 +70,11 @@ jobs:
           from pathlib import Path
 
           import_path = Path("tests/test_import_isolation.py")
-          lines = import_path.read_text(encoding="utf-8").splitlines()
-          rewritten = []
-          for line in lines:
-              if "not_a_public_api" in line and "getattr(" not in line:
-                  indent = line[: len(line) - len(line.lstrip())]
-                  line = f'{indent}getattr(tsao_researcher, "not_a_public_api")'
-              rewritten.append(line)
-          import_path.write_text("\n".join(rewritten) + "\n", encoding="utf-8")
+          text = import_path.read_text(encoding="utf-8")
+          marker = "# ruff: noqa: B018 - intentional AttributeError assertion\n"
+          if not text.startswith(marker):
+              text = marker + text
+          import_path.write_text(text, encoding="utf-8")
 
           router_path = Path("tests/test_router.py")
           lines = router_path.read_text(encoding="utf-8").splitlines()
