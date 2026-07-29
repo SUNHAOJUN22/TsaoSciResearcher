@@ -70,11 +70,18 @@ jobs:
           from pathlib import Path
 
           import_path = Path("tests/test_import_isolation.py")
-          text = import_path.read_text(encoding="utf-8")
-          marker = "# ruff: noqa: B018\n"
-          if not text.startswith(marker):
-              text = marker + text
-          import_path.write_text(text, encoding="utf-8")
+          lines = import_path.read_text(encoding="utf-8").splitlines()
+          rewritten = False
+          for index, line in enumerate(lines[:-1]):
+              if 'with pytest.raises(AttributeError, match="has no attribute")' in line:
+                  target = lines[index + 1]
+                  indent = target[: len(target) - len(target.lstrip())]
+                  lines[index + 1] = f'{indent}getattr(tsao_researcher, "not_a_public_api")'
+                  rewritten = True
+                  break
+          if not rewritten:
+              raise SystemExit("AttributeError assertion block not found")
+          import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
           router_path = Path("tests/test_router.py")
           lines = router_path.read_text(encoding="utf-8").splitlines()
@@ -144,7 +151,7 @@ jobs:
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
           python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environm-sbom.json
           python scripts/build_sbom.py --check
 
       - name: Mutation performance and quality baseline
