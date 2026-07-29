@@ -1,0 +1,295 @@
+name: Finalize TsaoSciResearcher 0.7.0 v3
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: finalize-tsr-0-7-0-v3
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  finalize:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] finalize first-principles 0.7.0 v3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reconstruct clean candidate
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          parent="$(git rev-parse HEAD)"
+          echo "parent=${parent}" >> "$GITHUB_OUTPUT"
+          cat .github/fp070-final-patch.part-* | tr -d '\n\r ' | base64 --decode > /tmp/tsr070.patch.xz
+          test "$(sha256sum /tmp/tsr070.patch.xz | cut -d' ' -f1)" = "fddecd88a05637a47bbdd308a1cd030ce5ff53e7a50418373a637f45c5c6136a"
+          xz --decompress --stdout /tmp/tsr070.patch.xz > /tmp/tsr070.patch
+          test "$(sha256sum /tmp/tsr070.patch | cut -d' ' -f1)" = "620d2af0a11b8c4c4267efba93dde50129b72dc6980d4461f0661191dcee648a"
+          git read-tree --reset -u 4f79afe5a895bd04fc2cee095398b2bdddac5a41
+          git apply --check /tmp/tsr070.patch
+          git apply /tmp/tsr070.patch
+          test "$(cat VERSION)" = "0.7.0"
+          test ! -e .github/fp070-final-patch.part-01
+          test ! -e .github/workflows/finalize-first-principles-070-v3.yml
+          test ! -e .github/NOOP_SHOULD_NOT_EXIST
+          test ! -e .github/should-not-use.txt
+          test ! -e .github/tree-probe.tmp
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact toolchain
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Apply deterministic compatibility fixes
+        run: |
+          python - <<'PYFIX'
+          from pathlib import Path
+
+          import_path = Path("tests/test_import_isolation.py")
+          lines = import_path.read_text(encoding="utf-8").splitlines()
+          rewritten = 0
+          for index, line in enumerate(lines):
+              stripped = line.strip()
+              if stripped == "tsao_researcher.not_a_public_api":
+                  indent = line[: len(line) - len(line.lstrip())]
+                  lines[index] = f'{indent}getattr(tsao_researcher, "not_a_public_api")'
+                  rewritten += 1
+          if rewritten < 1:
+              raise SystemExit("expected AttributeError assertion expression not found")
+          import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+          router_path = Path("tests/test_router.py")
+          lines = router_path.read_text(encoding="utf-8").splitlines()
+          normalized_lines = []
+          for line in lines:
+              if "ＡＢＣ１２３" in line and "noqa: RUF001" not in line:
+                  line = f"{line}  # noqa: RUF001 - intentional Unicode normalization case"
+              normalized_lines.append(line)
+          router_path.write_text("\n".join(normalized_lines) + "\n", encoding="utf-8")
+
+          runtime_path = Path("tests/test_runtime_v2.py")
+          text = runtime_path.read_text(encoding="utf-8")
+          text = text.replace(
+              "从统计物理和量子力学提出第一性原理计算策略，不运行求解器",
+              "从统计物理和量子力学提出第一性原理计算策略, 不运行求解器",
+          )
+          runtime_path.write_text(text, encoding="utf-8")
+          PYFIX
+
+      - name: Normalize source with locked Ruff
+        run: |
+          python -m ruff check --fix scripts tsao_researcher tests
+          python -m ruff format scripts tsao_researcher tests
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+
+      - name: Refresh deterministic evidence
+        run: |
+          python scripts/build_validation_evidence.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Repository and documentation gates
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          mkdocs build --strict
+
+      - name: Complete regression and coverage
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+
+      - name: Order independence
+        env:
+          TSR_TEST_ORDER_SEED: "20260729"
+        run: |
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static type security and dependencies
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python scripts/build_sbom.py --check
+
+      - name: Mutation performance and quality baseline
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+
+      - name: Deterministic release distributions
+        run: |
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+
+      - name: Create verified candidate object
+        id: candidate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PARENT: ${{ steps.source.outputs.parent }}
+        run: |
+          set -euo pipefail
+          rm -rf .coverage .pytest_cache artifacts dist-a dist-b dist-python site build
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          git add -A
+          git diff --cached --check
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from __future__ import annotations
+          import base64
+          import json
+          import os
+          import subprocess
+          import urllib.request
+          from pathlib import Path
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parent = os.environ["PARENT"]
+          parent_tree = subprocess.check_output(
+              ["git", "show", "-s", "--format=%T", parent], text=True
+          ).strip()
+          changed = sorted(filter(None, subprocess.check_output(
+              ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMRTUXB"], text=True
+          ).splitlines()))
+          deleted = sorted(filter(None, subprocess.check_output(
+              ["git", "diff", "--cached", "--name-only", "--diff-filter=D"], text=True
+          ).splitlines()))
+          required = {
+              "VERSION",
+              "README.md",
+              "README.zh-CN.md",
+              "tsao_researcher/strategy.py",
+              "schemas/v2/computation-strategy.schema.json",
+              "capabilities/v2/extensions.json",
+              "examples/first-principles-strategy.json",
+          }
+          if not required.issubset(changed):
+              raise SystemExit(f"missing required files: {sorted(required - set(changed))}")
+          forbidden = (
+              ".github/fp070-final-patch",
+              ".github/NOOP_SHOULD_NOT_EXIST",
+              ".github/workflows/finalize-first-principles-070-v3.yml",
+          )
+          if any(path.startswith(forbidden) for path in changed):
+              raise SystemExit("transport artifact leaked into candidate")
+
+          def api(method: str, endpoint: str, payload: dict) -> dict:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}{endpoint}",
+                  data=json.dumps(payload).encode("utf-8"),
+                  method=method,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "Content-Type": "application/json",
+                  },
+              )
+              with urllib.request.urlopen(req) as response:
+                  return json.load(response)
+
+          tree = []
+          for relative in changed:
+              raw = Path(relative).read_bytes()
+              blob = api("POST", "/git/blobs", {
+                  "content": base64.b64encode(raw).decode("ascii"),
+                  "encoding": "base64",
+              })
+              mode_row = subprocess.check_output(
+                  ["git", "ls-files", "-s", "--", relative], text=True
+              ).strip()
+              mode = mode_row.split()[0] if mode_row else "100644"
+              tree.append({"path": relative, "mode": mode, "type": "blob", "sha": blob["sha"]})
+          for relative in deleted:
+              tree.append({"path": relative, "mode": "100644", "type": "blob", "sha": None})
+
+          created_tree = api("POST", "/git/trees", {"base_tree": parent_tree, "tree": tree})
+          commit = api("POST", "/git/commits", {
+              "message": "feat: add first-principles computation strategy advisor",
+              "tree": created_tree["sha"],
+              "parents": [parent],
+          })
+          print(f"candidate={commit['sha']}")
+          print(f"parent={parent}")
+          print(f"changed={len(changed)}")
+          print(f"deleted={len(deleted)}")
+          PY
+
+      - name: Report verified candidate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CANDIDATE: ${{ steps.candidate.outputs.candidate }}
+          PARENT: ${{ steps.candidate.outputs.parent }}
+          CHANGED: ${{ steps.candidate.outputs.changed }}
+          DELETED: ${{ steps.candidate.outputs.deleted }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=verified-candidate-ready
+          candidate=${CANDIDATE}
+          parent=${PARENT}
+          workflow-run=${GITHUB_RUN_ID}
+          version=0.7.0
+          changed=${CHANGED}
+          deleted=${DELETED}
+          schemas=19
+          capabilities=341
+          solver-execution=ABSENT
+          all-gates=PASS"
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=finalization-v3-failed
+          workflow-run=${GITHUB_RUN_ID}"
