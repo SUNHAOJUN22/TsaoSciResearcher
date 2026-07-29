@@ -36,19 +36,27 @@ jobs:
           from pathlib import Path
 
           before = '("mass conservation", "momentum balance", "energy balance", "species conservation", "constitutive laws")'
-          path = Path("tsao_researcher/strategy.py")
-          text = path.read_text(encoding="utf-8")
-          print("anchor count:", text.count(before))
+          strategy_path = Path("tsao_researcher/strategy.py")
+          strategy = strategy_path.read_text(encoding="utf-8")
+          print("strategy exact anchor count:", strategy.count(before))
           cursor = 0
           occurrence = 0
           while True:
-              index = text.find(before, cursor)
+              index = strategy.find(before, cursor)
               if index < 0:
                   break
               occurrence += 1
               print(f"=== STRATEGY OCCURRENCE {occurrence} ===")
-              print(text[max(0, index - 1000):min(len(text), index + len(before) + 1000)])
+              print(strategy[max(0, index - 800):min(len(strategy), index + len(before) + 800)])
               cursor = index + len(before)
+
+          mutation_lines = Path("scripts/run_mutation_smoke.py").read_text(encoding="utf-8").splitlines()
+          matches = [index for index, line in enumerate(mutation_lines) if "strategy-continuum-mass-conservation" in line]
+          print("mutation definition count:", len(matches))
+          for occurrence, index in enumerate(matches, start=1):
+              print(f"=== MUTATION DEFINITION {occurrence} ===")
+              for offset in range(max(0, index - 4), min(len(mutation_lines), index + 18)):
+                  print(f"{offset + 1}: {mutation_lines[offset]}")
           PY
 
       - name: Mark diagnostic complete
@@ -57,4 +65,13 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=diagnostic-complete
+          workflow-run=${GITHUB_RUN_ID}"
+
+      - name: Mark diagnostic failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=diagnostic-failed
           workflow-run=${GITHUB_RUN_ID}"
