@@ -64,6 +64,11 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
+      - name: Normalize source with locked Ruff
+        run: |
+          python -m ruff check --fix scripts tsao_researcher tests
+          python -m ruff format scripts tsao_researcher tests
+
       - name: Refresh deterministic evidence
         run: |
           python scripts/build_validation_evidence.py --write
