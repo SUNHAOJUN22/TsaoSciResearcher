@@ -71,12 +71,18 @@ jobs:
           from pathlib import Path
 
           import_path = Path("tests/test_import_isolation.py")
-          text = import_path.read_text(encoding="utf-8")
-          text = text.replace(
-              "tsao_researcher.not_a_public_api",
-              "tsao_researcher.not_a_public_api  # noqa: B018",
-          )
-          import_path.write_text(text, encoding="utf-8")
+          lines = import_path.read_text(encoding="utf-8").splitlines()
+          rewritten = 0
+          for index, line in enumerate(lines):
+              if "tsao_researcher.not_a_public_api" in line and not line.lstrip().startswith("#"):
+                  indent = line[: len(line) - len(line.lstrip())]
+                  lines[index] = f"{indent}assert tsao_researcher.not_a_public_api is None"
+                  rewritten += 1
+          if rewritten == 0:
+              raise SystemExit("missing public-API isolation assertion target")
+          import_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          print("rewritten public-API assertions:", rewritten)
+          print("\n".join(line for line in lines if "not_a_public_api" in line))
 
           router_path = Path("tests/test_router.py")
           lines = router_path.read_text(encoding="utf-8").splitlines()
