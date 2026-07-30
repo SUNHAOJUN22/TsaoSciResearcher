@@ -1,0 +1,63 @@
+name: Diagnose checksum v8
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: diagnose-checksum-v8
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+
+jobs:
+  diagnose:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] diagnose checksum v8'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mark diagnosis running
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=running\nworkflow-run=%s\n' "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+
+      - name: Checkout current main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Recompute checksum for permanent tree
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          rm .github/workflows/checksum-diagnose-issue-v8.yml
+          test "$(find .github/workflows -maxdepth 1 -type f -name '*.yml' | wc -l | tr -d ' ')" = "5"
+          actual="$(cat SHA256SUMS)"
+          python scripts/generate_checksums.py --write
+          expected="$(cat SHA256SUMS)"
+          count="$(python -c 'from scripts.generate_checksums import source_files; print(len(source_files()))')"
+          printf 'status=diagnosed\nworkflow-run=%s\nactual=%s\nexpected=%s\nsource-files=%s\n' "$GITHUB_RUN_ID" "$actual" "$expected" "$count" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=diagnosis-failed\nworkflow-run=%s\n' "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
