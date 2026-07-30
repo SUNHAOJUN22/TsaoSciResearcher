@@ -40,6 +40,7 @@ EXCLUDED_PATHS = {
     "docs/test-dashboard.svg",
     "docs/engineering-audit-report.pdf",
 }
+COVERAGE_RUNTIME_PATTERNS = (".coverage", ".coverage.*")
 DEFAULT_COMPATIBILITY = {
     "macos_python_3_12": "PASS",
     "ubuntu_python_3_10": "PASS",
@@ -74,6 +75,10 @@ CI_ONLY_GATES = {
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
+def _is_coverage_runtime_file(path: Path) -> bool:
+    return path.name == ".coverage" or path.name.startswith(".coverage.")
+
+
 def _source_files() -> list[Path]:
     rows: list[Path] = []
     for path in ROOT.rglob("*"):
@@ -83,6 +88,8 @@ def _source_files() -> list[Path]:
         if relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES):
             continue
         if not path.is_file() or path.is_symlink():
+            continue
+        if _is_coverage_runtime_file(path):
             continue
         if relative.as_posix() in EXCLUDED_PATHS or path.suffix in {".pyc", ".pyo"}:
             continue
@@ -254,7 +261,7 @@ def build(
         "verified_inventory": _inventory(),
         "provenance": {
             "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
-            "digest_exclusions": sorted(EXCLUDED_PATHS),
+            "digest_exclusions": sorted([*EXCLUDED_PATHS, *COVERAGE_RUNTIME_PATTERNS]),
             "evidence_generated_from_commit": source_commit if attested else None,
             "publication_parent_commit": publication_parent if attested else None,
             "validated_file_count": file_count,
@@ -296,20 +303,17 @@ def validate(value: dict[str, Any]) -> list[str]:
         actual_count = provenance.get("validated_file_count")
         if actual_digest != expected_digest:
             errors.append(
-                "validated_tree_sha256 is stale "
-                f"(checked-in={actual_digest}, expected={expected_digest})",
+                f"validated_tree_sha256 is stale (checked-in={actual_digest}, expected={expected_digest})",
             )
         if actual_count != expected_count:
             errors.append(
-                "validated_file_count is stale "
-                f"(checked-in={actual_count}, expected={expected_count})",
+                f"validated_file_count is stale (checked-in={actual_count}, expected={expected_count})",
             )
         actual_lock = provenance.get("dependency_lock_sha256")
         expected_lock = _sha256(LOCK_FILE)
         if actual_lock != expected_lock:
             errors.append(
-                "dependency_lock_sha256 is stale "
-                f"(checked-in={actual_lock}, expected={expected_lock})",
+                f"dependency_lock_sha256 is stale (checked-in={actual_lock}, expected={expected_lock})",
             )
     gates = value.get("gates")
     scope = value.get("validation_scope")

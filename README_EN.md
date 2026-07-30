@@ -216,7 +216,7 @@ The published 0.7.0 tree was verified by GitHub Actions run `30511880407` on Ubu
 
 | Gate | Result |
 |---|---:|
-| Tests | **239 passed; 0 failed; 0 errors; 0 skipped** |
+| Tests | **240 passed; 0 failed; 0 errors; 0 skipped** |
 | Project line coverage | **95.726%** |
 | Branch coverage | **92.708%** |
 | Quality floor | **95% line / 90% branch** |

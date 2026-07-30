@@ -216,7 +216,7 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 | Gate | 结果 |
 |---|---:|
-| 测试 | **239 通过；0 failure；0 error；0 skip** |
+| 测试 | **240 通过；0 failure；0 error；0 skip** |
 | 项目综合覆盖率 | **95.726%** |
 | 分支覆盖率 | **92.708%** |
 | 质量门槛 | **95% 行 / 90% 分支** |
