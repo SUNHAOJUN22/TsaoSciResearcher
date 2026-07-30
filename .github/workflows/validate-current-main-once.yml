@@ -62,6 +62,16 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
+      - name: Refresh deterministic artifacts for corrected permanent tree
+        run: |
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
       - name: Repository and generated-artifact audit
         run: |
           python -m compileall -q scripts tsao_researcher tests
