@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts import build_sbom, build_validation_evidence
+from scripts import build_sbom, build_validation_evidence, generate_checksums
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,3 +61,17 @@ def test_validation_tree_digest_ignores_coverage_runtime_files(tmp_path: Path, m
     digest_with_config = build_validation_evidence.tree_digest()
     assert digest_with_config[1] == baseline[1] + 1
     assert digest_with_config[0] != baseline[0]
+
+
+def test_repository_checksum_ignores_coverage_runtime_files(tmp_path: Path) -> None:
+    (tmp_path / "source.py").write_text("value = 1\n", encoding="utf-8")
+    baseline = generate_checksums.build(tmp_path)
+
+    (tmp_path / ".coverage").write_text("runtime data", encoding="utf-8")
+    (tmp_path / ".coverage.worker-1").write_text(
+        "parallel runtime data", encoding="utf-8"
+    )
+    assert generate_checksums.build(tmp_path) == baseline
+
+    (tmp_path / ".coveragerc").write_text("[run]\nbranch = true\n", encoding="utf-8")
+    assert generate_checksums.build(tmp_path) != baseline
