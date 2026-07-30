@@ -304,19 +304,19 @@ def validate(value: dict[str, Any]) -> list[str]:
         if actual_digest != expected_digest:
             errors.append(
                 "validated_tree_sha256 is stale "
-                f"(checked-in={actual_digest}, expected={expected_digest})"
+                f"(checked-in={actual_digest}, expected={expected_digest})",
             )
         if actual_count != expected_count:
             errors.append(
                 "validated_file_count is stale "
-                f"(checked-in={actual_count}, expected={expected_count})"
+                f"(checked-in={actual_count}, expected={expected_count})",
             )
         actual_lock = provenance.get("dependency_lock_sha256")
         expected_lock = _sha256(LOCK_FILE)
         if actual_lock != expected_lock:
             errors.append(
                 "dependency_lock_sha256 is stale "
-                f"(checked-in={actual_lock}, expected={expected_lock})"
+                f"(checked-in={actual_lock}, expected={expected_lock})",
             )
     gates = value.get("gates")
     scope = value.get("validation_scope")
