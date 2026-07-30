@@ -212,7 +212,7 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 ## 验证结果
 
-已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30508047917` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
+已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30510192706` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
 
 | Gate | 结果 |
 |---|---:|
