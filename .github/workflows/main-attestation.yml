@@ -3,7 +3,7 @@ name: Exact main attestation
 on:
   workflow_dispatch:
   issues:
-    types: [opened]
+    types: [opened, assigned]
   schedule:
     - cron: "41 20 * * 4"
 
