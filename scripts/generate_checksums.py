@@ -28,10 +28,15 @@ EXCLUDED_DIRS = {
 GENERATED_PREFIXES = ("dist-", "dist_", "build-", "build_", "release-", "release_")
 EXCLUDED_FILES = {"SHA256SUMS"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".sha256"}
+COVERAGE_RUNTIME_PATTERNS = (".coverage", ".coverage.*")
 DEFERRED_COMPOSITE = (
     "NOT-RECORDED  TREE-SHA256 "
     "(composite evidence; run scripts/generate_checksums.py --write from a complete checkout)\n"
 )
+
+
+def _is_coverage_runtime_file(path: Path) -> bool:
+    return path.name == ".coverage" or path.name.startswith(".coverage.")
 
 
 def source_files(root: Path = ROOT) -> list[Path]:
@@ -45,6 +50,8 @@ def source_files(root: Path = ROOT) -> list[Path]:
         if path.is_symlink():
             raise ValueError(f"source tree contains symbolic link: {relative.as_posix()}")
         if not path.is_file():
+            continue
+        if _is_coverage_runtime_file(path):
             continue
         if path.name in EXCLUDED_FILES or path.suffix in EXCLUDED_SUFFIXES:
             continue
