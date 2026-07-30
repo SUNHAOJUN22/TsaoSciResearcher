@@ -1,0 +1,412 @@
+name: Ultimate completion v6
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: ultimate-completion-v6
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  compatibility:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] ultimate completion v6'
+    name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: "3.10"
+          - os: ubuntu-latest
+            python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.12"
+          - os: macos-latest
+            python-version: "3.12"
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply candidate patch in isolated matrix workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/ultimate_completion_v6.py
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/ultimate-completion-v6.yml')
+          workflow.unlink()
+          assert not Path('scripts/ultimate_completion_v6.py').exists()
+          files = sorted(Path('.github/workflows').glob('*.yml'))
+          assert len(files) == 5, files
+          PY
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact toolchain and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Compile and run cross-platform contracts
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_supply_chain.py
+          python -m tsao_researcher --version
+          python -m tsao_researcher strategy "Which excited state controls the optical absorption spectrum?" --observable "absorption spectrum" --condition "300 K"
+          python -m tsao_researcher strategy "How do trap states and morphology control space charge and breakdown?" --observable "space charge" --observable "breakdown strength" --condition "applied electric field"
+          python scripts/validate_schemas.py
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+
+  full-validation:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] ultimate completion v6'
+    needs: compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Mark completion running
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=running\nworkflow-run=%s\n' "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+
+      - name: Checkout current main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Capture parent and build permanent candidate tree
+        id: source
+        run: |
+          set -euo pipefail
+          parent="$(git rev-parse HEAD)"
+          test "$parent" = "$(git rev-parse origin/main)"
+          echo "parent=${parent}" >> "$GITHUB_OUTPUT"
+          python scripts/ultimate_completion_v6.py
+          rm .github/workflows/ultimate-completion-v6.yml
+          test ! -e scripts/ultimate_completion_v6.py
+          test "$(find .github/workflows -maxdepth 1 -type f -name '*.yml' | wc -l | tr -d ' ')" = "5"
+
+      - name: Set up locked Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Normalize and lint modified source
+        run: |
+          python -m ruff check --fix scripts/build_readme_facts.py tsao_researcher/strategy.py tests/test_first_principles_strategy.py tests/test_supply_chain.py
+          python -m ruff format scripts/build_readme_facts.py tsao_researcher/strategy.py tests/test_first_principles_strategy.py tests/test_supply_chain.py
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+
+      - name: Refresh deterministic artifacts for candidate tree
+        run: |
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Repository, visual, schema and generated-artifact audit
+        run: |
+          python -m compileall -q scripts tsao_researcher tests
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          workflows = sorted(Path('.github/workflows').glob('*.yml'))
+          assert len(workflows) == 5, workflows
+          uses = []
+          for path in workflows:
+              text = path.read_text(encoding='utf-8')
+              uses.extend(re.findall(r'uses:\s+([^@\s]+)@([^\s#]+)', text))
+          assert uses, 'no actions found'
+          for action, ref in uses:
+              assert re.fullmatch(r'[0-9a-f]{40}', ref), (action, ref)
+          expected = {
+              'actions/checkout': 'de0fac2e4500dabe0009e67214ff5f5447ce83dd',
+              'actions/setup-python': 'a309ff8b426b58ec0e2a45f0f869d46889d02405',
+              'actions/upload-artifact': '043fb46d1a93c77aae656e7c1c64a875d1fc6a0a',
+          }
+          for action, ref in uses:
+              if action in expected:
+                  assert ref == expected[action], (action, ref)
+          PY
+          mkdocs build --strict
+
+      - name: Complete regression and coverage
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+
+      - name: Order independence
+        env:
+          TSR_TEST_ORDER_SEED: "20260730"
+        run: |
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Static type security and dependency gates
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python scripts/build_sbom.py --check
+
+      - name: Mutation performance and quality baseline
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+
+      - name: Update bilingual README with live verified metrics
+        id: metrics
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from __future__ import annotations
+
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          quality = json.loads(Path('artifacts/quality-current.json').read_text(encoding='utf-8'))
+          tests = quality['tests']
+          coverage = quality['coverage']
+          mutation = quality['mutation']
+          run_id = os.environ['RUN_ID']
+
+          english_lines = [
+              f"The published 0.7.0 tree was verified by GitHub Actions run `{run_id}` on Ubuntu / Python 3.12 using the exact locked toolchain:",
+              '',
+              '| Gate | Result |',
+              '|---|---:|',
+              f"| Tests | **{tests['tests']} passed; {tests['failures']} failed; {tests['errors']} errors; {tests['skipped']} skipped** |",
+              f"| Project line coverage | **{coverage['line_percent']:.3f}%** |",
+              f"| Branch coverage | **{coverage['branch_percent']:.3f}%** |",
+              f"| Quality floor | **{coverage['line_minimum']:.0f}% line / {coverage['branch_minimum']:.0f}% branch** |",
+              f"| Critical mutation tests | **{mutation['killed']} / {mutation['total']} killed; {mutation['survivors']} survivors** |",
+              '| Performance baseline | **PASS** |',
+              '| Two source ZIP builds | **byte-identical** |',
+              '| Wheel and sdist isolated install | **PASS** |',
+              '| Ruff / Mypy / Bandit | **PASS** |',
+              '| Exact-lock dependency audit | **PASS; no known vulnerabilities** |',
+              '',
+          ]
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          pattern = re.compile(
+              r"The published 0\.7\.0 tree was verified.*?\n(?=Checked-in `docs/VALIDATION_EVIDENCE\.json`)",
+              re.DOTALL,
+          )
+          text, count = pattern.subn('\n'.join(english_lines), text, count=1)
+          if count != 1:
+              raise SystemExit('English README validation block was not replaced')
+          readme.write_text(text, encoding='utf-8', newline='\n')
+          Path('README_EN.md').write_text(text, encoding='utf-8', newline='\n')
+
+          chinese_lines = [
+              f"已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `{run_id}` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：",
+              '',
+              '| Gate | 结果 |',
+              '|---|---:|',
+              f"| 测试 | **{tests['tests']} 通过；{tests['failures']} failure；{tests['errors']} error；{tests['skipped']} skip** |",
+              f"| 项目综合覆盖率 | **{coverage['line_percent']:.3f}%** |",
+              f"| 分支覆盖率 | **{coverage['branch_percent']:.3f}%** |",
+              f"| 质量门槛 | **{coverage['line_minimum']:.0f}% 行 / {coverage['branch_minimum']:.0f}% 分支** |",
+              f"| 关键 Mutation | **{mutation['killed']} / {mutation['total']} killed；{mutation['survivors']} survivor** |",
+              '| 性能基线 | **PASS** |',
+              '| 两次源码 ZIP | **逐字节一致** |',
+              '| wheel 与 sdist 隔离安装 | **PASS** |',
+              '| Ruff / Mypy / Bandit | **PASS** |',
+              '| 精确锁依赖审计 | **PASS；未发现已知漏洞** |',
+              '',
+          ]
+          chinese = Path('README.zh-CN.md')
+          text = chinese.read_text(encoding='utf-8')
+          pattern = re.compile(
+              r"已发布的 0\.7\.0 主分支代码已由 GitHub Actions 运行.*?\n(?=仓库内 `docs/VALIDATION_EVIDENCE\.json`)",
+              re.DOTALL,
+          )
+          text, count = pattern.subn('\n'.join(chinese_lines), text, count=1)
+          if count != 1:
+              raise SystemExit('Chinese README validation block was not replaced')
+          chinese.write_text(text, encoding='utf-8', newline='\n')
+
+          print(f"tests={tests['tests']}")
+          print(f"line={coverage['line_percent']:.3f}")
+          print(f"branch={coverage['branch_percent']:.3f}")
+          print(f"mutation={mutation['killed']}/{mutation['total']}")
+          print(f"survivors={mutation['survivors']}")
+          PY
+
+      - name: Refresh final deterministic artifacts
+        run: |
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Reconfirm final tree and second full regression
+        run: |
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          mkdocs build --strict
+          python -m pytest -q -p hypothesis.extra.pytestplugin
+
+      - name: Deterministic release and distribution installation
+        run: |
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python scripts/validate_release.py
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+
+      - name: Upload ultimate validation evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ultimate-completion-v6-${{ github.sha }}
+          path: |
+            artifacts
+            docs/VALIDATION_EVIDENCE.json
+            docs/README_FACTS.json
+            docs/VISUAL_ATLAS.md
+            docs/VISUAL_ATLAS.zh-CN.md
+            docs/assets/ai
+            SHA256SUMS
+            dist-a
+            dist-python
+            site
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit verified ultimate completion to main
+        id: publish
+        run: |
+          set -euo pipefail
+          rm -rf .coverage .pytest_cache .hypothesis artifacts dist-a dist-b dist-python site build
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          test ! -e scripts/ultimate_completion_v6.py
+          test ! -e .github/workflows/ultimate-completion-v6.yml
+          git add -A
+          git -c core.whitespace=-blank-at-eof diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat: complete first-principles visual research atlas'
+          commit="$(git rev-parse HEAD)"
+          git push origin HEAD:main
+          test -z "$(git ls-tree -r --name-only HEAD | grep -E 'ultimate-completion-v6|ultimate_completion_v6' || true)"
+          echo "commit=${commit}" >> "$GITHUB_OUTPUT"
+
+      - name: Report completion result
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          COMMIT: ${{ steps.publish.outputs.commit }}
+          TESTS: ${{ steps.metrics.outputs.tests }}
+          LINE: ${{ steps.metrics.outputs.line }}
+          BRANCH: ${{ steps.metrics.outputs.branch }}
+          MUTATION: ${{ steps.metrics.outputs.mutation }}
+          SURVIVORS: ${{ steps.metrics.outputs.survivors }}
+        run: |
+          cat > /tmp/issue-body.txt <<EOF
+          status=ultimate-completion-published
+          commit=${COMMIT}
+          workflow-run=${GITHUB_RUN_ID}
+          tests=${TESTS}
+          line-coverage=${LINE}
+          branch-coverage=${BRANCH}
+          mutation=${MUTATION}
+          survivors=${SURVIVORS}
+          ai-diagrams=25
+          all-gates=PASS
+          EOF
+          sed -i 's/^          //' /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=ultimate-completion-failed\nworkflow-run=%s\n' "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
