@@ -1,12 +1,12 @@
 {
   "name": "TsaoSciResearcher",
   "slug": "tsao-sci-researcher",
-  "version": "0.6.0",
-  "description": "Evidence-first scientific research control layer with 322 named AI-for-Science capability contracts, 18 runtime capabilities, unified project state and guarded computation handoffs.",
+  "version": "0.7.0",
+  "description": "Evidence-first scientific research control layer with 322 named AI-for-Science capability contracts, 19 runtime capabilities, first-principles strategy advice, unified project state and guarded computation handoffs.",
   "license": "Apache-2.0",
-  "capability_count": 340,
+  "capability_count": 341,
   "workflow_count": 15,
-  "schema_count": 18,
+  "schema_count": 19,
   "entrypoint": "SKILL.md",
   "agent_metadata": "agents/openai.yaml",
   "capability_index": "capabilities/v2/index.json",
@@ -32,7 +32,7 @@
     "research_execution": "receipt-verified",
     "reproducibility": "deterministic-capsule",
     "supply_chain": "sbom-audit-attestation",
-    "multiscale_simulation": "validated-handoff-and-receipt-only"
+    "multiscale_simulation": "first-principles-strategy-plus-validated-handoff-and-receipt-only"
   },
   "legacy_capability_count": 158,
   "domain_pack_count": 7,

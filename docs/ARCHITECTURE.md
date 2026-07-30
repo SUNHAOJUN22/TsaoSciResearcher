@@ -1,12 +1,12 @@
 # Architecture
 
-TsaoSciResearcher v0.6.0 separates scientific policy, deterministic runtime services, external execution evidence and final human acceptance.
+TsaoSciResearcher v0.7.0 separates scientific policy, deterministic runtime services, external execution evidence and final human acceptance.
 
 ```mermaid
 flowchart TD
   U[Research request] --> R[Deterministic bilingual router]
   R --> W[One primary workflow and gates]
-  W --> C[340 capability contracts]
+  W --> C[341 capability contracts]
   C --> S[Hash-linked project state]
   S --> H[Guarded computation handoff]
   H --> X[External engine or laboratory]

@@ -12,6 +12,7 @@ nav:
   - CLI: CLI.md
   - Validation: VALIDATION.md
   - Scientific quality: SCIENTIFIC_QUALITY.md
+  - First-principles strategy: FIRST_PRINCIPLES_STRATEGY.md
   - Reproducibility capsule: REPRODUCIBILITY_CAPSULE.md
   - Execution receipts: EXECUTION_RECEIPTS.md
   - Supply chain: SUPPLY_CHAIN.md

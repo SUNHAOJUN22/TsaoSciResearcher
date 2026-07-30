@@ -251,11 +251,22 @@
       "有限元",
       "分子动力学",
       "计算流体力学",
-      "数字孪生"
+      "数字孪生",
+      "计算策略",
+      "仿真策略",
+      "计算或仿真方案",
+      "第一性原理",
+      "统计物理",
+      "量子力学",
+      "方法选择",
+      "computation strategy",
+      "simulation strategy",
+      "first-principles strategy",
+      "statistical mechanics",
+      "quantum mechanics",
+      "method hierarchy"
     ],
     "negative": [
-      "只解释",
-      "不运行",
       "仅分析已有",
       "只分析已有",
       "结果解读"

@@ -65,3 +65,7 @@ These AI-generated diagrams are derived from the repository architecture, capabi
 ## 16. Supply-chain and release attestation
 
 ![Supply-chain and release attestation](assets/ai/supply_chain_release_attestation.svg)
+## 17. First-principles strategy ladder
+
+![First-principles strategy ladder](assets/ai/first_principles_strategy_ladder.svg)
+

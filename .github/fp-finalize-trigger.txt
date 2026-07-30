@@ -1,2 +1,0 @@
-trigger=first-principles-0.7.0
-patch-sha256=76a7a38ca35c126f4410a742473a90d3963a482339ec1c06fa87b3e8a465d0e8

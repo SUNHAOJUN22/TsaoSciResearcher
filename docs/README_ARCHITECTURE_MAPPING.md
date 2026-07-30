@@ -1,6 +1,6 @@
 # Design → code → test mapping
 
-This matrix maps the v0.6.0 design to executable evidence.
+This matrix maps the v0.7.0 design to executable evidence.
 
 | Design intent | Code or artifact | Automated evidence | Status |
 |---|---|---|---|

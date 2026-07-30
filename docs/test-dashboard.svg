@@ -4,7 +4,7 @@
 <rect width="1200" height="100%" rx="24" fill="#f6f8fb"/>
 <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#152033}.muted{fill:#5f6b7a}.small{font-size:14px}.label{font-size:17px;font-weight:600}.value{font-size:32px;font-weight:700}.title{font-size:30px;font-weight:700}.panel{fill:#fff;stroke:#d8e0ea;stroke-width:1.5}</style>
 <text x="70" y="62" class="title">Automated test dashboard</text>
-<text x="70" y="91" class="muted small">Release 0.6.0 · preflight evidence · 2026-07-28 · run n/a</text>
+<text x="70" y="91" class="muted small">Release 0.7.0 · preflight evidence · 2026-07-30 · run n/a</text>
 <rect x="950" y="40" width="180" height="54" rx="27" fill="#eff6ff" stroke="#8ab4e8"/>
 <text x="1040" y="75" text-anchor="middle" class="label">PARTIAL</text>
 <rect x="70" y="125" width="235" height="128" rx="18" class="panel"/>
@@ -21,7 +21,7 @@
 <text x="622" y="232" class="muted small">explicitly disclosed</text>
 <rect x="865" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="887" y="160" class="muted small">Test modules</text>
-<text x="887" y="207" class="value">34</text>
+<text x="887" y="207" class="value">36</text>
 <text x="887" y="232" class="muted small">repository modules</text>
 <text x="70" y="302" class="label">Recorded platform baseline</text>
 <rect x="70" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
@@ -70,7 +70,7 @@
 <text x="70" y="862" class="small">Execution Receipts</text>
 <rect x="510" y="837" width="96" height="27" rx="13" fill="#fff7dd" stroke="#9a6700"/>
 <text x="558" y="855" text-anchor="middle" class="small" fill="#9a6700">LOCAL_PREFLIGHT</text>
-<text x="620" y="442" class="small">Json Schemas 18</text>
+<text x="620" y="442" class="small">Json Schemas 19</text>
 <rect x="1060" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <text x="1108" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
 <text x="620" y="484" class="small">Mypy Strict</text>
@@ -101,5 +101,5 @@
 <rect x="1060" y="795" width="96" height="27" rx="13" fill="#fff7dd" stroke="#9a6700"/>
 <text x="1108" y="813" text-anchor="middle" class="small" fill="#9a6700">NOT_RUN</text>
 <rect x="70" y="872" width="1060" height="1" fill="#d8e0ea"/>
-<text x="70" y="900" class="muted small">Inventory: 340 capability contracts · 322 named contracts · 15 workflows · 18 schemas · 7 domain packs · 0 placeholders</text>
+<text x="70" y="900" class="muted small">Inventory: 341 capability contracts · 322 named contracts · 15 workflows · 19 schemas · 7 domain packs · 0 placeholders</text>
 </svg>

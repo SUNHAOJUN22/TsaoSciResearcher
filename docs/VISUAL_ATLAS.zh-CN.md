@@ -65,3 +65,7 @@
 ## 16. 供应链与发布证明
 
 ![供应链与发布证明](assets/ai/supply_chain_release_attestation.svg)
+## 17. 第一性原理策略阶梯
+
+![第一性原理策略阶梯](assets/ai/first_principles_strategy_ladder.svg)
+

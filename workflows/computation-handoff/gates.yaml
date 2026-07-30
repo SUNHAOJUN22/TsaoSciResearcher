@@ -1,11 +1,12 @@
 entry:
-- scientific objective recorded
-- inputs classified by provenance
+- scientific question and decision-critical observable recorded
+- system conditions, constraints, and available evidence classified
 blocking:
+- do not choose a solver before degrees of freedom, governing physics, and scales are stated
 - do not claim unavailable execution
-- retain contradictory and null evidence
-- high-risk final decisions require qualified review
+- do not collapse prepared, executed, checked, validated, and accepted states
+- retain competing mechanisms, contradictory evidence, and null results
 completion:
-- artifacts exist
-- claims traceable
-- limitations visible
+- first-principles frame and ranked method ladder exist
+- validation, falsification, convergence, and uncertainty requirements are explicit
+- external execution boundary and human review points are visible

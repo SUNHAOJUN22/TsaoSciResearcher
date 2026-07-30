@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/computation-strategy.schema.json",
+  "title": "First-Principles Computation and Simulation Strategy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "strategy_id",
+    "status",
+    "question",
+    "observables",
+    "conditions",
+    "constraints",
+    "available_evidence",
+    "classification",
+    "first_principles_frame",
+    "method_ladder",
+    "cross_scale_plan",
+    "validation_plan",
+    "uncertainty_plan",
+    "decision_rules",
+    "human_review",
+    "execution_boundary"
+  ],
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "uniqueStrings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/nonEmptyString"},
+      "uniqueItems": true
+    },
+    "nonEmptyUniqueStrings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/nonEmptyString"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rank",
+        "role",
+        "family",
+        "representative_methods",
+        "target_observables",
+        "rationale",
+        "assumptions",
+        "required_inputs",
+        "validation",
+        "falsification",
+        "uncertainty",
+        "escalate_if"
+      ],
+      "properties": {
+        "rank": {"type": "integer", "minimum": 1},
+        "role": {"enum": ["minimum-sufficient", "escalation", "cross-regime-bridge"]},
+        "family": {"$ref": "#/$defs/nonEmptyString"},
+        "representative_methods": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "target_observables": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "rationale": {"$ref": "#/$defs/nonEmptyString"},
+        "assumptions": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "required_inputs": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "validation": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "falsification": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "uncertainty": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "escalate_if": {"$ref": "#/$defs/nonEmptyUniqueStrings"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "strategy_id": {"type": "string", "pattern": "^FPS-[0-9a-f]{16}$"},
+    "status": {"const": "advisory-only"},
+    "question": {"type": "string", "minLength": 3},
+    "observables": {"$ref": "#/$defs/uniqueStrings"},
+    "conditions": {"$ref": "#/$defs/uniqueStrings"},
+    "constraints": {"$ref": "#/$defs/uniqueStrings"},
+    "available_evidence": {"$ref": "#/$defs/uniqueStrings"},
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_regime",
+        "primary_name_zh",
+        "primary_name_en",
+        "selected_regimes",
+        "scores",
+        "clarification_required",
+        "clarification_questions"
+      ],
+      "properties": {
+        "primary_regime": {"$ref": "#/$defs/nonEmptyString"},
+        "primary_name_zh": {"$ref": "#/$defs/nonEmptyString"},
+        "primary_name_en": {"$ref": "#/$defs/nonEmptyString"},
+        "selected_regimes": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "scores": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        },
+        "clarification_required": {"type": "boolean"},
+        "clarification_questions": {"$ref": "#/$defs/uniqueStrings"}
+      }
+    },
+    "first_principles_frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "degrees_of_freedom",
+        "governing_principles",
+        "conserved_quantities",
+        "symmetries_and_constraints",
+        "state_variables",
+        "thermodynamic_potential",
+        "statistical_ensemble",
+        "equilibrium_status",
+        "length_scales",
+        "time_scales",
+        "dimensionless_or_scale_tests",
+        "reduction_assumptions"
+      ],
+      "properties": {
+        "degrees_of_freedom": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "governing_principles": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "conserved_quantities": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "symmetries_and_constraints": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "state_variables": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "thermodynamic_potential": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "statistical_ensemble": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "equilibrium_status": {"$ref": "#/$defs/nonEmptyString"},
+        "length_scales": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "time_scales": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "dimensionless_or_scale_tests": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "reduction_assumptions": {"$ref": "#/$defs/nonEmptyUniqueStrings"}
+      }
+    },
+    "method_ladder": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/method"},
+      "minItems": 2
+    },
+    "cross_scale_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "secondary_regimes", "bridge_variables", "coupling_rule"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "secondary_regimes": {"$ref": "#/$defs/uniqueStrings"},
+        "bridge_variables": {"$ref": "#/$defs/uniqueStrings"},
+        "coupling_rule": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "validation_plan": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+    "uncertainty_plan": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+    "decision_rules": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+    "human_review": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+    "execution_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["solver_executed", "external_execution_required", "statement", "next_step"],
+      "properties": {
+        "solver_executed": {"const": false},
+        "external_execution_required": {"const": true},
+        "statement": {"$ref": "#/$defs/nonEmptyString"},
+        "next_step": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    }
+  }
+}

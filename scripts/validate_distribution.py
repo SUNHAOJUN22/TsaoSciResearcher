@@ -32,8 +32,17 @@ def main() -> None:
         metadata = next((name for name in names if name.endswith(".dist-info/METADATA")), None)
         if metadata is None:
             raise SystemExit("wheel METADATA is missing")
-        if f"Version: {version}" not in handle.read(metadata).decode("utf-8"):
+        metadata_text = handle.read(metadata).decode("utf-8")
+        if f"Version: {version}" not in metadata_text:
             raise SystemExit("wheel version metadata mismatch")
+        requirements = [
+            line.split(":", 1)[1].strip().casefold()
+            for line in metadata_text.splitlines()
+            if line.startswith("Requires-Dist:")
+        ]
+        for dependency in ("pyyaml", "jsonschema"):
+            if not any(requirement.startswith(dependency) for requirement in requirements):
+                raise SystemExit(f"wheel metadata missing dependency: {dependency}")
 
     with tarfile.open(sdists[0], "r:gz") as handle:
         names = set(handle.getnames())
@@ -51,6 +60,7 @@ def main() -> None:
                 "pip",
                 "install",
                 "--disable-pip-version-check",
+                "--no-deps",
                 str(wheels[0]),
             ],
             check=True,

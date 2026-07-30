@@ -128,12 +128,12 @@ def main() -> None:
 
     def load_v2_capabilities_many() -> None:
         for _ in range(CAPABILITY_LOAD_ITERATIONS):
-            if len(load_v2_capabilities()) != 340:
+            if len(load_v2_capabilities()) != 341:
                 raise SystemExit("v2 capability catalog was not loaded completely")
 
     _measure("v2_catalog_load_100", load_v2_capabilities_many, metrics)
-    if len(first_v2_capabilities) != 340:
-        raise SystemExit("v2 capability catalog must contain 340 records")
+    if len(first_v2_capabilities) != 341:
+        raise SystemExit("v2 capability catalog must contain 341 records")
 
     def search_v2_many() -> None:
         for _ in range(1000):
@@ -184,8 +184,8 @@ def main() -> None:
 
         def validate_schemas() -> None:
             schemas = sorted((ROOT / "schemas").glob("*.json")) + sorted((ROOT / "schemas/v2").glob("*.json"))
-            if len(schemas) != 18:
-                raise SystemExit(f"expected 18 schemas, found {len(schemas)}")
+            if len(schemas) != 19:
+                raise SystemExit(f"expected 19 schemas, found {len(schemas)}")
             for schema_path in schemas:
                 schema = json.loads(schema_path.read_text(encoding="utf-8"))
                 jsonschema.Draft202012Validator.check_schema(schema)
@@ -230,7 +230,7 @@ def main() -> None:
         "inputs": {
             "route_iterations": ROUTE_ITERATIONS,
             "capability_load_iterations": CAPABILITY_LOAD_ITERATIONS,
-            "v2_capability_records": 340,
+            "v2_capability_records": 341,
             "v2_search_iterations": 1000,
             "jsonl_records": JSONL_RECORDS,
             "claim_records": GRAPH_RECORDS,

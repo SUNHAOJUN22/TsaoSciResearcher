@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import shutil
@@ -191,6 +192,27 @@ MUTATIONS = (
         "if False and requested_destination.is_symlink():",
         ("tests/test_defensive_boundaries.py",),
     ),
+    Mutation(
+        "strategy-execution-boundary",
+        "tsao_researcher/strategy.py",
+        '"solver_executed": False,',
+        '"solver_executed": True,',
+        ("tests/test_first_principles_strategy.py",),
+    ),
+    Mutation(
+        "strategy-continuum-mass-conservation",
+        "tsao_researcher/strategy.py",
+        "        governing_principles=(" + chr(10) + '            "mass conservation",',
+        "        governing_principles=(" + chr(10) + '            "mass balance omitted",',
+        ("tests/test_first_principles_strategy.py",),
+    ),
+    Mutation(
+        "strategy-minimum-sufficient-rank",
+        "tsao_researcher/strategy.py",
+        '"role": "minimum-sufficient" if rank == 1 else "escalation",',
+        '"role": "escalation",',
+        ("tests/test_first_principles_strategy.py",),
+    ),
 )
 
 
@@ -205,18 +227,19 @@ def _copy_repository(destination: Path) -> None:
 def _run_tests(
     work: Path, tests: tuple[str, ...], environment: dict[str, str]
 ) -> subprocess.CompletedProcess[str]:
+    command = [
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+    ]
+    if importlib.util.find_spec("hypothesis") is not None:
+        command.extend(["-p", "hypothesis.extra.pytestplugin"])
+    command.extend(tests)
     return subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            "-q",
-            "-p",
-            "no:cacheprovider",
-            "-p",
-            "hypothesis.extra.pytestplugin",
-            *tests,
-        ],
+        command,
         cwd=work,
         env=environment,
         capture_output=True,

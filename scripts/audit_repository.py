@@ -367,11 +367,16 @@ def audit() -> dict[str, Any]:
     if len(legacy) != 158 or index.get("total") != 158:
         errors.append(f"legacy capability total {len(legacy)} / {index.get('total')} != 158")
 
-    v2 = _load_json(ROOT / "capabilities/v2/capabilities.json")
+    v2_base = _load_json(ROOT / "capabilities/v2/capabilities.json")
+    v2_extensions = _load_json(ROOT / "capabilities/v2/extensions.json")
     v2_index = _load_json(ROOT / "capabilities/v2/index.json")
-    if not isinstance(v2, list):
-        errors.append("v2 capability catalog must be a list")
-        v2 = []
+    if not isinstance(v2_base, list):
+        errors.append("v2 base capability catalog must be a list")
+        v2_base = []
+    if not isinstance(v2_extensions, list):
+        errors.append("v2 extension capability catalog must be a list")
+        v2_extensions = []
+    v2 = [*v2_base, *v2_extensions]
     v2_ids: set[str] = set()
     v2_slugs: set[str] = set()
     workbook_catalog_ids: set[str] = set()
@@ -428,8 +433,14 @@ def audit() -> dict[str, Any]:
             target = (ROOT / str(reference)).resolve()
             if not target.is_relative_to(ROOT.resolve()) or not target.is_file():
                 errors.append(f"v2 capability {slug} references missing/unsafe file {reference}")
-    if len(v2) != 340 or v2_index.get("total") != 340:
-        errors.append(f"v2 capability total {len(v2)} / {v2_index.get('total')} != 340")
+    if len(v2_base) != 340 or v2_index.get("base_total") != 340:
+        errors.append(f"v2 base capability total {len(v2_base)} / {v2_index.get('base_total')} != 340")
+    if len(v2_extensions) != 1 or v2_index.get("extension_total") != 1:
+        errors.append(
+            f"v2 extension capability total {len(v2_extensions)} / {v2_index.get('extension_total')} != 1"
+        )
+    if len(v2) != 341 or v2_index.get("total") != 341:
+        errors.append(f"v2 capability total {len(v2)} / {v2_index.get('total')} != 341")
     if len(workbook_catalog_ids) != 322 or v2_index.get("workbook_named_total") != 322:
         errors.append(
             f"workbook-named capability coverage {len(workbook_catalog_ids)} / "
@@ -443,6 +454,8 @@ def audit() -> dict[str, Any]:
     checks["capabilities"] = {
         "loaded": len(legacy),
         "legacy_unique": len(legacy_ids),
+        "v2_base_loaded": len(v2_base),
+        "v2_extension_loaded": len(v2_extensions),
         "v2_loaded": len(v2),
         "v2_unique": len(v2_ids),
         "workbook_named": len(workbook_catalog_ids),
@@ -575,12 +588,12 @@ def audit() -> dict[str, Any]:
     checks["ci_coverage_markers"] = {"required": len(required_ci_markers), "missing": missing_markers}
 
     manifest_expectations = {
-        "capability_count": 340,
+        "capability_count": 341,
         "legacy_capability_count": 158,
         "workbook_named_capability_count": 322,
         "domain_named_capability_count": 164,
         "workflow_count": 15,
-        "schema_count": 18,
+        "schema_count": 19,
         "domain_pack_count": 7,
     }
     for key, expected in manifest_expectations.items():

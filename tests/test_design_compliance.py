@@ -4,13 +4,14 @@ import json
 import re
 from pathlib import Path
 
+from tsao_researcher.capabilities import load_capabilities
 from tsao_researcher.state import initialize, transition, verify
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_all_322_workbook_skills_are_named_records() -> None:
-    capabilities = json.loads((ROOT / "capabilities/v2/capabilities.json").read_text(encoding="utf-8"))
+    capabilities = load_capabilities()
     index = json.loads((ROOT / "capabilities/v2/index.json").read_text(encoding="utf-8"))
     catalog_ids: set[str] = set()
     for row in capabilities:

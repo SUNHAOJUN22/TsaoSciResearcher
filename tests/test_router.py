@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import random
+import string
 from pathlib import Path
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
+
+try:
+    from hypothesis import given
+    from hypothesis import strategies as st
+except ModuleNotFoundError:  # Minimal/offline validation environment.
+    given = None
+    st = None
 
 from scripts.route_task import MAX_ROUTE_CHARS, normalize, route
 
@@ -74,15 +81,54 @@ def test_rejects_oversized_input() -> None:
         route("x" * (MAX_ROUTE_CHARS + 1))
 
 
-@given(st.text(max_size=1000))
-def test_normalization_is_idempotent(text: str) -> None:
-    normalized = normalize(text)
-    assert normalize(normalized) == normalized
+def _deterministic_text_cases() -> list[str]:
+    rng = random.Random(20260729)
+    alphabet = (
+        string.ascii_letters
+        + string.digits
+        + " \t\n_-:/.,;()[]{}"
+        + "科研计算仿真量子统计物理高分子介电击穿文献报告"
+        + "αβγΔλμσπ∑∂∇∞"
+    )
+    cases = [
+        "",
+        " ",
+        "\t\n",
+        "ＡＢＣ１２３",  # noqa: RUF001
+        "量子力学   统计物理",
+        "DFT/MD/CFD",
+        "emoji-🧪-⚛️",
+        "x" * 1000,
+    ]
+    for size in (1, 2, 7, 31, 127, 511, 1000):
+        cases.append("".join(rng.choice(alphabet) for _ in range(size)))
+    return cases
 
 
-@given(st.text(max_size=1000))
-def test_router_never_returns_unknown_workflow(text: str) -> None:
-    result = route(text)
-    assert isinstance(result["workflow"], str)
-    assert result["read_first"].endswith("/WORKFLOW.md")
-    assert 0.0 <= result["confidence"] <= 1.0
+if given is not None and st is not None:
+
+    @given(st.text(max_size=1000))
+    def test_normalization_is_idempotent(text: str) -> None:
+        normalized = normalize(text)
+        assert normalize(normalized) == normalized
+
+    @given(st.text(max_size=1000))
+    def test_router_never_returns_unknown_workflow(text: str) -> None:
+        result = route(text)
+        assert isinstance(result["workflow"], str)
+        assert result["read_first"].endswith("/WORKFLOW.md")
+        assert 0.0 <= result["confidence"] <= 1.0
+
+else:
+
+    @pytest.mark.parametrize("text", _deterministic_text_cases())
+    def test_normalization_is_idempotent(text: str) -> None:
+        normalized = normalize(text)
+        assert normalize(normalized) == normalized
+
+    @pytest.mark.parametrize("text", _deterministic_text_cases())
+    def test_router_never_returns_unknown_workflow(text: str) -> None:
+        result = route(text)
+        assert isinstance(result["workflow"], str)
+        assert result["read_first"].endswith("/WORKFLOW.md")
+        assert 0.0 <= result["confidence"] <= 1.0

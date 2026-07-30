@@ -8,8 +8,10 @@ from .receipts import record_receipt, verify_receipts
 from .router import route
 from .state import initialize as init
 from .state import transition, verify
+from .strategy import advise_computation_strategy
 
 __all__ = [
+    "advise_computation_strategy",
     "export_capsule",
     "handoff",
     "init",

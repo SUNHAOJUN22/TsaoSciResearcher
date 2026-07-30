@@ -1,13 +1,13 @@
 # AI for Science capability coverage
 
-**Baseline:** uploaded 322-entry workbook and TsaoSciResearcher v0.6.0.
+**Baseline:** uploaded 322-entry workbook and TsaoSciResearcher v0.7.0.
 
 ## Result
 
 - **322/322 catalog slugs and names are represented as machine-readable v2 contracts.**
 - 158 general research contracts remain compatible with the legacy catalog.
 - 164 computation/engineering records now use their exact workbook names instead of generic numbered placeholders.
-- 18 additional runtime/core contracts bring the v2 total to 340.
+- 19 additional runtime/core contracts bring the v2 total to 341.
 - External engines remain delegated integrations; a named contract is not an installed solver.
 
 | Workbook category | Entries | Named contracts | Representation | Evidence |

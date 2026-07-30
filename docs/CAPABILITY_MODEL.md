@@ -1,11 +1,11 @@
 # Capability model
 
-The v2 catalog contains **340 records**:
+The v2 catalog contains **341 records**:
 
 ```text
 322 named AI-for-Science catalog contracts
 + 18 native runtime/core contracts
-= 340 total records
+= 341 total records
 ```
 
 The 322 named records comprise 158 general research contracts and 164 computation/engineering domain contracts. Each record preserves a stable internal ID, a public slug/name, routing metadata, inputs/outputs, validators, failure/recovery guidance, approval points, references and a computation boundary.

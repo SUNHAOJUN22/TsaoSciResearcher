@@ -5,10 +5,10 @@ TsaoSciResearcher is an evidence-first scientific research control layer. It sep
 ## Verified scope
 
 - 322/322 workbook Skill slugs preserved as named contracts;
-- 18 runtime/core additions;
-- 340 total capability contracts;
+- 19 runtime/core additions;
+- 341 total capability contracts;
 - 15 gated workflows;
-- 18 JSON Schemas;
+- 19 JSON Schemas;
 - canonical `.tsao-research/` state, execution receipts and reproducibility capsules;
 - explicit native, host-tool, external-computation and human-approval boundaries.
 

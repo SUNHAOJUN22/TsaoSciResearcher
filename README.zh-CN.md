@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **正式版本 0.6.0** · Apache-2.0 · Python 3.10–3.13 · Windows、Linux、macOS
+> **正式版本 0.7.0** · Apache-2.0 · Python 3.10–3.13 · Windows、Linux、macOS
 
 ## 实际代码到底实现了什么
 
@@ -24,14 +24,14 @@ TsaoSciResearcher 是一个**单入口科研路由器、项目状态系统、验
 | 通用科研具名合同 | **158** |
 | 计算/工程领域具名合同 | **164** |
 | 通用领域占位合同 | **0** |
-| 运行时/核心新增能力 | **18** |
-| 能力合同总数 | **340** |
-| 原生科研/运行时合同 | **147** |
+| 运行时/核心新增能力 | **19** |
+| 能力合同总数 | **341** |
+| 原生科研/运行时合同 | **148** |
 | 外部计算委托合同 | **170** |
 | 强制人工审核合同 | **23** |
 | 带 Gate 工作流 | **15** |
-| JSON Schema | **18** |
-| 确定性脚本 | **37** |
+| JSON Schema | **19** |
+| 确定性脚本 | **39** |
 
 完整结果见[最初功能定义落实审计](docs/ORIGINAL_REQUIREMENTS_AUDIT.zh-CN.md)。能力合同表示“可检索、可路由、可验证的任务合同”，**不代表**外部数据库、模型、求解器、仪器或计算已经安装或运行。
 
@@ -48,12 +48,27 @@ TsaoSciResearcher 是一个**单入口科研路由器、项目状态系统、验
 ## 核心架构
 
 - **先路由，后加载**：先选择一个主工作流，再读取该工作流明确列出的参考资料和模板。
-- **322 项精确目录合同**：Excel 中的全部 Slug 均保留；另有 18 项路由、安全、溯源和接受控制能力。
+- **322 项精确目录合同**：Excel 中的全部 Slug 均保留；另有 19 项路由、安全、溯源、第一性原理策略和接受控制能力。
 - **统一 `.tsao-research/` 状态**：问题、假设、证据、论断、决策、审批、风险、产物、凭据和哈希事件相互分离。
+- **第一性原理策略顾问**：先定义可观测量、自由度、守恒律、量子/统计物理、热力学势、系综、尺度和证伪，再提出最低充分的计算/仿真方法阶梯；不运行求解器。
 - **受控计算交接**：真实计算前记录输入哈希、尺度、方法、条件、收敛/UQ、预期输出和审批点。
 - **Execution Receipt v2**：把真实外部执行绑定到 handoff、引擎、参数、时间、退出状态和输出哈希。
 - **Reproducibility Capsule**：确定性 metadata/full ZIP，拒绝路径逃逸、符号链接、重复成员和校验和篡改。
 - **真实性状态机**：`completed`、`checked`、`validated`、`accepted` 不能互相替代。
+
+## 第一性原理计算与仿真策略
+
+本项目的特色不是简单推荐软件名称，而是从底层物理重建方法选择：
+
+```text
+科学问题 → 决策可观测量 → 自由度/状态变量 → 守恒律/对称性
+        → 量子、统计物理、热力学或连续介质框架
+        → 时间/空间/能量尺度与模型降阶
+        → 最低充分模型 → 升级模型 → 验证/证伪/UQ
+        → 外部计算 handoff → 结果审查
+```
+
+“第一性原理”不等于所有问题都使用 DFT。电子缺陷可能需要量子电子结构；自由能需要统计系综和采样；高分子形貌可能需要统计场和介观模型；压降与传热应优先从守恒方程、本构关系和无量纲分析开始。详见[第一性原理策略说明](docs/FIRST_PRINCIPLES_STRATEGY.zh-CN.md)。
 
 ## 科研生命周期与工作流
 
@@ -81,7 +96,7 @@ research-integrity     laboratory             computation-handoff
 
 | 工作流 | 合同数 |
 |---|---:|
-| `computation-handoff` | 168 |
+| `computation-handoff` | 169 |
 | `data-analysis` | 52 |
 | `project-management` | 35 |
 | `deep-research` | 16 |
@@ -130,6 +145,7 @@ research-integrity     laboratory             computation-handoff
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进式路由与加载"/><br/><strong>11 · 渐进式路由与加载</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目台账与溯源"/><br/><strong>12 · 项目台账与溯源</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据与引文完整性"/><br/><strong>13 · 证据与引文完整性</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研产出流水线"/><br/><strong>14 · 科研产出流水线</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容矩阵"/><br/><strong>15 · 安装兼容矩阵</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链与发布证明"/><br/><strong>16 · 供应链与发布证明</strong></td></tr>
+<tr><td colspan="2" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯"/><br/><strong>17 · 第一性原理计算与仿真策略阶梯</strong></td></tr>
 </table>
 
 ## 快速开始
@@ -148,6 +164,19 @@ python -m tsao_researcher search "聚合物 分子动力学" --limit 10
 ```bash
 python -m tsao_researcher init   --name "聚烯烃多尺度研究"   --question "加工历史通过哪些机制影响结构与性能？"   --research-type mechanistic   --output .
 python -m tsao_researcher verify .
+```
+
+形成第一性原理计算/仿真策略（只建议，不运行求解器）：
+
+```bash
+python -m tsao_researcher strategy \
+  "陷阱态和形貌如何控制空间电荷与击穿？" \
+  --observable "空间电荷" \
+  --observable "击穿强度" \
+  --condition "外加电场" \
+  --evidence "PEA 电荷分布" \
+  --output strategy.json
+python scripts/validate_computation_strategy.py strategy.json
 ```
 
 创建受控计算交接：
@@ -183,20 +212,20 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 ## 验证结果
 
-最近一次完整加固验证记录：
+当前 0.7.0 候选已在可用的离线环境完成以下验证：
 
 | Gate | 结果 |
 |---|---:|
-| 测试 | **212 通过；0 failure；0 error** |
-| 项目综合覆盖率 | **96.371%** |
-| 分支覆盖率 | **93.128%** |
+| 测试 | **262 通过；0 failure；0 error；0 skip** |
+| 项目综合覆盖率 | **95.406%** |
+| 分支覆盖率 | **91.458%** |
 | 质量门槛 | **95% 行 / 90% 分支** |
-| 关键 Mutation | **21 / 21 killed；0 survivor** |
-| Ruff / Mypy / Bandit | **PASS** |
-| 精确锁依赖审计 | **PASS** |
+| 关键 Mutation | **24 / 24 killed；0 survivor** |
 | 性能基线 | **PASS** |
 | 两次源码 ZIP | **逐字节一致** |
-| wheel 与 sdist 隔离安装 | **PASS** |
+| wheel 与 sdist 离线隔离安装 | **PASS** |
+| Ruff / Mypy / Bandit | **继续作为 CI 门禁；本离线环境未重跑** |
+| 精确锁依赖审计 | **继续作为 CI 门禁；本离线环境未重跑** |
 
 仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。
 

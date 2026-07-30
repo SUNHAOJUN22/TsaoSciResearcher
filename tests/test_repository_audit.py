@@ -10,9 +10,11 @@ class TestRepositoryAudit(unittest.TestCase):
         result = audit()
         self.assertEqual(result["status"], "PASS", result["errors"])
         self.assertEqual(result["checks"]["capabilities"]["loaded"], 158)
-        self.assertEqual(result["checks"]["capabilities"]["v2_loaded"], 340)
+        self.assertEqual(result["checks"]["capabilities"]["v2_base_loaded"], 340)
+        self.assertEqual(result["checks"]["capabilities"]["v2_extension_loaded"], 1)
+        self.assertEqual(result["checks"]["capabilities"]["v2_loaded"], 341)
         self.assertEqual(result["checks"]["workflows"]["count"], 15)
-        self.assertEqual(result["checks"]["schemas"]["total"], 18)
+        self.assertEqual(result["checks"]["schemas"]["total"], 19)
         self.assertEqual(result["checks"]["domain_packs"]["count"], 7)
 
 

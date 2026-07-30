@@ -22,9 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_catalog_is_complete_unique_and_defensively_copied() -> None:
     first = load_capabilities()
     second = load_capabilities()
-    assert len(first) == 340
-    assert len({row["id"] for row in first}) == 340
-    assert len({row["slug"] for row in first}) == 340
+    assert len(first) == 341
+    assert len({row["id"] for row in first}) == 341
+    assert len({row["slug"] for row in first}) == 341
     first[0]["slug"] = "mutated"
     assert second[0]["slug"] != "mutated"
 
@@ -82,6 +82,10 @@ def test_router_rules_are_cached_and_reloaded_on_change(tmp_path: Path) -> None:
 
 def test_router_unicode_boundaries_and_negative_semantics() -> None:
     assert route("做聚合反应的 Aspen 实际动态模拟")["primary_workflow"] == "computation-handoff"
+    assert (
+        route("从统计物理和量子力学提出第一性原理计算策略, 不运行求解器")["primary_workflow"]
+        == "computation-handoff"
+    )
     assert route("只分析已有 GROMACS 轨迹, 不运行")["primary_workflow"] == "data-analysis"
     assert route("请审核引用真实性和科研诚信")["primary_workflow"] == "research-integrity"
     assert route("ordinary")["primary_workflow"] == "unknown"
@@ -196,3 +200,62 @@ def test_workflow_contracts_and_gates_match() -> None:
         assert contract["slug"] == directory.name
         gates = yaml.safe_load((directory / "gates.yaml").read_text(encoding="utf-8"))
         assert all(gates[key] for key in ("entry", "blocking", "completion"))
+
+
+def _clear_capability_caches() -> None:
+    from tsao_researcher import capabilities as capability_module
+
+    capability_module._catalog.cache_clear()
+    capability_module._merged_catalog.cache_clear()
+    capability_module._single_search_index.cache_clear()
+    capability_module._merged_search_index.cache_clear()
+
+
+def test_custom_catalog_path_is_loaded_without_default_extensions(tmp_path: Path) -> None:
+    from tsao_researcher.capabilities import load_capabilities, search_capabilities
+
+    custom = tmp_path / "custom.json"
+    custom.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "CUSTOM-1",
+                    "slug": "custom-method",
+                    "name_en": "Custom Method",
+                    "description": "custom searchable method",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    assert [row["id"] for row in load_capabilities(custom)] == ["CUSTOM-1"]
+    assert search_capabilities("custom searchable", path=custom)[0]["slug"] == "custom-method"
+
+
+def test_missing_extension_catalog_falls_back_to_base(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from tsao_researcher import capabilities as capability_module
+
+    monkeypatch.setattr(capability_module, "EXTENSIONS_PATH", tmp_path / "missing-extensions.json")
+    _clear_capability_caches()
+    try:
+        assert len(capability_module.load_capabilities()) == 340
+        assert capability_module.search_capabilities("polymer", limit=1)
+    finally:
+        _clear_capability_caches()
+
+
+def test_duplicate_extension_capability_is_rejected(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from tsao_researcher import capabilities as capability_module
+
+    duplicate = capability_module.load_capabilities(capability_module.CATALOG_PATH)[0]
+    extension = tmp_path / "extensions.json"
+    extension.write_text(json.dumps([duplicate]), encoding="utf-8")
+    monkeypatch.setattr(capability_module, "EXTENSIONS_PATH", extension)
+    _clear_capability_caches()
+    try:
+        with pytest.raises(ValidationError, match="across catalogs"):
+            capability_module.load_capabilities()
+    finally:
+        _clear_capability_caches()

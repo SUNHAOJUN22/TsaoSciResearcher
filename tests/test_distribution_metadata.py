@@ -13,3 +13,6 @@ def test_typed_marker_and_distribution_metadata() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert "py.typed" in pyproject
     assert "Programming Language :: Python :: 3.13" in pyproject
+    validator = (ROOT / "scripts/validate_distribution.py").read_text(encoding="utf-8")
+    assert '"--no-deps"' in validator
+    assert 'line.startswith("Requires-Dist:")' in validator

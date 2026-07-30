@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project": "TsaoSciResearcher",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "source_requirements": [
     "TsaoSciResearcher Design(2).docx",
     "AI_for_Science_最全Skill目录(4).xlsx"
@@ -10,11 +10,11 @@
     "workbook_slugs": 322,
     "matched_slugs": 322,
     "missing_slugs": 0,
-    "runtime_core_additions": 18,
-    "total_capability_contracts": 340
+    "runtime_core_additions": 19,
+    "total_capability_contracts": 341
   },
   "implementation_levels": {
-    "native-research": 147,
+    "native-research": 148,
     "human-review": 23,
     "computation-delegated": 170
   },
@@ -31,8 +31,8 @@
       "area_zh": "综合科研方法学中枢",
       "area_en": "Full-lifecycle research control layer",
       "status": "complete",
-      "finding_zh": "已建立单入口 Skill、15 个科研工作流、340 个能力合同和统一状态/验证层。",
-      "finding_en": "Implemented through one root skill, 15 gated workflows, 340 capability contracts, and one state/validation core.",
+      "finding_zh": "已建立单入口 Skill、15 个科研工作流、341 个能力合同、第一性原理策略顾问和统一状态/验证层。",
+      "finding_en": "Implemented through one root skill, 15 gated workflows, 341 capability contracts, a first-principles strategy advisor, and one state/validation core.",
       "evidence": [
         "SKILL.md",
         "workflows/",
@@ -182,14 +182,17 @@
       "area_zh": "计算任务交接",
       "area_en": "Computation handoff",
       "status": "complete-boundary",
-      "finding_zh": "标准 handoff、输入哈希、边界条件、收敛/UQ 要求、Execution Receipt v2 和结果校验已实现；求解器与网络传输层不捆绑。",
-      "finding_en": "Structured handoffs, input hashes, boundary conditions, convergence/UQ requirements, Execution Receipt v2, and result verification are implemented; solvers and a network transport layer are not bundled.",
+      "finding_zh": "已实现从可观测量、自由度、守恒律、量子/统计物理、热力学势、系综和尺度分析推导方法阶梯的原生策略顾问；批准后可生成 checksum-bound handoff，真实执行仍外部完成。",
+      "finding_en": "A native advisor now derives method ladders from observables, degrees of freedom, conservation laws, quantum/statistical physics, thermodynamic potentials, ensembles, and scales; approved work can become a checksum-bound handoff while execution remains external.",
       "evidence": [
         "tsao_researcher/handoff.py",
         "tsao_researcher/receipts.py",
         "scripts/handoff_to_computation.py",
         "schemas/v2/handoff.schema.json",
-        "schemas/v2/execution-receipt.schema.json"
+        "schemas/v2/execution-receipt.schema.json",
+        "tsao_researcher/strategy.py",
+        "schemas/v2/computation-strategy.schema.json",
+        "docs/FIRST_PRINCIPLES_STRATEGY.md"
       ]
     },
     {
@@ -197,8 +200,8 @@
       "area_zh": "能力索引",
       "area_en": "Capability index",
       "status": "complete",
-      "finding_zh": "Excel 的 322 个 Skill Slug 全部进入 v2 目录，缺失 0；另增加 18 个运行时核心能力，总计 340。",
-      "finding_en": "All 322 workbook Skill slugs are present in the v2 catalog with zero omissions; 18 runtime/core capabilities bring the total to 340.",
+      "finding_zh": "Excel 的 322 个 Skill Slug 全部进入 v2 目录，缺失 0；另增加 19 个运行时核心能力，总计 341。",
+      "finding_en": "All 322 workbook Skill slugs are present in the v2 catalog with zero omissions; 19 runtime/core capabilities bring the total to 341.",
       "evidence": [
         "capabilities/v2/capabilities.json",
         "capabilities/v2/index.json",
@@ -210,8 +213,8 @@
       "area_zh": "确定性脚本与 Schema",
       "area_en": "Deterministic scripts and schemas",
       "status": "complete",
-      "finding_zh": "37 个脚本、18 个 Draft 2020-12 Schema、非零错误码、结构/证据/论断/图件/安装/打包验证均已实现。",
-      "finding_en": "Thirty-seven scripts and eighteen Draft 2020-12 schemas implement non-zero failures and validation for structure, evidence, claims, figures, installation, and packaging.",
+      "finding_zh": "已提供 39 个确定性脚本和 19 个 JSON Schema，新增计算策略生成与验证入口。",
+      "finding_en": "The repository provides 39 deterministic scripts and 19 JSON Schemas, including strategy generation and validation entry points.",
       "evidence": [
         "scripts/",
         "schemas/",
@@ -266,8 +269,8 @@
       "area_zh": "测试、发布与可复现性",
       "area_en": "Testing, release, and reproducibility",
       "status": "complete",
-      "finding_zh": "最终验证为 212 项测试、项目覆盖率 96.371%、分支覆盖率 93.128%、21/21 Mutation、确定性 ZIP、wheel/sdist 安装验证。",
-      "finding_en": "Final verification reports 212 tests, 96.371% project coverage, 93.128% branch coverage, 21/21 critical mutants, deterministic ZIPs, and wheel/sdist installation validation.",
+      "finding_zh": "最终验证为 262 项测试、项目覆盖率 95.406%、分支覆盖率 91.458%、24/24 Mutation、确定性 ZIP、wheel/sdist 离线安装验证。",
+      "finding_en": "Final verification reports 262 tests, 95.406% project coverage, 91.458% branch coverage, 24/24 critical mutants, deterministic ZIPs, and offline wheel/sdist installation validation.",
       "evidence": [
         "docs/QUALITY_BASELINE.json",
         "scripts/run_tests.py",

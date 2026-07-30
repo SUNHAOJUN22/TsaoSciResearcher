@@ -16,11 +16,13 @@ def test_v2_catalog_contains_322_named_contracts_and_no_generic_slots() -> None:
     rows = load_capabilities()
     index = json.loads((ROOT / "capabilities/v2/index.json").read_text(encoding="utf-8"))
 
-    assert len(rows) == 340
-    assert len({row["id"] for row in rows}) == 340
-    assert len({row["slug"] for row in rows}) == 340
+    assert len(rows) == 341
+    assert len({row["id"] for row in rows}) == 341
+    assert len({row["slug"] for row in rows}) == 341
+    assert index["base_total"] == 340
+    assert index["extension_total"] == 1
     assert index["workbook_named_total"] == 322
-    assert index["core_added"] == 18
+    assert index["core_added"] == 19
     assert index["generic_domain_slots"] == 0
 
     workbook_rows = [
@@ -49,6 +51,7 @@ def test_v2_catalog_contains_322_named_contracts_and_no_generic_slots() -> None:
         ("research team analysis", "citation-network-analyzer"),
         ("time series", "scientific-feature-engineering"),
         ("journal format adaptation", "reference-formatter"),
+        ("first-principles simulation strategy", "first-principles-strategy-advisor"),
     ],
 )
 def test_design_terms_resolve_to_named_capabilities(query: str, expected_slug: str) -> None:

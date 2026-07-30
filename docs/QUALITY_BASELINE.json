@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "release_floor": "0.6.0",
+  "release_floor": "0.7.0",
   "coverage": {
     "line_percent_minimum": 95.0,
     "branch_percent_minimum": 90.0
   },
   "mutation": {
-    "critical_mutants_minimum": 21,
+    "critical_mutants_minimum": 24,
     "survivors_maximum": 0
   },
   "performance": {

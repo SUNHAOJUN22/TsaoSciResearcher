@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **Release 0.6.0** · Apache-2.0 · Python 3.10–3.13 · Windows, Linux and macOS
+> **Release 0.7.0** · Apache-2.0 · Python 3.10–3.13 · Windows, Linux and macOS
 
 ## What the code actually implements
 
@@ -24,14 +24,14 @@ The original design has been checked against the actual source code and the uplo
 | Legacy/general named contracts | **158** |
 | Domain computation/engineering named contracts | **164** |
 | Generic domain placeholders | **0** |
-| Runtime/core additions | **18** |
-| Total capability contracts | **340** |
-| Native-research contracts | **147** |
+| Runtime/core additions | **19** |
+| Total capability contracts | **341** |
+| Native-research contracts | **148** |
 | Computation-delegated contracts | **170** |
 | Human-review contracts | **23** |
 | Gated workflows | **15** |
-| JSON Schemas | **18** |
-| Deterministic scripts | **37** |
+| JSON Schemas | **19** |
+| Deterministic scripts | **39** |
 
 Read the full [original-requirements implementation audit](docs/ORIGINAL_REQUIREMENTS_AUDIT.md). A capability contract is discoverable, routable, and testable metadata; it is **not** evidence that an external database, model, solver, instrument, or computation has executed.
 
@@ -48,12 +48,27 @@ Read the full [original-requirements implementation audit](docs/ORIGINAL_REQUIRE
 ## Architecture
 
 - **Route before loading** — one primary workflow is selected before references or templates are opened.
-- **322 exact catalog contracts** — every workbook slug is retained; 18 runtime contracts add routing, safety, provenance and acceptance controls.
+- **322 exact catalog contracts** — every workbook slug is retained; 19 runtime contracts add routing, safety, provenance, first-principles strategy and acceptance controls.
 - **Canonical `.tsao-research/` state** — questions, hypotheses, evidence, claims, decisions, approvals, risks, artifacts, receipts and hash-linked events remain separate.
+- **First-principles strategy advisor** — derives a minimum-sufficient method ladder from observables, degrees of freedom, conservation laws, quantum/statistical physics, thermodynamic ensembles, scales, falsification and UQ; it does not run solvers.
 - **Guarded computation handoff** — input hashes, scale, method, conditions, convergence/UQ requirements, expected outputs and approval points are recorded before external execution.
 - **Execution Receipt v2** — a real external run is bound to its handoff, engine, arguments, time, exit status and output hashes.
 - **Reproducibility Capsule** — deterministic metadata/full ZIPs reject path escape, symbolic links, duplicate members and checksum tampering.
 - **Truth-preserving validation** — `completed`, `checked`, `validated`, and `accepted` are distinct states.
+
+## First-principles computation and simulation strategy
+
+The distinctive capability is not a software-name recommender. It reconstructs method choice from the underlying science:
+
+```text
+question → decision observable → degrees of freedom/state variables
+         → conservation/symmetry → quantum, statistical, thermodynamic or continuum frame
+         → length/time/energy scales and model reduction
+         → minimum-sufficient model → justified escalation → validation/falsification/UQ
+         → external handoff → result review
+```
+
+“First principles” does not mean DFT for every problem. Electronic defects may require quantum electronic structure; free energies require ensembles and sampling; polymer morphology may require statistical-field or mesoscale models; pressure drop and heat transfer should usually begin with conservation laws, constitutive relations and dimensionless analysis. See the [first-principles strategy guide](docs/FIRST_PRINCIPLES_STRATEGY.md).
 
 ## Research lifecycle and workflows
 
@@ -81,7 +96,7 @@ research-integrity     laboratory             computation-handoff
 
 | Workflow | Contracts |
 |---|---:|
-| `computation-handoff` | 168 |
+| `computation-handoff` | 169 |
 | `data-analysis` | 52 |
 | `project-management` | 35 |
 | `deep-research` | 16 |
@@ -130,6 +145,7 @@ The following **AI-generated, repository-specific diagrams** describe the actual
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="Progressive routing and loading"/><br/><strong>11 · Progressive routing and loading</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="Project ledgers and provenance"/><br/><strong>12 · Project ledgers and provenance</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="Evidence and citation integrity"/><br/><strong>13 · Evidence and citation integrity</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="Research production pipeline"/><br/><strong>14 · Research production pipeline</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="Installation compatibility"/><br/><strong>15 · Installation compatibility</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="Supply-chain attestation"/><br/><strong>16 · Supply-chain attestation</strong></td></tr>
+<tr><td colspan="2" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="First-principles strategy ladder"/><br/><strong>17 · First-principles computation and simulation strategy ladder</strong></td></tr>
 </table>
 
 ## Quick start
@@ -148,6 +164,19 @@ Initialize and verify canonical project state:
 ```bash
 python -m tsao_researcher init   --name "Polyolefin multiscale study"   --question "Which mechanisms connect processing history to product properties?"   --research-type mechanistic   --output .
 python -m tsao_researcher verify .
+```
+
+Generate a first-principles computation/simulation strategy (advice only; no solver execution):
+
+```bash
+python -m tsao_researcher strategy \
+  "How do trap states and morphology control space charge and breakdown?" \
+  --observable "space charge" \
+  --observable "breakdown strength" \
+  --condition "applied electric field" \
+  --evidence "PEA charge profile" \
+  --output strategy.json
+python scripts/validate_computation_strategy.py strategy.json
 ```
 
 Create a guarded computation handoff:
@@ -183,20 +212,20 @@ PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
 
 ## Validation
 
-The latest verified hardening run recorded:
+The current 0.7.0 candidate was verified in the available offline environment:
 
 | Gate | Result |
 |---|---:|
-| Tests | **212 passed; 0 failed; 0 errors** |
-| Project line coverage | **96.371%** |
-| Branch coverage | **93.128%** |
+| Tests | **262 passed; 0 failed; 0 errors; 0 skipped** |
+| Project line coverage | **95.406%** |
+| Branch coverage | **91.458%** |
 | Quality floor | **95% line / 90% branch** |
-| Critical mutation tests | **21 / 21 killed; 0 survivors** |
-| Ruff / Mypy / Bandit | **PASS** |
-| Exact-lock dependency audit | **PASS** |
+| Critical mutation tests | **24 / 24 killed; 0 survivors** |
 | Performance baseline | **PASS** |
 | Two source ZIP builds | **byte-identical** |
-| Wheel and sdist isolated install | **PASS** |
+| Wheel and sdist offline isolated install | **PASS** |
+| Ruff / Mypy / Bandit | **retained as CI gates; not rerun in this offline environment** |
+| Exact-lock dependency audit | **retained as a CI gate; not rerun in this offline environment** |
 
 Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.
 
@@ -217,7 +246,7 @@ Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTI
 - Statistical, causal, DOE and ML methods are contracts and quality gates; numerical execution uses host tools.
 - Plotting has a validated contract and runnable example, but no universal plotting daemon is bundled.
 - DOCX, PPTX and LaTeX rendering rely on host capabilities.
-- DFT, MD, FEM, CFD, process simulators, HPC schedulers, instruments and laboratory robots remain external.
+- The strategy advisor derives quantum, statistical, continuum and multiscale method ladders, but DFT, MD, FEM, CFD, process simulators, HPC schedulers, instruments and laboratory robots remain external.
 - Patent/FTO, medical, safety and integrity acceptance require qualified human review.
 - A handoff is not a completed computation; a receipt is execution evidence, not scientific validity.
 

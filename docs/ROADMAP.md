@@ -1,6 +1,6 @@
 # Roadmap
 
-## Current release — v0.6.0
+## Current release — v0.7.0
 
 The current release adds deterministic reproducibility capsules, external execution receipts, validation evidence 1.6, coverage/quality baselines, deterministic SBOM, dependency audit, wheel/sdist validation, documentation builds, external commit attestation and permanent idempotent CI/audit/nightly/release workflows.
 

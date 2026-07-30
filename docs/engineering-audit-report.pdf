@@ -19,13 +19,13 @@ endobj
 << /Length 2183 >>
 stream
 BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
-BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.6.0 | preflight evidence | 2026-07-28) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.0 | preflight evidence | 2026-07-30) Tj ET
 q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
 BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 660.0 Tm (Truth boundary: a contract or handoff is not an execution receipt.) Tj ET
 q 0.980 g 0.750 G 46.0 590.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 62.0 629.0 Tm (340) Tj ET
+BT /F2 20 Tf 1 0 0 1 62.0 629.0 Tm (341) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 607.0 Tm (Capability contracts) Tj ET
 q 0.980 g 0.750 G 301.0 590.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 629.0 Tm (322) Tj ET
@@ -34,10 +34,10 @@ q 0.980 g 0.750 G 46.0 504.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 62.0 543.0 Tm (15) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 521.0 Tm (Workflows) Tj ET
 q 0.980 g 0.750 G 301.0 504.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (18) Tj ET
+BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (19) Tj ET
 BT /F1 9 Tf 1 0 0 1 317.0 521.0 Tm (Schemas) Tj ET
 q 0.980 g 0.750 G 46.0 418.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (34) Tj ET
+BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (36) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 435.0 Tm (Test modules) Tj ET
 q 0.980 g 0.750 G 301.0 418.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 457.0 Tm (7) Tj ET
@@ -121,7 +121,7 @@ BT /F1 8 Tf 1 0 0 1 56.0 349.0 Tm (execution receipts) Tj ET
 q 0.92 g 330.0 342.0 150.0 10 re f Q
 q 0.30 g 330.0 342.0 22.5 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (LOCAL_PREFLIGHT) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (json schemas 18) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (json schemas 19) Tj ET
 q 0.92 g 330.0 320.0 150.0 10 re f Q
 q 0.30 g 330.0 320.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 327.0 Tm (PASS) Tj ET

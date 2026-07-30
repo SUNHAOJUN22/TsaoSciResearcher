@@ -1,6 +1,6 @@
 # Executable scientific-quality guards
 
-TsaoSciResearcher 0.6.0 provides four deterministic, host-independent controls. They constrain operational completeness and claim strength; they do not decide whether the underlying science is true.
+TsaoSciResearcher 0.7.0 provides four deterministic, host-independent controls. They constrain operational completeness and claim strength; they do not decide whether the underlying science is true.
 
 ## Measurement Boundary
 

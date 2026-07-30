@@ -10,10 +10,12 @@ from typing import Any
 
 from .capabilities import search_capabilities
 from .capsule import export_capsule, verify_capsule
+from .io import write_json
 from .receipts import record_receipt, verify_receipts
 from .router import route
 from .scientific_quality import evaluate_quality
 from .state import RESEARCH_TYPES, initialize, transition, verify
+from .strategy import advise_computation_strategy
 from .version import __version__
 
 
@@ -49,6 +51,31 @@ def main() -> None:
 
     quality_parser = sub.add_parser("quality", help="evaluate a scientific-quality JSON request")
     quality_parser.add_argument("input", help="path to a quality request JSON file")
+
+    strategy_parser = sub.add_parser(
+        "strategy",
+        help="derive a first-principles computation or simulation strategy without running a solver",
+    )
+    strategy_parser.add_argument("question", help="scientific question or mechanism to explain")
+    strategy_parser.add_argument(
+        "--observable", action="append", default=[], help="decision-critical observable; repeatable"
+    )
+    strategy_parser.add_argument(
+        "--condition", action="append", default=[], help="thermodynamic or operating condition; repeatable"
+    )
+    strategy_parser.add_argument(
+        "--constraint",
+        action="append",
+        default=[],
+        help="resource, model, or evidence constraint; repeatable",
+    )
+    strategy_parser.add_argument(
+        "--evidence",
+        action="append",
+        default=[],
+        help="available measurement or reference evidence; repeatable",
+    )
+    strategy_parser.add_argument("--output", help="optional JSON output path")
 
     init_parser = sub.add_parser("init", help="initialize a traceable project")
     init_parser.add_argument("--name", required=True)
@@ -109,6 +136,17 @@ def main() -> None:
         _emit(result)
         if result["status"] == "BLOCK":
             raise SystemExit(2)
+    elif args.command == "strategy":
+        result = advise_computation_strategy(
+            args.question,
+            args.observable,
+            args.condition,
+            args.constraint,
+            args.evidence,
+        )
+        if args.output:
+            write_json(args.output, result)
+        _emit(result)
     elif args.command == "init":
         print(
             initialize(

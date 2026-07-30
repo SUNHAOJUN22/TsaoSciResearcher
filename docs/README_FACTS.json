@@ -3,10 +3,10 @@
     "by_implementation_level": {
       "computation-delegated": 170,
       "human-review": 23,
-      "native-research": 147
+      "native-research": 148
     },
     "by_workflow": {
-      "computation-handoff": 168,
+      "computation-handoff": 169,
       "data-analysis": 52,
       "deep-research": 16,
       "experiment-design": 3,
@@ -35,8 +35,8 @@
       "科研管理、专利与诚信": 24
     },
     "legacy_named": 158,
-    "runtime_core": 18,
-    "v2_total": 340,
+    "runtime_core": 19,
+    "v2_total": 341,
     "workbook_named": 322
   },
   "domain_packs": {
@@ -59,13 +59,13 @@
     "3.13"
   ],
   "repository_assets": {
-    "references": 22,
-    "templates": 13,
-    "test_modules": 34
+    "references": 23,
+    "templates": 14,
+    "test_modules": 36
   },
   "schema_version": "1.0",
   "schemas": {
-    "count": 18,
+    "count": 19,
     "items": [
       "schemas/artifact-manifest.schema.json",
       "schemas/capability.schema.json",
@@ -77,6 +77,7 @@
       "schemas/research-project.schema.json",
       "schemas/v2/artifact.schema.json",
       "schemas/v2/capability-invocation.schema.json",
+      "schemas/v2/computation-strategy.schema.json",
       "schemas/v2/execution-receipt.schema.json",
       "schemas/v2/handoff.schema.json",
       "schemas/v2/project.schema.json",
@@ -87,7 +88,7 @@
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.6.0",
+  "version": "0.7.0",
   "workflows": {
     "count": 15,
     "items": [

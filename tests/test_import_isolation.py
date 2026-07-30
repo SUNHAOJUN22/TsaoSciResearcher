@@ -4,6 +4,8 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import pytest
+
 from tests.helpers import ROOT, run_python
 
 SCRIPT_MODULES = tuple(
@@ -88,3 +90,42 @@ def test_package_import_does_not_need_test_path_pollution() -> None:
     assert result.returncode == 0, result.stderr
     assert result.stdout == ""
     assert result.stderr == ""
+
+
+def test_top_level_package_import_is_dependency_light() -> None:
+    code = """
+import builtins
+original = builtins.__import__
+def guarded(name, *args, **kwargs):
+    if name.split('.', 1)[0] in {'yaml', 'jsonschema'}:
+        raise AssertionError(f'unexpected eager dependency import: {name}')
+    return original(name, *args, **kwargs)
+builtins.__import__ = guarded
+import tsao_researcher
+assert tsao_researcher.__version__ == '0.7.0'
+assert 'route' in dir(tsao_researcher)
+"""
+    result = run_python(["-c", code])
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == ""
+    assert result.stderr == ""
+
+
+def test_lazy_public_export_resolves_on_access() -> None:
+    code = "import tsao_researcher; assert callable(tsao_researcher.route)"
+    result = run_python(["-c", code])
+    assert result.returncode == 0, result.stderr
+
+
+def test_lazy_package_api_resolves_caches_and_lists_exports() -> None:
+    import tsao_researcher
+
+    for name in tsao_researcher._LAZY_EXPORTS:
+        vars(tsao_researcher).pop(name, None)
+    for name in tsao_researcher._LAZY_EXPORTS:
+        first = getattr(tsao_researcher, name)
+        assert callable(first)
+        assert getattr(tsao_researcher, name) is first
+        assert name in dir(tsao_researcher)
+    with pytest.raises(AttributeError, match="has no attribute"):
+        assert getattr(tsao_researcher, "_".join(("not", "a", "public", "api"))) is None

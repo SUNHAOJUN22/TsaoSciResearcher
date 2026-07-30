@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 - 2026-07-29
+
+- Added the first-principles computation and simulation strategy advisor for quantum, statistical-mechanical, mesoscopic, continuum, transport and process questions.
+- Added a schema-validated method ladder with observables, degrees of freedom, governing physics, scale analysis, falsification, uncertainty and external-execution boundaries.
+- Preserved the 340-record base catalog and added one independently loadable runtime extension for 341 total capability contracts.
+- Added deterministic fallback property tests, lazy package exports, offline distribution validation, 262 passing tests, 95.406% line coverage, 91.458% branch coverage and 24/24 killed critical mutants.
+
 ## 0.6.0 - 2026-07-24
 
 - Added deterministic metadata/full reproducibility capsules with archive-safety and tamper verification.

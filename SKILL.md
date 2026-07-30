@@ -10,16 +10,16 @@ description: >
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
   through the structured computation-handoff workflow. Record external execution receipts and export deterministic reproducibility capsules when provenance is required.
-version: 0.6.0
+version: 0.7.0
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher
-  capability_count: 340
+  capability_count: 341
   workbook_named_capability_count: 322
   legacy_capability_count: 158
   domain_named_capability_count: 164
   workflow_count: 15
-  schema_count: 18
+  schema_count: 19
   domain_pack_count: 7
   progressive_disclosure: true
   evidence_first: true
@@ -33,7 +33,7 @@ Convert a broad scientific objective into a testable, traceable and reviewable r
 
 ## First rule: route before loading
 
-Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Use `capabilities/v2/index.json` and the cached `tsao-researcher search` CLI for discovery. The v2 catalog contains 322 exact named AI-for-Science contracts plus 18 runtime/core contracts; load the 158-record `capability-index/capabilities.json` only for legacy integrations.
+Do not load the full repository. Classify the request, read exactly one primary workflow, and then open only the references and templates named by that workflow. Use `capabilities/v2/index.json` and the cached `tsao-researcher search` CLI for discovery. The v2 catalog contains 322 exact named AI-for-Science contracts plus 19 runtime/core contracts; load the 158-record `capability-index/capabilities.json` only for legacy integrations.
 
 | User intent | Primary workflow |
 |---|---|
@@ -51,7 +51,7 @@ Do not load the full repository. Classify the request, read exactly one primary 
 | Patent search, landscape, disclosure, FTO screening | `workflows/patent-and-transfer/WORKFLOW.md` |
 | Integrity, citation, image, statistics or provenance audit | `workflows/research-integrity/WORKFLOW.md` |
 | SOP, instrument workflow, laboratory QC and traceability | `workflows/laboratory/WORKFLOW.md` |
-| DFT, MD, FEM, CFD, process simulation or other real computation | `workflows/computation-handoff/WORKFLOW.md` |
+| First-principles method reasoning, computation/simulation strategy, DFT/MD/FEM/CFD planning, external result review, or real-computation handoff | `workflows/computation-handoff/WORKFLOW.md` |
 
 Run deterministic v2 routing and capability search when useful:
 
@@ -99,6 +99,10 @@ The CLI and compatibility initializer use one canonical `.tsao-research/` layout
 ## Scientific figures
 
 For every quantitative figure, load `workflows/scientific-figure/WORKFLOW.md` and validate a figure contract before plotting. Default profile: Python/Matplotlib, 450 DPI raster preview, vector export when appropriate, no decorative grid, explicit units, retained source data and code, and zero-origin axes only when scientifically meaningful.
+
+## First-principles strategy rule
+
+When a scientific question may benefit from computation or simulation, do not jump directly to software names. First define the decision-critical observable, relevant degrees of freedom, conserved quantities, symmetry and boundary constraints, thermodynamic potential or statistical ensemble, equilibrium/non-equilibrium regime, length/time scales, model-reduction assumptions, validation route, falsification criteria and uncertainty plan. Use `python -m tsao_researcher strategy ...` and validate the result against `schemas/v2/computation-strategy.schema.json`. “First-principles” means deriving the lowest sufficient model from governing physics; it does not mean that every problem requires DFT.
 
 ## Computation boundary
 

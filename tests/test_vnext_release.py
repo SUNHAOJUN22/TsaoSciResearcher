@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from tsao_researcher.vnext import handoff, init, route, transition, verify
+from tsao_researcher.vnext import advise_computation_strategy, handoff, init, route, transition, verify
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -52,7 +52,15 @@ def test_v2_handoff_has_unique_id_and_checksum(tmp_path: Path) -> None:
 
 def test_v2_capability_count() -> None:
     index = json.loads((ROOT / "capabilities/v2/index.json").read_text(encoding="utf-8"))
-    assert index["total"] == 340
+    assert index["total"] == 341
     assert index["workbook_named_total"] == 322
     assert index["domain_named"] == 164
     assert index["generic_domain_slots"] == 0
+
+
+def test_v2_first_principles_strategy_facade() -> None:
+    result = advise_computation_strategy(
+        "How does a defect change the band gap?", ["band gap"], ["fixed charge state"]
+    )
+    assert result["classification"]["primary_regime"] == "electronic-structure"
+    assert result["execution_boundary"]["solver_executed"] is False

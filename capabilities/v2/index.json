@@ -1,9 +1,9 @@
 {
   "schema_version": "2.0",
-  "total": 340,
+  "total": 341,
   "legacy_preserved": 158,
   "domain_added": 164,
-  "core_added": 18,
+  "core_added": 19,
   "by_workflow": {
     "research-design": 10,
     "research-question": 6,
@@ -16,13 +16,13 @@
     "data-analysis": 52,
     "experiment-design": 3,
     "scientific-figure": 2,
-    "computation-handoff": 168,
+    "computation-handoff": 169,
     "laboratory": 8,
     "patent-and-transfer": 7,
     "research-integrity": 8
   },
   "by_implementation_level": {
-    "native-research": 147,
+    "native-research": 148,
     "human-review": 23,
     "computation-delegated": 170
   },
@@ -30,5 +30,7 @@
   "workbook_named_total": 322,
   "legacy_named": 158,
   "domain_named": 164,
-  "generic_domain_slots": 0
+  "generic_domain_slots": 0,
+  "base_total": 340,
+  "extension_total": 1
 }
