@@ -1,0 +1,32 @@
+name: Report main tree for atomic cleanup
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.actor == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] report main tree sha'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Report immutable commit and tree
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          commit="$(git rev-parse HEAD)"
+          tree="$(git show -s --format=%T HEAD)"
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=tree-reported
+          commit=${commit}
+          tree=${tree}"
