@@ -59,6 +59,7 @@
     "3.13"
   ],
   "repository_assets": {
+    "ai_diagrams": 25,
     "references": 23,
     "templates": 14,
     "test_modules": 36

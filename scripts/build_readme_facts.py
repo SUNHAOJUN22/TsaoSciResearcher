@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,33 @@ if __package__ is None or __package__ == "":
 from scripts.common import ROOT, atomic_write_text
 
 FACTS_PATH = ROOT / "docs/README_FACTS.json"
+VISUAL_ATLAS_ASSETS = (
+    "docs/assets/ai/research_os_architecture.svg",
+    "docs/assets/ai/multi_agent_orchestration.svg",
+    "docs/assets/ai/evidence_claim_graph.svg",
+    "docs/assets/ai/multiscale_science_pipeline.svg",
+    "docs/assets/ai/reproducibility_quality_gates.svg",
+    "docs/assets/ai/computation_handoff_boundary.svg",
+    "docs/assets/ai/project_state_machine.svg",
+    "docs/assets/ai/capability_landscape.svg",
+    "docs/assets/ai/original_requirements_coverage.svg",
+    "docs/assets/ai/capability_implementation_levels.svg",
+    "docs/assets/ai/progressive_routing_loading.svg",
+    "docs/assets/ai/project_ledgers_provenance.svg",
+    "docs/assets/ai/evidence_citation_integrity_loop.svg",
+    "docs/assets/ai/research_production_pipeline.svg",
+    "docs/assets/ai/installation_compatibility_matrix.svg",
+    "docs/assets/ai/supply_chain_release_attestation.svg",
+    "docs/assets/ai/first_principles_strategy_ladder.svg",
+    "docs/assets/ai/scientific_problem_method_decision_tree.svg",
+    "docs/assets/ai/uncertainty_quantification_validation.svg",
+    "docs/assets/ai/scientific_integrity_causality_guard.svg",
+    "docs/assets/ai/laboratory_data_quality.svg",
+    "docs/assets/ai/scientific_writing_evidence_chain.svg",
+    "docs/assets/ai/scientific_figure_edit_guard.svg",
+    "docs/assets/ai/human_approval_acceptance_boundary.svg",
+    "docs/assets/ai/polymer_multiscale_case_study.svg",
+)
 
 
 def _load_json(path: Path) -> Any:
@@ -58,6 +86,7 @@ def build_facts(root: Path = ROOT) -> dict[str, Any]:
         "domain_packs": {"count": len(domain_packs), "items": domain_packs},
         "repository_assets": {
             "test_modules": len(test_modules),
+            "ai_diagrams": len(VISUAL_ATLAS_ASSETS),
             "references": len(references),
             "templates": len(templates),
         },
@@ -85,6 +114,7 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
         str(facts["workflows"]["count"]),
         str(facts["schemas"]["count"]),
         str(facts["domain_packs"]["count"]),
+        str(facts["repository_assets"]["ai_diagrams"]),
     ]
     for token in required_tokens:
         if token not in english:
@@ -107,6 +137,33 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append(f"README.md does not link to {relative}")
         if relative not in chinese:
             errors.append(f"README.zh-CN.md does not link to {relative}")
+    english_atlas = (root / "docs/VISUAL_ATLAS.md").read_text(encoding="utf-8", errors="strict")
+    chinese_atlas = (root / "docs/VISUAL_ATLAS.zh-CN.md").read_text(encoding="utf-8", errors="strict")
+    if len(VISUAL_ATLAS_ASSETS) < 25 or len(set(VISUAL_ATLAS_ASSETS)) != len(VISUAL_ATLAS_ASSETS):
+        errors.append("visual atlas must contain at least 25 unique AI diagrams")
+    for relative in VISUAL_ATLAS_ASSETS:
+        path = root / relative
+        if not path.is_file() or path.is_symlink():
+            errors.append(f"visual atlas asset missing or unsafe: {relative}")
+            continue
+        try:
+            svg_root = ET.fromstring(path.read_text(encoding="utf-8", errors="strict"))
+        except ET.ParseError as exc:
+            errors.append(f"visual atlas SVG is invalid: {relative}: {exc}")
+            continue
+        if not svg_root.tag.endswith("svg"):
+            errors.append(f"visual atlas asset is not SVG: {relative}")
+        child_tags = {child.tag.rsplit("}", 1)[-1] for child in svg_root}
+        if "title" not in child_tags or "desc" not in child_tags:
+            errors.append(f"visual atlas SVG lacks title/desc accessibility metadata: {relative}")
+        if relative not in english:
+            errors.append(f"README.md does not embed {relative}")
+        if relative not in chinese:
+            errors.append(f"README.zh-CN.md does not embed {relative}")
+        if path.name not in english_atlas:
+            errors.append(f"VISUAL_ATLAS.md does not embed {path.name}")
+        if path.name not in chinese_atlas:
+            errors.append(f"VISUAL_ATLAS.zh-CN.md does not embed {path.name}")
     return errors
 
 

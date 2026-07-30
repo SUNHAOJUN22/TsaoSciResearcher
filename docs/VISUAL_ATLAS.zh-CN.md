@@ -1,6 +1,6 @@
 # 科研能力 AI 示意图谱
 
-以下示意图依据仓库架构、能力合同、验证器和明确的执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
+以下 25 张 AI 概念图依据仓库架构、能力合同、验证器和明确执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
 
 ## 1. 科研操作系统架构
 
@@ -65,7 +65,39 @@
 ## 16. 供应链与发布证明
 
 ![供应链与发布证明](assets/ai/supply_chain_release_attestation.svg)
+
 ## 17. 第一性原理策略阶梯
 
 ![第一性原理策略阶梯](assets/ai/first_principles_strategy_ladder.svg)
 
+## 18. 科学问题—方法决策树
+
+![科学问题—方法决策树](assets/ai/scientific_problem_method_decision_tree.svg)
+
+## 19. 不确定度量化与验证
+
+![不确定度量化与验证](assets/ai/uncertainty_quantification_validation.svg)
+
+## 20. 科研诚信与因果防护
+
+![科研诚信与因果防护](assets/ai/scientific_integrity_causality_guard.svg)
+
+## 21. 实验室与数据质量
+
+![实验室与数据质量](assets/ai/laboratory_data_quality.svg)
+
+## 22. 科研写作证据链
+
+![科研写作证据链](assets/ai/scientific_writing_evidence_chain.svg)
+
+## 23. 科学图片编辑防护
+
+![科学图片编辑防护](assets/ai/scientific_figure_edit_guard.svg)
+
+## 24. 人工审批与科学接受边界
+
+![人工审批与科学接受边界](assets/ai/human_approval_acceptance_boundary.svg)
+
+## 25. 高分子绝缘多尺度策略
+
+![高分子绝缘多尺度策略](assets/ai/polymer_multiscale_case_study.svg)

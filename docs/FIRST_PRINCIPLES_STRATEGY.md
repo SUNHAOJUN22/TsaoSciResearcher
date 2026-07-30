@@ -54,3 +54,26 @@ Start with the lowest-fidelity method that can causally determine the declared o
 ## External execution boundary
 
 An approved strategy can be converted to a checksum-bound handoff. Execution, logs, outputs, convergence, and receipts remain external. TsaoSciResearcher then reviews the returned evidence and keeps `executed`, `checked`, `validated`, and `accepted` distinct.
+
+## Scientific question to method ladder
+
+| Regime | Minimum-sufficient start | Escalation when missing physics is demonstrated |
+|---|---|---|
+| Electronic ground state and defects | exact charge/spin/symmetry bookkeeping; converged DFT | hybrid DFT, embedding or wavefunction benchmarks |
+| Excited states and spectra | state-character and selection-rule analysis; TDDFT | GW/BSE, multireference or nonadiabatic dynamics |
+| Reactions and catalysis | thermodynamic network consistency; DFT/NEB/TS | enhanced sampling, microkinetics, kMC and reaction–transport coupling |
+| Molecular free energy | ensemble definition; MD/MC and free-energy estimation | QM/MM, ab initio MD or validated coarse-graining |
+| Polymer morphology | scaling/SCFT and order-parameter selection | CGMD/DPD/phase field, then validated cross-scale closure |
+| Continuum transport | balances, constitutive closure and dimensionless analysis | mesh-converged CFD and coupled multiphysics |
+| Mechanics and fracture | energy, symmetry and constitutive identifiability | FEM, phase-field/cohesive fracture and microstructure models |
+| Charge transport and breakdown | trap/injection state analysis and charge conservation | kMC/drift–diffusion–Poisson, electrothermal and stochastic failure |
+| Process and populations | mass/energy balances and identifiability | PBE/reactor networks, CFD/flowsheets and Bayesian calibration |
+| Mixed problem | define observable, reservoirs, scales and falsification target | sequential uncertainty-aware multiscale coupling |
+
+## Truth-preserving escalation rule
+
+1. A solver recommendation is a plan, not an execution.
+2. An execution receipt proves that a process ran, not that it converged.
+3. Numerical convergence does not establish model validity.
+4. Model validity for one observable does not establish a causal mechanism.
+5. Scientific acceptance requires independent evidence and qualified review appropriate to the claim.

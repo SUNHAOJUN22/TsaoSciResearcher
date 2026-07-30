@@ -34,6 +34,16 @@ def test_electronic_defect_strategy_starts_from_quantum_states() -> None:
     assert result["method_ladder"][0]["role"] == "minimum-sufficient"
     assert "total charge" in result["first_principles_frame"]["conserved_quantities"]
 
+    excited = advise_computation_strategy(
+        "Which excited state controls the optical absorption spectrum and electron-hole response?",
+        ["absorption spectrum", "excitation energy"],
+        ["room temperature"],
+    )
+    assert excited["classification"]["primary_regime"] == "electronic-structure"
+    methods = " ".join(method for row in excited["method_ladder"] for method in row["representative_methods"])
+    assert "TDDFT" in methods
+    assert "GW/BSE" in methods
+
 
 def test_reaction_strategy_includes_quantum_barriers_and_statistical_kinetics() -> None:
     result = advise_computation_strategy(

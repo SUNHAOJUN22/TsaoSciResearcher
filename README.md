@@ -68,7 +68,24 @@ question → decision observable → degrees of freedom/state variables
          → external handoff → result review
 ```
 
-“First principles” does not mean DFT for every problem. Electronic defects may require quantum electronic structure; free energies require ensembles and sampling; polymer morphology may require statistical-field or mesoscale models; pressure drop and heat transfer should usually begin with conservation laws, constitutive relations and dimensionless analysis. See the [first-principles strategy guide](docs/FIRST_PRINCIPLES_STRATEGY.md).
+“First principles” does not mean DFT for every problem. The advisor selects the cheapest falsifiable physical representation, then escalates only when validation identifies a missing degree of freedom, coupling or scale. See the [first-principles strategy guide](docs/FIRST_PRINCIPLES_STRATEGY.md).
+
+### Scientific question → minimum-sufficient strategy
+
+| Scientific question | Start from | Minimum-sufficient method | Evidence-driven escalation |
+|---|---|---|---|
+| Ground-state bonding, defect levels and trap states | charge/spin, symmetry, electrostatics and thermodynamic cycles | periodic/cluster DFT with convergence and finite-size control | hybrid DFT, embedding or higher-level wavefunction treatment |
+| Excited states, optical spectra and carrier excitations | state character, selection rules and electron–hole degrees of freedom | TDDFT or a targeted excited-state calculation | GW/BSE, multireference or nonadiabatic dynamics |
+| Reaction barriers, catalysis and selectivity | stoichiometry, detailed balance and candidate networks | DFT/wavefunction path search, NEB and transition-state optimisation | enhanced sampling, microkinetics, kinetic Monte Carlo and transport coupling |
+| Conformations, solvation, free energies and rare events | ensemble, reservoirs, collective variables and correlation times | MD/Monte Carlo with umbrella, metadynamics or alchemical free energy | QM/MM, ab initio MD or a validated coarse-grained model |
+| Polymer morphology, crystallisation and phase separation | entropy–energy competition, chain connectivity and order parameters | scaling/SCFT followed by CGMD, DPD or phase-field kinetics | chemistry-informed mapping, homogenisation and process–structure coupling |
+| Flow, heat/mass transfer and pressure drop | conservation laws, constitutive closure and dimensionless groups | control-volume, 1D or reduced-order model | mesh-converged CFD and coupled multiphysics |
+| Stress, viscoelasticity, fracture and fatigue | momentum/energy balance, material symmetry and constitutive identifiability | reduced mechanics or FEM with objective constitutive laws | phase-field/cohesive fracture and microstructure-informed mechanics |
+| Charge transport, space charge and breakdown | electronic/trap states, electrochemical potential and Poisson/charge balance | hopping/kMC or drift–diffusion–Poisson | electrothermal, morphology-evolution and stochastic failure models |
+| Reactors, molecular-weight distributions and process dynamics | mass/energy balances, residence time and identifiability | CSTR/PFR/network plus population-balance model | reactor-CFD, flowsheet dynamics, Bayesian calibration or digital-twin surrogate |
+| Mixed or under-specified multiscale problem | observable, units, reservoirs, scales and competing mechanisms | analytical or reduced-order falsifiable model | sequential uncertainty-aware coupling through measurable bridge variables |
+
+The strategy output remains `advisory-only` and records `solver_executed: false`. A recommended DFT, MD, FEM, CFD or process model becomes a real execution only after an approved checksum-bound handoff, external logs and output hashes, convergence review and separate scientific acceptance.
 
 ## Research lifecycle and workflows
 
@@ -134,7 +151,7 @@ research-integrity     laboratory             computation-handoff
 
 ## Scientific capability visual atlas
 
-The following **AI-generated, repository-specific diagrams** describe the actual contracts, control flow, provenance and execution boundaries. They are documentation assets—not experimental observations, simulation outputs, or proof that an external engine ran.
+The following **25 AI-generated, repository-specific conceptual diagrams** describe the actual contracts, control flow, provenance, scientific reasoning and execution boundaries. They are documentation assets—not experimental observations, simulation outputs, or proof that an external engine ran.
 
 <table>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="Research OS architecture"/><br/><strong>1 · Research OS architecture</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="Multi-agent orchestration"/><br/><strong>2 · Multi-agent orchestration</strong></td></tr>
@@ -145,8 +162,14 @@ The following **AI-generated, repository-specific diagrams** describe the actual
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="Progressive routing and loading"/><br/><strong>11 · Progressive routing and loading</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="Project ledgers and provenance"/><br/><strong>12 · Project ledgers and provenance</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="Evidence and citation integrity"/><br/><strong>13 · Evidence and citation integrity</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="Research production pipeline"/><br/><strong>14 · Research production pipeline</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="Installation compatibility"/><br/><strong>15 · Installation compatibility</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="Supply-chain attestation"/><br/><strong>16 · Supply-chain attestation</strong></td></tr>
-<tr><td colspan="2" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="First-principles strategy ladder"/><br/><strong>17 · First-principles computation and simulation strategy ladder</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="First-principles strategy ladder"/><br/><strong>17 · First-principles strategy ladder</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_problem_method_decision_tree.svg" alt="Scientific problem method decision tree"/><br/><strong>18 · Problem → method decision tree</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="Uncertainty quantification and validation"/><br/><strong>19 · UQ and model validation</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="Scientific integrity and causality guard"/><br/><strong>20 · Integrity and causality guard</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="Laboratory and data quality"/><br/><strong>21 · Laboratory and data quality</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="Scientific writing evidence chain"/><br/><strong>22 · Scientific writing evidence chain</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="Scientific figure edit guard"/><br/><strong>23 · Scientific figure edit guard</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="Human approval and acceptance boundary"/><br/><strong>24 · Human approval boundary</strong></td></tr>
+<tr><td colspan="2" valign="top"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="Polymer insulation multiscale case study"/><br/><strong>25 · Polymer-insulation multiscale strategy case</strong></td></tr>
 </table>
+
+The complete bilingual atlas is available in [docs/VISUAL_ATLAS.md](docs/VISUAL_ATLAS.md). Every SVG is self-contained, accessible through `<title>` and `<desc>`, checked into the repository, and validated against the README asset manifest.
 
 ## Quick start
 
@@ -212,7 +235,7 @@ PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
 
 ## Validation
 
-The published 0.7.0 tree was verified by GitHub Actions run `30511880407` on Ubuntu / Python 3.12 using the exact locked toolchain:
+The published 0.7.0 tree was verified by GitHub Actions run `30525731965` on Ubuntu / Python 3.12 using the exact locked toolchain:
 
 | Gate | Result |
 |---|---:|

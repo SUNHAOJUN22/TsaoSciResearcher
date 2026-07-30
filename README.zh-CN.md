@@ -68,7 +68,24 @@ TsaoSciResearcher 是一个**单入口科研路由器、项目状态系统、验
         → 外部计算 handoff → 结果审查
 ```
 
-“第一性原理”不等于所有问题都使用 DFT。电子缺陷可能需要量子电子结构；自由能需要统计系综和采样；高分子形貌可能需要统计场和介观模型；压降与传热应优先从守恒方程、本构关系和无量纲分析开始。详见[第一性原理策略说明](docs/FIRST_PRINCIPLES_STRATEGY.zh-CN.md)。
+“第一性原理”不等于所有问题都使用 DFT。策略顾问先选择成本最低、能够被证伪的物理表征；只有当验证明确指出缺少自由度、耦合或尺度时才升级。详见[第一性原理策略说明](docs/FIRST_PRINCIPLES_STRATEGY.zh-CN.md)。
+
+### 科学问题 → 最低充分计算/仿真策略
+
+| 科学问题 | 首先从何出发 | 最低充分方法 | 由证据触发的升级方法 |
+|---|---|---|---|
+| 基态成键、缺陷能级和陷阱态 | 电荷/自旋、对称性、静电和热力学循环 | 经过收敛与有限尺寸控制的周期/团簇 DFT | 杂化泛函、嵌入或更高层级波函数方法 |
+| 激发态、光谱和载流子激发 | 态性质、选择定则与电子—空穴自由度 | TDDFT 或针对性的激发态计算 | GW/BSE、多参考方法或非绝热动力学 |
+| 反应能垒、催化与选择性 | 化学计量、细致平衡和候选反应网络 | DFT/波函数路径搜索、NEB 与过渡态优化 | 增强采样、微观动力学、动力学 Monte Carlo 与输运耦合 |
+| 构象、溶剂化、自由能和稀有事件 | 统计系综、库、集体变量和相关时间 | MD/Monte Carlo、umbrella、metadynamics 或炼金自由能 | QM/MM、从头算 MD 或经验证的粗粒化模型 |
+| 高分子形貌、结晶和相分离 | 熵—能竞争、链连接性和序参量 | 标度/SCFT，随后使用 CGMD、DPD 或相场动力学 | 化学信息映射、均匀化和工艺—结构耦合 |
+| 流动、传热传质和压降 | 守恒律、本构闭合和无量纲数 | 控制体、1D 或降阶模型 | 网格收敛的 CFD 与耦合多物理场 |
+| 应力、黏弹、断裂与疲劳 | 动量/能量平衡、材料对称性和本构可识别性 | 降阶力学或采用客观本构的 FEM | 相场/黏聚断裂和微结构知情力学 |
+| 电荷输运、空间电荷和击穿 | 电子/陷阱态、电化学势及 Poisson/电荷守恒 | 跳跃/kMC 或漂移—扩散—Poisson | 电—热、形貌演化和随机失效模型 |
+| 反应器、分子量分布和流程动态 | 质量/能量平衡、停留时间和可识别性 | CSTR/PFR/网络与群体平衡模型 | 反应器 CFD、流程动态、贝叶斯校准或数字孪生代理 |
+| 混合或定义不足的多尺度问题 | 可观测量、单位、库、尺度和竞争机理 | 可证伪的解析或降阶模型 | 通过可测桥接变量进行顺序、含不确定度的耦合 |
+
+策略输出始终为 `advisory-only`，并明确记录 `solver_executed: false`。推荐 DFT、MD、FEM、CFD 或流程模型不等于已经执行；只有完成经批准的校验和 handoff、外部日志与输出哈希、收敛审查和独立科学接受后，才能进入更高真实性状态。
 
 ## 科研生命周期与工作流
 
@@ -134,7 +151,7 @@ research-integrity     laboratory             computation-handoff
 
 ## 科研能力 AI 示意图谱
 
-以下为**依据当前仓库代码和能力边界生成的 AI 示意图**，用于解释合同、控制流、溯源和执行边界；它们属于文档资产，不是实验观测、模拟结果，也不是外部引擎已经运行的证明。
+以下为**依据当前仓库代码和能力边界生成的 25 张 AI 概念图**，用于解释能力合同、控制流、溯源、底层科学推理和执行边界；它们属于文档资产，不是实验观测、模拟结果，也不是外部引擎已经运行的证明。
 
 <table>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/><br/><strong>1 · 科研操作系统架构</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体科研编排"/><br/><strong>2 · 多智能体科研编排</strong></td></tr>
@@ -145,8 +162,14 @@ research-integrity     laboratory             computation-handoff
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进式路由与加载"/><br/><strong>11 · 渐进式路由与加载</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目台账与溯源"/><br/><strong>12 · 项目台账与溯源</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据与引文完整性"/><br/><strong>13 · 证据与引文完整性</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研产出流水线"/><br/><strong>14 · 科研产出流水线</strong></td></tr>
 <tr><td width="50%" valign="top"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容矩阵"/><br/><strong>15 · 安装兼容矩阵</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链与发布证明"/><br/><strong>16 · 供应链与发布证明</strong></td></tr>
-<tr><td colspan="2" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯"/><br/><strong>17 · 第一性原理计算与仿真策略阶梯</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯"/><br/><strong>17 · 第一性原理策略阶梯</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_problem_method_decision_tree.svg" alt="科学问题到方法决策树"/><br/><strong>18 · 科学问题—方法决策树</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定度量化与验证"/><br/><strong>19 · UQ 与模型验证</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="科研诚信与因果防护"/><br/><strong>20 · 科研诚信与因果防护</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="实验室与数据质量"/><br/><strong>21 · 实验室与数据质量</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="科研写作证据链"/><br/><strong>22 · 科研写作证据链</strong></td></tr>
+<tr><td width="50%" valign="top"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="科学图片编辑防护"/><br/><strong>23 · 科学图片编辑防护</strong></td><td width="50%" valign="top"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="人工审批与科学接受边界"/><br/><strong>24 · 人工审批与科学接受边界</strong></td></tr>
+<tr><td colspan="2" valign="top"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="高分子绝缘多尺度案例"/><br/><strong>25 · 高分子绝缘多尺度策略案例</strong></td></tr>
 </table>
+
+完整双语图谱见 [docs/VISUAL_ATLAS.zh-CN.md](docs/VISUAL_ATLAS.zh-CN.md)。全部 SVG 均为仓库内自包含资产，具有 `<title>` 与 `<desc>` 可访问性信息，并由 README 图谱清单进行自动验证。
 
 ## 快速开始
 
@@ -212,7 +235,7 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 ## 验证结果
 
-已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30511880407` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
+已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30525731965` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
 
 | Gate | 结果 |
 |---|---:|

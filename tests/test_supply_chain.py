@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts import build_sbom, build_validation_evidence, generate_checksums
+from scripts import build_readme_facts, build_sbom, build_validation_evidence, generate_checksums
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -46,6 +46,9 @@ def test_checked_in_evidence_can_be_truthful_preflight() -> None:
     assert value["gates"]["critical_mutation_killed"] == "NOT_RUN"
     assert value["provenance"]["workflow_run_id"] is None
     assert build_validation_evidence.validate(value) == []
+    facts = build_readme_facts.build_facts()
+    assert facts["repository_assets"]["ai_diagrams"] == 25
+    assert build_readme_facts._readme_errors(facts) == []
 
 
 def test_repository_checksum_ignores_coverage_runtime_files(tmp_path: Path) -> None:
