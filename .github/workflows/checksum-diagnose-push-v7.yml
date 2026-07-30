@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   diagnose:
-    if: github.actor == 'SUNHAOJUN22' && github.event.head_commit.message == 'ci: run checksum push diagnostic'
+    if: github.event.head_commit.message == 'ci: run checksum push diagnostic'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -31,4 +31,4 @@ jobs:
           printf 'status=diagnosed\nworkflow-run=%s\nactual=%s\nexpected=%s\nsource-files=%s\n' "$GITHUB_RUN_ID" "$actual" "$expected" "$count" > /tmp/issue-body.txt
           gh issue edit 132 --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
 
-# Registered trigger commit.
+# Registered trigger commit without actor restriction.
