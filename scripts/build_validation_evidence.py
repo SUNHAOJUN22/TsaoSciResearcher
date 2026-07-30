@@ -40,7 +40,6 @@ EXCLUDED_PATHS = {
     "docs/test-dashboard.svg",
     "docs/engineering-audit-report.pdf",
 }
-COVERAGE_RUNTIME_PATTERNS = (".coverage", ".coverage.*")
 DEFAULT_COMPATIBILITY = {
     "macos_python_3_12": "PASS",
     "ubuntu_python_3_10": "PASS",
@@ -75,10 +74,6 @@ CI_ONLY_GATES = {
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
-def _is_coverage_runtime_file(path: Path) -> bool:
-    return path.name == ".coverage" or path.name.startswith(".coverage.")
-
-
 def _source_files() -> list[Path]:
     rows: list[Path] = []
     for path in ROOT.rglob("*"):
@@ -88,8 +83,6 @@ def _source_files() -> list[Path]:
         if relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES):
             continue
         if not path.is_file() or path.is_symlink():
-            continue
-        if _is_coverage_runtime_file(path):
             continue
         if relative.as_posix() in EXCLUDED_PATHS or path.suffix in {".pyc", ".pyo"}:
             continue
@@ -261,7 +254,7 @@ def build(
         "verified_inventory": _inventory(),
         "provenance": {
             "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
-            "digest_exclusions": sorted([*EXCLUDED_PATHS, *COVERAGE_RUNTIME_PATTERNS]),
+            "digest_exclusions": sorted(EXCLUDED_PATHS),
             "evidence_generated_from_commit": source_commit if attested else None,
             "publication_parent_commit": publication_parent if attested else None,
             "validated_file_count": file_count,
