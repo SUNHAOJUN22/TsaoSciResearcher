@@ -39,251 +39,14 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Build permanent exact-attestation candidate
-        id: source
+      - name: Build final documented candidate
         shell: bash
         run: |
           set -euo pipefail
-          parent="$(git rev-parse HEAD)"
-          test "$parent" = "$(git rev-parse origin/main)"
-          echo "parent=${parent}" >> "$GITHUB_OUTPUT"
-          python - <<'BOOTSTRAP_PY'
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          test -e .github/workflows/main-attestation.yml
+          python - <<'PATCH_PY'
           from pathlib import Path
-
-          root = Path('.')
-          permanent = r'''name: Exact main attestation
-
-on:
-  workflow_dispatch:
-  issues:
-    types: [opened]
-  schedule:
-    - cron: "41 20 * * 4"
-
-permissions:
-  contents: read
-  issues: write
-
-concurrency:
-  group: exact-main-attestation-${{ github.ref }}
-  cancel-in-progress: false
-
-env:
-  PYTHONDONTWRITEBYTECODE: "1"
-  PYTHONNOUSERSITE: "1"
-  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
-
-jobs:
-  compatibility:
-    if: >-
-      github.event_name != 'issues' ||
-      (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] attest current main')
-    name: attest-${{ matrix.os }}-py${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            python-version: "3.10"
-          - os: ubuntu-latest
-            python-version: "3.13"
-          - os: windows-latest
-            python-version: "3.12"
-          - os: macos-latest
-            python-version: "3.12"
-    steps:
-      - name: Checkout exact current main
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: main
-          fetch-depth: 0
-      - name: Confirm event SHA equals checked-out main
-        shell: bash
-        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-      - name: Set up Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: requirements-ci.lock
-      - name: Install exact toolchain and package
-        run: |
-          python -m pip install --disable-pip-version-check -r requirements-ci.lock
-          python -m pip install --disable-pip-version-check -e . --no-deps
-          python -m pip check
-      - name: Compile and run cross-platform contracts
-        env:
-          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
-        run: |
-          python -m compileall -q scripts tsao_researcher tests
-          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_supply_chain.py
-          python -m tsao_researcher --version
-          python -m tsao_researcher strategy "Which excited state controls the optical absorption spectrum?" --observable "absorption spectrum" --condition "300 K"
-          python -m tsao_researcher strategy "How do trap states and morphology control space charge and breakdown?" --observable "space charge" --observable "breakdown strength" --condition "applied electric field"
-          python scripts/validate_schemas.py
-          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
-
-  full-attestation:
-    if: >-
-      github.event_name != 'issues' ||
-      (github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] attest current main')
-    needs: compatibility
-    runs-on: ubuntu-latest
-    timeout-minutes: 100
-    steps:
-      - name: Mark attestation running
-        if: github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          printf 'status=running\ncommit=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
-      - name: Checkout exact current main
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: main
-          fetch-depth: 0
-      - name: Confirm immutable subject
-        run: |
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$(git status --porcelain)" = ""
-      - name: Set up locked Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: requirements-ci.lock
-      - name: Install exact dependencies
-        run: |
-          python -m pip install --disable-pip-version-check -r requirements-ci.lock
-          python -m pip install --disable-pip-version-check -e . --no-deps
-          python -m pip check
-      - name: Repository, visual, schema and generated-artifact audit
-        run: |
-          mkdir -p artifacts
-          python scripts/sync_version.py --check
-          python scripts/validate_schemas.py
-          python scripts/audit_repository.py
-          python scripts/validate_structure.py
-          python scripts/build_readme_facts.py --check
-          python scripts/build_sbom.py --check
-          python scripts/build_validation_evidence.py --check
-          python scripts/build_test_dashboard.py --check
-          python scripts/build_research_quality_dashboard.py --check
-          python scripts/build_engineering_report.py --check
-          python scripts/generate_checksums.py --check
-          python scripts/build_capability_index.py --check
-          python scripts/route_task.py --self-test
-          python scripts/validate_figure.py examples/figure-contract.json
-          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
-          mkdocs build --strict
-      - name: Complete regression and coverage
-        run: |
-          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
-          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
-      - name: Order independence
-        env:
-          TSR_TEST_ORDER_SEED: "20260730"
-        run: |
-          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
-      - name: Static, type, source-security and dependency gates
-        run: |
-          python -m ruff format --check scripts tsao_researcher tests
-          python -m ruff check scripts tsao_researcher tests
-          python -m mypy scripts tsao_researcher
-          python -m bandit -q -lll -r scripts tsao_researcher
-          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
-          python scripts/build_sbom.py --check
-      - name: Mutation, performance and commit-bound evidence
-        run: |
-          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
-          python scripts/performance_smoke.py --json-out artifacts/performance.json
-          python scripts/check_quality_baseline.py
-          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
-          python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
-      - name: Deterministic release and isolated distributions
-        run: |
-          python scripts/package_release.py --out dist-a
-          python scripts/package_release.py --out dist-b
-          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
-          python scripts/validate_release.py
-          python -m build --sdist --wheel --outdir dist-python
-          python scripts/validate_distribution.py dist-python
-      - name: Build and verify exact publication attestation
-        run: |
-          python scripts/build_publication_attestation.py --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"
-          python - <<'ATTEST_PY'
-          import json
-          from pathlib import Path
-
-          commit = Path('.git/refs/heads/main').read_text(encoding='utf-8').strip() if Path('.git/refs/heads/main').is_file() else ''
-          value = json.loads(Path('artifacts/publication-attestation.json').read_text(encoding='utf-8'))
-          evidence = json.loads(Path('artifacts/VALIDATION_EVIDENCE.json').read_text(encoding='utf-8'))
-          preflight = json.loads(Path('docs/VALIDATION_EVIDENCE.json').read_text(encoding='utf-8'))
-          assert value['published_commit'] == evidence['provenance']['evidence_generated_from_commit']
-          assert value['published_commit'] == evidence['workflow']['source_commit_context']
-          assert evidence['provenance']['validated_tree_sha256'] == preflight['provenance']['validated_tree_sha256']
-          assert evidence['provenance']['validated_file_count'] == preflight['provenance']['validated_file_count']
-          assert value['truth_boundary'].endswith('does not grant scientific acceptance.')
-          ATTEST_PY
-      - name: Upload exact-current-main evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: exact-main-attestation-${{ github.sha }}
-          path: |
-            artifacts
-            docs/VALIDATION_EVIDENCE.json
-            docs/README_FACTS.json
-            docs/SBOM.cdx.json
-            docs/VISUAL_ATLAS.md
-            docs/VISUAL_ATLAS.zh-CN.md
-            SHA256SUMS
-            dist-a
-            dist-python
-            site
-          if-no-files-found: error
-          retention-days: 30
-      - name: Report exact attestation
-        if: github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          python - <<'REPORT_PY' > /tmp/issue-body.txt
-          import json
-          import os
-          from pathlib import Path
-
-          quality = json.loads(Path('artifacts/quality-current.json').read_text(encoding='utf-8'))
-          tests = quality['tests']
-          coverage = quality['coverage']
-          mutation = quality['mutation']
-          print('status=exact-main-attestation-pass')
-          print(f"commit={os.environ['GITHUB_SHA']}")
-          print(f"workflow-run={os.environ['GITHUB_RUN_ID']}")
-          print(f"tests={tests['tests']}")
-          print(f"line-coverage={coverage['line_percent']:.3f}")
-          print(f"branch-coverage={coverage['branch_percent']:.3f}")
-          print(f"mutation={mutation['killed']}/{mutation['total']}")
-          print(f"survivors={mutation['survivors']}")
-          print('all-gates=PASS')
-          REPORT_PY
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
-      - name: Report failure
-        if: failure() && github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          printf 'status=exact-main-attestation-failed\ncommit=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
-'''
-          Path('.github/workflows/main-attestation.yml').write_text(permanent, encoding='utf-8', newline='\n')
 
           for readme_name in ('README.md', 'README_EN.md'):
               path = Path(readme_name)
@@ -293,8 +56,9 @@ jobs:
               if badge not in text:
                   text = text.replace(ci_badge, ci_badge + ' ' + badge, 1)
               marker = 'Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.'
-              addition = marker + '\n\nThe read-only **Exact main attestation** workflow independently validates the immutable current `main` SHA and uploads commit-bound evidence without modifying that commit.'
-              text = text.replace(marker, addition, 1)
+              addition = marker + '\n\nThe content-read-only **Exact main attestation** workflow independently validates the immutable current `main` SHA and uploads commit-bound evidence without modifying that commit.'
+              if addition not in text:
+                  text = text.replace(marker, addition, 1)
               path.write_text(text, encoding='utf-8', newline='\n')
 
           path = Path('README.zh-CN.md')
@@ -304,8 +68,9 @@ jobs:
           if badge not in text:
               text = text.replace(ci_badge, ci_badge + ' ' + badge, 1)
           marker = '仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。'
-          addition = marker + '\n\n只读的 **Exact main attestation** 工作流会独立验证不可再修改的当前 `main` SHA，并上传与该提交绑定的外部证据，而不会反过来改写被验证的提交。'
-          text = text.replace(marker, addition, 1)
+          addition = marker + '\n\n内容只读的 **Exact main attestation** 工作流会独立验证不可再修改的当前 `main` SHA，并上传与该提交绑定的外部证据，而不会反过来改写被验证的提交。'
+          if addition not in text:
+              text = text.replace(marker, addition, 1)
           path.write_text(text, encoding='utf-8', newline='\n')
 
           facts = Path('scripts/build_readme_facts.py')
@@ -351,7 +116,7 @@ def test_exact_main_attestation_workflow_is_read_only_and_commit_bound() -> None
           tests.write_text(text, encoding='utf-8', newline='\n')
 
           Path('.github/workflows/bootstrap-exact-main-attestation.yml').unlink()
-          BOOTSTRAP_PY
+          PATCH_PY
           test ! -e .github/workflows/bootstrap-exact-main-attestation.yml
           test -e .github/workflows/main-attestation.yml
 
@@ -446,12 +211,7 @@ def test_exact_main_attestation_workflow_is_read_only_and_commit_bound() -> None
           run_id = os.environ['RUN_ID']
 
           english = Path('README.md').read_text(encoding='utf-8')
-          english = re.sub(
-              r"The published 0\.7\.0 tree was verified by GitHub Actions run `\d+`",
-              f"The published 0.7.0 tree was verified by GitHub Actions run `{run_id}`",
-              english,
-              count=1,
-          )
+          english = re.sub(r"The published 0\.7\.0 tree was verified by GitHub Actions run `\d+`", f"The published 0.7.0 tree was verified by GitHub Actions run `{run_id}`", english, count=1)
           english = re.sub(r"\| Tests \| \*\*\d+ passed; \d+ failed; \d+ errors; \d+ skipped\*\* \|", f"| Tests | **{tests['tests']} passed; {tests['failures']} failed; {tests['errors']} errors; {tests['skipped']} skipped** |", english, count=1)
           english = re.sub(r"\| Project line coverage \| \*\*[0-9.]+%\*\* \|", f"| Project line coverage | **{coverage['line_percent']:.3f}%** |", english, count=1)
           english = re.sub(r"\| Branch coverage \| \*\*[0-9.]+%\*\* \|", f"| Branch coverage | **{coverage['branch_percent']:.3f}%** |", english, count=1)
