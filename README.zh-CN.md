@@ -212,21 +212,20 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 ## 验证结果
 
-当前 0.7.0 候选已在可用的离线环境完成以下验证：
+已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30508047917` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
 
 | Gate | 结果 |
 |---|---:|
-| 测试 | **262 通过；0 failure；0 error；0 skip** |
-| 项目综合覆盖率 | **95.406%** |
-| 分支覆盖率 | **91.458%** |
+| 测试 | **238 通过；0 failure；0 error；0 skip** |
+| 项目综合覆盖率 | **95.726%** |
+| 分支覆盖率 | **92.708%** |
 | 质量门槛 | **95% 行 / 90% 分支** |
 | 关键 Mutation | **24 / 24 killed；0 survivor** |
 | 性能基线 | **PASS** |
 | 两次源码 ZIP | **逐字节一致** |
-| wheel 与 sdist 离线隔离安装 | **PASS** |
-| Ruff / Mypy / Bandit | **继续作为 CI 门禁；本离线环境未重跑** |
-| 精确锁依赖审计 | **继续作为 CI 门禁；本离线环境未重跑** |
-
+| wheel 与 sdist 隔离安装 | **PASS** |
+| Ruff / Mypy / Bandit | **PASS** |
+| 精确锁依赖审计 | **PASS；未发现已知漏洞** |
 仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。
 
 ## 机器可读证据与映射

@@ -212,21 +212,20 @@ PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
 
 ## Validation
 
-The current 0.7.0 candidate was verified in the available offline environment:
+The published 0.7.0 tree was verified by GitHub Actions run `30508047917` on Ubuntu / Python 3.12 using the exact locked toolchain:
 
 | Gate | Result |
 |---|---:|
-| Tests | **262 passed; 0 failed; 0 errors; 0 skipped** |
-| Project line coverage | **95.406%** |
-| Branch coverage | **91.458%** |
+| Tests | **238 passed; 0 failed; 0 errors; 0 skipped** |
+| Project line coverage | **95.726%** |
+| Branch coverage | **92.708%** |
 | Quality floor | **95% line / 90% branch** |
 | Critical mutation tests | **24 / 24 killed; 0 survivors** |
 | Performance baseline | **PASS** |
 | Two source ZIP builds | **byte-identical** |
-| Wheel and sdist offline isolated install | **PASS** |
-| Ruff / Mypy / Bandit | **retained as CI gates; not rerun in this offline environment** |
-| Exact-lock dependency audit | **retained as a CI gate; not rerun in this offline environment** |
-
+| Wheel and sdist isolated install | **PASS** |
+| Ruff / Mypy / Bandit | **PASS** |
+| Exact-lock dependency audit | **PASS; no known vulnerabilities** |
 Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.
 
 ## Machine-readable evidence and mapping
