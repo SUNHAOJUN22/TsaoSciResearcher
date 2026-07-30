@@ -99,6 +99,8 @@ def main() -> None:
     expected = build()
     if actual != expected:
         print("SHA256SUMS is stale; run scripts/generate_checksums.py --write", file=sys.stderr)
+        print(f"checked-in: {actual.strip()}", file=sys.stderr)
+        print(f"expected:   {expected.strip()}", file=sys.stderr)
         raise SystemExit(1)
     print(f"repository-tree checksum PASS: {expected.strip()}")
 
