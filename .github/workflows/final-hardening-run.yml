@@ -21,7 +21,7 @@ jobs:
   harden:
     if: >-
       github.actor == 'SUNHAOJUN22' &&
-      github.event.issue.title == '[TSR] execute final hardening'
+      github.event.issue.title == '[TSR] finalize hardening mirror'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -73,7 +73,7 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Refresh evidence before regression
+      - name: Refresh preflight artifacts
         run: |
           python scripts/build_readme_facts.py --write
           python scripts/build_sbom.py --write
@@ -83,7 +83,7 @@ jobs:
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
 
-      - name: Complete quality gates
+      - name: Run complete quality gates
         id: quality
         env:
           TSR_TEST_ORDER_SEED: "20260730"
@@ -123,11 +123,10 @@ jobs:
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           from pathlib import Path
+
           value = json.loads(Path("artifacts/quality-current.json").read_text(encoding="utf-8"))
-          print(f'tests={value["tests"]["tests"]}')
-          print(f'failures={value["tests"]["failures"]}')
-          print(f'errors={value["tests"]["errors"]}')
-          print(f'skipped={value["tests"]["skipped"]}')
+          for key in ("tests", "failures", "errors", "skipped"):
+              print(f'{key}={value["tests"][key]}')
           print(f'line={value["coverage"]["line_percent"]:.3f}')
           print(f'branch={value["coverage"]["branch_percent"]:.3f}')
           print(f'killed={value["mutation"]["killed"]}')
@@ -135,7 +134,7 @@ jobs:
           print(f'survivors={value["mutation"]["survivors"]}')
           PY
 
-      - name: Synchronize live evidence into bilingual README
+      - name: Synchronize live evidence into all README files
         env:
           RUN_ID: ${{ github.run_id }}
           TESTS: ${{ steps.quality.outputs.tests }}
@@ -170,8 +169,8 @@ jobs:
               "| Exact-lock dependency audit | **PASS; no known vulnerabilities** |",
               "",
           ]
-          path = Path("README.md")
-          text = path.read_text(encoding="utf-8")
+          readme = Path("README.md")
+          text = readme.read_text(encoding="utf-8")
           pattern = re.compile(
               r"The current 0\.7\.0 candidate was verified.*?\n(?=Checked-in `docs/VALIDATION_EVIDENCE\.json`)",
               re.DOTALL,
@@ -179,7 +178,8 @@ jobs:
           text, count = pattern.subn("\n".join(english_lines), text, count=1)
           if count != 1:
               raise SystemExit("English README validation section not found")
-          path.write_text(text, encoding="utf-8")
+          readme.write_text(text, encoding="utf-8")
+          Path("README_EN.md").write_text(text, encoding="utf-8")
 
           chinese_lines = [
               f'已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `{os.environ["RUN_ID"]}` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：',
@@ -228,6 +228,7 @@ jobs:
           python scripts/build_research_quality_dashboard.py --check
           python scripts/build_engineering_report.py --check
           python scripts/generate_checksums.py --check
+          mkdocs build --strict
           python -m pytest -q -p hypothesis.extra.pytestplugin
 
       - name: Rebuild deterministic release and distributions
@@ -253,6 +254,7 @@ jobs:
           git -c core.whitespace=-blank-at-eof diff --cached --check
           git diff --cached --name-only | grep -Fx 'pyproject.toml'
           git diff --cached --name-only | grep -Fx 'README.md'
+          git diff --cached --name-only | grep -Fx 'README_EN.md'
           git diff --cached --name-only | grep -Fx 'README.zh-CN.md'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -287,5 +289,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=final-hardening-failed
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=final-hardening-mirror-failed
           workflow-run=${GITHUB_RUN_ID}"
