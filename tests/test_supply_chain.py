@@ -46,3 +46,18 @@ def test_checked_in_evidence_can_be_truthful_preflight() -> None:
     assert value["gates"]["critical_mutation_killed"] == "NOT_RUN"
     assert value["provenance"]["workflow_run_id"] is None
     assert build_validation_evidence.validate(value) == []
+
+
+def test_validation_tree_digest_ignores_coverage_runtime_files(tmp_path: Path, monkeypatch) -> None:
+    (tmp_path / "source.py").write_text("value = 1\n", encoding="utf-8")
+    monkeypatch.setattr(build_validation_evidence, "ROOT", tmp_path)
+    baseline = build_validation_evidence.tree_digest()
+
+    (tmp_path / ".coverage").write_text("runtime data", encoding="utf-8")
+    (tmp_path / ".coverage.worker-1").write_text("parallel runtime data", encoding="utf-8")
+    assert build_validation_evidence.tree_digest() == baseline
+
+    (tmp_path / ".coveragerc").write_text("[run]\nbranch = true\n", encoding="utf-8")
+    digest_with_config = build_validation_evidence.tree_digest()
+    assert digest_with_config[1] == baseline[1] + 1
+    assert digest_with_config[0] != baseline[0]

@@ -45,6 +45,8 @@
     "dependency_lock_sha256": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5",
     "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
     "digest_exclusions": [
+      ".coverage",
+      ".coverage.*",
       "SHA256SUMS",
       "docs/QUALITY_HISTORY.json",
       "docs/VALIDATION_EVIDENCE.json",
@@ -55,8 +57,8 @@
     "evidence_generated_from_commit": null,
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
-    "validated_file_count": 368,
-    "validated_tree_sha256": "7f1c30842cacde2317dd6a2ffe49787884565f879e940471a1b7aa08e6090e12",
+    "validated_file_count": 367,
+    "validated_tree_sha256": "fc593adb5f7a1a46382787a073eb54db6627501f39e476ecc995b66522872d7f",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null

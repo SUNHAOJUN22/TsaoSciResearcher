@@ -212,11 +212,11 @@ PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
 
 ## Validation
 
-The published 0.7.0 tree was verified by GitHub Actions run `30510192706` on Ubuntu / Python 3.12 using the exact locked toolchain:
+The published 0.7.0 tree was verified by GitHub Actions run `30511880407` on Ubuntu / Python 3.12 using the exact locked toolchain:
 
 | Gate | Result |
 |---|---:|
-| Tests | **238 passed; 0 failed; 0 errors; 0 skipped** |
+| Tests | **239 passed; 0 failed; 0 errors; 0 skipped** |
 | Project line coverage | **95.726%** |
 | Branch coverage | **92.708%** |
 | Quality floor | **95% line / 90% branch** |
