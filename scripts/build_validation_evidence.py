@@ -299,12 +299,25 @@ def validate(value: dict[str, Any]) -> list[str]:
     provenance = value.get("provenance")
     if isinstance(provenance, dict):
         expected_digest, expected_count = tree_digest()
-        if provenance.get("validated_tree_sha256") != expected_digest:
-            errors.append("validated_tree_sha256 is stale")
-        if provenance.get("validated_file_count") != expected_count:
-            errors.append("validated_file_count is stale")
-        if provenance.get("dependency_lock_sha256") != _sha256(LOCK_FILE):
-            errors.append("dependency_lock_sha256 is stale")
+        actual_digest = provenance.get("validated_tree_sha256")
+        actual_count = provenance.get("validated_file_count")
+        if actual_digest != expected_digest:
+            errors.append(
+                "validated_tree_sha256 is stale "
+                f"(checked-in={actual_digest}, expected={expected_digest})"
+            )
+        if actual_count != expected_count:
+            errors.append(
+                "validated_file_count is stale "
+                f"(checked-in={actual_count}, expected={expected_count})"
+            )
+        actual_lock = provenance.get("dependency_lock_sha256")
+        expected_lock = _sha256(LOCK_FILE)
+        if actual_lock != expected_lock:
+            errors.append(
+                "dependency_lock_sha256 is stale "
+                f"(checked-in={actual_lock}, expected={expected_lock})"
+            )
     gates = value.get("gates")
     scope = value.get("validation_scope")
     if scope == "current-tree":
