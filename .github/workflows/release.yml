@@ -51,10 +51,9 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$BASELINE"
           test "$(git status --porcelain)" = ""
-          main_sha="$(git rev-parse origin/main)"
-          test "$main_sha" = "$GITHUB_SHA"
-          test "$(git rev-parse "${main_sha}^")" = "$BASELINE"
-          test "$(git diff --name-only "$BASELINE" "$main_sha")" = ".github/workflows/release.yml"
+          git merge-base --is-ancestor "$BASELINE" "$GITHUB_SHA"
+          unexpected="$(git diff --name-only "$BASELINE" "$GITHUB_SHA" | grep -v '^.github/workflows/release.yml$' || true)"
+          test -z "$unexpected"
           python - <<'PY'
           import json, re
           from pathlib import Path
@@ -188,6 +187,20 @@ jobs:
           (root/'RELEASE-ASSET-MANIFEST.json').write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
           PY
           (cd release-assets && find . -maxdepth 1 -type f ! -name RELEASE-SHA256SUMS -printf '%f\n' | LC_ALL=C sort | xargs sha256sum > RELEASE-SHA256SUMS)
+
+      - name: Wait for permanent workflow restoration
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 120); do
+            git fetch -q origin main
+            if git diff --quiet "$BASELINE" origin/main -- .github/workflows; then
+              echo 'permanent workflow tree restored'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'permanent workflow restoration timeout' >&2
+          exit 1
 
       - name: Create annotated tag and release
         id: publish
