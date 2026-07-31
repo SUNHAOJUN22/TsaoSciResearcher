@@ -86,7 +86,6 @@ jobs:
     steps:
       - name: Mark attestation running
         if: github.event_name == 'issues'
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -222,7 +221,6 @@ jobs:
           retention-days: 30
       - name: Report exact attestation
         if: github.event_name == 'issues'
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -246,10 +244,14 @@ jobs:
           print(f"survivors={mutation['survivors']}")
           print('all-gates=PASS')
           REPORT_PY
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+          python - <<'PAYLOAD_PY' > /tmp/issue-payload.json
+          import json
+          from pathlib import Path
+          print(json.dumps({'body': Path('/tmp/issue-body.txt').read_text(encoding='utf-8')}))
+          PAYLOAD_PY
+          gh api --method PATCH "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER" --input /tmp/issue-payload.json
       - name: Report failure
         if: failure() && github.event_name == 'issues'
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
