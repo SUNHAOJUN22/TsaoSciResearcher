@@ -57,8 +57,7 @@ jobs:
           ref=json.loads(Path('/tmp/tag-ref.json').read_text())
           assert ref['object']['type']=='tag'
           tag=json.loads(subprocess.check_output(['gh','api',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/tags/{ref['object']['sha']}"]))
-          assert tag['object']['type']=='commit'
-          assert tag['object']['sha']==os.environ['BASELINE']
+          assert tag['object']['type']=='commit' and tag['object']['sha']==os.environ['BASELINE']
           assert tag['tag']=='v0.7.0'
           Path('/tmp/tag-object.txt').write_text(ref['object']['sha'])
           PY
@@ -77,7 +76,7 @@ jobs:
           PY
           echo "tag_object=$(cat /tmp/tag-object.txt)" >> "$GITHUB_OUTPUT"
 
-      - name: Download and validate official assets
+      - name: Download, checksum and deterministically rebuild official source
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -88,16 +87,13 @@ jobs:
           python - <<'PY'
           import json, stat, zipfile
           from pathlib import Path, PurePosixPath
-          archive=Path('downloaded/TsaoSciResearcher-v0.7.0.zip')
-          with zipfile.ZipFile(archive) as handle:
-              infos=handle.infolist()
-              names=[item.filename for item in infos]
+          with zipfile.ZipFile('downloaded/TsaoSciResearcher-v0.7.0.zip') as handle:
+              infos=handle.infolist(); names=[item.filename for item in infos]
               assert len(names)==len(set(names))
               assert 'TsaoSciResearcher/SHA256SUMS' not in names
               for item in infos:
                   path=PurePosixPath(item.filename)
-                  assert not path.is_absolute()
-                  assert '..' not in path.parts
+                  assert not path.is_absolute() and '..' not in path.parts
                   assert not stat.S_ISLNK(item.external_attr >> 16)
               handle.extractall('/tmp/source')
           root=Path('/tmp/source/TsaoSciResearcher')
@@ -108,8 +104,7 @@ jobs:
           quality=json.loads(Path('downloaded/quality-current.json').read_text())
           manifest=json.loads(Path('downloaded/RELEASE-ASSET-MANIFEST.json').read_text())
           assert publication['published_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
-          assert evidence['status']=='PASS'
-          assert evidence['provenance']['evidence_generated_from_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
+          assert evidence['status']=='PASS' and evidence['provenance']['evidence_generated_from_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
           assert quality['tests']['tests']==240
           assert round(quality['coverage']['line_percent'],3)==95.726
           assert round(quality['coverage']['branch_percent'],3)==92.708
@@ -128,7 +123,8 @@ jobs:
           python -m venv /tmp/wheel-venv
           /tmp/wheel-venv/bin/python -m pip install --disable-pip-version-check downloaded/tsao_sci_researcher-0.7.0-py3-none-any.whl
           /tmp/wheel-venv/bin/python -m pip check
-          test "$(/tmp/wheel-venv/bin/python -m tsao_researcher --version)" = '0.7.0'
+          test "$(/tmp/wheel-venv/bin/python -c 'import tsao_researcher; print(tsao_researcher.__version__)')" = '0.7.0'
+          /tmp/wheel-venv/bin/python -m tsao_researcher --version | grep -Fx 'python -m tsao_researcher 0.7.0'
           /tmp/wheel-venv/bin/python -m tsao_researcher route 'run an actual DFT calculation' >/tmp/route.json
           /tmp/wheel-venv/bin/python -m tsao_researcher strategy 'Which excited state controls optical absorption?' --observable 'absorption spectrum' --condition '300 K' >/tmp/strategy.json
           python - <<'PY'
@@ -148,7 +144,8 @@ jobs:
           python -m venv /tmp/sdist-venv
           /tmp/sdist-venv/bin/python -m pip install --disable-pip-version-check downloaded/tsao_sci_researcher-0.7.0.tar.gz
           /tmp/sdist-venv/bin/python -m pip check
-          test "$(/tmp/sdist-venv/bin/python -m tsao_researcher --version)" = '0.7.0'
+          test "$(/tmp/sdist-venv/bin/python -c 'import tsao_researcher; print(tsao_researcher.__version__)')" = '0.7.0'
+          /tmp/sdist-venv/bin/python -m tsao_researcher --version | grep -Fx 'python -m tsao_researcher 0.7.0'
           /tmp/sdist-venv/bin/python -m tsao_researcher strategy 'How do trap states control space charge and breakdown?' --observable 'space charge' --observable 'breakdown strength' --condition 'applied electric field' >/tmp/sdist-strategy.json
           python - <<'PY'
           import json
@@ -176,14 +173,7 @@ jobs:
           print(f"release-url={release['url']}")
           print(f"published-at={release['publishedAt']}")
           print(f"workflow-run={os.environ['GITHUB_RUN_ID']}")
-          print('draft=false')
-          print('prerelease=false')
-          print('release-asset-checksums=PASS')
-          print('source-zip-safety=PASS')
-          print('source-zip-deterministic-rebuild=PASS')
-          print('wheel-install=PASS')
-          print('sdist-install=PASS')
-          print('scientific-truth-boundary=PASS')
+          print('draft=false\nprerelease=false\nrelease-asset-checksums=PASS\nsource-zip-safety=PASS\nsource-zip-deterministic-rebuild=PASS\nwheel-install=PASS\nsdist-install=PASS\nscientific-truth-boundary=PASS')
           print('assets:')
           for asset in manifest['assets']:
               print(f"- {asset['name']} | {asset['bytes']} bytes | sha256:{asset['sha256']}")
