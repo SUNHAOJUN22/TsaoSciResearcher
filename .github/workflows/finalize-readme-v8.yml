@@ -1,0 +1,144 @@
+name: Finalize README truth boundary v8
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: finalize-readme-v8
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  finalize:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] finalize readme v8'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - name: Mark finalization running
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=running\ncommit=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+      - name: Checkout current main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Confirm immutable subject
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git status --porcelain)" = ""
+      - name: Set up locked Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install exact dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Build final non-workflow tree
+        run: |
+          python - <<'PATCH_PY'
+          from pathlib import Path
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              return text.replace(old, new, 1)
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          text = replace_once(text, 'The published 0.7.0 tree was verified by GitHub Actions run `30525731965` on Ubuntu / Python 3.12 using the exact locked toolchain:', 'The release 0.7.0 quality baseline was verified by GitHub Actions run `30525731965` on Ubuntu / Python 3.12 using the exact locked toolchain:', 'English heading')
+          text = replace_once(text, '| Exact-lock dependency audit | **PASS; no known vulnerabilities** |\nChecked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.', '| Exact-lock dependency audit | **PASS; no known vulnerabilities** |\n\nThe current `main` commit is independently verified by the [Exact main attestation workflow](.github/workflows/main-attestation.yml). Successful runs publish an artifact named `exact-main-attestation-<commit SHA>`, so the commit does not need to embed a self-referential run ID.\n\nChecked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.', 'English attestation note')
+          readme.write_text(text, encoding='utf-8', newline='\n')
+          Path('README_EN.md').write_text(text, encoding='utf-8', newline='\n')
+
+          chinese = Path('README.zh-CN.md')
+          text = chinese.read_text(encoding='utf-8')
+          text = replace_once(text, '已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30525731965` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：', '0.7.0 版本质量基线已由 GitHub Actions 运行 `30525731965` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：', 'Chinese heading')
+          text = replace_once(text, '| 精确锁依赖审计 | **PASS；未发现已知漏洞** |\n仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。', '| 精确锁依赖审计 | **PASS；未发现已知漏洞** |\n\n当前 `main` 提交由[精确主线证明工作流](.github/workflows/main-attestation.yml)独立验证。成功运行会发布名为 `exact-main-attestation-<提交 SHA>` 的产物，从而避免在被证明的提交内部写入自引用运行号。\n\n仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。', 'Chinese attestation note')
+          chinese.write_text(text, encoding='utf-8', newline='\n')
+
+          for relative in ('scripts/harden_attestation_v7.py', '.github/workflows/finalize-readme-v8.yml'):
+              path = Path(relative)
+              if path.exists():
+                  path.unlink()
+          PATCH_PY
+      - name: Refresh deterministic artifacts
+        run: |
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+      - name: Validate final candidate tree
+        run: |
+          mkdir -p artifacts
+          python scripts/sync_version.py --check
+          python scripts/validate_schemas.py
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+          python -m pytest -q -p hypothesis.extra.pytestplugin
+          mkdocs build --strict
+      - name: Commit only non-workflow changes
+        id: publish
+        run: |
+          set -euo pipefail
+          rm -rf .coverage .pytest_cache .hypothesis artifacts site build
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          git add -A -- README.md README_EN.md README.zh-CN.md SHA256SUMS docs scripts/harden_attestation_v7.py
+          test -z "$(git diff --cached --name-only -- .github/workflows)"
+          git -c core.whitespace=-blank-at-eof diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: bind README to external main attestation'
+          commit="$(git rev-parse HEAD)"
+          git push origin HEAD:main
+          echo "commit=${commit}" >> "$GITHUB_OUTPUT"
+      - name: Report finalization result
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          COMMIT: ${{ steps.publish.outputs.commit }}
+        run: |
+          printf 'status=readme-finalized\ncommit=%s\nworkflow-run=%s\nall-gates=PASS\n' "$COMMIT" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=readme-finalization-failed\ncommit=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
