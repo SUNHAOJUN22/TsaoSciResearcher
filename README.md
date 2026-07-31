@@ -235,7 +235,7 @@ PowerShell and shell wrappers are also provided: `install.ps1` and `install.sh`.
 
 ## Validation
 
-The published 0.7.0 tree was verified by GitHub Actions run `30525731965` on Ubuntu / Python 3.12 using the exact locked toolchain:
+The release 0.7.0 quality baseline was verified by GitHub Actions run `30525731965` on Ubuntu / Python 3.12 using the exact locked toolchain:
 
 | Gate | Result |
 |---|---:|
@@ -249,6 +249,9 @@ The published 0.7.0 tree was verified by GitHub Actions run `30525731965` on Ubu
 | Wheel and sdist isolated install | **PASS** |
 | Ruff / Mypy / Bandit | **PASS** |
 | Exact-lock dependency audit | **PASS; no known vulnerabilities** |
+
+The current `main` commit is independently verified by the [Exact main attestation workflow](.github/workflows/main-attestation.yml). Successful runs publish an artifact named `exact-main-attestation-<commit SHA>`, so the commit does not need to embed a self-referential run ID.
+
 Checked-in `docs/VALIDATION_EVIDENCE.json` remains deliberately `preflight/PARTIAL`; commit-bound PASS evidence is produced externally by CI to avoid self-referential commit claims.
 
 ## Machine-readable evidence and mapping

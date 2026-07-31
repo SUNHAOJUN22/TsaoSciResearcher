@@ -235,7 +235,7 @@ python install.py --agent open-agent --scope project --target ./skills --force
 
 ## 验证结果
 
-已发布的 0.7.0 主分支代码已由 GitHub Actions 运行 `30525731965` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
+0.7.0 版本质量基线已由 GitHub Actions 运行 `30525731965` 在 Ubuntu / Python 3.12 与精确锁定工具链下完成验证：
 
 | Gate | 结果 |
 |---|---:|
@@ -249,6 +249,9 @@ python install.py --agent open-agent --scope project --target ./skills --force
 | wheel 与 sdist 隔离安装 | **PASS** |
 | Ruff / Mypy / Bandit | **PASS** |
 | 精确锁依赖审计 | **PASS；未发现已知漏洞** |
+
+当前 `main` 提交由[精确主线证明工作流](.github/workflows/main-attestation.yml)独立验证。成功运行会发布名为 `exact-main-attestation-<提交 SHA>` 的产物，从而避免在被证明的提交内部写入自引用运行号。
+
 仓库内 `docs/VALIDATION_EVIDENCE.json` 有意保留为 `preflight/PARTIAL`；与提交绑定的 PASS 证明由 CI 外部生成，避免在提交内部制造自引用 SHA。
 
 ## 机器可读证据与映射
