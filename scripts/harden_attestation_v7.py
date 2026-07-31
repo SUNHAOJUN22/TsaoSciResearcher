@@ -31,7 +31,14 @@ def patch_workflow() -> None:
         "          assert 'assigned' not in text\n",
         "          trigger_block = text.split('issues:\\n', 1)[1].split('schedule:', 1)[0]\n"
         "          assert 'assigned' not in trigger_block\n",
-        label="workflow governance self-check",
+        label="workflow assigned-trigger governance self-check",
+    )
+    text = replace_once(
+        text,
+        "          assert '\\n  maintenance-hardening:\\n' not in text\n",
+        "          maintenance_marker = '\\n  ' + 'maintenance-' + 'hardening' + ':\\n'\n"
+        "          assert maintenance_marker not in text\n",
+        label="workflow maintenance-job governance self-check",
     )
 
     required = (
