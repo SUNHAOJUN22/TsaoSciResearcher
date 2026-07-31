@@ -26,6 +26,13 @@ def patch_workflow() -> None:
     if marker not in text:
         raise SystemExit("maintenance-hardening bootstrap job is missing")
     text = text.split(marker, 1)[0].rstrip() + "\n"
+    text = replace_once(
+        text,
+        "          assert 'assigned' not in text\n",
+        "          trigger_block = text.split('issues:\\n', 1)[1].split('schedule:', 1)[0]\n"
+        "          assert 'assigned' not in trigger_block\n",
+        label="workflow governance self-check",
+    )
 
     required = (
         "types: [opened]",
@@ -40,7 +47,8 @@ def patch_workflow() -> None:
     top_level = text.split("concurrency:", 1)[0]
     if "issues: write" in top_level:
         raise SystemExit("top-level attestation permissions still grant issues: write")
-    if "assigned" in text:
+    trigger_block = text.split("issues:\n", 1)[1].split("schedule:", 1)[0]
+    if "assigned" in trigger_block:
         raise SystemExit("assigned issue trigger remains in final attestation workflow")
     WORKFLOW.write_text(text, encoding="utf-8", newline="\n")
 
