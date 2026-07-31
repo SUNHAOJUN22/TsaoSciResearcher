@@ -1,76 +1,213 @@
-name: Signed release publication
+name: Immutable v0.7.0 post-release acceptance
 
 on:
-  push:
-    tags:
-      - "v*"
+  issues:
+    types: [opened]
 
 permissions:
-  contents: write
-
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
+  contents: read
+  issues: write
 
 env:
+  BASELINE: 716b0bc30d7ce34b478173b77c56e548a631aee7
+  TAG_NAME: v0.7.0
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONNOUSERSITE: "1"
-  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+concurrency:
+  group: immutable-v0.7.0-post-release-acceptance
+  cancel-in-progress: false
 
 jobs:
-  release:
+  verify:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] verify immutable v0.7.0 release'
     runs-on: ubuntu-latest
-    timeout-minutes: 65
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      - name: Mark verification running
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=running\nsource-commit=%s\nworkflow-run=%s\n' "$BASELINE" "$GITHUB_RUN_ID" >/tmp/body.txt
+          python - <<'PY' >/tmp/payload.json
+          import json
+          from pathlib import Path
+          print(json.dumps({'body':Path('/tmp/body.txt').read_text()}))
+          PY
+          gh api --method PATCH "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER" --input /tmp/payload.json
+
+      - name: Checkout immutable source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: requirements-ci.lock
-      - name: Validate tag and install toolchain
-        run: |
-          test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
-          python -m pip install --disable-pip-version-check -r requirements-ci.lock
-          python -m pip install --disable-pip-version-check -e . --no-deps
-      - name: Full release gates
-        run: |
-          mkdir -p artifacts release-assets
-          python scripts/sync_version.py --check
-          python scripts/validate_schemas.py
-          python scripts/audit_repository.py
-          python scripts/build_sbom.py --check
-          python scripts/build_validation_evidence.py --check
-          python scripts/generate_checksums.py --check
-          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
-          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=json:artifacts/coverage.json
-          python -m ruff format --check scripts tsao_researcher tests
-          python -m ruff check scripts tsao_researcher tests
-          python -m mypy scripts tsao_researcher
-          python -m bandit -q -lll -r scripts tsao_researcher
-          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
-          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
-          python scripts/performance_smoke.py --json-out artifacts/performance.json
-          python scripts/check_quality_baseline.py
-          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
-          python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
-          mkdocs build --strict
-          python scripts/package_release.py --out release-assets
-          python -m build --sdist --wheel --outdir release-assets
-          python scripts/validate_distribution.py release-assets
-          cp docs/SBOM.cdx.json release-assets/
-          cp artifacts/VALIDATION_EVIDENCE.json release-assets/VALIDATION_EVIDENCE.json
-          cp artifacts/QUALITY_HISTORY.json release-assets/QUALITY_HISTORY.json
-          cp docs/engineering-audit-report.pdf release-assets/
-          python scripts/build_publication_attestation.py --out release-assets/publication-attestation.json
-          sha256sum release-assets/* > release-assets/RELEASE-SHA256SUMS
-      - name: Publish or refresh GitHub release
+          ref: ${{ env.BASELINE }}
+          fetch-depth: 0
+
+      - name: Verify annotated tag and release metadata
+        id: metadata
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
-            gh release upload "${GITHUB_REF_NAME}" release-assets/* --clobber
-          else
-            gh release create "${GITHUB_REF_NAME}" release-assets/* --title "TsaoSciResearcher ${GITHUB_REF_NAME}" --generate-notes --verify-tag
-          fi
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$BASELINE"
+          gh api "/repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG_NAME" >/tmp/tag-ref.json
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          ref=json.loads(Path('/tmp/tag-ref.json').read_text())
+          assert ref['object']['type']=='tag'
+          tag=json.loads(subprocess.check_output(['gh','api',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/tags/{ref['object']['sha']}"]))
+          assert tag['object']['type']=='commit'
+          assert tag['object']['sha']==os.environ['BASELINE']
+          assert tag['tag']=='v0.7.0'
+          Path('/tmp/tag-object.txt').write_text(ref['object']['sha'])
+          PY
+          gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --json tagName,targetCommitish,isDraft,isPrerelease,name,url,publishedAt,assets >/tmp/release.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          value=json.loads(Path('/tmp/release.json').read_text())
+          assert value['tagName']=='v0.7.0'
+          assert value['targetCommitish'] in {'v0.7.0','716b0bc30d7ce34b478173b77c56e548a631aee7'}
+          assert value['isDraft'] is False and value['isPrerelease'] is False
+          assert value['name']=='TsaoSciResearcher v0.7.0 — First-Principles Research Control Platform'
+          names={asset['name'] for asset in value['assets']}
+          required={'TsaoSciResearcher-v0.7.0.zip','TsaoSciResearcher-v0.7.0.zip.sha256','tsao_sci_researcher-0.7.0-py3-none-any.whl','tsao_sci_researcher-0.7.0.tar.gz','SHA256SUMS','SBOM.cdx.json','VALIDATION_EVIDENCE.json','publication-attestation.json','quality-current.json','mutation-results.json','performance.json','RELEASE_NOTES.md','LICENSE','NOTICE','THIRD_PARTY.md','INSTALL-VERIFY.md','RELEASE-ASSET-MANIFEST.json','RELEASE-SHA256SUMS'}
+          assert required <= names
+          PY
+          echo "tag_object=$(cat /tmp/tag-object.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Download and validate official assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf downloaded /tmp/source /tmp/rebuilt && mkdir downloaded /tmp/source /tmp/rebuilt
+          gh release download "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --dir downloaded
+          (cd downloaded && sha256sum -c RELEASE-SHA256SUMS && sha256sum -c TsaoSciResearcher-v0.7.0.zip.sha256)
+          python - <<'PY'
+          import json, stat, zipfile
+          from pathlib import Path, PurePosixPath
+          archive=Path('downloaded/TsaoSciResearcher-v0.7.0.zip')
+          with zipfile.ZipFile(archive) as handle:
+              infos=handle.infolist()
+              names=[item.filename for item in infos]
+              assert len(names)==len(set(names))
+              assert 'TsaoSciResearcher/SHA256SUMS' not in names
+              for item in infos:
+                  path=PurePosixPath(item.filename)
+                  assert not path.is_absolute()
+                  assert '..' not in path.parts
+                  assert not stat.S_ISLNK(item.external_attr >> 16)
+              handle.extractall('/tmp/source')
+          root=Path('/tmp/source/TsaoSciResearcher')
+          assert (root/'VERSION').read_text().strip()=='0.7.0'
+          assert not (root/'SHA256SUMS').exists()
+          publication=json.loads(Path('downloaded/publication-attestation.json').read_text())
+          evidence=json.loads(Path('downloaded/VALIDATION_EVIDENCE.json').read_text())
+          quality=json.loads(Path('downloaded/quality-current.json').read_text())
+          manifest=json.loads(Path('downloaded/RELEASE-ASSET-MANIFEST.json').read_text())
+          assert publication['published_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
+          assert evidence['status']=='PASS'
+          assert evidence['provenance']['evidence_generated_from_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
+          assert quality['tests']['tests']==240
+          assert round(quality['coverage']['line_percent'],3)==95.726
+          assert round(quality['coverage']['branch_percent'],3)==92.708
+          assert quality['mutation']['killed']==24 and quality['mutation']['total']==24 and quality['mutation']['survivors']==0
+          assert manifest['release']=='v0.7.0' and manifest['source_commit']=='716b0bc30d7ce34b478173b77c56e548a631aee7'
+          assert 'do not prove external execution or scientific acceptance' in manifest['scientific_truth_boundary']
+          PY
+          (cd /tmp/source/TsaoSciResearcher && python scripts/package_release.py --out /tmp/rebuilt)
+          cmp downloaded/TsaoSciResearcher-v0.7.0.zip /tmp/rebuilt/TsaoSciResearcher-v0.7.0.zip
+          cmp downloaded/TsaoSciResearcher-v0.7.0.zip.sha256 /tmp/rebuilt/TsaoSciResearcher-v0.7.0.zip.sha256
+
+      - name: Fresh wheel installation acceptance
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/wheel-venv
+          python -m venv /tmp/wheel-venv
+          /tmp/wheel-venv/bin/python -m pip install --disable-pip-version-check downloaded/tsao_sci_researcher-0.7.0-py3-none-any.whl
+          /tmp/wheel-venv/bin/python -m pip check
+          test "$(/tmp/wheel-venv/bin/python -m tsao_researcher --version)" = '0.7.0'
+          /tmp/wheel-venv/bin/python -m tsao_researcher route 'run an actual DFT calculation' >/tmp/route.json
+          /tmp/wheel-venv/bin/python -m tsao_researcher strategy 'Which excited state controls optical absorption?' --observable 'absorption spectrum' --condition '300 K' >/tmp/strategy.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          route=json.loads(Path('/tmp/route.json').read_text())
+          strategy=json.loads(Path('/tmp/strategy.json').read_text())
+          assert route['primary_workflow']=='computation-handoff'
+          assert strategy['execution_boundary']['solver_executed'] is False
+          assert strategy['execution_boundary']['external_execution_required'] is True
+          PY
+
+      - name: Fresh sdist installation acceptance
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/sdist-venv
+          python -m venv /tmp/sdist-venv
+          /tmp/sdist-venv/bin/python -m pip install --disable-pip-version-check downloaded/tsao_sci_researcher-0.7.0.tar.gz
+          /tmp/sdist-venv/bin/python -m pip check
+          test "$(/tmp/sdist-venv/bin/python -m tsao_researcher --version)" = '0.7.0'
+          /tmp/sdist-venv/bin/python -m tsao_researcher strategy 'How do trap states control space charge and breakdown?' --observable 'space charge' --observable 'breakdown strength' --condition 'applied electric field' >/tmp/sdist-strategy.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          strategy=json.loads(Path('/tmp/sdist-strategy.json').read_text())
+          assert strategy['execution_boundary']['solver_executed'] is False
+          assert strategy['execution_boundary']['external_execution_required'] is True
+          PY
+
+      - name: Report immutable release acceptance
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          TAG_OBJECT: ${{ steps.metadata.outputs.tag_object }}
+        run: |
+          python - <<'PY' >/tmp/body.txt
+          import hashlib, json, os
+          from pathlib import Path
+          release=json.loads(Path('/tmp/release.json').read_text())
+          manifest=json.loads(Path('downloaded/RELEASE-ASSET-MANIFEST.json').read_text())
+          print('status=v0.7.0-immutable-release-acceptance-pass')
+          print('tag=v0.7.0')
+          print(f"tag-object={os.environ['TAG_OBJECT']}")
+          print('tag-target=716b0bc30d7ce34b478173b77c56e548a631aee7')
+          print(f"release-url={release['url']}")
+          print(f"published-at={release['publishedAt']}")
+          print(f"workflow-run={os.environ['GITHUB_RUN_ID']}")
+          print('draft=false')
+          print('prerelease=false')
+          print('release-asset-checksums=PASS')
+          print('source-zip-safety=PASS')
+          print('source-zip-deterministic-rebuild=PASS')
+          print('wheel-install=PASS')
+          print('sdist-install=PASS')
+          print('scientific-truth-boundary=PASS')
+          print('assets:')
+          for asset in manifest['assets']:
+              print(f"- {asset['name']} | {asset['bytes']} bytes | sha256:{asset['sha256']}")
+          print(f"- RELEASE-ASSET-MANIFEST.json | sha256:{hashlib.sha256(Path('downloaded/RELEASE-ASSET-MANIFEST.json').read_bytes()).hexdigest()}")
+          print(f"- RELEASE-SHA256SUMS | sha256:{hashlib.sha256(Path('downloaded/RELEASE-SHA256SUMS').read_bytes()).hexdigest()}")
+          print('all-gates=PASS')
+          PY
+          python - <<'PY' >/tmp/payload.json
+          import json
+          from pathlib import Path
+          print(json.dumps({'body':Path('/tmp/body.txt').read_text(),'state':'closed','state_reason':'completed'}))
+          PY
+          gh api --method PATCH "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER" --input /tmp/payload.json
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=v0.7.0-post-release-acceptance-failed\nsource-commit=%s\nworkflow-run=%s\n' "$BASELINE" "$GITHUB_RUN_ID" >/tmp/body.txt
+          python - <<'PY' >/tmp/payload.json
+          import json
+          from pathlib import Path
+          print(json.dumps({'body':Path('/tmp/body.txt').read_text()}))
+          PY
+          gh api --method PATCH "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER" --input /tmp/payload.json
