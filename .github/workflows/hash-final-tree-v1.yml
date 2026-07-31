@@ -1,0 +1,50 @@
+name: Calculate final tree digests
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: calculate-final-tree-digests
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+
+jobs:
+  calculate:
+    if: github.actor == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] calculate final tree digests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+      - name: Calculate self-hidden final tree
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          rm .github/workflows/hash-final-tree-v1.yml
+          python scripts/build_validation_evidence.py --write
+          python scripts/generate_checksums.py --write
+          python - <<'PY' > /tmp/issue-body.txt
+          import json
+          from pathlib import Path
+          evidence = json.loads(Path('docs/VALIDATION_EVIDENCE.json').read_text(encoding='utf-8'))
+          provenance = evidence['provenance']
+          print('status=final-tree-digests-calculated')
+          print(f"validated-file-count={provenance['validated_file_count']}")
+          print(f"validated-tree-sha256={provenance['validated_tree_sha256']}")
+          print(f"repository-checksum={Path('SHA256SUMS').read_text(encoding='utf-8').strip()}")
+          PY
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
