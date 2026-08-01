@@ -1,0 +1,65 @@
+name: Patch v0.7.1 duplicated part prefix
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: patch-v071-duplicate-prefix
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    if: >-
+      github.event.issue.user.login == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] patch v0.7.1 duplicated prefix' &&
+      contains(github.event.issue.body, 'status=ready')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Patch strict duplicate-prefix recovery
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/apply-v071.yml')
+          text = path.read_text(encoding='utf-8')
+          old = """              data = path.read_bytes()
+              expected_length, expected_hash = expected_parts[key]
+              assert len(data) == expected_length, (key, len(data), expected_length)
+              assert hashlib.sha256(data).hexdigest() == expected_hash, key
+              encoded.extend(data)
+"""
+          new = """              raw = path.read_bytes()
+              expected_length, expected_hash = expected_parts[key]
+              data = raw[:expected_length]
+              assert hashlib.sha256(data).hexdigest() == expected_hash, key
+              duplicate = raw[expected_length:]
+              assert duplicate == data[:len(duplicate)], (key, len(raw), expected_length)
+              encoded.extend(data)
+"""
+          assert text.count(old) == 1
+          path.write_text(text.replace(old, new), encoding='utf-8', newline='\n')
+          PY
+          rm .github/workflows/patch-v071-duplicate-prefix.yml
+          git diff --check
+          git config user.name 'SUNHAOJUN22 hardening automation'
+          git config user.email 'SUNHAOJUN22@users.noreply.github.com'
+          git add -A
+          git commit -m 'ci: strictly recover duplicated optimization prefix'
+          git push origin HEAD:main
+          printf 'status=patched\ncommit=%s\nfailed-run=30713374858\n' "$(git rev-parse HEAD)" > /tmp/body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
