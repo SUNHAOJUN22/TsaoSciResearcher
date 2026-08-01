@@ -1,4 +1,4 @@
-name: Fix v0.7.1 final gates
+name: Fix v0.7.1 final candidate tree
 
 on:
   issues:
@@ -9,7 +9,7 @@ permissions:
   issues: write
 
 concurrency:
-  group: fix-v071-final-gates
+  group: fix-v071-final-candidate-tree
   cancel-in-progress: false
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Patch deterministic lint and candidate-tree handling
+      - name: Correct code-commit and candidate-tree boundaries
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -38,12 +38,6 @@ jobs:
 
           path = Path('.github/workflows/apply-v071.yml')
           text = path.read_text(encoding='utf-8')
-
-          format_line = "          python -m ruff format scripts/package_release.py scripts/validate_distribution.py tsao_researcher/capabilities.py tsao_researcher/receipts.py tsao_researcher/router.py\n"
-          fix_line = "          python -m ruff check --fix tests/test_v071_hardening.py tsao_researcher/io.py\n"
-          assert text.count(format_line) == 1
-          assert fix_line not in text
-          text = text.replace(format_line, format_line + fix_line)
 
           bad_commit_prep = "          git checkout \"$GITHUB_SHA\" -- .github/workflows\n          rm -f .github/workflows/apply-v071.yml\n"
           good_commit_prep = "          git checkout \"$GITHUB_SHA\" -- .github/workflows\n"
@@ -63,7 +57,7 @@ jobs:
           git config user.name 'SUNHAOJUN22 hardening automation'
           git config user.email 'SUNHAOJUN22@users.noreply.github.com'
           git add -A
-          git commit -m 'fix: close v0.7.1 lint and candidate gates'
+          git commit -m 'fix: close v0.7.1 candidate tree boundary'
           git push origin HEAD:main
           printf 'status=fixed\ncommit=%s\nfailed-run=30711184288\n' "$(git rev-parse HEAD)" > /tmp/body.txt
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
