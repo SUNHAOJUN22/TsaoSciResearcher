@@ -2,7 +2,7 @@ name: Fix v0.7.1 version test contract
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   contents: write
