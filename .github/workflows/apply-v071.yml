@@ -115,6 +115,17 @@ jobs:
           python scripts/sync_runtime_data.py --write
           sed -i "s/assert tsao_researcher.__version__ == '0.7.0'/assert tsao_researcher.__version__ == '0.7.1'/" tests/test_import_isolation.py
           grep -Fq "assert tsao_researcher.__version__ == '0.7.1'" tests/test_import_isolation.py
+          tar --exclude=.git --exclude=.pytest_cache --exclude='*.pyc' --exclude='__pycache__' -czf /tmp/TsaoSciResearcher-v0.7.1-candidate.tar.gz .
+          sha256sum /tmp/TsaoSciResearcher-v0.7.1-candidate.tar.gz > /tmp/TsaoSciResearcher-v0.7.1-candidate.tar.gz.sha256
+      - name: Upload verified candidate source
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tsao-v071-candidate-source-${{ github.run_id }}
+          path: |
+            /tmp/TsaoSciResearcher-v0.7.1-candidate.tar.gz
+            /tmp/TsaoSciResearcher-v0.7.1-candidate.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 7
       - name: Set up locked Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
