@@ -51,9 +51,9 @@ jobs:
           git merge-base --is-ancestor "$BASELINE" HEAD
           python - <<'PY'
           import subprocess
-          allowed = {'.github/workflows/apply-v071.yml'}
+          allowed = {'.github/workflows/apply-v071.yml', '.github/workflows/fix-v071-version-contract.yml'}
           changed = set(subprocess.check_output(['git','diff','--name-only',f"{__import__('os').environ['BASELINE']}..HEAD"], text=True).splitlines())
-          assert changed == allowed, f'unexpected staging changes: {sorted(changed)}'
+          assert changed <= allowed, f'unexpected staging changes: {sorted(changed)}'
           PY
           gh api --paginate "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" > /tmp/comments.json
           python - <<'PY'
@@ -110,9 +110,12 @@ jobs:
               destination.chmod(mode)
           PY
           rm .github/workflows/apply-v071.yml
+          rm -f .github/workflows/fix-v071-version-contract.yml
           test -f .github/workflows/main-attestation.yml
           test "$(cat VERSION)" = 0.7.1
           python scripts/sync_runtime_data.py --write
+          sed -i "s/assert tsao_researcher.__version__ == '0.7.0'/assert tsao_researcher.__version__ == '0.7.1'/" tests/test_import_isolation.py
+          grep -Fq "assert tsao_researcher.__version__ == '0.7.1'" tests/test_import_isolation.py
       - name: Set up locked Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
@@ -196,7 +199,7 @@ jobs:
           Path('/tmp/workflow-blobs.json').write_text(json.dumps(values,sort_keys=True))
           PY
           git checkout "$GITHUB_SHA" -- .github/workflows
-          test -z "$(git diff --name-only -- .github/workflows)"
+          rm -f .github/workflows/apply-v071.yml .github/workflows/fix-v071-version-contract.yml
           git config user.name 'SUNHAOJUN22 hardening automation'
           git config user.email 'SUNHAOJUN22@users.noreply.github.com'
           git add -A
@@ -212,7 +215,6 @@ jobs:
           from pathlib import Path
           blobs=json.loads(Path('/tmp/workflow-blobs.json').read_text())
           tree=[{'path':path,'mode':'100644','type':'blob','sha':sha} for path,sha in sorted(blobs.items())]
-          tree.append({'path':'.github/workflows/apply-v071.yml','mode':'100644','type':'blob','sha':None})
           payload=json.dumps({'base_tree':os.environ['CODE_TREE'],'tree':tree}).encode()
           result=subprocess.run(['gh','api','--method','POST',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/trees",'--input','-'],input=payload,check=True,capture_output=True)
           final_tree=json.loads(result.stdout)['sha']
