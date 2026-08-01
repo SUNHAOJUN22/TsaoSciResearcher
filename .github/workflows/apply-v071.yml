@@ -70,11 +70,13 @@ jobs:
                   assert index not in parts
                   parts[index]=payload
           expected=int(os.environ['OVERLAY_PARTS'])
-          assert sorted(parts)==[f'{i:02d}' for i in range(expected)], sorted(parts)
-          archive=b''.join(
-              base64.b64decode(parts[f'{i:02d}'], validate=True)
-              for i in range(expected)
-          )
+          keys=[f'{i:02d}' for i in range(expected)]
+          assert sorted(parts)==keys, sorted(parts)
+          for left,right in zip(keys,keys[1:]):
+              assert parts[left][-1]==parts[right][0], (left,right)
+          encoded=''.join(parts[key][:-1] for key in keys[:-1]) + parts[keys[-1]]
+          assert len(encoded) % 4 == 0, len(encoded)
+          archive=base64.b64decode(encoded, validate=True)
           assert hashlib.sha256(archive).hexdigest()==os.environ['OVERLAY_SHA256']
           Path('/tmp/overlay.tar.gz').write_bytes(archive)
           PY
