@@ -133,6 +133,7 @@ jobs:
           import hashlib
           import json
           import os
+          import subprocess
           import tarfile
           from pathlib import Path, PurePosixPath
 
@@ -152,10 +153,13 @@ jobs:
               path = Path(f'.github/v071-opt-part-{key}.b64')
               raw = path.read_bytes()
               expected_length, expected_hash = expected_parts[key]
+              if len(raw) != expected_length:
+                  assert key == '07', (key, len(raw), expected_length)
+                  assert len(raw) == 11465
+                  blob = subprocess.check_output(['git', 'hash-object', str(path)], text=True).strip()
+                  assert blob == '89c4c8651424e860457f5e09c288a19008fd2004'
               data = raw[:expected_length]
               assert hashlib.sha256(data).hexdigest() == expected_hash, key
-              duplicate = raw[expected_length:]
-              assert duplicate == data[:len(duplicate)], (key, len(raw), expected_length)
               encoded.extend(data)
           archive_bytes = base64.b64decode(bytes(encoded), validate=True)
           assert hashlib.sha256(archive_bytes).hexdigest() == os.environ['OPTIMIZATION_SHA256']
@@ -192,7 +196,6 @@ jobs:
           PY
           rm -f .github/v071-opt-part-*.b64
           rm -f .github/workflows/apply-v071.yml
-          rm -f .github/workflows/patch-v071-duplicate-prefix.yml
           python scripts/sync_runtime_data.py --write
 
       - name: Set up locked Python
