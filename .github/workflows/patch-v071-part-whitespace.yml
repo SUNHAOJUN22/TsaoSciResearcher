@@ -1,0 +1,53 @@
+name: Patch v0.7.1 part whitespace handling
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: patch-v071-part-whitespace
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    if: >-
+      github.event.issue.user.login == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] patch v0.7.1 part whitespace' &&
+      contains(github.event.issue.body, 'status=ready')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Apply exact whitespace normalization
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/apply-v071.yml')
+          text = path.read_text(encoding='utf-8')
+          old = "              data = path.read_bytes()\n              expected_length, expected_hash = expected_parts[key]\n"
+          new = "              data = b''.join(path.read_bytes().split())\n              expected_length, expected_hash = expected_parts[key]\n"
+          assert text.count(old) == 1
+          path.write_text(text.replace(old, new), encoding='utf-8', newline='\n')
+          PY
+          rm .github/workflows/patch-v071-part-whitespace.yml
+          git diff --check
+          git config user.name 'SUNHAOJUN22 hardening automation'
+          git config user.email 'SUNHAOJUN22@users.noreply.github.com'
+          git add -A
+          git commit -m 'ci: normalize optimization part transport whitespace'
+          git push origin HEAD:main
+          printf 'status=patched\ncommit=%s\n' "$(git rev-parse HEAD)" > /tmp/body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
