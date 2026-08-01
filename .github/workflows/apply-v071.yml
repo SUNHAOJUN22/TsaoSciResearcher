@@ -137,6 +137,7 @@ jobs:
           python scripts/validate_schemas.py
           python scripts/build_readme_facts.py --write
           python scripts/build_sbom.py --write
+          python -m ruff format scripts/package_release.py scripts/validate_distribution.py tsao_researcher/capabilities.py tsao_researcher/receipts.py tsao_researcher/router.py
           python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
