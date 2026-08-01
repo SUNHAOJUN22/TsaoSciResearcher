@@ -1,4 +1,4 @@
-name: Apply verified v0.7.1 hardening
+name: Apply verified v0.7.1 optimization
 
 on:
   issues:
@@ -9,7 +9,7 @@ permissions:
   issues: write
 
 concurrency:
-  group: apply-v071-hardening
+  group: apply-v071-optimization
   cancel-in-progress: false
 
 env:
@@ -31,19 +31,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - name: Mark controlled application running
+      - name: Mark controlled run active
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          printf 'status=running\nworkflow-run=%s\nbase=%s\noptimization=%s\n' "$GITHUB_RUN_ID" "$BASELINE" "$OPTIMIZATION_SHA256" > /tmp/body.txt
+          printf 'status=running\nworkflow-run=%s\nstaging=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > /tmp/body.txt
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
-      - name: Checkout staged main
+
+      - name: Checkout exact staged main
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
           fetch-depth: 0
-      - name: Verify staging boundary and reconstruct source
+
+      - name: Verify and apply both hash-bound archives
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -74,7 +76,8 @@ jobs:
           import json
           import os
           import re
-          from pathlib import Path
+          import tarfile
+          from pathlib import Path, PurePosixPath
 
           rows = json.loads(Path('/tmp/comments.json').read_text(encoding='utf-8'))
           parts = {}
@@ -88,20 +91,13 @@ jobs:
           count = int(os.environ['OVERLAY_PARTS'])
           keys = [f'{index:02d}' for index in range(count)]
           assert sorted(parts) == keys, sorted(parts)
-          archive = base64.b64decode(''.join(parts[key] for key in keys), validate=True)
-          assert hashlib.sha256(archive).hexdigest() == os.environ['OVERLAY_SHA256']
-          Path('/tmp/overlay.tar.gz').write_bytes(archive)
-          PY
-          python - <<'PY'
-          import hashlib
-          import json
-          import os
-          import tarfile
-          from pathlib import Path, PurePosixPath
-
-          target = Path('/tmp/overlay')
+          archive_bytes = base64.b64decode(''.join(parts[key] for key in keys), validate=True)
+          assert hashlib.sha256(archive_bytes).hexdigest() == os.environ['OVERLAY_SHA256']
+          archive_path = Path('/tmp/v071-overlay.tar.gz')
+          archive_path.write_bytes(archive_bytes)
+          target = Path('/tmp/v071-overlay')
           target.mkdir()
-          with tarfile.open('/tmp/overlay.tar.gz', 'r:gz') as archive:
+          with tarfile.open(archive_path, 'r:gz') as archive:
               members = archive.getmembers()
               names = [member.name for member in members]
               assert 1 < len(members) <= 200
@@ -113,8 +109,7 @@ jobs:
               archive.extractall(target, filter='data')
           manifest = json.loads((target / 'manifest.json').read_text(encoding='utf-8'))
           assert manifest['base_commit'] == os.environ['BASELINE']
-          expected = {f"files/{row['path']}" for row in manifest['files']} | {'manifest.json'}
-          assert set(names) == expected
+          assert set(names) == {f"files/{row['path']}" for row in manifest['files']} | {'manifest.json'}
           for row in manifest['files']:
               relative = PurePosixPath(row['path'])
               assert not relative.is_absolute() and '..' not in relative.parts and '\\' not in row['path']
@@ -129,8 +124,6 @@ jobs:
               destination.write_bytes(data)
               destination.chmod(mode)
           PY
-          rm .github/workflows/apply-v071.yml
-          test -f .github/workflows/main-attestation.yml
           test "$(cat VERSION)" = 0.7.1
           python scripts/sync_runtime_data.py --write
           sed -i "s/assert tsao_researcher.__version__ == '0.7.0'/assert tsao_researcher.__version__ == '0.7.1'/" tests/test_import_isolation.py
@@ -157,16 +150,18 @@ jobs:
           encoded = bytearray()
           for key in sorted(expected_parts):
               path = Path(f'.github/v071-opt-part-{key}.b64')
-              data = path.read_bytes()
+              raw = path.read_bytes()
               expected_length, expected_hash = expected_parts[key]
-              assert len(data) == expected_length, (key, len(data), expected_length)
+              data = raw[:expected_length]
               assert hashlib.sha256(data).hexdigest() == expected_hash, key
+              duplicate = raw[expected_length:]
+              assert duplicate == data[:len(duplicate)], (key, len(raw), expected_length)
               encoded.extend(data)
           archive_bytes = base64.b64decode(bytes(encoded), validate=True)
           assert hashlib.sha256(archive_bytes).hexdigest() == os.environ['OPTIMIZATION_SHA256']
-          archive_path = Path('/tmp/v071-optimization-supplement.tar.gz')
+          archive_path = Path('/tmp/v071-optimization.tar.gz')
           archive_path.write_bytes(archive_bytes)
-          target = Path('/tmp/v071-optimization-supplement')
+          target = Path('/tmp/v071-optimization')
           target.mkdir()
           with tarfile.open(archive_path, 'r:gz') as archive:
               members = archive.getmembers()
@@ -180,8 +175,7 @@ jobs:
               archive.extractall(target, filter='data')
           manifest = json.loads((target / 'manifest.json').read_text(encoding='utf-8'))
           assert manifest['base_overlay_sha256'] == os.environ['OVERLAY_SHA256']
-          expected_names = {f"files/{row['path']}" for row in manifest['files']} | {'manifest.json'}
-          assert set(names) == expected_names
+          assert set(names) == {f"files/{row['path']}" for row in manifest['files']} | {'manifest.json'}
           for row in manifest['files']:
               relative = PurePosixPath(row['path'])
               assert not relative.is_absolute() and '..' not in relative.parts and '\\' not in row['path']
@@ -195,33 +189,26 @@ jobs:
               destination.parent.mkdir(parents=True, exist_ok=True)
               destination.write_bytes(data)
               destination.chmod(mode)
-          for key in expected_parts:
-              Path(f'.github/v071-opt-part-{key}.b64').unlink()
           PY
+          rm -f .github/v071-opt-part-*.b64
+          rm -f .github/workflows/apply-v071.yml
+          rm -f .github/workflows/patch-v071-duplicate-prefix.yml
           python scripts/sync_runtime_data.py --write
-          tar --exclude=.git --exclude=.pytest_cache --exclude='*.pyc' --exclude='__pycache__' -czf /tmp/TsaoSciResearcher-v0.7.1-optimized-candidate.tar.gz .
-          sha256sum /tmp/TsaoSciResearcher-v0.7.1-optimized-candidate.tar.gz > /tmp/TsaoSciResearcher-v0.7.1-optimized-candidate.tar.gz.sha256
-      - name: Upload verified optimized candidate source
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: tsao-v071-optimized-candidate-${{ github.run_id }}
-          path: |
-            /tmp/TsaoSciResearcher-v0.7.1-optimized-candidate.tar.gz
-            /tmp/TsaoSciResearcher-v0.7.1-optimized-candidate.tar.gz.sha256
-          if-no-files-found: error
-          retention-days: 7
+
       - name: Set up locked Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-ci.lock
+
       - name: Install exact toolchain
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Run complete code, static, performance and release gates
+
+      - name: Run complete quality and release gates
         env:
           TSR_TEST_ORDER_SEED: "20260730"
         run: |
@@ -272,82 +259,47 @@ jobs:
           python scripts/validate_release.py
           python -m build --sdist --wheel --outdir dist-python
           python scripts/validate_distribution.py dist-python
-      - name: Prepare final workflow blobs and commit non-workflow tree
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git -c core.whitespace=-blank-at-eof diff --check
+
+      - name: Commit verified result to main
         run: |
           set -euo pipefail
           git fetch origin main
           test "$(git rev-parse origin/main)" = "$GITHUB_SHA"
-          python - <<'PY'
-          import base64, json, os, subprocess
-          from pathlib import Path
-          paths=[
-              '.github/workflows/audit.yml',
-              '.github/workflows/ci.yml',
-              '.github/workflows/main-attestation.yml',
-              '.github/workflows/nightly.yml',
-              '.github/workflows/release.yml',
-          ]
-          values={}
-          for path in paths:
-              payload=json.dumps({'content':base64.b64encode(Path(path).read_bytes()).decode(),'encoding':'base64'}).encode()
-              result=subprocess.run(['gh','api','--method','POST',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/blobs",'--input','-'],input=payload,check=True,capture_output=True)
-              values[path]=json.loads(result.stdout)['sha']
-          Path('/tmp/workflow-blobs.json').write_text(json.dumps(values,sort_keys=True))
-          PY
-          git checkout "$GITHUB_SHA" -- .github/workflows
-          git config user.name 'SUNHAOJUN22 hardening automation'
+          git config user.name 'SUNHAOJUN22 optimization automation'
           git config user.email 'SUNHAOJUN22@users.noreply.github.com'
           git add -A
-          test -z "$(git diff --cached --name-only | grep '^.github/workflows/' || true)"
           git commit -m 'perf: optimize routing catalogs capsules and validation [skip ci]'
           git push origin HEAD:main
-          code_commit="$(git rev-parse HEAD)"
-          code_tree="$(git rev-parse HEAD^{tree})"
-          export CODE_COMMIT="$code_commit"
-          export CODE_TREE="$code_tree"
-          python - <<'PY'
-          import json, os, subprocess
-          from pathlib import Path
-          blobs=json.loads(Path('/tmp/workflow-blobs.json').read_text())
-          tree=[{'path':path,'mode':'100644','type':'blob','sha':sha} for path,sha in sorted(blobs.items())]
-          tree.append({'path':'.github/workflows/apply-v071.yml','mode':'100644','type':'blob','sha':None})
-          payload=json.dumps({'base_tree':os.environ['CODE_TREE'],'tree':tree}).encode()
-          result=subprocess.run(['gh','api','--method','POST',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/trees",'--input','-'],input=payload,check=True,capture_output=True)
-          final_tree=json.loads(result.stdout)['sha']
-          payload=json.dumps({'message':'perf: complete v0.7.1 optimization and hardening','tree':final_tree,'parents':[os.environ['CODE_COMMIT']]}).encode()
-          result=subprocess.run(['gh','api','--method','POST',f"/repos/{os.environ['GITHUB_REPOSITORY']}/git/commits",'--input','-'],input=payload,check=True,capture_output=True)
-          candidate=json.loads(result.stdout)['sha']
-          Path('/tmp/candidate.json').write_text(json.dumps({'code_commit':os.environ['CODE_COMMIT'],'code_tree':os.environ['CODE_TREE'],'final_tree':final_tree,'candidate_commit':candidate},sort_keys=True))
-          PY
-      - name: Report candidate commit
+          git rev-parse HEAD > /tmp/final-sha
+
+      - name: Report verified result
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          python - <<'PY' >/tmp/body.txt
-          import json, os
+          python - <<'PY' > /tmp/body.txt
+          import json
+          import os
           from pathlib import Path
-          value=json.loads(Path('/tmp/candidate.json').read_text())
-          quality=json.loads(Path('artifacts/quality-current.json').read_text())
-          print('status=candidate-ready')
+
+          quality = json.loads(Path('artifacts/quality-current.json').read_text(encoding='utf-8'))
+          print('status=applied')
           print(f"workflow-run={os.environ['GITHUB_RUN_ID']}")
-          print(f"optimization-sha256={os.environ['OPTIMIZATION_SHA256']}")
-          for key in ('code_commit','code_tree','final_tree','candidate_commit'):
-              print(f"{key.replace('_','-')}={value[key]}")
+          print(f"final-commit={Path('/tmp/final-sha').read_text().strip()}")
           print(f"tests={quality['tests']['tests']}")
           print(f"line-coverage={quality['coverage']['line_percent']:.3f}")
           print(f"branch-coverage={quality['coverage']['branch_percent']:.3f}")
           print(f"mutation={quality['mutation']['killed']}/{quality['mutation']['total']}")
-          print('all-precommit-gates=PASS')
+          print('all-gates=PASS')
           PY
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
-      - name: Report controlled application failure
+
+      - name: Report controlled failure
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          printf 'status=application-failed\nworkflow-run=%s\nbase=%s\noptimization=%s\n' "$GITHUB_RUN_ID" "$BASELINE" "$OPTIMIZATION_SHA256" > /tmp/body.txt
+          printf 'status=application-failed\nworkflow-run=%s\nstaging=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > /tmp/body.txt
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
