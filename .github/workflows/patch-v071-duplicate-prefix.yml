@@ -34,23 +34,10 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           python - <<'PY'
           from pathlib import Path
-
           path = Path('.github/workflows/apply-v071.yml')
           text = path.read_text(encoding='utf-8')
-          old = """              data = path.read_bytes()
-              expected_length, expected_hash = expected_parts[key]
-              assert len(data) == expected_length, (key, len(data), expected_length)
-              assert hashlib.sha256(data).hexdigest() == expected_hash, key
-              encoded.extend(data)
-"""
-          new = """              raw = path.read_bytes()
-              expected_length, expected_hash = expected_parts[key]
-              data = raw[:expected_length]
-              assert hashlib.sha256(data).hexdigest() == expected_hash, key
-              duplicate = raw[expected_length:]
-              assert duplicate == data[:len(duplicate)], (key, len(raw), expected_length)
-              encoded.extend(data)
-"""
+          old = "              data = path.read_bytes()\n              expected_length, expected_hash = expected_parts[key]\n              assert len(data) == expected_length, (key, len(data), expected_length)\n              assert hashlib.sha256(data).hexdigest() == expected_hash, key\n              encoded.extend(data)\n"
+          new = "              raw = path.read_bytes()\n              expected_length, expected_hash = expected_parts[key]\n              data = raw[:expected_length]\n              assert hashlib.sha256(data).hexdigest() == expected_hash, key\n              duplicate = raw[expected_length:]\n              assert duplicate == data[:len(duplicate)], (key, len(raw), expected_length)\n              encoded.extend(data)\n"
           assert text.count(old) == 1
           path.write_text(text.replace(old, new), encoding='utf-8', newline='\n')
           PY
