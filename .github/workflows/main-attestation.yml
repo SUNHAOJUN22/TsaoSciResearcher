@@ -264,3 +264,94 @@ jobs:
         run: |
           printf 'status=exact-main-attestation-failed\ncommit=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+
+  refresh-preflight-evidence:
+    if: >-
+      github.event_name == 'issues' &&
+      github.event.issue.user.login == 'SUNHAOJUN22' &&
+      github.event.issue.title == '[TSR] refresh current evidence' &&
+      contains(github.event.issue.body, 'status=refresh-evidence')
+    permissions:
+      contents: write
+      issues: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact current main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Confirm immutable refresh parent
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git status --porcelain)" = ""
+      - name: Set up locked Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install exact dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Rebuild deterministic preflight evidence
+        run: |
+          python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
+          python scripts/build_readme_facts.py --write
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --check
+          python scripts/generate_checksums.py --check
+      - name: Commit refreshed evidence only
+        env:
+          EXPECTED_PARENT: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_PARENT"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            SHA256SUMS \
+            docs/README_FACTS.json \
+            docs/SBOM.cdx.json \
+            docs/VALIDATION_EVIDENCE.json \
+            docs/test-dashboard.html \
+            docs/test-dashboard.svg \
+            docs/research-quality-dashboard.html \
+            docs/research-quality-dashboard.svg \
+            docs/SCIENTIFIC_QUALITY_EXAMPLES.json \
+            docs/engineering-audit-report.pdf
+          test -n "$(git diff --cached --name-only)"
+          unexpected="$(git diff --cached --name-only | grep -Ev '^(SHA256SUMS|docs/(README_FACTS.json|SBOM.cdx.json|VALIDATION_EVIDENCE.json|test-dashboard.html|test-dashboard.svg|research-quality-dashboard.html|research-quality-dashboard.svg|SCIENTIFIC_QUALITY_EXAMPLES.json|engineering-audit-report.pdf))$' || true)"
+          test -z "$unexpected"
+          git commit -m "chore: refresh final preflight evidence [skip ci]"
+          git push origin HEAD:main
+      - name: Report refreshed evidence commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=refresh-complete\ncommit=%s\nworkflow-run=%s\n' "$(git rev-parse HEAD)" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+      - name: Report refresh failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          printf 'status=refresh-failed\nparent=%s\nworkflow-run=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > /tmp/issue-body.txt
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
