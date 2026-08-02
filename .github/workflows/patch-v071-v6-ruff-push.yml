@@ -1,3 +1,4 @@
+# activation: 1
 name: Patch v0.7.1 Ruff gate on push
 
 on:
