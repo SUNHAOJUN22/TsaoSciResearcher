@@ -154,15 +154,30 @@ jobs:
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
           mkdocs build --strict
 
-      - name: Run deterministic release and distribution gates
+      - name: Build deterministic source archives
         run: |
           python scripts/package_release.py --out dist-a
           python scripts/package_release.py --out dist-b
+
+      - name: Compare deterministic source archives
+        run: |
           cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" \
               "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+
+      - name: Validate source release archive
+        run: |
           python scripts/validate_release.py
+
+      - name: Build Python distributions
+        run: |
           python -m build --sdist --wheel --outdir dist-python
+
+      - name: Validate Python distributions
+        run: |
           python scripts/validate_distribution.py dist-python
+
+      - name: Run final whitespace diff gate
+        run: |
           git -c core.whitespace=-blank-at-eof diff --check
 
       - name: Commit verified production source
