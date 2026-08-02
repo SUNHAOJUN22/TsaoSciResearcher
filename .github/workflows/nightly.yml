@@ -40,6 +40,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
           python scripts/audit_repository.py
           python scripts/build_sbom.py --check
           python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
