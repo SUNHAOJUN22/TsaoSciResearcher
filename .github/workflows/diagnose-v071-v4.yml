@@ -2,7 +2,7 @@ name: Diagnose v0.7.1 base and optimization comments
 
 on:
   issues:
-    types: [edited]
+    types: [opened, edited]
 
 permissions:
   contents: read
@@ -12,17 +12,18 @@ jobs:
   diagnose:
     if: >-
       github.event.issue.user.login == 'SUNHAOJUN22' &&
-      github.event.issue.title == '[TSR] apply v0.7.1 hardening' &&
-      contains(github.event.issue.body, 'status=optimized-v4-diagnose')
+      github.event.issue.title == '[TSR] diagnose v0.7.1 payloads' &&
+      contains(github.event.issue.body, 'status=payload-diagnose')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Read and report exact comment payloads
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPORT_ISSUE: ${{ github.event.issue.number }}
+          SOURCE_ISSUE: "176"
         run: |
-          gh api --paginate "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" > /tmp/comments.json
+          gh api --paginate "/repos/$GITHUB_REPOSITORY/issues/$SOURCE_ISSUE/comments" > /tmp/comments.json
           python - <<'PY'
           import base64,hashlib,json,re
           from pathlib import Path
@@ -44,5 +45,5 @@ jobs:
                   data=base64.b64decode(''.join(parts[key] for key in keys),validate=True)
                   print(prefix+'_ARCHIVE_SHA='+hashlib.sha256(data).hexdigest())
           PY
-          printf 'status=optimized-v4-diagnostic-complete\nworkflow-run=%s\n' "$GITHUB_RUN_ID" > /tmp/body.txt
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
+          printf 'status=payload-diagnostic-complete\nworkflow-run=%s\nsource-issue=%s\n' "$GITHUB_RUN_ID" "$SOURCE_ISSUE" > /tmp/body.txt
+          gh issue edit "$REPORT_ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.txt
