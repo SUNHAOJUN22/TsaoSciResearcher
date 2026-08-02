@@ -55,7 +55,7 @@ jobs:
           PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
         run: |
           python -m compileall -q scripts tsao_researcher tests
-          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_v071_hardening.py
           python -m tsao_researcher --version
           python -m tsao_researcher route "run an actual DFT calculation"
           python -m tsao_researcher search "polymer molecular dynamics" --limit 3
@@ -86,6 +86,7 @@ jobs:
       - name: Repository, metadata, schema and generated-artifact audit
         run: |
           python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
           python scripts/validate_schemas.py
           python scripts/audit_repository.py
           python scripts/validate_structure.py
