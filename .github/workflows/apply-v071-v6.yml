@@ -162,7 +162,12 @@ jobs:
           assert source.count(old) == 1
           path.write_text(source.replace(old, new), encoding='utf-8', newline='\n')
 
-          encoded = Path('.github/v071-opt-v6.b64').read_text(encoding='ascii').strip()
+          encoded = ''.join(
+              Path(f'.github/v071-opt-part-{index:02d}.b64')
+              .read_text(encoding='ascii')
+              .strip()
+              for index in range(9)
+          )
           optimized = checked_archive(encoded, os.environ['OPT_ARCHIVE_SHA'], 'OPT-V6')
           apply_archive(
               optimized,
