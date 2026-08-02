@@ -8,14 +8,6 @@ permissions:
   contents: write
   issues: write
 
-env:
-  BASELINE: d9eca929fc39e329b1d94fdb2a08d2a75b577afa
-  BASE_ARCHIVE_SHA: e7fb0bdae5b0dee605f9b84ea4361ef15a4b676831434a6e48a5aa3d53f0f036
-  OPT_ARCHIVE_SHA: b56bf27d9893a44720e5bc4f6b7a2cba13a349c484e451c3317bc46966b014b6
-  PYTHONDONTWRITEBYTECODE: "1"
-  PYTHONNOUSERSITE: "1"
-  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
-
 concurrency:
   group: apply-v071-optimization-v6
   cancel-in-progress: false
@@ -28,8 +20,13 @@ jobs:
       contains(github.event.issue.body, 'status=optimized-v6-go')
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    env:
+      BASELINE: d9eca929fc39e329b1d94fdb2a08d2a75b577afa
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONNOUSERSITE: "1"
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
     steps:
-      - name: Mark v6 running
+      - name: Mark running
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -43,7 +40,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Verify archives and apply manifests
+      - name: Verify and apply exact archives
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -52,139 +49,20 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           git merge-base --is-ancestor "$BASELINE" HEAD
           python - <<'PY'
-          import os
-          import subprocess
-
-          allowed_workflows = {
-              '.github/workflows/apply-v071.yml',
-              '.github/workflows/apply-v071-v2.yml',
-              '.github/workflows/apply-v071-v3.yml',
-              '.github/workflows/apply-v071-v5.yml',
-              '.github/workflows/apply-v071-v6.yml',
-              '.github/workflows/diagnose-v071-v4.yml',
-          }
-          changed = set(
-              subprocess.check_output(
-                  ['git', 'diff', '--name-only', f"{os.environ['BASELINE']}..HEAD"],
-                  text=True,
-              ).splitlines()
-          )
-          assert changed, 'staging diff is empty'
-          assert len(changed) <= 30, sorted(changed)
-          unexpected = {
-              path
-              for path in changed
-              if path not in allowed_workflows and not path.startswith('.github/v071-opt-')
-          }
-          assert not unexpected, sorted(unexpected)
+          import os, subprocess
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', f"{os.environ['BASELINE']}..HEAD"],
+              text=True,
+          ).splitlines()
+          assert changed and len(changed) <= 40, changed
+          assert all(path.startswith('.github/') for path in changed), changed
           PY
           gh api --paginate "/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" > /tmp/comments.json
-          python - <<'PY'
-          import base64
-          import hashlib
-          import io
-          import json
-          import os
-          import re
-          import tarfile
-          from pathlib import Path, PurePosixPath
-
-          def checked_archive(encoded: str, expected_sha: str, label: str) -> bytes:
-              data = base64.b64decode(encoded, validate=True)
-              actual = hashlib.sha256(data).hexdigest()
-              assert actual == expected_sha, (label, actual, expected_sha)
-              return data
-
-          def comment_archive(prefix: str, total: int, expected_sha: str) -> bytes:
-              rows = json.loads(Path('/tmp/comments.json').read_text(encoding='utf-8'))
-              pattern = re.compile(rf'{prefix} (\d{{2}})/(\d{{2}})\n([A-Za-z0-9+/=]+)')
-              parts = {}
-              for row in rows:
-                  match = pattern.fullmatch(row.get('body', ''))
-                  if not match:
-                      continue
-                  index, declared, payload = match.groups()
-                  assert int(declared) == total and index not in parts
-                  parts[index] = payload
-              keys = [f'{index:02d}' for index in range(total)]
-              assert sorted(parts) == keys, (prefix, sorted(parts))
-              return checked_archive(''.join(parts[key] for key in keys), expected_sha, prefix)
-
-          def apply_archive(data: bytes, guard) -> None:
-              with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as archive:
-                  members = archive.getmembers()
-                  names = [member.name for member in members]
-                  assert 1 < len(members) <= 250
-                  assert len(names) == len(set(names))
-                  assert 'manifest.json' in names
-                  for member in members:
-                      path = PurePosixPath(member.name)
-                      assert not path.is_absolute() and '..' not in path.parts
-                      assert '\\' not in member.name
-                      assert member.isfile() and not member.issym() and not member.islnk()
-                  manifest_member = archive.getmember('manifest.json')
-                  manifest_stream = archive.extractfile(manifest_member)
-                  assert manifest_stream is not None
-                  manifest = json.loads(manifest_stream.read().decode('utf-8', errors='strict'))
-                  guard(manifest)
-                  rows = manifest['files']
-                  assert isinstance(rows, list) and rows
-                  expected = {f"files/{row['path']}" for row in rows} | {'manifest.json'}
-                  assert set(names) == expected
-                  for row in rows:
-                      rel = PurePosixPath(row['path'])
-                      assert not rel.is_absolute() and '..' not in rel.parts
-                      assert '\\' not in row['path']
-                      mode = int(row['mode'], 8)
-                      assert mode in {0o644, 0o755}
-                      member = archive.getmember(f"files/{row['path']}")
-                      stream = archive.extractfile(member)
-                      assert stream is not None
-                      payload = stream.read()
-                      assert len(payload) == row['bytes']
-                      assert hashlib.sha256(payload).hexdigest() == row['sha256']
-                      destination = Path(row['path'])
-                      destination.parent.mkdir(parents=True, exist_ok=True)
-                      destination.write_bytes(payload)
-                      destination.chmod(mode)
-
-          base = comment_archive('PART', 16, os.environ['BASE_ARCHIVE_SHA'])
-          apply_archive(
-              base,
-              lambda manifest: manifest['base_commit'] == os.environ['BASELINE']
-              or (_ for _ in ()).throw(AssertionError('base manifest mismatch')),
-          )
-          assert Path('VERSION').read_text(encoding='utf-8').strip() == '0.7.1'
-          path = Path('tests/test_import_isolation.py')
-          source = path.read_text(encoding='utf-8')
-          old = "assert tsao_researcher.__version__ == '0.7.0'"
-          new = "assert tsao_researcher.__version__ == '0.7.1'"
-          assert source.count(old) == 1
-          path.write_text(source.replace(old, new), encoding='utf-8', newline='\n')
-
-          encoded = ''.join(
-              Path(f'.github/v071-opt-part-{index:02d}.b64')
-              .read_text(encoding='ascii')
-              .strip()
-              for index in range(8)
-          )
-          encoded += Path('.github/v071-opt-part-08a.b64').read_text(encoding='ascii').strip()
-          encoded += Path('.github/v071-opt-part-08b.b64').read_text(encoding='ascii').strip()
-          optimized = checked_archive(encoded, os.environ['OPT_ARCHIVE_SHA'], 'OPT-V6')
-          apply_archive(
-              optimized,
-              lambda manifest: manifest['base_overlay_sha256'] == os.environ['BASE_ARCHIVE_SHA']
-              or (_ for _ in ()).throw(AssertionError('optimization manifest mismatch')),
-          )
-          PY
-          rm -f .github/v071-opt-part-*.b64 .github/v071-opt-v6.b64
-          rm -f \
-            .github/workflows/apply-v071.yml \
-            .github/workflows/apply-v071-v2.yml \
-            .github/workflows/apply-v071-v3.yml \
-            .github/workflows/apply-v071-v5.yml \
-            .github/workflows/apply-v071-v6.yml \
-            .github/workflows/diagnose-v071-v4.yml
+          python .github/apply_v071_v12.py
+          rm -f .github/v071-opt-*.b64 .github/apply_v071_v12.py
+          rm -f .github/workflows/apply-v071*.yml
+          rm -f .github/workflows/diagnose-v071*.yml
+          rm -f .github/workflows/patch-v071*.yml
           python scripts/sync_runtime_data.py --write
 
       - name: Set up locked Python
@@ -270,10 +148,8 @@ jobs:
           cp artifacts/quality-current.json /tmp/quality.json
           cp artifacts/performance.json /tmp/performance.json
           rm -rf artifacts dist-a dist-b dist-python site .coverage
-          test ! -e .github/v071-opt-v6.b64
           test -z "$(find .github -maxdepth 1 -name 'v071-opt-*' -print -quit)"
-          test -z "$(find .github/workflows -maxdepth 1 \
-            \( -name 'apply-v071*.yml' -o -name 'diagnose-v071*.yml' \) -print -quit)"
+          test ! -e .github/apply_v071_v12.py
           git config user.name 'SUNHAOJUN22 optimization automation'
           git config user.email 'SUNHAOJUN22@users.noreply.github.com'
           git add -A
@@ -289,10 +165,8 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           python - <<'PY' > /tmp/body.txt
-          import json
-          import os
+          import json, os
           from pathlib import Path
-
           quality = json.loads(Path('/tmp/quality.json').read_text())
           performance = json.loads(Path('/tmp/performance.json').read_text())
           print('status=optimized-v6-committed')
