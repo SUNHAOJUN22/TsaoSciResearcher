@@ -7,8 +7,11 @@ never treats an advisory plan as execution evidence.
 from __future__ import annotations
 
 import hashlib
+import re
 import unicodedata
 from dataclasses import dataclass
+from functools import cache
+from re import Pattern
 from typing import Any
 
 from .errors import ValidationError
@@ -17,6 +20,23 @@ from .io import canonical_json
 MAX_QUESTION_CHARS = 20_000
 MAX_ITEMS = 64
 MAX_ITEM_CHARS = 2_000
+_WORD_CHAR = r"[0-9a-z_]"
+_NON_EQUILIBRIUM_MARKERS = (
+    "non-equilibrium",
+    "nonequilibrium",
+    "transient",
+    "driven",
+    "flow",
+    "transport",
+    "kinetic",
+    "非平衡",
+    "瞬态",
+    "驱动",
+    "流动",
+    "输运",
+    "动力学",
+)
+_EQUILIBRIUM_MARKERS = ("equilibrium", "phase equilibrium", "平衡", "相平衡")
 
 
 @dataclass(frozen=True, slots=True)
@@ -1234,6 +1254,7 @@ def _clean_items(values: list[str] | tuple[str, ...] | None, *, field: str) -> l
     if len(values) > MAX_ITEMS:
         raise ValidationError(f"{field} has more than {MAX_ITEMS} items")
     cleaned: list[str] = []
+    seen: set[str] = set()
     for value in values:
         if not isinstance(value, str):
             raise TypeError(f"{field} items must be strings")
@@ -1242,43 +1263,43 @@ def _clean_items(values: list[str] | tuple[str, ...] | None, *, field: str) -> l
             continue
         if len(text) > MAX_ITEM_CHARS:
             raise ValidationError(f"{field} item exceeds {MAX_ITEM_CHARS} characters")
-        if text not in cleaned:
+        if text not in seen:
+            seen.add(text)
             cleaned.append(text)
     return cleaned
 
 
-def _score(regime: Regime, text: str, observables: list[str]) -> int:
+@cache
+def _compiled_trigger(trigger: str) -> tuple[str, Pattern[str] | None]:
+    normalized = _normalize(trigger)
+    pattern: Pattern[str] | None = None
+    if normalized.isascii() and any(char.isalnum() for char in normalized):
+        pattern = re.compile(rf"(?<!{_WORD_CHAR}){re.escape(normalized)}(?!{_WORD_CHAR})")
+    return normalized, pattern
+
+
+def _contains_trigger(text: str, trigger: str) -> bool:
+    normalized, pattern = _compiled_trigger(trigger)
+    if not normalized:
+        return False
+    return pattern.search(text) is not None if pattern is not None else normalized in text
+
+
+def _score(regime: Regime, text: str, observable_text: str) -> int:
     score = 0
-    observable_text = " ".join(_normalize(value) for value in observables)
     for trigger in regime.triggers:
         normalized = _normalize(trigger)
-        if normalized in text:
+        if _contains_trigger(text, trigger):
             score += 4 if " " in normalized or any(ord(char) > 127 for char in normalized) else 3
-        if normalized in observable_text:
+        if _contains_trigger(observable_text, trigger):
             score += 3
     return score
 
 
 def _equilibrium_status(primary: Regime, text: str) -> str:
-    non_equilibrium = (
-        "non-equilibrium",
-        "nonequilibrium",
-        "transient",
-        "driven",
-        "flow",
-        "transport",
-        "kinetic",
-        "非平衡",
-        "瞬态",
-        "驱动",
-        "流动",
-        "输运",
-        "动力学",
-    )
-    equilibrium = ("equilibrium", "phase equilibrium", "平衡", "相平衡")
-    if any(marker in text for marker in non_equilibrium):
+    if any(marker in text for marker in _NON_EQUILIBRIUM_MARKERS):
         return "non-equilibrium or mixed; forcing and observation time must be explicit"
-    if any(marker in text for marker in equilibrium):
+    if any(marker in text for marker in _EQUILIBRIUM_MARKERS):
         return "equilibrium, subject to metastability and sampling checks"
     return primary.equilibrium_status
 
@@ -1320,12 +1341,13 @@ def advise_computation_strategy(
     clean_conditions = _clean_items(conditions, field="conditions")
     clean_constraints = _clean_items(constraints, field="constraints")
     clean_evidence = _clean_items(available_evidence, field="available_evidence")
+    normalized_observables = " ".join(_normalize(value) for value in clean_observables)
     combined = _normalize(
         " ".join([clean_question, *clean_observables, *clean_conditions, *clean_constraints])
     )
 
     scored = sorted(
-        ((regime, _score(regime, combined, clean_observables)) for regime in REGIMES),
+        ((regime, _score(regime, combined, normalized_observables)) for regime in REGIMES),
         key=lambda item: (-item[1], item[0].slug),
     )
     positive = [(regime, score) for regime, score in scored if score > 0]

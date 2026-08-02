@@ -40,8 +40,13 @@
     "stable statistics across replicas",
     "physical consistency with experimental trends"
   ],
-  "evidence_level": "planned",
+  "evidence_level": "prepared",
   "human_approval_points": [
     "approve force field and carbon-black representation before execution"
-  ]
+  ],
+  "execution_boundary": {
+    "solver_executed": false,
+    "external_execution_required": true,
+    "statement": "This handoff plans an external computation; it is not execution evidence."
+  }
 }

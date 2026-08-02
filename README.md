@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **Release 0.7.0** · Apache-2.0 · Python 3.10–3.13 · Windows, Linux and macOS
+> **Release 0.7.1** · Apache-2.0 · Python 3.10–3.13 · Windows, Linux and macOS
 
 ## What the code actually implements
 
@@ -53,8 +53,10 @@ Read the full [original-requirements implementation audit](docs/ORIGINAL_REQUIRE
 - **First-principles strategy advisor** — derives a minimum-sufficient method ladder from observables, degrees of freedom, conservation laws, quantum/statistical physics, thermodynamic ensembles, scales, falsification and UQ; it does not run solvers.
 - **Guarded computation handoff** — input hashes, scale, method, conditions, convergence/UQ requirements, expected outputs and approval points are recorded before external execution.
 - **Execution Receipt v2** — a real external run is bound to its handoff, engine, arguments, time, exit status and output hashes.
-- **Reproducibility Capsule** — deterministic metadata/full ZIPs reject path escape, symbolic links, duplicate members and checksum tampering.
-- **Truth-preserving validation** — `completed`, `checked`, `validated`, and `accepted` are distinct states.
+- **Reproducibility Capsule** — deterministic metadata/full ZIPs reject path escape, symbolic links, undeclared members, duplicate inventory records and checksum tampering.
+- **Installed-runtime parity** — the wheel carries checksum-synchronized routing and capability data, and distribution acceptance executes real `route` and `search` commands from an isolated installation.
+- **Ownership-bound mutations** — lock release cannot delete a replacement owner; JSONL and multi-file project mutations roll back on handled write failure.
+- **Truth-preserving validation** — handoffs remain `planned`/`prepared`, receipts bind the registered handoff hash, and `completed`, `checked`, `validated`, and `accepted` remain distinct states.
 
 ## First-principles computation and simulation strategy
 

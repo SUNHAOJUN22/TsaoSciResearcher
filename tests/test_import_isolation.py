@@ -102,13 +102,53 @@ def guarded(name, *args, **kwargs):
     return original(name, *args, **kwargs)
 builtins.__import__ = guarded
 import tsao_researcher
-assert tsao_researcher.__version__ == '0.7.0'
+assert tsao_researcher.__version__ == '0.7.1'
 assert 'route' in dir(tsao_researcher)
 """
     result = run_python(["-c", code])
     assert result.returncode == 0, result.stderr
     assert result.stdout == ""
     assert result.stderr == ""
+
+
+def test_dependency_light_cli_route_and_search_do_not_import_yaml_or_jsonschema() -> None:
+    code = r"""
+import builtins
+import contextlib
+import io
+import json
+import sys
+
+original = builtins.__import__
+def guarded(name, *args, **kwargs):
+    if name.split('.', 1)[0] in {'yaml', 'jsonschema'}:
+        raise AssertionError(f'unexpected eager dependency import: {name}')
+    return original(name, *args, **kwargs)
+builtins.__import__ = guarded
+
+from tsao_researcher.__main__ import main
+
+for argv in (
+    ['tsao-researcher', 'route', 'Design a traceable multiscale polymer study'],
+    ['tsao-researcher', 'search', 'polymer molecular dynamics', '--limit', '3'],
+):
+    sys.argv = argv
+    stream = io.StringIO()
+    with contextlib.redirect_stdout(stream):
+        main()
+    value = json.loads(stream.getvalue())
+    assert isinstance(value, dict if argv[1] == 'route' else list)
+"""
+    result = run_python(["-c", code])
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+
+
+def test_shared_research_type_contract_matches_state_runtime() -> None:
+    from tsao_researcher.contracts import RESEARCH_TYPES as CONTRACT_TYPES
+    from tsao_researcher.state import RESEARCH_TYPES as STATE_TYPES
+
+    assert CONTRACT_TYPES is STATE_TYPES
 
 
 def test_lazy_public_export_resolves_on_access() -> None:

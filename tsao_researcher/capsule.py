@@ -6,8 +6,11 @@ import hashlib
 import json
 import os
 import platform
+import shutil
+import stat
 import tempfile
 import zipfile
+from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -24,6 +27,14 @@ MAX_FILE_BYTES = 128 * 1024 * 1024
 MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
 METADATA_EXCLUDED_TOP_LEVEL = {"data", "figures", "artifacts"}
 IGNORED_NAMES = {".mutation.lock", ".DS_Store"}
+IGNORED_DIRECTORIES = {".git", ".pytest_cache", "__pycache__"}
+
+
+@dataclass(frozen=True, slots=True)
+class _ProjectFile:
+    path: Path
+    relative: Path
+    size: int
 
 
 def _safe_member(name: str) -> PurePosixPath:
@@ -50,30 +61,46 @@ def _role(relative: Path) -> str:
     }.get(top, "project-metadata")
 
 
-def _project_files(root: Path, output: Path, mode: str) -> list[Path]:
-    rows: list[Path] = []
+def _project_files(root: Path, output: Path, mode: str) -> tuple[list[_ProjectFile], int]:
+    rows: list[_ProjectFile] = []
     total = 0
+    resolved_root = root.resolve()
     resolved_output = output.resolve(strict=False)
-    for path in root.rglob("*"):
-        relative = path.relative_to(root)
-        if path.resolve(strict=False) == resolved_output or path.name in IGNORED_NAMES:
-            continue
-        if path.is_symlink():
-            raise ValidationError(f"symbolic links are forbidden in capsules: {relative.as_posix()}")
-        if not path.is_file():
-            continue
-        if mode == "metadata" and relative.parts and relative.parts[0] in METADATA_EXCLUDED_TOP_LEVEL:
-            continue
-        size = path.stat().st_size
-        if size > MAX_FILE_BYTES:
-            raise ValidationError(f"capsule file exceeds {MAX_FILE_BYTES} bytes: {relative.as_posix()}")
-        total += size
-        if total > MAX_TOTAL_BYTES:
-            raise ValidationError("capsule exceeds total expanded-size limit")
-        rows.append(path)
-    if len(rows) > MAX_FILES:
-        raise ValidationError(f"capsule has more than {MAX_FILES} files")
-    return sorted(rows, key=lambda item: item.relative_to(root).as_posix())
+    for directory, dirnames, filenames in os.walk(resolved_root, topdown=True, followlinks=False):
+        current = Path(directory)
+        relative_directory = current.relative_to(resolved_root)
+        kept_directories: list[str] = []
+        for name in dirnames:
+            child = current / name
+            relative = child.relative_to(resolved_root)
+            if child.is_symlink():
+                raise ValidationError(f"symbolic links are forbidden in capsules: {relative.as_posix()}")
+            if name in IGNORED_DIRECTORIES:
+                continue
+            if mode == "metadata" and not relative_directory.parts and name in METADATA_EXCLUDED_TOP_LEVEL:
+                continue
+            kept_directories.append(name)
+        dirnames[:] = kept_directories
+        for name in filenames:
+            path = current / name
+            relative = path.relative_to(resolved_root)
+            if path.resolve(strict=False) == resolved_output or name in IGNORED_NAMES:
+                continue
+            if path.is_symlink():
+                raise ValidationError(f"symbolic links are forbidden in capsules: {relative.as_posix()}")
+            info = path.stat(follow_symlinks=False)
+            if not stat.S_ISREG(info.st_mode):
+                continue
+            if info.st_size > MAX_FILE_BYTES:
+                raise ValidationError(f"capsule file exceeds {MAX_FILE_BYTES} bytes: {relative.as_posix()}")
+            if len(rows) >= MAX_FILES:
+                raise ValidationError(f"capsule has more than {MAX_FILES} files")
+            total += info.st_size
+            if total > MAX_TOTAL_BYTES:
+                raise ValidationError("capsule exceeds total expanded-size limit")
+            rows.append(_ProjectFile(path, relative, info.st_size))
+    rows.sort(key=lambda item: item.relative.as_posix())
+    return rows, total
 
 
 def _tree_digest(records: list[dict[str, Any]]) -> str:
@@ -114,15 +141,15 @@ def export_capsule(
         raise ValidationError("capsule output cannot be a symbolic link")
     destination = requested_destination.resolve(strict=False)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    files = _project_files(state_root, destination, mode)
+    files, total_bytes = _project_files(state_root, destination, mode)
     records = [
         {
-            "path": path.relative_to(state_root).as_posix(),
-            "role": _role(path.relative_to(state_root)),
-            "size_bytes": path.stat().st_size,
-            "sha256": sha256_file(path),
+            "path": item.relative.as_posix(),
+            "role": _role(item.relative),
+            "size_bytes": item.size,
+            "sha256": sha256_file(item.path),
         }
-        for path in files
+        for item in files
     ]
     base_manifest: dict[str, Any] = {
         "schema_version": CAPSULE_SCHEMA_VERSION,
@@ -140,7 +167,7 @@ def export_capsule(
         "state_verification": state_result,
         "receipt_verification": receipt_result,
         "file_count": len(records),
-        "total_bytes": sum(path.stat().st_size for path in files),
+        "total_bytes": total_bytes,
         "tree_sha256": _tree_digest(records),
         "files": records,
         "truth_boundary": "A verified capsule proves internal integrity and provenance, not scientific acceptance.",
@@ -156,14 +183,16 @@ def export_capsule(
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as handle:
             handle.writestr(_zip_info("capsule/manifest.json"), manifest_bytes)
-            for path in files:
-                relative = path.relative_to(state_root).as_posix()
-                handle.writestr(_zip_info(f"capsule/project/{relative}"), path.read_bytes())
+            for item in files:
+                info = _zip_info(f"capsule/project/{item.relative.as_posix()}")
+                with item.path.open("rb") as source, handle.open(info, "w", force_zip64=True) as target:
+                    shutil.copyfileobj(source, target, length=1024 * 1024)
         os.replace(temporary, destination)
     finally:
         temporary.unlink(missing_ok=True)
+    archive_sha256 = sha256_file(destination)
     sidecar = destination.with_name(destination.name + ".sha256")
-    atomic_write_text(sidecar, f"{sha256_file(destination)}  {destination.name}\n")
+    atomic_write_text(sidecar, f"{archive_sha256}  {destination.name}\n")
     return {
         "valid": True,
         "capsule": str(destination),
@@ -172,7 +201,7 @@ def export_capsule(
         "mode": mode,
         "files": len(records),
         "tree_sha256": manifest["tree_sha256"],
-        "archive_sha256": sha256_file(destination),
+        "archive_sha256": archive_sha256,
     }
 
 
@@ -185,14 +214,23 @@ def verify_capsule(path: str | Path) -> dict[str, Any]:
     total = 0
     names: set[str] = set()
     with zipfile.ZipFile(capsule) as handle:
-        for info in handle.infolist():
+        infos = handle.infolist()
+        if len(infos) > MAX_FILES + 1:
+            raise IntegrityError(f"capsule has more than {MAX_FILES} project files")
+        for info in infos:
             _safe_member(info.filename)
             if info.filename in names:
                 raise IntegrityError(f"duplicate capsule member: {info.filename}")
             names.add(info.filename)
+            if info.flag_bits & 0x1:
+                raise IntegrityError(f"encrypted capsule member forbidden: {info.filename}")
+            if info.is_dir():
+                raise IntegrityError(f"directory capsule member forbidden: {info.filename}")
             mode = (info.external_attr >> 16) & 0o170000
             if mode == 0o120000:
                 raise IntegrityError(f"symbolic link member forbidden: {info.filename}")
+            if mode not in {0, 0o100000}:
+                raise IntegrityError(f"non-regular capsule member forbidden: {info.filename}")
             if info.file_size > MAX_FILE_BYTES:
                 raise IntegrityError(f"capsule member exceeds size limit: {info.filename}")
             total += info.file_size
@@ -204,15 +242,25 @@ def verify_capsule(path: str | Path) -> dict[str, Any]:
         if not isinstance(manifest, dict) or manifest.get("schema_version") != CAPSULE_SCHEMA_VERSION:
             raise IntegrityError("capsule manifest schema is invalid")
         records = manifest.get("files")
-        if not isinstance(records, list) or len(records) != manifest.get("file_count"):
+        if (
+            not isinstance(records, list)
+            or len(records) != manifest.get("file_count")
+            or len(records) > MAX_FILES
+        ):
             raise IntegrityError("capsule file inventory is invalid")
         normalized: list[dict[str, Any]] = []
+        record_paths: set[str] = set()
+        expected_names = {"capsule/manifest.json"}
         for record in records:
             if not isinstance(record, dict):
                 raise IntegrityError("capsule file record is invalid")
             relative = str(record.get("path", ""))
+            if not relative or relative in record_paths:
+                raise IntegrityError(f"duplicate or blank capsule inventory path: {relative}")
+            record_paths.add(relative)
             member = f"capsule/project/{relative}"
             _safe_member(member)
+            expected_names.add(member)
             if member not in names:
                 raise IntegrityError(f"capsule project member missing: {relative}")
             payload = handle.read(member)
@@ -220,6 +268,10 @@ def verify_capsule(path: str | Path) -> dict[str, Any]:
             if record.get("size_bytes") != len(payload) or record.get("sha256") != digest:
                 raise IntegrityError(f"capsule checksum mismatch: {relative}")
             normalized.append(record)
+        if names != expected_names:
+            extras = sorted(names - expected_names)
+            missing = sorted(expected_names - names)
+            raise IntegrityError(f"capsule inventory is not exact: extra={extras}, missing={missing}")
         if manifest.get("tree_sha256") != _tree_digest(normalized):
             raise IntegrityError("capsule tree digest mismatch")
         base = dict(manifest)

@@ -61,7 +61,20 @@ def _is_relative_to(path: Path, parent: Path) -> bool:
         return False
 
 
+def _reject_symlink_components(path: Path) -> None:
+    absolute = path.absolute()
+    parts = absolute.parts
+    if not parts:
+        return
+    current = Path(parts[0])
+    for part in parts[1:]:
+        current /= part
+        if current.is_symlink():
+            raise ValueError(f"install path contains a symbolic-link component: {current}")
+
+
 def validate_destination(path: Path) -> None:
+    _reject_symlink_components(path)
     resolved = path.resolve(strict=False)
     dangerous = {Path(resolved.anchor), Path.home().resolve(), Path.cwd().resolve(), ROOT.resolve()}
     if resolved in dangerous:
@@ -120,6 +133,8 @@ def install(dst: Path, *, agent: str, scope: str, force: bool) -> None:
     validate_destination(dst)
     validate_source()
     dst.parent.mkdir(parents=True, exist_ok=True)
+    validate_destination(dst)
+    _reject_symlink_components(dst.parent)
     stage = Path(tempfile.mkdtemp(prefix=f".{dst.name}.stage-", dir=dst.parent))
     backup: Path | None = None
     try:

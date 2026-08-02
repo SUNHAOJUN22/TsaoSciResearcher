@@ -8,7 +8,7 @@ import os
 import secrets
 import tempfile
 import time
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -43,13 +43,7 @@ def new_id(prefix: str) -> str:
 
 
 def canonical_json(value: Any) -> str:
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-        allow_nan=False,
-    )
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
 def _regular_file(path: Path, *, max_bytes: int = MAX_TEXT_BYTES) -> Path:
@@ -61,6 +55,19 @@ def _regular_file(path: Path, *, max_bytes: int = MAX_TEXT_BYTES) -> Path:
     if size > max_bytes:
         raise ValidationError(f"input exceeds {max_bytes} bytes: {path}")
     return path
+
+
+def _reject_symlink_components(path: Path, *, include_leaf: bool = True) -> None:
+    absolute = path.absolute()
+    parts = absolute.parts
+    if not parts:
+        return
+    current = Path(parts[0])
+    stop = len(parts) if include_leaf else max(1, len(parts) - 1)
+    for part in parts[1:stop]:
+        current /= part
+        if Path.is_symlink(current):
+            raise ValidationError(f"symbolic-link path component is not allowed: {current}")
 
 
 def read_text(path: str | Path, *, max_bytes: int = MAX_TEXT_BYTES) -> str:
@@ -110,47 +117,126 @@ def clear_json_cache() -> None:
     _load_json_cached.cache_clear()
 
 
-def atomic_write_text(path: str | Path, text: str, *, mode: int = 0o644) -> None:
+def _fsync_directory(path: Path) -> None:
+    flags = getattr(os, "O_DIRECTORY", 0) | os.O_RDONLY
+    try:
+        fd = os.open(path, flags)
+    except OSError:
+        return
+    try:
+        os.fsync(fd)
+    except OSError:
+        pass
+    finally:
+        os.close(fd)
+
+
+def _write_all(fd: int, payload: bytes) -> None:
+    view = memoryview(payload)
+    while view:
+        written = os.write(fd, view)
+        if written <= 0:
+            raise OSError("filesystem write made no progress")
+        view = view[written:]
+
+
+def atomic_write_bytes(path: str | Path, payload: bytes, *, mode: int = 0o644) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(target, include_leaf=False)
     if target.is_symlink():
         raise ValidationError(f"refusing to replace symbolic link: {target}")
     fd, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
     temporary = Path(temporary_name)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(text)
-            handle.flush()
-            os.fsync(handle.fileno())
+        try:
+            _write_all(fd, payload)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
         os.chmod(temporary, mode)
         os.replace(temporary, target)
+        _fsync_directory(target.parent)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def atomic_write_text(path: str | Path, text: str, *, mode: int = 0o644) -> None:
+    atomic_write_bytes(path, text.encode("utf-8"), mode=mode)
 
 
 def write_json(path: str | Path, value: Any) -> None:
     atomic_write_text(path, json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
 
 
+@contextmanager
+def file_transaction(paths: Sequence[str | Path]) -> Iterator[None]:
+    """Restore every listed file if a multi-file mutation raises.
+
+    Callers must hold their project mutation lock before entering.  The helper is
+    intentionally bounded and rejects symlink targets, so rollback cannot escape
+    the intended state directory.
+    """
+
+    snapshots: dict[Path, tuple[bytes, int] | None] = {}
+    for raw in dict.fromkeys(Path(value) for value in paths):
+        _reject_symlink_components(raw, include_leaf=False)
+        if raw.is_symlink():
+            raise ValidationError(f"transaction target cannot be a symbolic link: {raw}")
+        if raw.exists():
+            if not raw.is_file():
+                raise ValidationError(f"transaction target must be a regular file: {raw}")
+            if raw.stat().st_size > MAX_TEXT_BYTES:
+                raise ValidationError(f"transaction target exceeds {MAX_TEXT_BYTES} bytes: {raw}")
+            snapshots[raw] = (raw.read_bytes(), raw.stat().st_mode & 0o777)
+        else:
+            snapshots[raw] = None
+    try:
+        yield
+    except BaseException:
+        for target, snapshot in snapshots.items():
+            if snapshot is None:
+                if target.exists() and not target.is_symlink() and target.is_file():
+                    target.unlink()
+                    _fsync_directory(target.parent)
+            else:
+                payload, mode = snapshot
+                atomic_write_bytes(target, payload, mode=mode)
+        clear_json_cache()
+        raise
+
+
 def append_jsonl(path: str | Path, record: Mapping[str, Any]) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(target, include_leaf=False)
     if target.is_symlink():
         raise ValidationError(f"refusing to append through symbolic link: {target}")
     payload = (canonical_json(dict(record)) + "\n").encode("utf-8")
     if len(payload) > MAX_JSONL_RECORD_BYTES:
         raise ValidationError(f"JSONL record exceeds {MAX_JSONL_RECORD_BYTES} bytes")
-    flags = os.O_APPEND | os.O_CREAT | os.O_WRONLY
-    if hasattr(os, "O_NOFOLLOW"):
-        flags |= os.O_NOFOLLOW
-    fd = os.open(target, flags, 0o644)
-    try:
-        written = os.write(fd, payload)
-        if written != len(payload):
-            raise OSError(f"short JSONL write: {written} of {len(payload)} bytes")
-        os.fsync(fd)
-    finally:
-        os.close(fd)
+    lock_path = target.with_name(f".{target.name}.append.lock")
+    with exclusive_lock(lock_path):
+        flags = os.O_CREAT | os.O_RDWR | os.O_APPEND
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        existed = target.exists()
+        fd = os.open(target, flags, 0o644)
+        original_size = os.fstat(fd).st_size
+        try:
+            try:
+                written = os.write(fd, payload)
+                if written != len(payload):
+                    raise OSError(f"short JSONL write: {written} of {len(payload)} bytes")
+                os.fsync(fd)
+            except BaseException:
+                os.ftruncate(fd, original_size)
+                os.fsync(fd)
+                raise
+        finally:
+            os.close(fd)
+        if not existed:
+            _fsync_directory(target.parent)
 
 
 def iter_jsonl(path: str | Path) -> Iterator[JsonObject]:
@@ -190,6 +276,40 @@ def sha256_file(path: str | Path, *, chunk_bytes: int = 1024 * 1024) -> str:
     return digest.hexdigest()
 
 
+def _same_lock(path: Path, identity: tuple[int, int], token: str) -> bool:
+    try:
+        stat = path.lstat()
+        if path.is_symlink() or (stat.st_dev, stat.st_ino) != identity:
+            return False
+        flags = os.O_RDONLY
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(path, flags)
+        try:
+            payload = os.read(fd, 4096).decode("utf-8", errors="strict")
+        finally:
+            os.close(fd)
+        value = json.loads(payload, parse_constant=_reject_non_finite)
+        return isinstance(value, dict) and value.get("token") == token
+    except (FileNotFoundError, OSError, UnicodeError, ValueError):
+        return False
+
+
+def _unlink_if_same(path: Path, stat_result: os.stat_result) -> bool:
+    try:
+        current = path.lstat()
+    except FileNotFoundError:
+        return False
+    if path.is_symlink() or (current.st_dev, current.st_ino) != (stat_result.st_dev, stat_result.st_ino):
+        return False
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return False
+    _fsync_directory(path.parent)
+    return True
+
+
 @contextmanager
 def exclusive_lock(
     path: str | Path,
@@ -197,22 +317,28 @@ def exclusive_lock(
     timeout: float = DEFAULT_LOCK_TIMEOUT,
     stale_after: float = DEFAULT_STALE_LOCK_SECONDS,
 ) -> Iterator[None]:
-    """Acquire a small cross-platform lock file using atomic O_EXCL creation."""
+    """Acquire an ownership-bound cross-platform lock using atomic O_EXCL creation."""
 
     if timeout < 0 or stale_after <= 0:
         raise ValidationError("invalid lock timing configuration")
     lock = Path(path)
     lock.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(lock, include_leaf=False)
     deadline = time.monotonic() + timeout
-    payload = canonical_json({"pid": os.getpid(), "created_at": utc_now()}) + "\n"
+    token = secrets.token_hex(32)
+    payload = (canonical_json({"pid": os.getpid(), "created_at": utc_now(), "token": token}) + "\n").encode()
+    identity: tuple[int, int] | None = None
     while True:
         try:
-            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+            if hasattr(os, "O_NOFOLLOW"):
+                flags |= os.O_NOFOLLOW
+            fd = os.open(lock, flags, 0o600)
         except FileExistsError:
             try:
-                age = time.time() - lock.stat().st_mtime
-                if age > stale_after and not lock.is_symlink():
-                    lock.unlink(missing_ok=True)
+                observed = lock.lstat()
+                age = time.time() - observed.st_mtime
+                if age > stale_after and not lock.is_symlink() and _unlink_if_same(lock, observed):
                     continue
             except FileNotFoundError:
                 continue
@@ -221,12 +347,43 @@ def exclusive_lock(
             time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
             continue
         try:
-            os.write(fd, payload.encode("utf-8"))
+            _write_all(fd, payload)
             os.fsync(fd)
+            stat = os.fstat(fd)
+            identity = (stat.st_dev, stat.st_ino)
         finally:
             os.close(fd)
+        _fsync_directory(lock.parent)
         break
     try:
         yield
     finally:
-        lock.unlink(missing_ok=True)
+        if identity is not None and _same_lock(lock, identity, token):
+            try:
+                current = lock.lstat()
+                _unlink_if_same(lock, current)
+            except FileNotFoundError:
+                pass
+
+
+__all__ = [
+    "MAX_JSONL_RECORDS",
+    "MAX_JSONL_RECORD_BYTES",
+    "MAX_TEXT_BYTES",
+    "append_jsonl",
+    "atomic_write_bytes",
+    "atomic_write_text",
+    "canonical_json",
+    "clear_json_cache",
+    "exclusive_lock",
+    "file_transaction",
+    "iter_jsonl",
+    "load_json",
+    "new_id",
+    "project_regular_file",
+    "read_jsonl",
+    "read_text",
+    "sha256_file",
+    "utc_now",
+    "write_json",
+]

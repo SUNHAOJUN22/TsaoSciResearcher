@@ -8,14 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .capabilities import search_capabilities
-from .capsule import export_capsule, verify_capsule
-from .io import write_json
-from .receipts import record_receipt, verify_receipts
-from .router import route
-from .scientific_quality import evaluate_quality
-from .state import RESEARCH_TYPES, initialize, transition, verify
-from .strategy import advise_computation_strategy
+from .contracts import RESEARCH_TYPES
 from .version import __version__
 
 
@@ -121,8 +114,12 @@ def main() -> None:
 
     args = parser.parse_args()
     if args.command == "route":
+        from .router import route
+
         _emit(route(args.text))
     elif args.command == "search":
+        from .capabilities import search_capabilities
+
         _emit(
             search_capabilities(
                 args.query,
@@ -132,11 +129,15 @@ def main() -> None:
             )
         )
     elif args.command == "quality":
+        from .scientific_quality import evaluate_quality
+
         result = evaluate_quality(_load_quality_request(args.input))
         _emit(result)
         if result["status"] == "BLOCK":
             raise SystemExit(2)
     elif args.command == "strategy":
+        from .strategy import advise_computation_strategy
+
         result = advise_computation_strategy(
             args.question,
             args.observable,
@@ -145,9 +146,13 @@ def main() -> None:
             args.evidence,
         )
         if args.output:
+            from .io import write_json
+
             write_json(args.output, result)
         _emit(result)
     elif args.command == "init":
+        from .state import initialize
+
         print(
             initialize(
                 args.name,
@@ -158,10 +163,16 @@ def main() -> None:
             )
         )
     elif args.command == "transition":
+        from .state import transition
+
         _emit(transition(args.project, args.state, args.reason, approvals=args.approval))
     elif args.command == "verify":
+        from .state import verify
+
         _emit(verify(args.project))
     elif args.command == "receipt" and args.receipt_command == "record":
+        from .receipts import record_receipt
+
         _emit(
             record_receipt(
                 args.project,
@@ -178,10 +189,16 @@ def main() -> None:
             )
         )
     elif args.command == "receipt" and args.receipt_command == "verify":
+        from .receipts import verify_receipts
+
         _emit(verify_receipts(args.project))
     elif args.command == "capsule" and args.capsule_command == "export":
+        from .capsule import export_capsule
+
         _emit(export_capsule(args.project, args.output, mode=args.mode))
     elif args.command == "capsule" and args.capsule_command == "verify":
+        from .capsule import verify_capsule
+
         _emit(verify_capsule(args.capsule))
 
 

@@ -10,7 +10,7 @@ description: >
   investigate, analyze, visualize, write, review, audit, manage or communicate
   scientific research. Delegate real multiscale simulations to TsaoSciComputation
   through the structured computation-handoff workflow. Record external execution receipts and export deterministic reproducibility capsules when provenance is required.
-version: 0.7.0
+version: 0.7.1
 allowed-tools: Read, Glob, Grep, WebSearch, Bash(python *), Bash(python3 *)
 metadata:
   canonical_name: TsaoSciResearcher

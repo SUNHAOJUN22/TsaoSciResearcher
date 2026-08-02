@@ -1,0 +1,79 @@
+[
+  {
+    "schema_version": "2.0",
+    "id": "TSR-A019",
+    "slug": "first-principles-strategy-advisor",
+    "name_zh": "第一性原理计算与仿真策略顾问",
+    "name_en": "First-Principles Computation and Simulation Strategy Advisor",
+    "category": "vNext核心能力",
+    "domains": [
+      "general",
+      "computational-chemistry-materials",
+      "molecular-dynamics-multiscale",
+      "catalysis-polymers-composites",
+      "fem-multiphysics",
+      "cfd-particles-processing",
+      "process-kinetics-digital-twin"
+    ],
+    "description": "从可观测量、自由度、守恒律、对称性、热力学势、统计系综、量子与统计物理、尺度分离和证伪要求出发，提出最低充分的计算或仿真方法阶梯；仅提供策略，不运行求解器。",
+    "implementation_level": "native-research",
+    "maturity": "beta",
+    "workflow": "computation-handoff",
+    "positive_triggers": [
+      "第一性原理策略",
+      "计算策略",
+      "仿真策略",
+      "统计物理",
+      "量子力学",
+      "方法阶梯",
+      "first-principles strategy",
+      "computation strategy",
+      "simulation strategy",
+      "statistical mechanics",
+      "quantum mechanics"
+    ],
+    "negative_triggers": [
+      "执行求解器",
+      "伪造计算结果"
+    ],
+    "input_schema": "schemas/v2/capability-invocation.schema.json",
+    "output_schema": "schemas/v2/computation-strategy.schema.json",
+    "validators": [
+      "schema",
+      "physics-frame",
+      "execution-boundary"
+    ],
+    "failure_modes": [
+      "observable undefined",
+      "scale ambiguity",
+      "method selected without governing-physics rationale",
+      "validation or falsification absent",
+      "advisory plan misrepresented as executed computation"
+    ],
+    "recovery": [
+      "request observable and conditions",
+      "return lowest-sufficient method ladder",
+      "require external execution receipt before any completion claim"
+    ],
+    "human_approval": {
+      "required": false,
+      "points": [
+        "qualified method review before external execution"
+      ]
+    },
+    "computation_handoff": {
+      "mode": "optional",
+      "profile": "first-principles-strategy"
+    },
+    "data_egress": "none",
+    "references": [
+      "references/computation/first-principles-strategy.md",
+      "docs/FIRST_PRINCIPLES_STRATEGY.md"
+    ],
+    "source_lineage": [
+      {
+        "source": "vNext-original"
+      }
+    ]
+  }
+]

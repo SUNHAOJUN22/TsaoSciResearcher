@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **正式版本 0.7.0** · Apache-2.0 · Python 3.10–3.13 · Windows、Linux、macOS
+> **正式版本 0.7.1** · Apache-2.0 · Python 3.10–3.13 · Windows、Linux、macOS
 
 ## 实际代码到底实现了什么
 
@@ -53,8 +53,10 @@ TsaoSciResearcher 是一个**单入口科研路由器、项目状态系统、验
 - **第一性原理策略顾问**：先定义可观测量、自由度、守恒律、量子/统计物理、热力学势、系综、尺度和证伪，再提出最低充分的计算/仿真方法阶梯；不运行求解器。
 - **受控计算交接**：真实计算前记录输入哈希、尺度、方法、条件、收敛/UQ、预期输出和审批点。
 - **Execution Receipt v2**：把真实外部执行绑定到 handoff、引擎、参数、时间、退出状态和输出哈希。
-- **Reproducibility Capsule**：确定性 metadata/full ZIP，拒绝路径逃逸、符号链接、重复成员和校验和篡改。
-- **真实性状态机**：`completed`、`checked`、`validated`、`accepted` 不能互相替代。
+- **Reproducibility Capsule**：确定性 metadata/full ZIP，拒绝路径逃逸、符号链接、未声明成员、重复清单记录和校验和篡改。
+- **安装后运行一致性**：wheel 内置经校验同步的路由与能力数据；分发验收会在隔离安装中真实执行 `route` 与 `search`。
+- **所有权绑定变更**：锁释放不会删除后来接管的锁；JSONL 与多文件项目变更在可处理写入失败时会完整回滚。
+- **真实性状态机**：handoff 仅保持 `planned`/`prepared`，receipt 绑定已登记 handoff 的哈希，且 `completed`、`checked`、`validated`、`accepted` 不能互相替代。
 
 ## 第一性原理计算与仿真策略
 

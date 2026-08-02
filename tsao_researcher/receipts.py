@@ -14,6 +14,7 @@ from .io import (
     append_jsonl,
     atomic_write_text,
     exclusive_lock,
+    file_transaction,
     new_id,
     project_regular_file,
     read_jsonl,
@@ -92,10 +93,29 @@ def record_receipt(
 
     state_root = project_root(root)
     project = load_project(state_root)
+    if not isinstance(handoff_path, str):
+        raise TypeError("handoff_path must be a string")
     handoff_file = _safe_project_file(state_root, handoff_path, field="handoff")
     handoff = json.loads(handoff_file.read_text(encoding="utf-8", errors="strict"))
+    registered_handoffs = project.get("computation_handoffs", [])
+    relative_handoff = handoff_file.relative_to(state_root.resolve()).as_posix()
+    if not isinstance(registered_handoffs, list) or relative_handoff not in registered_handoffs:
+        raise ValidationError("handoff is not registered in this project")
     if not isinstance(handoff, dict) or handoff.get("project_id") != project.get("project_id"):
         raise ValidationError("handoff does not belong to this project")
+    if handoff.get("status") != "ready" or handoff.get("evidence_level") != "prepared":
+        raise ValidationError("execution receipts require a ready, prepared handoff")
+    boundary = handoff.get("execution_boundary")
+    if not isinstance(boundary, dict) or boundary.get("solver_executed") is not False:
+        raise ValidationError("handoff execution boundary is missing or invalid")
+    if (
+        not isinstance(engine, str)
+        or not isinstance(command, list)
+        or any(not isinstance(value, str) for value in command)
+    ):
+        raise TypeError("engine and command values must be strings")
+    if isinstance(exit_code, bool) or not isinstance(exit_code, int):
+        raise TypeError("exit_code must be an integer")
     if not engine.strip() or not command or any(not value.strip() for value in command):
         raise ValidationError("engine and a non-empty command vector are required")
     start = _parse_timestamp(started_at, "started_at")
@@ -111,7 +131,8 @@ def record_receipt(
         "receipt_id": new_id("RUN"),
         "project_id": project["project_id"],
         "handoff_id": handoff.get("handoff_id"),
-        "handoff_path": handoff_file.relative_to(state_root.resolve()).as_posix(),
+        "handoff_path": relative_handoff,
+        "handoff_sha256": sha256_file(handoff_file),
         "engine": {"name": engine.strip(), "version": engine_version.strip() or None},
         "command": [value.strip() for value in command],
         "started_at": started_at.strip(),
@@ -132,26 +153,30 @@ def record_receipt(
         registered = project.get("execution_receipts", [])
         if not isinstance(registered, list):
             raise ValidationError("project execution_receipts must be a list")
-        append_jsonl(state_root / relative_receipt, receipt)
-        registered.append(receipt["receipt_id"])
-        project["execution_receipts"] = registered
-        project["updated_at"] = receipt["recorded_at"]
-        atomic_write_text(
-            state_root / "project.yaml",
-            yaml.safe_dump(project, sort_keys=False, allow_unicode=True),
-        )
-        append_jsonl(
-            state_root / "artifacts.jsonl",
-            {
-                "artifact_id": new_id("ART"),
-                "project_id": project["project_id"],
-                "artifact_type": "execution-receipt",
-                "path": relative_receipt,
-                "status": status,
-                "related_ids": [receipt["receipt_id"], str(receipt["handoff_id"])],
-                "created_at": receipt["recorded_at"],
-            },
-        )
+        receipt_path = state_root / relative_receipt
+        project_path = state_root / "project.yaml"
+        artifacts_path = state_root / "artifacts.jsonl"
+        with file_transaction((receipt_path, project_path, artifacts_path)):
+            append_jsonl(receipt_path, receipt)
+            registered.append(receipt["receipt_id"])
+            project["execution_receipts"] = registered
+            project["updated_at"] = receipt["recorded_at"]
+            atomic_write_text(
+                project_path,
+                yaml.safe_dump(project, sort_keys=False, allow_unicode=True),
+            )
+            append_jsonl(
+                artifacts_path,
+                {
+                    "artifact_id": new_id("ART"),
+                    "project_id": project["project_id"],
+                    "artifact_type": "execution-receipt",
+                    "path": relative_receipt,
+                    "status": status,
+                    "related_ids": [receipt["receipt_id"], str(receipt["handoff_id"])],
+                    "created_at": receipt["recorded_at"],
+                },
+            )
     return receipt
 
 
@@ -177,6 +202,8 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         if not receipt_id.startswith("RUN-"):
             raise IntegrityError(f"execution receipt {index} has an invalid ID")
         actual_ids.append(receipt_id)
+        if receipt.get("schema_version") != "2.0":
+            raise IntegrityError(f"execution receipt schema invalid: {receipt_id}")
         if receipt.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"execution receipt project mismatch: {receipt_id}")
         handoff_path = str(receipt.get("handoff_path", ""))
@@ -184,11 +211,23 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
             handoff_file = _safe_project_file(state_root, handoff_path, field="handoff")
         except ValidationError as exc:
             raise IntegrityError(str(exc)) from exc
+        registered_handoffs = project.get("computation_handoffs", [])
+        if not isinstance(registered_handoffs, list) or handoff_path not in registered_handoffs:
+            raise IntegrityError(f"execution receipt handoff is not registered: {receipt_id}")
         handoff = json.loads(handoff_file.read_text(encoding="utf-8", errors="strict"))
         if not isinstance(handoff, dict) or handoff.get("handoff_id") != receipt.get("handoff_id"):
             raise IntegrityError(f"execution receipt handoff mismatch: {receipt_id}")
         if handoff.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"execution receipt handoff project mismatch: {receipt_id}")
+        if handoff.get("status") != "ready" or handoff.get("evidence_level") != "prepared":
+            raise IntegrityError(f"execution receipt handoff readiness invalid: {receipt_id}")
+        boundary = handoff.get("execution_boundary")
+        if not isinstance(boundary, dict) or boundary.get("solver_executed") is not False:
+            raise IntegrityError(f"execution receipt handoff boundary invalid: {receipt_id}")
+        if receipt.get("handoff_sha256") != sha256_file(handoff_file):
+            raise IntegrityError(f"execution receipt handoff checksum mismatch: {receipt_id}")
+        if not str(receipt.get("truth_boundary", "")).endswith("does not grant scientific acceptance."):
+            raise IntegrityError(f"execution receipt truth boundary invalid: {receipt_id}")
         try:
             started = _parse_timestamp(str(receipt.get("started_at", "")), "started_at")
             finished = _parse_timestamp(str(receipt.get("finished_at", "")), "finished_at")
@@ -206,7 +245,7 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
                 raise IntegrityError(f"successful execution receipt semantics invalid: {receipt_id}")
             successful += 1
         elif status == "failed":
-            if receipt.get("evidence_level") != "failed":
+            if exit_code == 0 or receipt.get("evidence_level") != "failed":
                 raise IntegrityError(f"failed execution receipt semantics invalid: {receipt_id}")
             failed += 1
         else:

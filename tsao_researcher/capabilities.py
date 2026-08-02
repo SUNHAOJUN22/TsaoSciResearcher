@@ -2,24 +2,34 @@
 
 from __future__ import annotations
 
+import heapq
 import re
 import unicodedata
-from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from .errors import ValidationError
 from .io import load_json
 
-ROOT = Path(__file__).resolve().parents[1]
-CATALOG_PATH = ROOT / "capabilities" / "v2" / "capabilities.json"
-EXTENSIONS_PATH = ROOT / "capabilities" / "v2" / "extensions.json"
+PACKAGE_DATA = Path(__file__).resolve().parent / "data" / "capabilities"
+CATALOG_PATH = PACKAGE_DATA / "capabilities.json"
+EXTENSIONS_PATH = PACKAGE_DATA / "extensions.json"
 _TOKEN_RE = re.compile(r"[\w-]+", re.UNICODE)
 
 
 def _normalize(value: str) -> str:
     return unicodedata.normalize("NFKC", value).casefold()
+
+
+def _json_clone(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: _json_clone(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_json_clone(item) for item in value]
+    if isinstance(value, tuple):
+        return [_json_clone(item) for item in value]
+    return value
 
 
 @lru_cache(maxsize=16)
@@ -43,6 +53,57 @@ def _catalog(path: Path, mtime_ns: int, size: int) -> tuple[dict[str, Any], ...]
         ids.add(identifier)
         slugs.add(slug)
         rows.append(row)
+    strict_contract = path.resolve() in {CATALOG_PATH.resolve(), EXTENSIONS_PATH.resolve()}
+    if not strict_contract:
+        return tuple(rows)
+    required_strings = (
+        "schema_version",
+        "id",
+        "slug",
+        "name_zh",
+        "name_en",
+        "category",
+        "description",
+        "implementation_level",
+        "maturity",
+        "workflow",
+        "input_schema",
+        "output_schema",
+        "data_egress",
+    )
+    list_fields = (
+        "domains",
+        "positive_triggers",
+        "negative_triggers",
+        "validators",
+        "failure_modes",
+        "recovery",
+        "references",
+        "source_lineage",
+    )
+    string_list_fields = (
+        "domains",
+        "positive_triggers",
+        "negative_triggers",
+        "validators",
+        "failure_modes",
+        "recovery",
+        "references",
+    )
+    for number, row in enumerate(rows, 1):
+        for field in required_strings:
+            if not isinstance(row.get(field), str) or not str(row[field]).strip():
+                raise ValidationError(
+                    f"capability row {number} field {field!r} must be a non-empty string: {path}"
+                )
+        for field in list_fields:
+            if not isinstance(row.get(field), list):
+                raise ValidationError(f"capability row {number} field {field!r} must be a list: {path}")
+        for field in string_list_fields:
+            if any(not isinstance(item, str) or not item.strip() for item in row[field]):
+                raise ValidationError(
+                    f"capability row {number} field {field!r} must contain non-empty strings: {path}"
+                )
     return tuple(rows)
 
 
@@ -92,12 +153,12 @@ def _rows(source: Path) -> tuple[dict[str, Any], ...]:
 
 
 def load_capabilities(path: str | Path = CATALOG_PATH) -> list[dict[str, Any]]:
-    return deepcopy(list(_rows(Path(path))))
+    return cast(list[dict[str, Any]], _json_clone(_rows(Path(path))))
 
 
 def _build_search_index(
     rows: tuple[dict[str, Any], ...],
-) -> tuple[tuple[dict[str, Any], str, frozenset[str]], ...]:
+) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
     indexed = []
     for row in rows:
         fields = [
@@ -112,14 +173,24 @@ def _build_search_index(
             else "",
         ]
         haystack = _normalize(" ".join(str(field) for field in fields))
-        indexed.append((row, haystack, frozenset(_TOKEN_RE.findall(haystack))))
+        slug = str(row.get("slug", ""))
+        domains = row.get("domains", [])
+        indexed.append(
+            (
+                row,
+                haystack,
+                frozenset(_TOKEN_RE.findall(haystack)),
+                _normalize(slug),
+                frozenset(domains) if isinstance(domains, list) else frozenset(),
+            )
+        )
     return tuple(indexed)
 
 
 @lru_cache(maxsize=16)
 def _single_search_index(
     path: Path, mtime_ns: int, size: int
-) -> tuple[tuple[dict[str, Any], str, frozenset[str]], ...]:
+) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
     return _build_search_index(_catalog(path, mtime_ns, size))
 
 
@@ -131,7 +202,7 @@ def _merged_search_index(
     extension_path: Path,
     extension_mtime_ns: int,
     extension_size: int,
-) -> tuple[tuple[dict[str, Any], str, frozenset[str]], ...]:
+) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
     return _build_search_index(
         _merged_catalog(
             base_path,
@@ -144,7 +215,7 @@ def _merged_search_index(
     )
 
 
-def _search_rows(source: Path) -> tuple[tuple[dict[str, Any], str, frozenset[str]], ...]:
+def _search_rows(source: Path) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
     resolved = source.resolve()
     base = CATALOG_PATH.resolve()
     if resolved != base:
@@ -173,29 +244,40 @@ def search_capabilities(
     limit: int = 20,
     path: str | Path = CATALOG_PATH,
 ) -> list[dict[str, Any]]:
+    if not isinstance(query, str):
+        raise TypeError("query must be a string")
+    if workflow is not None and not isinstance(workflow, str):
+        raise TypeError("workflow must be a string or None")
+    if domains is not None and (
+        not isinstance(domains, set) or any(not isinstance(domain, str) for domain in domains)
+    ):
+        raise TypeError("domains must be a set of strings or None")
+    if isinstance(limit, bool) or not isinstance(limit, int):
+        raise TypeError("limit must be an integer")
     if limit < 1 or limit > 200:
         raise ValidationError("limit must be between 1 and 200")
+    clean_workflow = workflow.strip() if workflow else None
+    clean_domains = {domain.strip() for domain in domains or set() if domain.strip()}
     normalized_query = _normalize(query).strip()
     if not normalized_query:
         return []
     tokens = set(_TOKEN_RE.findall(normalized_query))
     scored: list[tuple[int, str, dict[str, Any]]] = []
-    for row, haystack, haystack_tokens in _search_rows(Path(path)):
-        if workflow and row.get("workflow") != workflow:
+    for row, haystack, haystack_tokens, normalized_slug, row_domains in _search_rows(Path(path)):
+        if clean_workflow and row.get("workflow") != clean_workflow:
             continue
-        row_domains = set(row.get("domains", [])) if isinstance(row.get("domains"), list) else set()
-        if domains and not domains.intersection(row_domains):
+        if clean_domains and not clean_domains.intersection(row_domains):
             continue
         overlap = tokens.intersection(haystack_tokens)
         score = len(overlap) * 3
         if normalized_query in haystack:
             score += 8
         slug = str(row.get("slug", ""))
-        if normalized_query == _normalize(slug):
+        if normalized_query == normalized_slug:
             score += 20
         if score:
             scored.append((score, slug, row))
-    scored.sort(key=lambda item: (-item[0], item[1]))
+    ranked = heapq.nsmallest(limit, scored, key=lambda item: (-item[0], item[1]))
     return [
         {
             "score": score,
@@ -204,9 +286,9 @@ def search_capabilities(
             "name_zh": row.get("name_zh"),
             "name_en": row.get("name_en"),
             "workflow": row.get("workflow"),
-            "domains": row.get("domains", []),
+            "domains": _json_clone(row.get("domains", [])),
             "maturity": row.get("maturity"),
             "implementation_level": row.get("implementation_level"),
         }
-        for score, _, row in scored[:limit]
+        for score, _, row in ranked
     ]

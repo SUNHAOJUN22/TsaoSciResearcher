@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 - 2026-08-01
+
+- Bound lock release to the acquiring owner and made handled JSONL/multi-file mutation failures rollback-safe.
+- Strengthened computation handoff and execution-receipt truth boundaries with registered-handoff checksum binding.
+- Enforced exact reproducibility-capsule inventories and hardened installer/release path handling.
+- Packaged synchronized routing/capability runtime data and exercised installed CLI routing/search during distribution acceptance.
+- Added boundary and failure-path regression tests without weakening existing quality gates.
+
 ## 0.7.0 - 2026-07-29
 
 - Added the first-principles computation and simulation strategy advisor for quantum, statistical-mechanical, mesoscopic, continuum, transport and process questions.

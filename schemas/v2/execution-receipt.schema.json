@@ -10,6 +10,7 @@
     "project_id",
     "handoff_id",
     "handoff_path",
+    "handoff_sha256",
     "engine",
     "command",
     "started_at",
@@ -141,6 +142,10 @@
     "truth_boundary": {
       "type": "string",
       "minLength": 1
+    },
+    "handoff_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
     }
   },
   "allOf": [
@@ -184,6 +189,11 @@
         "properties": {
           "evidence_level": {
             "const": "failed"
+          },
+          "exit_code": {
+            "not": {
+              "const": 0
+            }
           }
         }
       }

@@ -11,7 +11,8 @@ from pathlib import Path
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tsao_researcher.state import RESEARCH_TYPES, initialize
+from tsao_researcher.contracts import RESEARCH_TYPES
+from tsao_researcher.state import initialize
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:

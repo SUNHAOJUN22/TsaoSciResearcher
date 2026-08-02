@@ -12,18 +12,39 @@
     {
       "name": "candidate method",
       "rationale": "Explain why the method matches the property, scale and assumptions.",
-      "limitations": ["Document domain, model-form and numerical limitations."]
+      "limitations": [
+        "Document domain, model-form and numerical limitations."
+      ]
     }
   ],
   "inputs": [],
   "boundary_conditions": [],
   "initial_conditions": [],
-  "evaluation_metrics": ["Define a measurable evaluation metric."],
-  "expected_outputs": ["Define the expected validated artifact."],
-  "convergence_checks": ["Define method-appropriate numerical and model convergence."],
-  "uncertainty_analysis": ["Separate parameter, model-form and numerical uncertainty."],
-  "physical_validation": ["Define benchmark, experiment, conservation or limiting-case checks."],
-  "acceptance_criteria": ["Converged, physically consistent and answers the scientific question."],
-  "human_approval_points": ["Approve method, assumptions and resources before execution."],
-  "created_at": "1970-01-01T00:00:00Z"
+  "evaluation_metrics": [
+    "Define a measurable evaluation metric."
+  ],
+  "expected_outputs": [
+    "Define the expected validated artifact."
+  ],
+  "convergence_checks": [
+    "Define method-appropriate numerical and model convergence."
+  ],
+  "uncertainty_analysis": [
+    "Separate parameter, model-form and numerical uncertainty."
+  ],
+  "physical_validation": [
+    "Define benchmark, experiment, conservation or limiting-case checks."
+  ],
+  "acceptance_criteria": [
+    "Converged, physically consistent and answers the scientific question."
+  ],
+  "human_approval_points": [
+    "Approve method, assumptions and resources before execution."
+  ],
+  "created_at": "1970-01-01T00:00:00Z",
+  "execution_boundary": {
+    "solver_executed": false,
+    "external_execution_required": true,
+    "statement": "This handoff plans an external computation; it is not execution evidence."
+  }
 }

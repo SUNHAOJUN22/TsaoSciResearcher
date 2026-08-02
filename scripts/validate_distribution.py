@@ -14,6 +14,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _run_checked(command: list[str]) -> subprocess.CompletedProcess[str]:
+    completed = subprocess.run(command, capture_output=True, text=True)
+    if completed.returncode != 0:
+        rendered = " ".join(command)
+        raise SystemExit(
+            f"isolated runtime command failed ({completed.returncode}): {rendered}\n"
+            f"stdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
+        )
+    return completed
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory")
@@ -27,8 +38,15 @@ def main() -> None:
 
     with zipfile.ZipFile(wheels[0]) as handle:
         names = set(handle.namelist())
-        if "tsao_researcher/py.typed" not in names:
-            raise SystemExit("wheel missing tsao_researcher/py.typed")
+        required_runtime = {
+            "tsao_researcher/py.typed",
+            "tsao_researcher/data/capabilities/capabilities.json",
+            "tsao_researcher/data/capabilities/extensions.json",
+            "tsao_researcher/data/routing/router-rules-v2.json",
+        }
+        missing_runtime = sorted(required_runtime - names)
+        if missing_runtime:
+            raise SystemExit(f"wheel missing installed runtime data: {missing_runtime}")
         metadata = next((name for name in names if name.endswith(".dist-info/METADATA")), None)
         if metadata is None:
             raise SystemExit("wheel METADATA is missing")
@@ -45,9 +63,21 @@ def main() -> None:
                 raise SystemExit(f"wheel metadata missing dependency: {dependency}")
 
     with tarfile.open(sdists[0], "r:gz") as handle:
-        names = set(handle.getnames())
-        if not any(name.endswith("/tsao_researcher/py.typed") for name in names):
-            raise SystemExit("sdist missing py.typed")
+        members = handle.getmembers()
+        names = {member.name for member in members}
+        for member in members:
+            path = Path(member.name)
+            if path.is_absolute() or ".." in path.parts or member.issym() or member.islnk():
+                raise SystemExit(f"unsafe sdist member: {member.name}")
+        required_suffixes = (
+            "/tsao_researcher/py.typed",
+            "/tsao_researcher/data/capabilities/capabilities.json",
+            "/tsao_researcher/data/capabilities/extensions.json",
+            "/tsao_researcher/data/routing/router-rules-v2.json",
+        )
+        for suffix in required_suffixes:
+            if not any(name.endswith(suffix) for name in names):
+                raise SystemExit(f"sdist missing installed runtime data: {suffix}")
 
     with tempfile.TemporaryDirectory(prefix="tsr-wheel-") as temporary:
         environment = Path(temporary) / "venv"
@@ -65,14 +95,18 @@ def main() -> None:
             ],
             check=True,
         )
-        result = subprocess.run(
-            [str(python), "-c", "import tsao_researcher; print(tsao_researcher.__version__)"],
-            check=True,
-            capture_output=True,
-            text=True,
+        result = _run_checked(
+            [str(python), "-c", "import tsao_researcher; print(tsao_researcher.__version__)"]
         )
         if result.stdout.strip() != version:
             raise SystemExit("isolated wheel import version mismatch")
+        for arguments in (
+            ["-m", "tsao_researcher", "route", "Design a traceable multiscale polymer study"],
+            ["-m", "tsao_researcher", "search", "polymer molecular dynamics", "--limit", "3"],
+        ):
+            completed = _run_checked([str(python), *arguments])
+            if not completed.stdout.strip().startswith(("{", "[")):
+                raise SystemExit(f"installed runtime command produced invalid output: {arguments}")
 
     print(f"distribution PASS version={version} wheel={wheels[0].name} sdist={sdists[0].name}")
 

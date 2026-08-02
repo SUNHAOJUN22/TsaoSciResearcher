@@ -125,15 +125,15 @@ MUTATIONS = (
     Mutation(
         "router-word-boundary",
         "scripts/route_task.py",
-        "return re.search(pattern, haystack) is not None",
-        "return keyword in haystack",
+        "return self.pattern.search(text) is not None",
+        "return self.normalized in text",
         ("tests/test_router.py",),
     ),
     Mutation(
         "router-keyword-deduplication",
         "scripts/route_task.py",
-        "if not keyword or keyword in seen:",
-        "if not keyword:",
+        "if not keyword.normalized or keyword.normalized in seen:",
+        "if not keyword.normalized:",
         ("tests/test_router.py",),
     ),
     Mutation(

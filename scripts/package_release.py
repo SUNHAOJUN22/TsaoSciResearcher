@@ -38,6 +38,44 @@ MAX_FILE_BYTES = 64 * 1024 * 1024
 MAX_TOTAL_BYTES = 512 * 1024 * 1024
 
 
+def _is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+        return True
+    except ValueError:
+        return False
+
+
+def _reject_symlink_components(path: Path) -> None:
+    absolute = path.absolute()
+    parts = absolute.parts
+    if not parts:
+        return
+    current = Path(parts[0])
+    for part in parts[1:]:
+        current /= part
+        if current.is_symlink():
+            raise ValueError(f"release path contains a symbolic-link component: {current}")
+
+
+def _validate_output(output: Path, root: Path) -> Path:
+    _reject_symlink_components(output)
+    resolved_output = output.resolve(strict=False)
+    resolved_root = root.resolve()
+    if resolved_output == resolved_root or _is_relative_to(resolved_root, resolved_output):
+        raise ValueError(f"release output overlaps source repository: {resolved_output}")
+    if _is_relative_to(resolved_output, resolved_root):
+        relative = resolved_output.relative_to(resolved_root)
+        allowed_generated = len(relative.parts) == 1 and (
+            relative.parts[0] in EXCLUDED_DIRS or relative.parts[0].startswith(GENERATED_DIR_PREFIXES)
+        )
+        if not allowed_generated:
+            raise ValueError(f"release output overlaps source repository: {resolved_output}")
+    if output.exists() and not output.is_dir():
+        raise ValueError(f"release output must be a directory: {output}")
+    return resolved_output
+
+
 def _is_generated_path(relative: Path) -> bool:
     if not relative.parts:
         return False
@@ -88,9 +126,9 @@ def _zip_info(relative: Path, mode: int) -> zipfile.ZipInfo:
 
 def build_release(output_dir: str | Path, *, root: Path = ROOT) -> tuple[Path, Path]:
     output = Path(output_dir)
+    _validate_output(output, root)
     output.mkdir(parents=True, exist_ok=True)
-    if output.is_symlink():
-        raise ValueError(f"release output cannot be a symbolic link: {output}")
+    _reject_symlink_components(output)
     version = (root / "VERSION").read_text(encoding="utf-8", errors="strict").strip()
     if not version or any(
         char not in "0123456789.-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" for char in version
@@ -133,7 +171,12 @@ def build_release(output_dir: str | Path, *, root: Path = ROOT) -> tuple[Path, P
 
 def verify_sidecar(archive: str | Path, sidecar: str | Path) -> None:
     archive_path = Path(archive)
-    fields = Path(sidecar).read_text(encoding="utf-8", errors="strict").strip().split()
+    sidecar_path = Path(sidecar)
+    if archive_path.is_symlink() or not archive_path.is_file():
+        raise ValueError("release archive must be a regular file")
+    if sidecar_path.is_symlink() or not sidecar_path.is_file() or sidecar_path.stat().st_size > 4096:
+        raise ValueError("release sidecar must be a small regular file")
+    fields = sidecar_path.read_text(encoding="utf-8", errors="strict").strip().split()
     if len(fields) != 2 or fields[1] != archive_path.name:
         raise ValueError("invalid SHA-256 sidecar format or filename")
     expected = fields[0].casefold()

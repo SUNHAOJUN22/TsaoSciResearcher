@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tsao-sci-researcher"
-version = "0.7.0"
+version = "0.7.1"
 description = "Evidence-first full-lifecycle scientific research control layer"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -60,7 +60,7 @@ Security = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/SECURITY.
 include = ["tsao_researcher*"]
 
 [tool.setuptools.package-data]
-tsao_researcher = ["py.typed"]
+tsao_researcher = ["py.typed", "data/**/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

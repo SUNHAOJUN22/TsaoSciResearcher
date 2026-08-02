@@ -24,34 +24,83 @@
     "physical_validation",
     "acceptance_criteria",
     "human_approval_points",
-    "created_at"
+    "created_at",
+    "execution_boundary"
   ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {"const": "2.0"},
-    "handoff_id": {"type": "string", "minLength": 3},
-    "project_id": {"type": "string", "minLength": 3},
-    "scientific_question": {"type": "string", "minLength": 3},
-    "target_property": {"type": "string", "minLength": 1},
-    "profile": {"type": "string", "minLength": 1},
-    "scale": {
-      "enum": ["electronic", "atomistic", "mesoscale", "continuum", "device", "process", "multiscale"]
+    "schema_version": {
+      "const": "2.0"
     },
-    "status": {"enum": ["draft", "ready"]},
-    "evidence_level": {"enum": ["planned", "prepared", "executed", "checked", "validated", "accepted"]},
+    "handoff_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "scientific_question": {
+      "type": "string",
+      "minLength": 3
+    },
+    "target_property": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scale": {
+      "enum": [
+        "electronic",
+        "atomistic",
+        "mesoscale",
+        "continuum",
+        "device",
+        "process",
+        "multiscale"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "ready"
+      ]
+    },
+    "evidence_level": {
+      "enum": [
+        "planned",
+        "prepared"
+      ]
+    },
     "candidate_methods": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "rationale", "limitations"],
+        "required": [
+          "name",
+          "rationale",
+          "limitations"
+        ],
         "properties": {
-          "name": {"type": "string", "minLength": 1},
-          "rationale": {"type": "string", "minLength": 1},
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
           "limitations": {
             "type": "array",
-            "items": {"type": "string", "minLength": 1},
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
             "minItems": 1
           }
         }
@@ -62,58 +111,130 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "size_bytes", "sha256"],
+        "required": [
+          "path",
+          "size_bytes",
+          "sha256"
+        ],
         "properties": {
-          "path": {"type": "string", "minLength": 1},
-          "size_bytes": {"type": "integer", "minimum": 0},
-          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
         }
       }
     },
-    "boundary_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
-    "initial_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "boundary_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "initial_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
     "evaluation_metrics": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
     "expected_outputs": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
-    "created_at": {"type": "string", "format": "date-time"},
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "convergence_checks": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
     "uncertainty_analysis": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
     "physical_validation": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
     "acceptance_criteria": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
     },
     "human_approval_points": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "execution_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "solver_executed",
+        "external_execution_required",
+        "statement"
+      ],
+      "properties": {
+        "solver_executed": {
+          "const": false
+        },
+        "external_execution_required": {
+          "const": true
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   }
 }

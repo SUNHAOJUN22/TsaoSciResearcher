@@ -62,7 +62,7 @@
     "ai_diagrams": 25,
     "references": 23,
     "templates": 14,
-    "test_modules": 36
+    "test_modules": 39
   },
   "schema_version": "1.0",
   "schemas": {
@@ -89,7 +89,7 @@
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.7.0",
+  "version": "0.7.1",
   "workflows": {
     "count": 15,
     "items": [

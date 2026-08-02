@@ -6,8 +6,10 @@ import json
 import re
 import sys
 import unicodedata
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from re import Pattern
 from typing import Any
 
 if __package__ is None or __package__ == "":
@@ -20,6 +22,27 @@ DEFAULT_WORKFLOW = "research-question"
 _WORD_CHAR = r"[0-9a-z_]"
 
 
+@dataclass(frozen=True, slots=True)
+class _Keyword:
+    raw: str
+    normalized: str
+    pattern: Pattern[str] | None
+    bonus: int
+
+    def matches(self, text: str) -> bool:
+        if self.pattern is not None:
+            return self.pattern.search(text) is not None
+        return self.normalized in text
+
+
+@dataclass(frozen=True, slots=True)
+class _Rule:
+    workflow: str
+    weight: int
+    keywords: tuple[_Keyword, ...]
+    order: int
+
+
 def normalize(text: str) -> str:
     if not isinstance(text, str):
         raise TypeError("route text must be a string")
@@ -30,13 +53,55 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", normalized).strip()
 
 
-def _contains(haystack: str, keyword: str) -> bool:
-    if not keyword:
-        return False
-    if keyword.isascii() and any(char.isalnum() for char in keyword):
-        pattern = rf"(?<!{_WORD_CHAR}){re.escape(keyword)}(?!{_WORD_CHAR})"
-        return re.search(pattern, haystack) is not None
-    return keyword in haystack
+def _keyword(raw_keyword: str) -> _Keyword:
+    normalized = normalize(raw_keyword)
+    pattern: Pattern[str] | None = None
+    if normalized.isascii() and any(char.isalnum() for char in normalized):
+        pattern = re.compile(rf"(?<!{_WORD_CHAR}){re.escape(normalized)}(?!{_WORD_CHAR})")
+    return _Keyword(
+        raw=raw_keyword,
+        normalized=normalized,
+        pattern=pattern,
+        bonus=min(normalized.count(" "), 3) + (1 if len(normalized) >= 8 else 0),
+    )
+
+
+def _unique_keywords(raw_keywords: list[Any], *, workflow: str) -> tuple[_Keyword, ...]:
+    seen: set[str] = set()
+    compiled: list[_Keyword] = []
+    for raw_keyword in raw_keywords:
+        if not isinstance(raw_keyword, str):
+            raise ValueError(f"{workflow}: keyword must be a string")
+        keyword = _keyword(raw_keyword)
+        if not keyword.normalized or keyword.normalized in seen:
+            continue
+        seen.add(keyword.normalized)
+        compiled.append(keyword)
+    return tuple(compiled)
+
+
+def _compile_rules(active_rules: dict[str, dict[str, Any]]) -> tuple[_Rule, ...]:
+    compiled: list[_Rule] = []
+    for order, (workflow, rule) in enumerate(active_rules.items()):
+        if not isinstance(workflow, str) or not isinstance(rule, dict):
+            raise ValueError("router rules must map workflow names to objects")
+        raw_keywords = rule.get("keywords", [])
+        if not isinstance(raw_keywords, list):
+            raise ValueError(f"{workflow}: keywords must be a list")
+        weight = rule.get("weight", 1)
+        if not isinstance(weight, int) or weight < 0:
+            raise ValueError(f"{workflow}: weight must be a non-negative integer")
+        compiled.append(
+            _Rule(
+                workflow,
+                weight,
+                _unique_keywords(raw_keywords, workflow=workflow),
+                order,
+            )
+        )
+    if not compiled:
+        raise ValueError("router rules must be a non-empty object")
+    return tuple(compiled)
 
 
 @lru_cache(maxsize=8)
@@ -48,31 +113,28 @@ def load_rules(path: Path | None = None) -> dict[str, dict[str, Any]]:
     return value
 
 
+@lru_cache(maxsize=8)
+def _compiled_default_rules(path: Path, mtime_ns: int, size: int) -> tuple[_Rule, ...]:
+    del mtime_ns, size
+    return _compile_rules(load_rules(path))
+
+
+def _active_compiled_rules(rules: dict[str, dict[str, Any]] | None) -> tuple[_Rule, ...]:
+    if rules:
+        return _compile_rules(rules)
+    source = (ROOT / "router_rules.json").resolve()
+    stat = source.stat()
+    return _compiled_default_rules(source, stat.st_mtime_ns, stat.st_size)
+
+
 def route(text: str, *, rules: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
     normalized_text = normalize(text)
-    active_rules = rules or load_rules()
     scored: list[tuple[str, int, list[str], int]] = []
-    for order, (workflow, rule) in enumerate(active_rules.items()):
-        raw_keywords = rule.get("keywords", [])
-        if not isinstance(raw_keywords, list):
-            raise ValueError(f"{workflow}: keywords must be a list")
-        weight = rule.get("weight", 1)
-        if not isinstance(weight, int) or weight < 0:
-            raise ValueError(f"{workflow}: weight must be a non-negative integer")
-        seen: set[str] = set()
-        matches: list[str] = []
-        score = 0
-        for raw_keyword in raw_keywords:
-            if not isinstance(raw_keyword, str):
-                raise ValueError(f"{workflow}: keyword must be a string")
-            keyword = normalize(raw_keyword)
-            if not keyword or keyword in seen:
-                continue
-            seen.add(keyword)
-            if _contains(normalized_text, keyword):
-                matches.append(raw_keyword)
-                score += weight + min(keyword.count(" "), 3) + (1 if len(keyword) >= 8 else 0)
-        scored.append((workflow, score, matches, order))
+    for rule in _active_compiled_rules(rules):
+        matched = [keyword for keyword in rule.keywords if keyword.matches(normalized_text)]
+        matches = [keyword.raw for keyword in matched]
+        score = sum(rule.weight + keyword.bonus for keyword in matched)
+        scored.append((rule.workflow, score, matches, rule.order))
     ranked = sorted(scored, key=lambda item: (-item[1], item[3]))
     best_workflow, best_score, best_matches, _ = ranked[0]
     if best_score <= 0:

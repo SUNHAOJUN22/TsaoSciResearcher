@@ -11,12 +11,15 @@ from typing import Any
 
 import yaml
 
+from .contracts import RESEARCH_TYPES
 from .errors import IntegrityError, StateTransitionError, ValidationError
 from .io import (
+    _reject_symlink_components,
     append_jsonl,
     atomic_write_text,
     canonical_json,
     exclusive_lock,
+    file_transaction,
     new_id,
     project_regular_file,
     read_jsonl,
@@ -25,9 +28,6 @@ from .io import (
 
 STATE_DIR = ".tsao-research"
 MANAGED_MARKER = "This directory is managed by TsaoSciResearcher."
-RESEARCH_TYPES = frozenset(
-    {"descriptive", "explanatory", "predictive", "causal", "design", "mechanistic", "mixed"}
-)
 COMPATIBILITY_JSON = {
     "questions.json": "questions",
     "hypotheses.json": "hypotheses",
@@ -120,9 +120,10 @@ def initialize(
         raise ValidationError("project name and a substantive scientific question are required")
     if clean_type not in RESEARCH_TYPES:
         raise ValidationError(f"unsupported research type: {research_type}")
+    requested = Path(output).expanduser()
+    requested_root = requested if requested.name == STATE_DIR else requested / STATE_DIR
+    _reject_symlink_components(requested_root)
     root = project_root(output)
-    if root.is_symlink():
-        raise ValidationError(f"project state directory cannot be a symbolic link: {root}")
     if root.exists() and any(root.iterdir()) and not force:
         raise FileExistsError(f"{root} exists; pass force=True to replace a managed state directory")
     if root.exists() and any(root.iterdir()):
@@ -240,46 +241,50 @@ def transition(
         project_id = str(project.get("project_id", ""))
         timestamp = utc_now()
         new_approvals = [value for value in requested if value not in existing_approvals]
-        for reference in new_approvals:
+        approvals_path = state_root / "approvals.jsonl"
+        decisions_path = state_root / "decisions.jsonl"
+        events_path = state_root / "state" / "events.jsonl"
+        project_path = state_root / "project.yaml"
+        with file_transaction((approvals_path, decisions_path, events_path, project_path)):
+            for reference in new_approvals:
+                append_jsonl(
+                    approvals_path,
+                    {
+                        "approval_id": new_id("APR"),
+                        "project_id": project_id,
+                        "timestamp": timestamp,
+                        "reference": reference,
+                        "transition": next_state,
+                    },
+                )
             append_jsonl(
-                state_root / "approvals.jsonl",
+                decisions_path,
                 {
-                    "approval_id": new_id("APR"),
+                    "decision_id": new_id("DEC"),
                     "project_id": project_id,
                     "timestamp": timestamp,
-                    "reference": reference,
-                    "transition": next_state,
+                    "previous_state": current,
+                    "next_state": next_state,
+                    "reason": clean_reason,
+                    "approvals": requested,
                 },
             )
-        append_jsonl(
-            state_root / "decisions.jsonl",
-            {
-                "decision_id": new_id("DEC"),
-                "project_id": project_id,
-                "timestamp": timestamp,
-                "previous_state": current,
-                "next_state": next_state,
-                "reason": clean_reason,
-                "approvals": requested,
-            },
-        )
-        events_path = state_root / "state" / "events.jsonl"
-        previous_hash = project.get("latest_event_hash")
-        event = _event_payload(
-            project_id,
-            "project.transition",
-            current,
-            next_state,
-            clean_reason,
-            requested,
-            previous_hash if isinstance(previous_hash, str) else None,
-        )
-        append_jsonl(events_path, event)
-        project["status"] = next_state
-        project["updated_at"] = timestamp
-        project["latest_event_hash"] = event["event_hash"]
-        project["approvals"] = merged_approvals
-        _write_project(state_root / "project.yaml", project)
+            previous_hash = project.get("latest_event_hash")
+            event = _event_payload(
+                project_id,
+                "project.transition",
+                current,
+                next_state,
+                clean_reason,
+                requested,
+                previous_hash if isinstance(previous_hash, str) else None,
+            )
+            append_jsonl(events_path, event)
+            project["status"] = next_state
+            project["updated_at"] = timestamp
+            project["latest_event_hash"] = event["event_hash"]
+            project["approvals"] = merged_approvals
+            _write_project(project_path, project)
         return project
 
 
