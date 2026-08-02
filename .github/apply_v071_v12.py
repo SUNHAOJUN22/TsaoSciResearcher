@@ -129,6 +129,15 @@ def main() -> None:
             raise AssertionError(test_name)
         path.write_text(source.replace(fullwidth, escaped), encoding="utf-8", newline="\n")
 
+    patch_path = Path(".github/apply_v071_cli_lazy.py")
+    namespace: dict[str, object] = {"__name__": "apply_v071_cli_lazy"}
+    exec(compile(patch_path.read_bytes(), str(patch_path), "exec"), namespace)
+    patch_main = namespace.get("main")
+    if not callable(patch_main):
+        raise AssertionError("CLI lazy patch main is missing")
+    patch_main()
+    patch_path.unlink()
+
 
 if __name__ == "__main__":
     main()
