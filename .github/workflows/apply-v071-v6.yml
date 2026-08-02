@@ -78,9 +78,7 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Run complete quality and release gates
-        env:
-          TSR_TEST_ORDER_SEED: "20260730"
+      - name: Prepare generated artifacts and format
         run: |
           set -euo pipefail
           mkdir -p artifacts
@@ -91,30 +89,56 @@ jobs:
           python scripts/build_sbom.py --write
           python -m ruff check --fix scripts tsao_researcher tests
           python -m ruff format scripts tsao_researcher tests
+
+      - name: Run functional test suite
+        run: |
           python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+
+      - name: Run branch coverage gate
+        run: |
           python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov \
             --ignore=tests/test_import_isolation.py \
             --cov=tsao_researcher --cov-branch \
             --cov-report=term-missing \
             --cov-report=json:artifacts/coverage.json \
             --cov-report=xml:artifacts/coverage.xml
+
+      - name: Run order-independence gates
+        env:
+          TSR_TEST_ORDER_SEED: "20260730"
+        run: |
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+
+      - name: Run formatting static type and source security gates
+        run: |
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
+
+      - name: Run dependency security gate
+        run: |
           python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
           python -m pip_audit --strict -r artifacts/resolved-environment.lock \
             --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+
+      - name: Run mutation performance and quality baseline gates
+        run: |
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
           python scripts/check_quality_baseline.py
+
+      - name: Build validation evidence and generated reports
+        run: |
           python scripts/build_validation_evidence.py --write --preflight --evidence-date "$(date -u +%F)"
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
+
+      - name: Run repository documentation and example gates
+        run: |
           python scripts/audit_repository.py
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
@@ -129,6 +153,9 @@ jobs:
           python scripts/validate_figure.py examples/figure-contract.json
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
           mkdocs build --strict
+
+      - name: Run deterministic release and distribution gates
+        run: |
           python scripts/package_release.py --out dist-a
           python scripts/package_release.py --out dist-b
           cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" \
