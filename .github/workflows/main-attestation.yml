@@ -5,7 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:
   issues:
-    types: [opened]
+    types: [opened, edited]
   schedule:
     - cron: "41 20 * * 4"
 
@@ -25,7 +25,9 @@ jobs:
   compatibility:
     if: >-
       github.event_name != 'issues' ||
-      (github.event.issue.user.login == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] attest current main')
+      (github.event.issue.user.login == 'SUNHAOJUN22' &&
+       github.event.issue.title == '[TSR] attest current main' &&
+       contains(github.event.issue.body, 'status=requested'))
     name: attest-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
@@ -76,7 +78,9 @@ jobs:
   full-attestation:
     if: >-
       github.event_name != 'issues' ||
-      (github.event.issue.user.login == 'SUNHAOJUN22' && github.event.issue.title == '[TSR] attest current main')
+      (github.event.issue.user.login == 'SUNHAOJUN22' &&
+       github.event.issue.title == '[TSR] attest current main' &&
+       contains(github.event.issue.body, 'status=requested'))
     needs: compatibility
     permissions:
       contents: read
@@ -109,7 +113,8 @@ jobs:
 
           text = Path('.github/workflows/main-attestation.yml').read_text(encoding='utf-8')
           assert 'push:\n    branches: [main]' in text
-          assert 'types: [opened]' in text
+          assert 'types: [opened, edited]' in text
+          assert "contains(github.event.issue.body, 'status=requested')" in text
           trigger_block = text.split('issues:\n', 1)[1].split('schedule:', 1)[0]
           assert 'assigned' not in trigger_block
           assert re.search(r'group:\s*exact-main-attestation-\$\{\{\s*github\.sha\s*\}\}', text)
