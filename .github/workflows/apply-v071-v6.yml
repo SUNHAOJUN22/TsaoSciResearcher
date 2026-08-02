@@ -166,8 +166,10 @@ jobs:
               Path(f'.github/v071-opt-part-{index:02d}.b64')
               .read_text(encoding='ascii')
               .strip()
-              for index in range(9)
+              for index in range(8)
           )
+          encoded += Path('.github/v071-opt-part-08a.b64').read_text(encoding='ascii').strip()
+          encoded += Path('.github/v071-opt-part-08b.b64').read_text(encoding='ascii').strip()
           optimized = checked_archive(encoded, os.environ['OPT_ARCHIVE_SHA'], 'OPT-V6')
           apply_archive(
               optimized,
