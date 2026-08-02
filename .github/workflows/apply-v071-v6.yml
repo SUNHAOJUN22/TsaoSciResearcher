@@ -173,8 +173,27 @@ jobs:
           python -m build --sdist --wheel --outdir dist-python
 
       - name: Validate Python distributions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          python scripts/validate_distribution.py dist-python
+          set +e
+          python scripts/validate_distribution.py dist-python > /tmp/distribution-validation.log 2>&1
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ]; then
+            {
+              echo '### Python distribution validation failure'
+              echo
+              echo '```text'
+              tail -n 100 /tmp/distribution-validation.log
+              echo '```'
+            } > /tmp/distribution-comment.md
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/distribution-comment.md
+            cat /tmp/distribution-validation.log
+            exit "$rc"
+          fi
+          cat /tmp/distribution-validation.log
 
       - name: Run final whitespace diff gate
         run: |
