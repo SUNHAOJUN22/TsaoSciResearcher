@@ -97,11 +97,17 @@ jobs:
                   parts[index] = payload
               keys = [f'{index:02d}' for index in range(total)]
               assert sorted(parts) == keys, (prefix, sorted(parts))
+              actual = {
+                  key: (len(parts[key]), hashlib.sha256(parts[key].encode('ascii')).hexdigest())
+                  for key in keys
+              }
+              print(f'{prefix}_PART_META=' + json.dumps(actual, sort_keys=True))
               for key in keys:
                   payload = parts[key]
                   expected_length, expected_hash = expected[key]
-                  assert len(payload) == expected_length, (prefix, key, len(payload), expected_length)
-                  assert hashlib.sha256(payload.encode('ascii')).hexdigest() == expected_hash, (prefix, key)
+                  actual_length, actual_hash = actual[key]
+                  assert actual_length == expected_length, (prefix, key, actual_length, expected_length)
+                  assert actual_hash == expected_hash, (prefix, key, actual_hash, expected_hash)
               return base64.b64decode(''.join(parts[key] for key in keys), validate=True)
 
           base_expected = {
