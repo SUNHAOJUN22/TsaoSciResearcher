@@ -138,6 +138,16 @@ def main() -> None:
     patch_main()
     patch_path.unlink()
 
+    hook = Path(".git/hooks/pre-commit")
+    hook.write_text(
+        "#!/bin/sh\n"
+        "set -eu\n"
+        "git restore --source=HEAD --staged --worktree .github/workflows\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    hook.chmod(0o755)
+
 
 if __name__ == "__main__":
     main()
