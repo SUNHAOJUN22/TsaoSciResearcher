@@ -126,8 +126,13 @@ jobs:
           cat > /tmp/expected-paths.txt <<'EOF'
           .github/tsr-perf-payload-temp-00
           .github/tsr-perf-payload-temp-01
+          .github/tsr-perf-payload-temp-01a
+          .github/tsr-perf-payload-temp-01b
+          .github/tsr-perf-payload-temp-01c
           .github/tsr-perf-payload-temp-02
           .github/tsr-perf-payload-temp-03a
+          .github/tsr-perf-payload-temp-03a1
+          .github/tsr-perf-payload-temp-03a2
           .github/tsr-perf-payload-temp-03b
           .github/tsr-perf-payload-temp-04a
           .github/tsr-perf-payload-temp-04b
@@ -234,8 +239,13 @@ jobs:
           git add --all -- \
             .github/tsr-perf-payload-temp-00 \
             .github/tsr-perf-payload-temp-01 \
+            .github/tsr-perf-payload-temp-01a \
+            .github/tsr-perf-payload-temp-01b \
+            .github/tsr-perf-payload-temp-01c \
             .github/tsr-perf-payload-temp-02 \
             .github/tsr-perf-payload-temp-03a \
+            .github/tsr-perf-payload-temp-03a1 \
+            .github/tsr-perf-payload-temp-03a2 \
             .github/tsr-perf-payload-temp-03b \
             .github/tsr-perf-payload-temp-04a \
             .github/tsr-perf-payload-temp-04b \
