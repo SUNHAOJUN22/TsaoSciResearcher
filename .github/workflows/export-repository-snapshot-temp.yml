@@ -1,64 +1,45 @@
-name: One-time read-only repository snapshot export
+name: One-time main tree coordinate
 
 on:
   issues:
-    types: [opened, edited]
+    types: [edited]
 
 permissions:
   contents: read
   issues: write
 
 concurrency:
-  group: tsr-repository-snapshot-export
+  group: tsr-main-tree-coordinate
   cancel-in-progress: false
 
 jobs:
-  export:
+  report:
     if: >-
       github.event.issue.user.login == 'SUNHAOJUN22' &&
       github.event.issue.title == '[TSR] one-time repository snapshot export' &&
-      contains(github.event.issue.body, 'snapshot_token=TSR-20260805-0045-repo-readonly')
+      contains(github.event.issue.body, 'tree_token=TSR-20260805-atomic-main-write')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - name: Checkout exact issue-event main commit
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
-      - name: Verify exact source and create snapshot
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          archive="TsaoSciResearcher-main-${GITHUB_SHA}.tar.gz"
-          tar \
-            --exclude=.git \
-            --exclude="$archive" \
-            -czf "/tmp/$archive" .
-          sha256sum "/tmp/$archive" > "/tmp/$archive.sha256"
-      - name: Upload repository snapshot
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: tsr-repository-snapshot-${{ github.sha }}
-          path: |
-            /tmp/TsaoSciResearcher-main-${{ github.sha }}.tar.gz
-            /tmp/TsaoSciResearcher-main-${{ github.sha }}.tar.gz.sha256
-          if-no-files-found: error
-          retention-days: 1
-          compression-level: 0
-      - name: Report snapshot coordinates
+      - name: Report commit and tree coordinates
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          tree_sha="$(git rev-parse 'HEAD^{tree}')"
           cat > /tmp/issue-body.txt <<EOF
-          status=snapshot-ready
+          status=tree-ready
           source_commit=${GITHUB_SHA}
+          source_tree=${tree_sha}
           workflow_run_id=${GITHUB_RUN_ID}
           workflow_attempt=${GITHUB_RUN_ATTEMPT}
-          artifact_name=tsr-repository-snapshot-${GITHUB_SHA}
           EOF
           gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
