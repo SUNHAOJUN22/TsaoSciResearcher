@@ -1,8 +1,8 @@
 name: One-time verified performance patch
 
 on:
-  issues:
-    types: [edited]
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: write
@@ -20,9 +20,10 @@ env:
 jobs:
   apply:
     if: >-
-      github.event.issue.user.login == 'SUNHAOJUN22' &&
+      github.event.issue.number == 198 &&
       github.event.issue.title == '[TSR] one-time repository snapshot export' &&
-      contains(github.event.issue.body, 'apply_token=TSR-20260805-perf-apply-v1')
+      github.event.comment.user.login == 'SUNHAOJUN22' &&
+      github.event.comment.body == 'apply_token=TSR-20260805-perf-apply-v1'
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
@@ -273,6 +274,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Report final commit
+        if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -280,15 +282,7 @@ jobs:
         run: |
           set -euo pipefail
           final_sha="$(git rev-parse HEAD)"
-          cat > /tmp/issue-body.txt <<EOF
-          status=performance-patch-applied
-          staged_source=${GITHUB_SHA}
-          final_commit=${final_sha}
-          workflow_run_id=${GITHUB_RUN_ID}
-          workflow_attempt=${GITHUB_RUN_ATTEMPT}
-          linux_precommit_gates=PASS
-          EOF
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=performance-patch-applied final_commit=${final_sha} workflow_run_id=${GITHUB_RUN_ID} linux_precommit_gates=PASS"
 
       - name: Report failure
         if: failure()
@@ -297,10 +291,4 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
-          cat > /tmp/issue-body.txt <<EOF
-          status=performance-patch-failed
-          staged_source=${GITHUB_SHA}
-          workflow_run_id=${GITHUB_RUN_ID}
-          workflow_attempt=${GITHUB_RUN_ATTEMPT}
-          EOF
-          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/issue-body.txt
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=performance-patch-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
