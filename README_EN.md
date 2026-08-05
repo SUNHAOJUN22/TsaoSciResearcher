@@ -40,7 +40,7 @@ The runtime exposes one deterministic entry point and a machine-readable scienti
 | Capability discovery | **341** capability contracts, including **322** preserved workbook names, **164** domain computation/engineering contracts, **158** legacy/general contracts and **19** runtime additions |
 | Contract quality | **0** generic domain placeholders; nested implementation level, lineage, approval and computation-handoff metadata are validated |
 | Research state | canonical `.tsao-research/` project state, hash-linked events, controlled transitions and rollback-safe writes |
-| Scientific reasoning | first-principles method ladders derived from observables, degrees of freedom, conservation laws, ensembles, scales, falsification and uncertainty |
+| Scientific reasoning | first-principles method ladders plus a Scientific Passport, evidence maturity, causal guard, scale-jump guard, falsification and uncertainty contracts |
 | External computation | checksum-bound handoffs and execution receipts for external DFT, quantum chemistry, MD, FEM, CFD, process/HPC or instrument runs |
 | Reproducibility | deterministic capsules, safe archives, content hashes, SBOM, release validation and isolated distribution checks |
 | Quality control | evidence/claim consistency, scientific-quality blockers, figure contracts, citation boundaries and human-approval gates |
@@ -97,6 +97,31 @@ approved external handoff → receipt → independent scientific acceptance
 | Mixed multiscale question | observable, units, reservoirs, competing mechanisms | lowest-cost falsifiable reduced model | sequential uncertainty-aware scale bridging through measurable variables |
 
 The `strategy` result is always marked advisory and records that no solver has been executed.
+
+
+### Scientific Passport and machine-readable integrity gates
+
+Every generated strategy now carries a **Scientific Passport** bound to its deterministic `strategy_id`:
+
+| Contract | Machine-readable content | Acceptance boundary |
+|---|---|---|
+| Model Contract | state variables, governing principles, assumptions, applicability domain and failure conditions | no model is valid outside its declared domain |
+| Bridge Contract | source regimes, measurable bridge variables and cross-scale acceptance tests | direct micro-to-industry jumps are blocked or sent to review |
+| Evidence Contract | declared evidence items and maturity `E0`–`E4` | the classification is explicitly declared-only, never independent validation |
+| Uncertainty Contract | parameter, numerical, sampling, boundary, measurement, model-form and scale-transfer uncertainty | uncertainty must reach the decision observable and threshold |
+| Integrity Gates | causal-language guard, scale-jump guard and competing-mechanism requirement | correlation or visual agreement cannot be promoted to causal proof |
+
+```text
+E0 hypothesis only → E1 theoretical/literature → E2 computation
+                   → E3 independent experiment → E4 pilot/industrial validation
+```
+
+A higher lexical maturity level does not certify evidence quality. It records what the caller declared and identifies the minimum next evidence needed for stronger acceptance.
+
+<table>
+<tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Conceptual Scientific Passport evidence contract"/><br/><strong>Passport evidence contract</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="Conceptual scale bridge contract"/><br/><strong>Scale-bridge contract</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="Conceptual causal and scale-jump guard"/><br/><strong>Causal and scale-jump guard</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="Conceptual uncertainty contract"/><br/><strong>Uncertainty acceptance contract</strong></td></tr>
+</table>
 
 ## Architecture and data flow
 

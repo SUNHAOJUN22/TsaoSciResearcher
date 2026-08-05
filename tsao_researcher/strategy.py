@@ -39,6 +39,192 @@ _NON_EQUILIBRIUM_MARKERS = (
 _EQUILIBRIUM_MARKERS = ("equilibrium", "phase equilibrium", "平衡", "相平衡")
 
 
+_EVIDENCE_LEVELS: tuple[tuple[int, str, tuple[str, ...]], ...] = (
+    (
+        1,
+        "E1-theoretical",
+        (
+            "theory",
+            "theoretical",
+            "literature",
+            "review",
+            "analytical",
+            "equation",
+            "理论",
+            "文献",
+            "综述",
+            "解析",
+            "方程",
+        ),
+    ),
+    (
+        2,
+        "E2-computational",
+        (
+            "simulation",
+            "simulated",
+            "calculation",
+            "computed",
+            "dft",
+            "molecular dynamics",
+            " md ",
+            "fem",
+            "cfd",
+            "monte carlo",
+            "仿真",
+            "模拟",
+            "计算",
+        ),
+    ),
+    (
+        3,
+        "E3-experimental",
+        (
+            "experiment",
+            "experimental",
+            "measurement",
+            "measurements",
+            "measured",
+            "observed",
+            "spectroscopy",
+            "xps",
+            "tsdc",
+            "pea",
+            "weibull",
+            "实验",
+            "测量",
+            "实测",
+            "观测",
+            "表征",
+            "光谱",
+        ),
+    ),
+    (
+        4,
+        "E4-industrial",
+        (
+            "industrial",
+            "pilot plant",
+            "plant validation",
+            "field validation",
+            "production validation",
+            "manufacturing validation",
+            "工业",
+            "中试",
+            "工厂验证",
+            "现场验证",
+            "生产验证",
+            "制造验证",
+        ),
+    ),
+)
+_CAUSAL_MARKERS = (
+    "cause",
+    "causes",
+    "caused by",
+    "causal",
+    "control",
+    "controls",
+    "controlled by",
+    "determine",
+    "determines",
+    "drive",
+    "drives",
+    "lead to",
+    "leads to",
+    "mechanism",
+    "because",
+    "导致",
+    "因果",
+    "控制",
+    "决定",
+    "驱动",
+    "机制",
+    "由于",
+)
+_SCALE_TARGET_MARKERS: tuple[tuple[int, tuple[str, ...]], ...] = (
+    (
+        4,
+        (
+            "industrial",
+            "plant",
+            "production",
+            "manufacturing",
+            "product quality",
+            "grade performance",
+            "reactor",
+            "digital twin",
+            "工业",
+            "工厂",
+            "生产",
+            "制造",
+            "产品质量",
+            "牌号性能",
+            "反应器",
+            "数字孪生",
+        ),
+    ),
+    (
+        3,
+        (
+            "device",
+            "component",
+            "continuum",
+            "pressure drop",
+            "temperature field",
+            "stress field",
+            "breakdown strength",
+            "器件",
+            "部件",
+            "连续介质",
+            "压降",
+            "温度场",
+            "应力场",
+            "击穿强度",
+        ),
+    ),
+    (
+        2,
+        (
+            "morphology",
+            "domain size",
+            "lamella",
+            "mesoscale",
+            "microstructure",
+            "形貌",
+            "相区",
+            "片晶",
+            "介观",
+            "微结构",
+        ),
+    ),
+    (
+        1,
+        (
+            "molecule",
+            "chain conformation",
+            "free energy",
+            "reaction pathway",
+            "分子",
+            "链构象",
+            "自由能",
+            "反应路径",
+        ),
+    ),
+)
+_REGIME_SCALE_TIER = {
+    "electronic-structure": 0,
+    "reaction-kinetics": 1,
+    "molecular-thermodynamics": 1,
+    "soft-matter-polymer": 2,
+    "charge-transport-dielectric": 2,
+    "continuum-transport": 3,
+    "solid-mechanics": 3,
+    "process-kinetics-population": 4,
+    "multiscale-general": 4,
+}
+
+
 @dataclass(frozen=True, slots=True)
 class MethodTemplate:
     family: str
@@ -1314,6 +1500,117 @@ def _equilibrium_status(primary: Regime, text: str) -> str:
     return primary.equilibrium_status
 
 
+def _marker_hits(text: str, markers: tuple[str, ...]) -> list[str]:
+    return list(dict.fromkeys(marker for marker in markers if marker in text))
+
+
+def _evidence_maturity(evidence: list[str]) -> dict[str, Any]:
+    text = f" {_normalize(' '.join(evidence))} "
+    rank = 0
+    level = "E0-hypothesis-only"
+    detected: list[str] = []
+    for candidate_rank, candidate_level, markers in _EVIDENCE_LEVELS:
+        if _marker_hits(text, markers):
+            detected.append(candidate_level)
+            if candidate_rank > rank:
+                rank = candidate_rank
+                level = candidate_level
+    if not detected:
+        detected = ["E0-hypothesis-only"]
+    next_evidence = {
+        0: [
+            "document the governing hypothesis and at least one plausible competing mechanism",
+            "collect a literature, analytical, computational, or experimental baseline",
+        ],
+        1: [
+            "test the hypothesis with a reproducible computation or experiment",
+            "define an independent observable that could refute the proposed mechanism",
+        ],
+        2: [
+            "obtain independent experimental measurements under declared conditions",
+            "validate model transfer across at least one hold-out condition",
+        ],
+        3: [
+            "demonstrate transferability across samples, operators, or operating conditions",
+            "seek pilot, field, or manufacturing validation when the decision is industrial",
+        ],
+        4: [
+            "monitor drift, domain shift, and failure cases in the operating environment",
+            "retain independent audit and change-control evidence",
+        ],
+    }
+    return {
+        "classification_basis": "lexical classification of user-declared evidence; this is not independent validation",
+        "declared_only": True,
+        "maturity_rank": rank,
+        "maturity_level": level,
+        "levels_detected": detected,
+        "evidence_items": evidence,
+        "minimum_next_evidence": next_evidence[rank],
+    }
+
+
+def _causal_claim_gate(text: str, evidence_rank: int) -> dict[str, Any]:
+    triggers = _marker_hits(text, _CAUSAL_MARKERS)
+    if not triggers:
+        status = "not-triggered"
+    elif evidence_rank >= 3:
+        status = "guarded"
+    else:
+        status = "review-required"
+    return {
+        "status": status,
+        "triggers": triggers,
+        "rule": "Causal language requires temporal or intervention logic, competing-mechanism tests, and evidence beyond correlation.",
+        "required_checks": [
+            "state the causal intervention, counterfactual, or temporal ordering",
+            "compare at least one plausible competing mechanism",
+            "separate correlation, prediction, mechanism consistency, and causal identification",
+        ],
+    }
+
+
+def _scale_jump_gate(
+    primary: Regime, secondary: list[tuple[Regime, int]], text: str, bridge_variables: list[str]
+) -> dict[str, Any]:
+    source_tier = _REGIME_SCALE_TIER.get(primary.slug, 0)
+    target_tier = source_tier
+    target_markers: list[str] = []
+    for tier, markers in _SCALE_TARGET_MARKERS:
+        hits = _marker_hits(text, markers)
+        if hits:
+            target_tier = max(target_tier, tier)
+            target_markers.extend(hits)
+    target_markers = list(dict.fromkeys(target_markers))
+    tier_gap = max(0, target_tier - source_tier)
+    has_explicit_bridge = bool(secondary and bridge_variables)
+    if tier_gap >= 2 and not has_explicit_bridge:
+        status = "blocked"
+    elif tier_gap >= 2:
+        status = "review-required"
+    else:
+        status = "pass"
+    missing = (
+        [
+            "identify measurable bridge variables for every skipped scale",
+            "validate each submodel at its native scale before parameter transfer",
+            "propagate bridge uncertainty to the final decision observable",
+        ]
+        if tier_gap >= 2
+        else []
+    )
+    return {
+        "status": status,
+        "source_regime": primary.slug,
+        "source_tier": source_tier,
+        "target_tier": target_tier,
+        "tier_gap": tier_gap,
+        "target_markers": target_markers,
+        "bridge_variables": bridge_variables,
+        "missing_bridge_requirements": missing,
+    }
+
+
 def _method_record(template: MethodTemplate, rank: int) -> dict[str, Any]:
     return {
         "rank": rank,
@@ -1463,9 +1760,61 @@ def advise_computation_strategy(
             "Identify existing measurements or literature that can calibrate and falsify the proposed models."
         )
 
+    strategy_id = f"FPS-{digest}"
+    evidence_contract = _evidence_maturity(clean_evidence)
+    integrity_gates = {
+        "causal_claim": _causal_claim_gate(combined, evidence_contract["maturity_rank"]),
+        "scale_jump": _scale_jump_gate(primary, secondary, combined, bridge_variables),
+        "mechanism_competition": {
+            "status": "required",
+            "rule": "A preferred mechanism must be tested against at least one plausible alternative.",
+            "minimum_alternatives": 1,
+        },
+    }
+    scientific_passport = {
+        "passport_version": "1.0",
+        "strategy_id": strategy_id,
+        "model_contract": {
+            "state_variables": list(primary.state_variables),
+            "governing_principles": list(primary.governing_principles),
+            "assumptions": list(
+                dict.fromkeys([*primary.reduction_assumptions, *primary.methods[0].assumptions])
+            ),
+            "applicability_domain": clean_conditions
+            or ["not specified; clarification and qualified review required"],
+            "failure_conditions": list(
+                dict.fromkeys([item for method in ladder[:2] for item in method["falsification"][:2]])
+            ),
+        },
+        "bridge_contract": {
+            "required": bool(secondary) or intrinsically_multiscale,
+            "source_regimes": selected_slugs,
+            "bridge_variables": bridge_variables,
+            "acceptance_tests": [
+                "bridge variables are measurable or independently inferable",
+                "each scale-specific model is validated before coupling",
+                "uncertainty is propagated across every scale bridge",
+            ],
+        },
+        "evidence_contract": evidence_contract,
+        "uncertainty_contract": {
+            "categories": [
+                "parameter",
+                "numerical",
+                "sampling",
+                "boundary-condition",
+                "measurement",
+                "model-form",
+                "scale-transfer",
+            ],
+            "propagation_target": clean_observables or ["declared decision observable"],
+            "acceptance_rule": "Report uncertainty against the decision threshold and declare extrapolation outside the calibration and validation domain.",
+        },
+    }
+
     return {
-        "schema_version": "1.0",
-        "strategy_id": f"FPS-{digest}",
+        "schema_version": "1.1",
+        "strategy_id": strategy_id,
         "status": "advisory-only",
         "question": clean_question,
         "observables": clean_observables,
@@ -1489,6 +1838,8 @@ def advise_computation_strategy(
             "bridge_variables": bridge_variables,
             "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist.",
         },
+        "scientific_passport": scientific_passport,
+        "integrity_gates": integrity_gates,
         "validation_plan": list(
             dict.fromkeys(
                 [

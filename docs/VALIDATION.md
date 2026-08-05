@@ -68,3 +68,7 @@ The process-isolation test module is part of complete regression but intentional
 - JSONL reading, claim–evidence validation, all schemas, bounded ZIP validation, install/uninstall, and two byte-identical source-release builds.
 
 Thresholds are intentionally platform-tolerant and detect large regressions. Any speedup claim must additionally report the execution environment, before/after measurements, numerical or semantic equivalence evidence, and whether the workload is warm-cache, cold-cache, repeated, or mixed.
+
+## Scientific Passport contract gates
+
+The computation-strategy schema requires a Scientific Passport and integrity gates. Regression verifies evidence maturity `E0`–`E4`, declared-only evidence semantics, deterministic passport binding, unsupported causal-language review, blocked unbridged scale jumps, competing-mechanism requirements, and rejection of fabricated maturity values.

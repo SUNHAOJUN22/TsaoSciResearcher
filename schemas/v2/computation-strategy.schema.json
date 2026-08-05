@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/computation-strategy.schema.json",
-  "title": "First-Principles Computation and Simulation Strategy",
+  "title": "First-Principles Computation and Simulation Strategy with Scientific Passport",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -21,18 +21,27 @@
     "uncertainty_plan",
     "decision_rules",
     "human_review",
-    "execution_boundary"
+    "execution_boundary",
+    "scientific_passport",
+    "integrity_gates"
   ],
   "$defs": {
-    "nonEmptyString": {"type": "string", "minLength": 1},
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
     "uniqueStrings": {
       "type": "array",
-      "items": {"$ref": "#/$defs/nonEmptyString"},
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
       "uniqueItems": true
     },
     "nonEmptyUniqueStrings": {
       "type": "array",
-      "items": {"$ref": "#/$defs/nonEmptyString"},
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
       "minItems": 1,
       "uniqueItems": true
     },
@@ -54,30 +63,77 @@
         "escalate_if"
       ],
       "properties": {
-        "rank": {"type": "integer", "minimum": 1},
-        "role": {"enum": ["minimum-sufficient", "escalation", "cross-regime-bridge"]},
-        "family": {"$ref": "#/$defs/nonEmptyString"},
-        "representative_methods": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "target_observables": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "rationale": {"$ref": "#/$defs/nonEmptyString"},
-        "assumptions": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "required_inputs": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "validation": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "falsification": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "uncertainty": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "escalate_if": {"$ref": "#/$defs/nonEmptyUniqueStrings"}
+        "rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "role": {
+          "enum": [
+            "minimum-sufficient",
+            "escalation",
+            "cross-regime-bridge"
+          ]
+        },
+        "family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "representative_methods": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "target_observables": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "assumptions": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "required_inputs": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "validation": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "falsification": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "escalate_if": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        }
       }
     }
   },
   "properties": {
-    "schema_version": {"const": "1.0"},
-    "strategy_id": {"type": "string", "pattern": "^FPS-[0-9a-f]{16}$"},
-    "status": {"const": "advisory-only"},
-    "question": {"type": "string", "minLength": 3},
-    "observables": {"$ref": "#/$defs/uniqueStrings"},
-    "conditions": {"$ref": "#/$defs/uniqueStrings"},
-    "constraints": {"$ref": "#/$defs/uniqueStrings"},
-    "available_evidence": {"$ref": "#/$defs/uniqueStrings"},
+    "schema_version": {
+      "const": "1.1"
+    },
+    "strategy_id": {
+      "type": "string",
+      "pattern": "^FPS-[0-9a-f]{16}$"
+    },
+    "status": {
+      "const": "advisory-only"
+    },
+    "question": {
+      "type": "string",
+      "minLength": 3
+    },
+    "observables": {
+      "$ref": "#/$defs/uniqueStrings"
+    },
+    "conditions": {
+      "$ref": "#/$defs/uniqueStrings"
+    },
+    "constraints": {
+      "$ref": "#/$defs/uniqueStrings"
+    },
+    "available_evidence": {
+      "$ref": "#/$defs/uniqueStrings"
+    },
     "classification": {
       "type": "object",
       "additionalProperties": false,
@@ -91,17 +147,32 @@
         "clarification_questions"
       ],
       "properties": {
-        "primary_regime": {"$ref": "#/$defs/nonEmptyString"},
-        "primary_name_zh": {"$ref": "#/$defs/nonEmptyString"},
-        "primary_name_en": {"$ref": "#/$defs/nonEmptyString"},
-        "selected_regimes": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "primary_regime": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "primary_name_zh": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "primary_name_en": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "selected_regimes": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
         "scores": {
           "type": "object",
           "minProperties": 1,
-          "additionalProperties": {"type": "integer", "minimum": 1}
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
         },
-        "clarification_required": {"type": "boolean"},
-        "clarification_questions": {"$ref": "#/$defs/uniqueStrings"}
+        "clarification_required": {
+          "type": "boolean"
+        },
+        "clarification_questions": {
+          "$ref": "#/$defs/uniqueStrings"
+        }
       }
     },
     "first_principles_frame": {
@@ -122,49 +193,356 @@
         "reduction_assumptions"
       ],
       "properties": {
-        "degrees_of_freedom": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "governing_principles": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "conserved_quantities": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "symmetries_and_constraints": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "state_variables": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "thermodynamic_potential": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "statistical_ensemble": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "equilibrium_status": {"$ref": "#/$defs/nonEmptyString"},
-        "length_scales": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "time_scales": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "dimensionless_or_scale_tests": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-        "reduction_assumptions": {"$ref": "#/$defs/nonEmptyUniqueStrings"}
+        "degrees_of_freedom": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "governing_principles": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "conserved_quantities": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "symmetries_and_constraints": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "state_variables": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "thermodynamic_potential": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "statistical_ensemble": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "equilibrium_status": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "length_scales": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "time_scales": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "dimensionless_or_scale_tests": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "reduction_assumptions": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        }
       }
     },
     "method_ladder": {
       "type": "array",
-      "items": {"$ref": "#/$defs/method"},
+      "items": {
+        "$ref": "#/$defs/method"
+      },
       "minItems": 2
     },
     "cross_scale_plan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["required", "secondary_regimes", "bridge_variables", "coupling_rule"],
+      "required": [
+        "required",
+        "secondary_regimes",
+        "bridge_variables",
+        "coupling_rule"
+      ],
       "properties": {
-        "required": {"type": "boolean"},
-        "secondary_regimes": {"$ref": "#/$defs/uniqueStrings"},
-        "bridge_variables": {"$ref": "#/$defs/uniqueStrings"},
-        "coupling_rule": {"$ref": "#/$defs/nonEmptyString"}
+        "required": {
+          "type": "boolean"
+        },
+        "secondary_regimes": {
+          "$ref": "#/$defs/uniqueStrings"
+        },
+        "bridge_variables": {
+          "$ref": "#/$defs/uniqueStrings"
+        },
+        "coupling_rule": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
       }
     },
-    "validation_plan": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-    "uncertainty_plan": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-    "decision_rules": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
-    "human_review": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+    "validation_plan": {
+      "$ref": "#/$defs/nonEmptyUniqueStrings"
+    },
+    "uncertainty_plan": {
+      "$ref": "#/$defs/nonEmptyUniqueStrings"
+    },
+    "decision_rules": {
+      "$ref": "#/$defs/nonEmptyUniqueStrings"
+    },
+    "human_review": {
+      "$ref": "#/$defs/nonEmptyUniqueStrings"
+    },
     "execution_boundary": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["solver_executed", "external_execution_required", "statement", "next_step"],
+      "required": [
+        "solver_executed",
+        "external_execution_required",
+        "statement",
+        "next_step"
+      ],
       "properties": {
-        "solver_executed": {"const": false},
-        "external_execution_required": {"const": true},
-        "statement": {"$ref": "#/$defs/nonEmptyString"},
-        "next_step": {"$ref": "#/$defs/nonEmptyString"}
+        "solver_executed": {
+          "const": false
+        },
+        "external_execution_required": {
+          "const": true
+        },
+        "statement": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "next_step": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "scientific_passport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passport_version",
+        "strategy_id",
+        "model_contract",
+        "bridge_contract",
+        "evidence_contract",
+        "uncertainty_contract"
+      ],
+      "properties": {
+        "passport_version": {
+          "const": "1.0"
+        },
+        "strategy_id": {
+          "type": "string",
+          "pattern": "^FPS-[0-9a-f]{16}$"
+        },
+        "model_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state_variables",
+            "governing_principles",
+            "assumptions",
+            "applicability_domain",
+            "failure_conditions"
+          ],
+          "properties": {
+            "state_variables": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "governing_principles": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "assumptions": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "applicability_domain": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "failure_conditions": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "bridge_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "source_regimes",
+            "bridge_variables",
+            "acceptance_tests"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "source_regimes": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "bridge_variables": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "acceptance_tests": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "evidence_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification_basis",
+            "declared_only",
+            "maturity_rank",
+            "maturity_level",
+            "levels_detected",
+            "evidence_items",
+            "minimum_next_evidence"
+          ],
+          "properties": {
+            "classification_basis": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "declared_only": {
+              "const": true
+            },
+            "maturity_rank": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "maturity_level": {
+              "enum": [
+                "E0-hypothesis-only",
+                "E1-theoretical",
+                "E2-computational",
+                "E3-experimental",
+                "E4-industrial"
+              ]
+            },
+            "levels_detected": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "evidence_items": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "minimum_next_evidence": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "uncertainty_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "categories",
+            "propagation_target",
+            "acceptance_rule"
+          ],
+          "properties": {
+            "categories": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "propagation_target": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "acceptance_rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        }
+      }
+    },
+    "integrity_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "causal_claim",
+        "scale_jump",
+        "mechanism_competition"
+      ],
+      "properties": {
+        "causal_claim": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "triggers",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not-triggered",
+                "review-required",
+                "guarded"
+              ]
+            },
+            "triggers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "scale_jump": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "source_regime",
+            "source_tier",
+            "target_tier",
+            "tier_gap",
+            "target_markers",
+            "bridge_variables",
+            "missing_bridge_requirements"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "source_regime": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "source_tier": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "target_tier": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "tier_gap": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "target_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "bridge_variables": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "missing_bridge_requirements": {
+              "$ref": "#/$defs/uniqueStrings"
+            }
+          }
+        },
+        "mechanism_competition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "rule",
+            "minimum_alternatives"
+          ],
+          "properties": {
+            "status": {
+              "const": "required"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "minimum_alternatives": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
       }
     }
   }

@@ -1,34 +1,30 @@
 {
-  "schema_version": "1.0",
-  "strategy_id": "FPS-8f260ee03b20d2aa",
+  "schema_version": "1.1",
+  "strategy_id": "FPS-4b465b9c9b76b26e",
   "status": "advisory-only",
-  "question": "How do trap states and morphology control space charge, conductivity, and electrical breakdown?",
+  "question": "How do interfacial trap states control charge transport and breakdown?",
   "observables": [
-    "space charge",
-    "conductivity",
-    "breakdown strength"
+    "trap energy distribution",
+    "space-charge density"
   ],
   "conditions": [
-    "applied electric field",
-    "elevated temperature"
+    "applied electric field"
   ],
-  "constraints": [
-    "advisory plan only; no solver execution"
-  ],
+  "constraints": [],
   "available_evidence": [
-    "thermally stimulated current",
-    "PEA charge profile",
-    "breakdown Weibull data"
+    "TSDC and PEA experiment measurements"
   ],
   "classification": {
     "primary_regime": "charge-transport-dielectric",
     "primary_name_zh": "电荷输运、介电响应与击穿",
     "primary_name_en": "Charge transport, dielectric response, and breakdown",
     "selected_regimes": [
-      "charge-transport-dielectric"
+      "charge-transport-dielectric",
+      "electronic-structure"
     ],
     "scores": {
-      "charge-transport-dielectric": 23
+      "charge-transport-dielectric": 11,
+      "electronic-structure": 7
     },
     "clarification_required": false,
     "clarification_questions": []
@@ -70,7 +66,7 @@
     "statistical_ensemble": [
       "open carrier reservoirs with driven non-equilibrium transport"
     ],
-    "equilibrium_status": "non-equilibrium under applied field; local equilibrium assumptions require justification",
+    "equilibrium_status": "non-equilibrium or mixed; forcing and observation time must be explicit",
     "length_scales": [
       "electronic localisation",
       "trap spacing and morphology",
@@ -223,13 +219,185 @@
       "escalate_if": [
         "failure remains dominated by unknown manufacturing defects requiring new measurement"
       ]
+    },
+    {
+      "rank": 4,
+      "role": "cross-regime-bridge",
+      "family": "bridge charge-transport-dielectric with electronic-structure",
+      "representative_methods": [
+        "sequential parameter passing with validation at each scale",
+        "joint inference only when bridge variables are identifiable"
+      ],
+      "target_observables": [
+        "trap energy distribution",
+        "space-charge density"
+      ],
+      "rationale": "The question activates more than one physical regime; coupling must use measurable bridge variables and propagate uncertainty.",
+      "assumptions": [
+        "each submodel is independently valid in its regime"
+      ],
+      "required_inputs": [
+        "scale-specific inputs",
+        "bridge-variable definitions",
+        "cross-scale validation data"
+      ],
+      "validation": [
+        "closure tests",
+        "uncertainty propagation",
+        "independent cross-regime observables"
+      ],
+      "falsification": [
+        "coupled result depends on an unvalidated or non-identifiable bridge variable"
+      ],
+      "uncertainty": [
+        "model discrepancy at each scale",
+        "bridge-variable covariance"
+      ],
+      "escalate_if": [
+        "scale separation fails or concurrent coupling is demonstrably required"
+      ]
     }
   ],
   "cross_scale_plan": {
-    "required": false,
-    "secondary_regimes": [],
-    "bridge_variables": [],
+    "required": true,
+    "secondary_regimes": [
+      "electronic-structure"
+    ],
+    "bridge_variables": [
+      "carrier density",
+      "trap occupancy",
+      "potential",
+      "electron density",
+      "ionic geometry",
+      "occupation",
+      "trap energy distribution",
+      "space-charge density"
+    ],
     "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist."
+  },
+  "scientific_passport": {
+    "passport_version": "1.0",
+    "strategy_id": "FPS-4b465b9c9b76b26e",
+    "model_contract": {
+      "state_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "polarisation",
+        "temperature",
+        "microstructure descriptors"
+      ],
+      "governing_principles": [
+        "charge conservation",
+        "Poisson equation",
+        "detailed balance for hopping",
+        "electrothermal energy balance"
+      ],
+      "assumptions": [
+        "selected trap/transport states form an adequate coarse-grained network",
+        "field and temperature coupling is represented",
+        "representative chemistry and morphology are available"
+      ],
+      "applicability_domain": [
+        "applied electric field"
+      ],
+      "failure_conditions": [
+        "calculated state hierarchy cannot explain temperature/field trends",
+        "one parameter set cannot reproduce both steady and transient observables"
+      ]
+    },
+    "bridge_contract": {
+      "required": true,
+      "source_regimes": [
+        "charge-transport-dielectric",
+        "electronic-structure"
+      ],
+      "bridge_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "electron density",
+        "ionic geometry",
+        "occupation",
+        "trap energy distribution",
+        "space-charge density"
+      ],
+      "acceptance_tests": [
+        "bridge variables are measurable or independently inferable",
+        "each scale-specific model is validated before coupling",
+        "uncertainty is propagated across every scale bridge"
+      ]
+    },
+    "evidence_contract": {
+      "classification_basis": "lexical classification of user-declared evidence; this is not independent validation",
+      "declared_only": true,
+      "maturity_rank": 3,
+      "maturity_level": "E3-experimental",
+      "levels_detected": [
+        "E3-experimental"
+      ],
+      "evidence_items": [
+        "TSDC and PEA experiment measurements"
+      ],
+      "minimum_next_evidence": [
+        "demonstrate transferability across samples, operators, or operating conditions",
+        "seek pilot, field, or manufacturing validation when the decision is industrial"
+      ]
+    },
+    "uncertainty_contract": {
+      "categories": [
+        "parameter",
+        "numerical",
+        "sampling",
+        "boundary-condition",
+        "measurement",
+        "model-form",
+        "scale-transfer"
+      ],
+      "propagation_target": [
+        "trap energy distribution",
+        "space-charge density"
+      ],
+      "acceptance_rule": "Report uncertainty against the decision threshold and declare extrapolation outside the calibration and validation domain."
+    }
+  },
+  "integrity_gates": {
+    "causal_claim": {
+      "status": "guarded",
+      "triggers": [
+        "control"
+      ],
+      "rule": "Causal language requires temporal or intervention logic, competing-mechanism tests, and evidence beyond correlation.",
+      "required_checks": [
+        "state the causal intervention, counterfactual, or temporal ordering",
+        "compare at least one plausible competing mechanism",
+        "separate correlation, prediction, mechanism consistency, and causal identification"
+      ]
+    },
+    "scale_jump": {
+      "status": "pass",
+      "source_regime": "charge-transport-dielectric",
+      "source_tier": 2,
+      "target_tier": 2,
+      "tier_gap": 0,
+      "target_markers": [],
+      "bridge_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "electron density",
+        "ionic geometry",
+        "occupation",
+        "trap energy distribution",
+        "space-charge density"
+      ],
+      "missing_bridge_requirements": []
+    },
+    "mechanism_competition": {
+      "status": "required",
+      "rule": "A preferred mechanism must be tested against at least one plausible alternative.",
+      "minimum_alternatives": 1
+    }
   },
   "validation_plan": [
     "test conservation laws, symmetries, units, and limiting cases",

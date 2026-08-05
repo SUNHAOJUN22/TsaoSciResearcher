@@ -40,7 +40,7 @@ TsaoSciResearcher 是一个**科研任务路由器、研究状态机、证据合
 | 能力检索 | 共 **341** 个能力合同，其中保留 **322** 个工作簿命名、**164** 个领域计算/工程合同、**158** 个旧版/通用合同，并新增 **19** 个运行时能力 |
 | 合同质量 | 通用领域占位项为 **0**；对实现级别、来源链、审批要求和计算交接等嵌套结构进行验证 |
 | 研究状态 | 标准 `.tsao-research/` 项目状态、哈希链接事件、受控状态转移与失败回滚 |
-| 科学推理 | 从观测量、自由度、守恒律、系综、尺度、证伪与不确定性推导第一性原理方法阶梯 |
+| 科学推理 | 第一性原理方法阶梯，以及 Scientific Passport、证据成熟度、因果防线、尺度跳跃防线、证伪与不确定性合同 |
 | 外部计算 | 为 DFT、量子化学、MD、FEM、CFD、流程/HPC 与仪器运行提供校验和绑定的交接与执行回执 |
 | 可复现性 | 确定性胶囊、安全归档、内容哈希、SBOM、发布验证和隔离安装验证 |
 | 质量控制 | 证据/主张一致性、科研质量阻断、图件合同、引文边界与人工审批门 |
@@ -97,6 +97,31 @@ TsaoSciResearcher 是一个**科研任务路由器、研究状态机、证据合
 | 欠定的混合多尺度问题 | 观测量、单位、储库、竞争机制 | 成本最低的可证伪降阶模型 | 通过可测桥接变量进行不确定性驱动的逐级耦合 |
 
 `strategy` 输出始终标记为建议性结果，并明确记录求解器未执行。
+
+
+### Scientific Passport 与机器可读科研诚信门
+
+每个策略现在都携带一个与确定性 `strategy_id` 绑定的 **Scientific Passport（科学护照）**：
+
+| 合同 | 机器可读内容 | 验收边界 |
+|---|---|---|
+| Model Contract | 状态变量、控制规律、假设、适用域与失效条件 | 模型不得越过已声明适用域使用 |
+| Bridge Contract | 来源尺度、可测桥接变量与跨尺度验收测试 | 微观结果直接跳到工业结论时自动阻断或转人工复核 |
+| Evidence Contract | 已声明证据及 `E0`–`E4` 成熟度 | 明确标记为“声明分类”，不冒充独立核验 |
+| Uncertainty Contract | 参数、数值、采样、边界、测量、模型形式与尺度传递不确定性 | 不确定性必须传播到决策观测量和阈值 |
+| Integrity Gates | 因果语言防线、尺度跳跃防线与竞争机制要求 | 相关性或视觉一致不能升级为因果证明 |
+
+```text
+E0 仅假设 → E1 理论/文献 → E2 计算
+          → E3 独立实验 → E4 中试/工业验证
+```
+
+较高的词汇分级不等于证据质量认证。系统只记录调用者声明的证据类型，并给出进入更高验收等级所需的最低下一步证据。
+
+<table>
+<tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Scientific Passport 证据合同概念图"/><br/><strong>科学护照证据合同</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="尺度桥合同概念图"/><br/><strong>尺度桥合同</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="因果与尺度跳跃防线概念图"/><br/><strong>因果与尺度跳跃防线</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性合同概念图"/><br/><strong>不确定性验收合同</strong></td></tr>
+</table>
 
 ## 架构与数据流
 

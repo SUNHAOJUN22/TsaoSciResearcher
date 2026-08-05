@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add deterministic Scientific Passport output with model, bridge, evidence, and uncertainty contracts.
+- Add evidence maturity E0-E4 plus causal-claim, scale-jump, and competing-mechanism integrity gates.
+- Add schema, cross-platform regression, README, and validation documentation for the new contracts.
+
 - Reduced deterministic routing overhead by avoiding regex evaluation when the normalized literal is absent and by reusing compiled default rules without repeated filesystem probes.
 - Reduced first-principles strategy scoring overhead by reusing each compiled trigger across the combined question and observable text while preserving word-boundary semantics.
 - Accelerated defensive capability-catalog cloning with bounded JSON-aware copies and strengthened nested contract validation for lineage, approval, and computation-handoff metadata.
