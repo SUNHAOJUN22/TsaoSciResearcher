@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 198 &&
       github.event.issue.title == '[TSR] one-time repository snapshot export' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-perf-final-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-perf-final-v2'
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
@@ -131,7 +131,7 @@ jobs:
             scripts/capability_io.py \
             tsao_researcher/capabilities.py \
             tsao_researcher/strategy.py
-          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-04
+          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-05
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
@@ -161,7 +161,7 @@ jobs:
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
           mkdocs build --strict
 
-      - name: Run complete regression, coverage, order, and static gates
+      - name: Run complete regression, coverage, order, static, security, and performance gates
         shell: bash
         run: |
           set -euo pipefail
@@ -177,7 +177,11 @@ jobs:
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
-          python -m pip_audit --strict
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict \
+            -r artifacts/resolved-environment.lock \
+            --format cyclonedx-json \
+            --output artifacts/resolved-environment-sbom.json
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
           python scripts/check_quality_baseline.py
