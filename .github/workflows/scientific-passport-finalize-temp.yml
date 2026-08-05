@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 199 &&
       github.event.issue.title == '[TSR] Scientific Passport and integrity-gate finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-passport-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-passport-v2'
     strategy:
       fail-fast: false
       matrix:
@@ -73,7 +73,7 @@ jobs:
       github.event.issue.number == 199 &&
       github.event.issue.title == '[TSR] Scientific Passport and integrity-gate finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-passport-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-passport-v2'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -119,6 +119,7 @@ jobs:
           rm -f \
             .github/workflows/scientific-passport-finalize-temp.yml \
             scripts/apply_scientific_passport_temp.py
+          python scripts/build_readme_facts.py --write
           python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-05
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
@@ -199,6 +200,7 @@ jobs:
           README_EN.md
           README.zh-CN.md
           SHA256SUMS
+          docs/README_FACTS.json
           docs/SCIENTIFIC_QUALITY_EXAMPLES.json
           docs/VALIDATION.md
           docs/VALIDATION_EVIDENCE.json
