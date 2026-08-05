@@ -17,3 +17,13 @@ jobs:
         run: |
           gh workflow run decision-readiness-finalize-temp.yml --repo "$GITHUB_REPOSITORY" --ref main
           gh issue comment 200 --repo "$GITHUB_REPOSITORY" --body "status=readiness-dispatch-requested dispatcher_run_id=${GITHUB_RUN_ID}"
+  status:
+    if: github.event.issue.number == 200 && github.event.comment.body == 'status_token=TSR-20260805-readiness'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report finalizer status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          run_json="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow decision-readiness-finalize-temp.yml --event workflow_dispatch --limit 1 --json databaseId,status,conclusion,headSha,event,createdAt)"
+          gh issue comment 200 --repo "$GITHUB_REPOSITORY" --body "status=readiness-run-query data=${run_json}"
