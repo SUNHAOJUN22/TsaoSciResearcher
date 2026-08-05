@@ -246,6 +246,22 @@ def test_missing_extension_catalog_falls_back_to_base(
         _clear_capability_caches()
 
 
+def test_non_file_extension_catalog_falls_back_to_base(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from tsao_researcher import capabilities as capability_module
+
+    extension_directory = tmp_path / "extensions"
+    extension_directory.mkdir()
+    monkeypatch.setattr(capability_module, "EXTENSIONS_PATH", extension_directory)
+    _clear_capability_caches()
+    try:
+        assert len(capability_module.load_capabilities()) == 340
+        assert capability_module.search_capabilities("polymer", limit=1)
+    finally:
+        _clear_capability_caches()
+
+
 def test_duplicate_extension_capability_is_rejected(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     from tsao_researcher import capabilities as capability_module
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Reduced deterministic routing overhead by avoiding regex evaluation when the normalized literal is absent and by reusing compiled default rules without repeated filesystem probes.
+- Reduced first-principles strategy scoring overhead by reusing each compiled trigger across the combined question and observable text while preserving word-boundary semantics.
+- Accelerated defensive capability-catalog cloning with bounded JSON-aware copies and strengthened nested contract validation for lineage, approval, and computation-handoff metadata.
+- Expanded the performance gate to exercise 3,000 mixed scientific-strategy requests and 1,000 mixed capability searches rather than relying on a single repeated query.
+- Added regression coverage for nested mutation isolation, malformed nested capability contracts, non-file extension catalogs, and optimized trigger-boundary behavior.
+
 ## 0.7.1 - 2026-08-01
 
 - Bound lock release to the acquiring owner and made handled JSONL/multi-file mutation failures rollback-safe.

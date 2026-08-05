@@ -30,9 +30,11 @@ class _Keyword:
     bonus: int
 
     def matches(self, text: str) -> bool:
+        if self.normalized not in text:
+            return False
         if self.pattern is not None:
             return self.pattern.search(text) is not None
-        return self.normalized in text
+        return True
 
 
 @dataclass(frozen=True, slots=True)
@@ -113,18 +115,16 @@ def load_rules(path: Path | None = None) -> dict[str, dict[str, Any]]:
     return value
 
 
-@lru_cache(maxsize=8)
-def _compiled_default_rules(path: Path, mtime_ns: int, size: int) -> tuple[_Rule, ...]:
-    del mtime_ns, size
-    return _compile_rules(load_rules(path))
+@lru_cache(maxsize=1)
+def _compiled_default_rules() -> tuple[_Rule, ...]:
+    source = (ROOT / "router_rules.json").resolve()
+    return _compile_rules(load_rules(source))
 
 
 def _active_compiled_rules(rules: dict[str, dict[str, Any]] | None) -> tuple[_Rule, ...]:
     if rules:
         return _compile_rules(rules)
-    source = (ROOT / "router_rules.json").resolve()
-    stat = source.stat()
-    return _compiled_default_rules(source, stat.st_mtime_ns, stat.st_size)
+    return _compiled_default_rules()
 
 
 def route(text: str, *, rules: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:

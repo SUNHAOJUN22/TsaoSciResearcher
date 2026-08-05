@@ -25,9 +25,11 @@ class Trigger:
     pattern: Pattern[str] | None
 
     def matches(self, text: str) -> bool:
+        if self.normalized not in text:
+            return False
         if self.pattern is not None:
             return self.pattern.search(text) is not None
-        return self.normalized in text
+        return True
 
 
 @dataclass(frozen=True, slots=True)
@@ -145,6 +147,8 @@ def route(text: str, *, rules_path: str | Path = DEFAULT_RULES_PATH) -> dict[str
     results: list[tuple[Rule, int, tuple[str, ...], tuple[str, ...]]] = []
     for rule in load_rules(rules_path):
         positives = tuple(trigger.normalized for trigger in rule.positive if trigger.matches(normalized))
+        if not positives:
+            continue
         negatives = tuple(trigger.normalized for trigger in rule.negative if trigger.matches(normalized))
         score = max(0, len(positives) * rule.weight - len(negatives) * rule.weight * 2)
         if score:

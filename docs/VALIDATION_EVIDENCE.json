@@ -6,7 +6,7 @@
     "windows_python_3_12": "PASS"
   },
   "compatibility_scope": "Recorded compatibility results are a prior release baseline. CI-only gates for this source tree remain explicitly NOT_RUN or PARTIAL until an external attestation is created.",
-  "evidence_date": "2026-08-02",
+  "evidence_date": "2026-08-05",
   "gates": {
     "bandit_high_severity": "NOT_RUN",
     "bounded_performance": "LOCAL_PREFLIGHT",
@@ -58,7 +58,7 @@
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
     "validated_file_count": 385,
-    "validated_tree_sha256": "40ba2cf4be478337aedba73ceae8a41e13e1a5712665d41a962e33721d311ec0",
+    "validated_tree_sha256": "1698f2947a0a235f1cf678da196f2d354813384df5c1d5a9a9cc03cfd563744c",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null

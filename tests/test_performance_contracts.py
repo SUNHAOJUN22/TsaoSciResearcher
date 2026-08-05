@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+from re import Pattern
+from typing import cast
 
 import pytest
 
 from scripts import route_task
-from tsao_researcher import capabilities, strategy
+from tsao_researcher import capabilities, router, strategy
 from tsao_researcher.capabilities import load_capabilities, search_capabilities
 from tsao_researcher.capsule import export_capsule, verify_capsule
 from tsao_researcher.state import initialize
@@ -46,10 +48,16 @@ def test_capability_catalog_and_search_results_are_deeply_isolated() -> None:
     original_name = first[0]["name_en"]
     first[0]["name_en"] = "mutated"
     first[0]["domains"].append("mutated-domain")
+    first[0]["source_lineage"][0]["source"] = "mutated-source"
+    first[0]["human_approval"]["points"].append("mutated-approval")
+    first[0]["computation_handoff"]["mode"] = "mutated-mode"
 
     second = load_capabilities()
     assert second[0]["name_en"] == original_name
     assert "mutated-domain" not in second[0]["domains"]
+    assert second[0]["source_lineage"][0]["source"] != "mutated-source"
+    assert "mutated-approval" not in second[0]["human_approval"]["points"]
+    assert second[0]["computation_handoff"]["mode"] != "mutated-mode"
 
     result = search_capabilities("polymer", limit=1)
     assert result
@@ -82,6 +90,24 @@ def test_strategy_trigger_compilation_is_cached() -> None:
     assert first == second
     assert after_first.misses > 0
     assert after_second.hits > after_first.hits
+
+
+def test_trigger_literal_prefilters_avoid_unnecessary_regex_work() -> None:
+    class ExplodingPattern:
+        def search(self, text: str) -> None:
+            raise AssertionError(f"regex should not run for absent literal: {text}")
+
+    pattern = cast(Pattern[str], ExplodingPattern())
+    assert strategy._compiled_trigger_matches("unrelated text", "target", pattern) is False
+    assert router.Trigger("target", pattern).matches("unrelated text") is False
+    assert route_task._Keyword("target", "target", pattern, 0).matches("unrelated text") is False
+
+
+def test_strategy_trigger_prefilter_preserves_literal_and_word_boundaries() -> None:
+    assert strategy._contains_trigger("unrelated text", "target") is False
+    assert strategy._contains_trigger("a target value", "target") is True
+    assert strategy._contains_trigger("targeted value", "target") is False
+    assert strategy._contains_trigger("高分子结晶过程", "结晶") is True
 
 
 def test_capsule_prunes_repository_metadata_and_streams_files(

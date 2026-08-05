@@ -1282,16 +1282,26 @@ def _contains_trigger(text: str, trigger: str) -> bool:
     normalized, pattern = _compiled_trigger(trigger)
     if not normalized:
         return False
-    return pattern.search(text) is not None if pattern is not None else normalized in text
+    if normalized not in text:
+        return False
+    return pattern.search(text) is not None if pattern is not None else True
+
+
+def _compiled_trigger_matches(text: str, normalized: str, pattern: Pattern[str] | None) -> bool:
+    """Match a precompiled trigger without repeating normalization or cache lookup."""
+
+    if not normalized or normalized not in text:
+        return False
+    return pattern.search(text) is not None if pattern is not None else True
 
 
 def _score(regime: Regime, text: str, observable_text: str) -> int:
     score = 0
     for trigger in regime.triggers:
-        normalized = _normalize(trigger)
-        if _contains_trigger(text, trigger):
+        normalized, pattern = _compiled_trigger(trigger)
+        if _compiled_trigger_matches(text, normalized, pattern):
             score += 4 if " " in normalized or any(ord(char) > 127 for char in normalized) else 3
-        if _contains_trigger(observable_text, trigger):
+        if _compiled_trigger_matches(observable_text, normalized, pattern):
             score += 3
     return score
 
@@ -1341,7 +1351,7 @@ def advise_computation_strategy(
     clean_conditions = _clean_items(conditions, field="conditions")
     clean_constraints = _clean_items(constraints, field="constraints")
     clean_evidence = _clean_items(available_evidence, field="available_evidence")
-    normalized_observables = " ".join(_normalize(value) for value in clean_observables)
+    normalized_observables = _normalize(" ".join(clean_observables))
     combined = _normalize(
         " ".join([clean_question, *clean_observables, *clean_conditions, *clean_constraints])
     )

@@ -28,8 +28,10 @@ from scripts.validate_claims import validate_claim_graph
 from tsao_researcher.capabilities import load_capabilities as load_v2_capabilities
 from tsao_researcher.capabilities import search_capabilities
 from tsao_researcher.router import route as route_v2
+from tsao_researcher.strategy import advise_computation_strategy
 
 ROUTE_ITERATIONS = 10_000
+STRATEGY_ITERATIONS = 3_000
 CAPABILITY_LOAD_ITERATIONS = 100
 JSONL_RECORDS = 1_000
 GRAPH_RECORDS = 1_000
@@ -38,6 +40,7 @@ ZIP_MEMBERS = 1_000
 THRESHOLDS_SECONDS = {
     "route_10000": 20.0,
     "v2_route_10000": 8.0,
+    "strategy_3000": 4.0,
     "v2_catalog_load_100": 4.0,
     "v2_search_1000": 4.0,
     "capability_load_100": 5.0,
@@ -124,6 +127,33 @@ def main() -> None:
 
     _measure("v2_route_10000", route_v2_many, metrics)
 
+    strategy_cases = (
+        (
+            "How do trap states and polymer morphology control space charge and breakdown?",
+            ["space charge", "conductivity", "breakdown strength"],
+            ["30 C", "20 kV/mm"],
+        ),
+        (
+            "Predict pressure drop and temperature for non-Newtonian channel flow.",
+            ["pressure drop", "temperature field"],
+            ["steady inlet flow"],
+        ),
+        (
+            "Which catalytic pathway controls selectivity and activation energy?",
+            ["selectivity", "rate constant"],
+            ["operando temperature and pressure"],
+        ),
+    )
+
+    def strategy_many() -> None:
+        for index in range(STRATEGY_ITERATIONS):
+            question, observables, conditions = strategy_cases[index % len(strategy_cases)]
+            strategy = advise_computation_strategy(question, observables, conditions)
+            if strategy["status"] != "advisory-only":
+                raise SystemExit("strategy advisor crossed its execution boundary")
+
+    _measure("strategy_3000", strategy_many, metrics)
+
     first_v2_capabilities = load_v2_capabilities()
 
     def load_v2_capabilities_many() -> None:
@@ -136,8 +166,15 @@ def main() -> None:
         raise SystemExit("v2 capability catalog must contain 341 records")
 
     def search_v2_many() -> None:
-        for _ in range(1000):
-            if not search_capabilities("polymer molecular dynamics", limit=10):
+        queries = (
+            "polymer molecular dynamics",
+            "DFT defect states",
+            "CFD pressure drop",
+            "Bayesian experimental design",
+            "evidence citation integrity",
+        )
+        for index in range(1000):
+            if not search_capabilities(queries[index % len(queries)], limit=10):
                 raise SystemExit("v2 capability search returned no result")
 
     _measure("v2_search_1000", search_v2_many, metrics)
@@ -229,6 +266,7 @@ def main() -> None:
         "python": sys.version,
         "inputs": {
             "route_iterations": ROUTE_ITERATIONS,
+            "strategy_iterations": STRATEGY_ITERATIONS,
             "capability_load_iterations": CAPABILITY_LOAD_ITERATIONS,
             "v2_capability_records": 341,
             "v2_search_iterations": 1000,

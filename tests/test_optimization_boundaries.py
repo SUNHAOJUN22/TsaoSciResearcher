@@ -38,6 +38,9 @@ def _valid_capability() -> dict[str, object]:
         (lambda row: row.update(name_en=""), "non-empty string"),
         (lambda row: row.update(domains="bad"), "must be a list"),
         (lambda row: row.update(domains=[""]), "non-empty strings"),
+        (lambda row: row.update(source_lineage=["bad"]), "source_lineage"),
+        (lambda row: row.update(human_approval={"required": False}), "human_approval"),
+        (lambda row: row.update(computation_handoff={"mode": 1}), "computation_handoff"),
     ],
 )
 def test_strict_capability_contract_errors(

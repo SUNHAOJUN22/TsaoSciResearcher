@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import heapq
 import re
+import stat as stat_module
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
@@ -16,6 +17,16 @@ PACKAGE_DATA = Path(__file__).resolve().parent / "data" / "capabilities"
 CATALOG_PATH = PACKAGE_DATA / "capabilities.json"
 EXTENSIONS_PATH = PACKAGE_DATA / "extensions.json"
 _TOKEN_RE = re.compile(r"[\w-]+", re.UNICODE)
+_STRING_LIST_FIELDS = (
+    "domains",
+    "positive_triggers",
+    "negative_triggers",
+    "validators",
+    "failure_modes",
+    "recovery",
+    "references",
+)
+_LIST_FIELDS = (*_STRING_LIST_FIELDS, "source_lineage")
 
 
 def _normalize(value: str) -> str:
@@ -30,6 +41,23 @@ def _json_clone(value: Any) -> Any:
     if isinstance(value, tuple):
         return [_json_clone(item) for item in value]
     return value
+
+
+def _clone_contract_rows(rows: tuple[dict[str, Any], ...]) -> list[dict[str, Any]]:
+    """Clone validated package contracts using their bounded JSON shape."""
+
+    cloned_rows: list[dict[str, Any]] = []
+    for row in rows:
+        cloned = row.copy()
+        for field in _STRING_LIST_FIELDS:
+            cloned[field] = list(row[field])
+        cloned["source_lineage"] = [entry.copy() for entry in row["source_lineage"]]
+        human_approval = row["human_approval"].copy()
+        human_approval["points"] = list(human_approval["points"])
+        cloned["human_approval"] = human_approval
+        cloned["computation_handoff"] = row["computation_handoff"].copy()
+        cloned_rows.append(cloned)
+    return cloned_rows
 
 
 @lru_cache(maxsize=16)
@@ -71,39 +99,46 @@ def _catalog(path: Path, mtime_ns: int, size: int) -> tuple[dict[str, Any], ...]
         "output_schema",
         "data_egress",
     )
-    list_fields = (
-        "domains",
-        "positive_triggers",
-        "negative_triggers",
-        "validators",
-        "failure_modes",
-        "recovery",
-        "references",
-        "source_lineage",
-    )
-    string_list_fields = (
-        "domains",
-        "positive_triggers",
-        "negative_triggers",
-        "validators",
-        "failure_modes",
-        "recovery",
-        "references",
-    )
     for number, row in enumerate(rows, 1):
         for field in required_strings:
             if not isinstance(row.get(field), str) or not str(row[field]).strip():
                 raise ValidationError(
                     f"capability row {number} field {field!r} must be a non-empty string: {path}"
                 )
-        for field in list_fields:
+        for field in _LIST_FIELDS:
             if not isinstance(row.get(field), list):
                 raise ValidationError(f"capability row {number} field {field!r} must be a list: {path}")
-        for field in string_list_fields:
+        for field in _STRING_LIST_FIELDS:
             if any(not isinstance(item, str) or not item.strip() for item in row[field]):
                 raise ValidationError(
                     f"capability row {number} field {field!r} must contain non-empty strings: {path}"
                 )
+        if any(
+            not isinstance(entry, dict)
+            or any(not isinstance(key, str) or not isinstance(value, str) for key, value in entry.items())
+            for entry in row["source_lineage"]
+        ):
+            raise ValidationError(
+                f"capability row {number} field 'source_lineage' must contain string objects: {path}"
+            )
+        human_approval = row.get("human_approval")
+        if (
+            not isinstance(human_approval, dict)
+            or not isinstance(human_approval.get("required"), bool)
+            or not isinstance(human_approval.get("points"), list)
+            or any(not isinstance(item, str) for item in human_approval["points"])
+        ):
+            raise ValidationError(
+                f"capability row {number} field 'human_approval' has an invalid contract: {path}"
+            )
+        computation_handoff = row.get("computation_handoff")
+        if not isinstance(computation_handoff, dict) or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for key, value in computation_handoff.items()
+        ):
+            raise ValidationError(
+                f"capability row {number} field 'computation_handoff' has an invalid contract: {path}"
+            )
     return tuple(rows)
 
 
@@ -132,16 +167,19 @@ def _merged_catalog(
 
 
 def _rows(source: Path) -> tuple[dict[str, Any], ...]:
-    resolved = source.resolve()
-    base = CATALOG_PATH.resolve()
-    if resolved != base:
+    if source != CATALOG_PATH:
+        resolved = source.resolve()
         stat = resolved.stat()
         return _catalog(resolved, stat.st_mtime_ns, stat.st_size)
+    base = CATALOG_PATH
     base_stat = base.stat()
-    extension = EXTENSIONS_PATH.resolve()
-    if not extension.is_file():
+    extension = EXTENSIONS_PATH
+    try:
+        extension_stat = extension.stat()
+    except FileNotFoundError:
         return _catalog(base, base_stat.st_mtime_ns, base_stat.st_size)
-    extension_stat = extension.stat()
+    if not stat_module.S_ISREG(extension_stat.st_mode):
+        return _catalog(base, base_stat.st_mtime_ns, base_stat.st_size)
     return _merged_catalog(
         base,
         base_stat.st_mtime_ns,
@@ -153,7 +191,11 @@ def _rows(source: Path) -> tuple[dict[str, Any], ...]:
 
 
 def load_capabilities(path: str | Path = CATALOG_PATH) -> list[dict[str, Any]]:
-    return cast(list[dict[str, Any]], _json_clone(_rows(Path(path))))
+    source = Path(path)
+    rows = _rows(source)
+    if source == CATALOG_PATH:
+        return _clone_contract_rows(rows)
+    return cast(list[dict[str, Any]], _json_clone(rows))
 
 
 def _build_search_index(
@@ -216,16 +258,19 @@ def _merged_search_index(
 
 
 def _search_rows(source: Path) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
-    resolved = source.resolve()
-    base = CATALOG_PATH.resolve()
-    if resolved != base:
+    if source != CATALOG_PATH:
+        resolved = source.resolve()
         stat = resolved.stat()
         return _single_search_index(resolved, stat.st_mtime_ns, stat.st_size)
+    base = CATALOG_PATH
     base_stat = base.stat()
-    extension = EXTENSIONS_PATH.resolve()
-    if not extension.is_file():
+    extension = EXTENSIONS_PATH
+    try:
+        extension_stat = extension.stat()
+    except FileNotFoundError:
         return _single_search_index(base, base_stat.st_mtime_ns, base_stat.st_size)
-    extension_stat = extension.stat()
+    if not stat_module.S_ISREG(extension_stat.st_mode):
+        return _single_search_index(base, base_stat.st_mtime_ns, base_stat.st_size)
     return _merged_search_index(
         base,
         base_stat.st_mtime_ns,

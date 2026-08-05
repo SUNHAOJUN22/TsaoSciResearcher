@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Iterable
-from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -13,6 +12,18 @@ if __package__ is None or __package__ == "":
 from scripts.common import ROOT, JsonObject, load_data
 
 INDEX = ROOT / "capability-index" / "capabilities.json"
+
+
+def _json_clone(value: Any) -> Any:
+    """Clone trusted JSON data without the dispatch overhead of ``deepcopy``."""
+
+    if isinstance(value, dict):
+        return {key: _json_clone(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_json_clone(item) for item in value]
+    if isinstance(value, tuple):
+        return [_json_clone(item) for item in value]
+    return value
 
 
 def _object(value: Any, *, context: str) -> JsonObject:
@@ -62,4 +73,4 @@ def load_capabilities(categories: Iterable[str] | None = None) -> list[JsonObjec
     selected = set(categories or [])
     root = ROOT.resolve()
     rows = _load_all_capabilities(INDEX.resolve(strict=False), root)
-    return [deepcopy(row) for row in rows if not selected or row.get("category_zh") in selected]
+    return [_json_clone(row) for row in rows if not selected or row.get("category_zh") in selected]

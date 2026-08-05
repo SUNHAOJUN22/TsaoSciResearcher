@@ -57,3 +57,14 @@ python scripts/validate_distribution.py dist-python
 `docs/QUALITY_HISTORY.json` records release-scoped coverage, mutation, test and performance evidence. CI produces an idempotent current-tree history artifact; entries with `local-preflight` or missing metrics remain explicitly partial.
 
 The process-isolation test module is part of complete regression but intentionally excluded from coverage collection so its fresh subprocesses do not inherit pytest-cov state.
+
+## Performance gate scope
+
+`scripts/performance_smoke.py` is a bounded software-regression gate, not evidence that an external DFT, MD, FEM, CFD, process-simulation, or laboratory engine ran faster. It measures implemented repository paths with deterministic inputs:
+
+- 10,000 legacy routes and 10,000 v2 routes with unique request suffixes;
+- 3,000 strategy-advisor requests spanning dielectric transport, continuum flow, and reaction kinetics while checking the advisory-only execution boundary;
+- 100 defensive loads of each capability catalog and 1,000 mixed capability searches across molecular simulation, electronic structure, CFD, experimental design, and evidence integrity;
+- JSONL reading, claim–evidence validation, all schemas, bounded ZIP validation, install/uninstall, and two byte-identical source-release builds.
+
+Thresholds are intentionally platform-tolerant and detect large regressions. Any speedup claim must additionally report the execution environment, before/after measurements, numerical or semantic equivalence evidence, and whether the workload is warm-cache, cold-cache, repeated, or mixed.
