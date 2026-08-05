@@ -36,3 +36,17 @@ def test_sync_version_check_detects_stale_metadata() -> None:
         assert "version metadata is stale" in result.stderr + result.stdout
     finally:
         readme.write_text(original, encoding="utf-8")
+
+
+def test_bump_version_direct_script_resolves_repo_package() -> None:
+    result = subprocess.run(
+        [sys.executable, "scripts/bump_version.py", "not-a-semver"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    output = result.stdout + result.stderr
+    assert result.returncode != 0
+    assert "invalid semantic version" in output
+    assert "ModuleNotFoundError" not in output
