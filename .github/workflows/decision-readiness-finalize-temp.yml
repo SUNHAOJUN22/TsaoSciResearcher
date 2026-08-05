@@ -1,8 +1,7 @@
 name: One-time decision readiness finalization
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,7 +18,6 @@ env:
 
 jobs:
   compatibility:
-    if: github.event.head_commit.message == 'ci: trigger decision-readiness finalization'
     strategy:
       fail-fast: false
       matrix:
@@ -63,7 +61,6 @@ jobs:
           python -m ruff check tsao_researcher/strategy.py tests/test_strategy_passport.py
 
   finalize:
-    if: github.event.head_commit.message == 'ci: trigger decision-readiness finalization'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 65
@@ -109,6 +106,7 @@ jobs:
             --output examples/first-principles-strategy.json
           rm -f \
             .github/workflows/decision-readiness-finalize-temp.yml \
+            .github/workflows/issue-probe-temp.yml \
             scripts/apply_decision_readiness_temp.py \
             .tsr-decision-readiness-trigger
           python scripts/build_readme_facts.py --write
@@ -175,6 +173,7 @@ jobs:
           rm -rf .coverage .coverage.* .hypothesis .mypy_cache .pytest_cache .ruff_cache artifacts build dist dist-a dist-b dist-python site ./*.egg-info tsao_researcher/*.egg-info
           cat > /tmp/allowed-paths.txt <<'EOF'
           .github/workflows/decision-readiness-finalize-temp.yml
+          .github/workflows/issue-probe-temp.yml
           .tsr-decision-readiness-trigger
           CHANGELOG.md
           CITATION.cff
