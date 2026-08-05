@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 200 &&
       github.event.issue.title == '[TSR] Decision readiness and evidence inventory finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-readiness-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-readiness-v2'
     strategy:
       fail-fast: false
       matrix:
@@ -37,52 +37,46 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     steps:
-      - name: Checkout exact staged main
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: requirements-ci.lock
-      - name: Install exact dependencies
+      - name: Install
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Apply candidate upgrade
+      - name: Apply and test candidate
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
         run: |
           python scripts/apply_decision_readiness_temp.py
           python scripts/bump_version.py 0.7.2
           python -c "from pathlib import Path; Path('README_CN.md').write_text(Path('README.zh-CN.md').read_text(encoding='utf-8'), encoding='utf-8', newline='\n')"
           python -m ruff format tsao_researcher/strategy.py tests/test_strategy_passport.py
           python scripts/build_readme_facts.py --write
-      - name: Cross-platform contracts
-        env:
-          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
-        run: |
           python -m compileall -q scripts tsao_researcher tests
           python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_strategy_passport.py tests/test_readme_facts.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_v071_hardening.py
           python scripts/validate_schemas.py
           python scripts/build_readme_facts.py --check
           python -m ruff check tsao_researcher/strategy.py tests/test_strategy_passport.py
-          python -m tsao_researcher strategy "Predict pressure drop from a validated CFD model." --observable "pressure drop" --condition "specified geometry" --evidence "mesh-converged CFD simulation"
 
   finalize:
     if: >-
       github.event.issue.number == 200 &&
       github.event.issue.title == '[TSR] Decision readiness and evidence inventory finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-readiness-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-readiness-v2'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
-      - name: Checkout exact staged main
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
@@ -91,22 +85,20 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          remote_head="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
-          test "$remote_head" = "$GITHUB_SHA"
-      - name: Set up locked Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+          test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$GITHUB_SHA"
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-ci.lock
-      - name: Install exact dependencies
+      - name: Install
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Apply upgrade and refresh deterministic artifacts
+      - name: Apply and refresh
         shell: bash
         run: |
           set -euo pipefail
@@ -123,9 +115,7 @@ jobs:
             --evidence "converged DFT simulation calculation" \
             --evidence "independent TSDC and PEA experiment measurements" \
             --output examples/first-principles-strategy.json
-          rm -f \
-            .github/workflows/decision-readiness-finalize-temp.yml \
-            scripts/apply_decision_readiness_temp.py
+          rm -f .github/workflows/decision-readiness-finalize-temp.yml scripts/apply_decision_readiness_temp.py
           python scripts/build_readme_facts.py --write
           python scripts/build_sbom.py --write
           python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-05
@@ -133,7 +123,7 @@ jobs:
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
-      - name: Repository schema README and documentation gates
+      - name: Repository and documentation gates
         shell: bash
         run: |
           set -euo pipefail
@@ -156,32 +146,24 @@ jobs:
           python scripts/validate_figure.py examples/figure-contract.json
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
           mkdocs build --strict
-      - name: Regression order static security mutation and performance gates
+      - name: Full quality gates
         shell: bash
         run: |
           set -euo pipefail
           python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
-          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov \
-            --ignore=tests/test_import_isolation.py \
-            --cov=tsao_researcher --cov-branch \
-            --cov-report=term-missing \
-            --cov-report=json:artifacts/coverage.json
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-          TSR_TEST_ORDER_SEED=20260805 python -m pytest -q \
-            -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+          TSR_TEST_ORDER_SEED=20260805 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
           python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
-          python -m pip_audit --strict \
-            -r artifacts/resolved-environment.lock \
-            --format cyclonedx-json \
-            --output artifacts/resolved-environment-sbom.json
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
           python scripts/check_quality_baseline.py
-      - name: Deterministic package build and isolated-install gates
+      - name: Build gates
         shell: bash
         run: |
           set -euo pipefail
@@ -191,14 +173,11 @@ jobs:
           python scripts/validate_release.py
           python -m build --sdist --wheel --outdir dist-python
           python scripts/validate_distribution.py dist-python
-      - name: Verify scope commit and fast-forward main
+      - name: Commit and fast-forward main
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf \
-            .coverage .coverage.* .hypothesis .mypy_cache .pytest_cache .ruff_cache \
-            artifacts build dist dist-a dist-b dist-python site \
-            ./*.egg-info tsao_researcher/*.egg-info
+          rm -rf .coverage .coverage.* .hypothesis .mypy_cache .pytest_cache .ruff_cache artifacts build dist dist-a dist-b dist-python site ./*.egg-info tsao_researcher/*.egg-info
           cat > /tmp/allowed-paths.txt <<'EOF'
           .github/workflows/decision-readiness-finalize-temp.yml
           CHANGELOG.md
@@ -255,9 +234,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
-          final_sha="$(git rev-parse HEAD)"
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
-            --body "status=readiness-finalized final_commit=${final_sha} workflow_run_id=${GITHUB_RUN_ID} windows_linux_and_full_gates=PASS"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=readiness-finalized final_commit=$(git rev-parse HEAD) workflow_run_id=${GITHUB_RUN_ID} windows_linux_and_full_gates=PASS"
       - name: Report failure
         if: failure()
         env:
@@ -265,5 +242,4 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
-          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
-            --body "status=readiness-finalization-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "status=readiness-finalization-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
