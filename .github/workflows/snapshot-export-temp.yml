@@ -1,0 +1,45 @@
+name: One-time v0.7.3 snapshot export
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  export:
+    if: github.event.issue.number == 201 && github.event.comment.body == 'snapshot_token=TSR-20260805-v073'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify and package repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(git rev-parse HEAD)"
+          remote_sha="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$main_sha" = "$remote_sha"
+          git archive --format=zip --output=/tmp/TsaoSciResearcher-v073-source.zip HEAD
+          printf '%s\n' "$main_sha" > /tmp/SOURCE_COMMIT.txt
+      - name: Upload source snapshot
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: tsr-v073-source
+          path: |
+            /tmp/TsaoSciResearcher-v073-source.zip
+            /tmp/SOURCE_COMMIT.txt
+          if-no-files-found: error
+          retention-days: 1
+      - name: Report snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh issue comment 201 --repo "$GITHUB_REPOSITORY" --body "status=snapshot-exported source_commit=$(git rev-parse HEAD) workflow_run_id=${GITHUB_RUN_ID}"
