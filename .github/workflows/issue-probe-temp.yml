@@ -1,0 +1,15 @@
+name: Issue event probe
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  issues: write
+jobs:
+  probe:
+    if: github.event.issue.number == 200 && github.event.comment.body == 'probe_token=TSR-20260805'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report probe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh issue comment 200 --repo "$GITHUB_REPOSITORY" --body "status=issue-probe-pass workflow_run_id=${GITHUB_RUN_ID}"
