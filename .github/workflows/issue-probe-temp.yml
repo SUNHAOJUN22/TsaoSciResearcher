@@ -16,30 +16,52 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Rebuild checksummed payload from issue parts
+      - name: Rebuild checksummed payload from repaired issue parts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
           source_head="$(git rev-parse HEAD)"
-          gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/200/comments?per_page=100" \
-            --jq '.[] | select(.body | startswith("PAYLOAD_V4_PART_")) | .body' \
-            | LC_ALL=C sort > /tmp/payload-parts.txt
-          test "$(wc -l < /tmp/payload-parts.txt | tr -d ' ')" = "4"
-          awk '{print NR, length($0), substr($0,1,19), substr($0,length($0)-15)}' /tmp/payload-parts.txt
-          while IFS= read -r line; do
-            prefix="${line%%:*}"
-            payload="${line#*:}"
-            printf '%s' "$payload" | sha256sum | sed "s#  -#  ${prefix}#"
-          done < /tmp/payload-parts.txt
-          sed -E 's/^PAYLOAD_V4_PART_[0-9]{3}://' /tmp/payload-parts.txt \
-            | tr -d '\n' > /tmp/payload.b64
-          base64 --decode /tmp/payload.b64 > scripts/apply_decision_readiness_temp.py
-          wc -c /tmp/payload.b64 scripts/apply_decision_readiness_temp.py
-          actual_sha="$(sha256sum scripts/apply_decision_readiness_temp.py | awk '{print $1}')"
-          echo "actual_sha=${actual_sha}"
-          test "$actual_sha" = "3e07762f70f6198d6450746ab21aaf0794aae40ea0e7a48bba6bebd807344b65"
+          gh api "repos/${GITHUB_REPOSITORY}/issues/200/comments?per_page=100" > /tmp/comments.json
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          from pathlib import Path
+
+          comments = json.loads(Path('/tmp/comments.json').read_text(encoding='utf-8'))
+          prefixes = (
+              'PAYLOAD_V4_PART_001:',
+              'PAYLOAD_V4_PART_002:',
+              'PAYLOAD_V4_FIX_003:',
+              'PAYLOAD_V4_FIX_004:',
+          )
+          expected = (
+              '8eb1537762752addbbc9402aecd1b84cc8702856c0ee8be99922ea6a6bd00008',
+              '6824654e6895e115d9a61522fac71221bb1e603b7087afbcde8ac07b0948339b',
+              'bc69e929e4476f4c65118823eb790261cf291a1f7c81462e12f96c5dae49e5c0',
+              '442f14cda4aeb36686e8b5adbfc86e035ae37f326a8e5aeaf74fc73a62de2367',
+          )
+          chunks: list[str] = []
+          for prefix, digest in zip(prefixes, expected, strict=True):
+              matches = [item['body'] for item in comments if item.get('body', '').startswith(prefix)]
+              if len(matches) != 1:
+                  raise SystemExit(f'{prefix} expected exactly once, found {len(matches)}')
+              chunk = matches[0][len(prefix):]
+              actual = hashlib.sha256(chunk.encode('ascii')).hexdigest()
+              print(prefix, len(chunk), actual)
+              if actual != digest:
+                  raise SystemExit(f'{prefix} checksum mismatch')
+              chunks.append(chunk)
+          encoded = ''.join(chunks)
+          raw = base64.b64decode(encoded, validate=True)
+          if hashlib.sha256(raw).hexdigest() != '3e07762f70f6198d6450746ab21aaf0794aae40ea0e7a48bba6bebd807344b65':
+              raise SystemExit('combined payload checksum mismatch')
+          Path('scripts/apply_decision_readiness_temp.py').write_bytes(raw)
+          PY
           python -m py_compile scripts/apply_decision_readiness_temp.py
           test "$(git status --porcelain=v1 | cut -c4-)" = "scripts/apply_decision_readiness_temp.py"
           git config user.name "github-actions[bot]"
