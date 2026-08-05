@@ -47,7 +47,9 @@ def test_checked_in_evidence_can_be_truthful_preflight() -> None:
     assert value["provenance"]["workflow_run_id"] is None
     assert build_validation_evidence.validate(value) == []
     facts = build_readme_facts.build_facts()
-    assert facts["repository_assets"]["ai_diagrams"] == 25
+    diagram_count = facts["repository_assets"]["ai_diagrams"]
+    assert diagram_count == len(build_readme_facts.VISUAL_ATLAS_ASSETS)
+    assert diagram_count >= 29
     assert build_readme_facts._readme_errors(facts) == []
 
 

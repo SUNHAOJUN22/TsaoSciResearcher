@@ -93,16 +93,17 @@ def test_package_import_does_not_need_test_path_pollution() -> None:
 
 
 def test_top_level_package_import_is_dependency_light() -> None:
-    code = """
+    expected_version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    code = f"""
 import builtins
 original = builtins.__import__
 def guarded(name, *args, **kwargs):
-    if name.split('.', 1)[0] in {'yaml', 'jsonschema'}:
-        raise AssertionError(f'unexpected eager dependency import: {name}')
+    if name.split('.', 1)[0] in {{'yaml', 'jsonschema'}}:
+        raise AssertionError(f'unexpected eager dependency import: {{name}}')
     return original(name, *args, **kwargs)
 builtins.__import__ = guarded
 import tsao_researcher
-assert tsao_researcher.__version__ == '0.7.1'
+assert tsao_researcher.__version__ == {expected_version!r}
 assert 'route' in dir(tsao_researcher)
 """
     result = run_python(["-c", code])
