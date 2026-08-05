@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2'
     strategy:
       fail-fast: false
       matrix:
@@ -76,12 +76,30 @@ jobs:
           python -m ruff check tsao_researcher/strategy.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py scripts/build_readme_facts.py
           python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict industrial product quality?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
 
+  report-compatibility-failure:
+    if: >-
+      always() &&
+      github.event.issue.number == 202 &&
+      github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
+      github.event.comment.user.login == 'SUNHAOJUN22' &&
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2' &&
+      needs.compatibility.result != 'success'
+    needs: compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report compatibility failure
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh issue comment 202 --repo "$GITHUB_REPOSITORY" --body "status=quantitative-integrity-compatibility-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
+
   finalize:
     if: >-
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v1'
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 70
