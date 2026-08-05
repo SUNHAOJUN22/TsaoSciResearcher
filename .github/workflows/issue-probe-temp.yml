@@ -28,6 +28,11 @@ jobs:
             | LC_ALL=C sort > /tmp/payload-parts.txt
           test "$(wc -l < /tmp/payload-parts.txt | tr -d ' ')" = "4"
           awk '{print NR, length($0), substr($0,1,19), substr($0,length($0)-15)}' /tmp/payload-parts.txt
+          while IFS= read -r line; do
+            prefix="${line%%:*}"
+            payload="${line#*:}"
+            printf '%s' "$payload" | sha256sum | sed "s#  -#  ${prefix}#"
+          done < /tmp/payload-parts.txt
           sed -E 's/^PAYLOAD_V4_PART_[0-9]{3}://' /tmp/payload-parts.txt \
             | tr -d '\n' > /tmp/payload.b64
           base64 --decode /tmp/payload.b64 > scripts/apply_decision_readiness_temp.py
