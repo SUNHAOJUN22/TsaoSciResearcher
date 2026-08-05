@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/computation-strategy.schema.json",
-  "title": "First-Principles Computation and Simulation Strategy with Scientific Passport",
+  "title": "First-Principles Strategy with Scientific Passport and Decision Readiness",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -23,7 +23,8 @@
     "human_review",
     "execution_boundary",
     "scientific_passport",
-    "integrity_gates"
+    "integrity_gates",
+    "decision_readiness"
   ],
   "$defs": {
     "nonEmptyString": {
@@ -109,7 +110,7 @@
   },
   "properties": {
     "schema_version": {
-      "const": "1.1"
+      "const": "1.2"
     },
     "strategy_id": {
       "type": "string",
@@ -307,11 +308,12 @@
         "model_contract",
         "bridge_contract",
         "evidence_contract",
+        "claim_contract",
         "uncertainty_contract"
       ],
       "properties": {
         "passport_version": {
-          "const": "1.0"
+          "const": "1.1"
         },
         "strategy_id": {
           "type": "string",
@@ -379,6 +381,7 @@
             "maturity_level",
             "levels_detected",
             "evidence_items",
+            "evidence_inventory",
             "minimum_next_evidence"
           ],
           "properties": {
@@ -410,6 +413,51 @@
             },
             "minimum_next_evidence": {
               "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "evidence_inventory": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "evidence_id",
+                  "statement",
+                  "declared_rank",
+                  "declared_level",
+                  "matched_markers",
+                  "verification_status"
+                ],
+                "properties": {
+                  "evidence_id": {
+                    "type": "string",
+                    "pattern": "^EVI-[0-9a-f]{12}$"
+                  },
+                  "statement": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "declared_rank": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4
+                  },
+                  "declared_level": {
+                    "enum": [
+                      "E0-hypothesis-only",
+                      "E1-theoretical",
+                      "E2-computational",
+                      "E3-experimental",
+                      "E4-industrial"
+                    ]
+                  },
+                  "matched_markers": {
+                    "$ref": "#/$defs/uniqueStrings"
+                  },
+                  "verification_status": {
+                    "const": "declared-unverified"
+                  }
+                }
+              },
+              "uniqueItems": true
             }
           }
         },
@@ -429,6 +477,55 @@
               "$ref": "#/$defs/nonEmptyUniqueStrings"
             },
             "acceptance_rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "claim_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_type",
+            "triggers",
+            "minimum_evidence_rank",
+            "observed_evidence_rank",
+            "status",
+            "required_evidence",
+            "language_boundary"
+          ],
+          "properties": {
+            "claim_type": {
+              "enum": [
+                "descriptive",
+                "predictive",
+                "mechanistic",
+                "causal"
+              ]
+            },
+            "triggers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "minimum_evidence_rank": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            },
+            "observed_evidence_rank": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "status": {
+              "enum": [
+                "insufficient",
+                "guarded",
+                "baseline-met"
+              ]
+            },
+            "required_evidence": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "language_boundary": {
               "$ref": "#/$defs/nonEmptyString"
             }
           }
@@ -542,6 +639,46 @@
               "minimum": 1
             }
           }
+        }
+      }
+    },
+    "decision_readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "automatic_approval",
+        "human_review_required",
+        "blocking_codes",
+        "review_codes",
+        "next_best_evidence",
+        "handoff_rule"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "blocked",
+            "review-required",
+            "ready-for-human-review"
+          ]
+        },
+        "automatic_approval": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "blocking_codes": {
+          "$ref": "#/$defs/uniqueStrings"
+        },
+        "review_codes": {
+          "$ref": "#/$defs/uniqueStrings"
+        },
+        "next_best_evidence": {
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "handoff_rule": {
+          "$ref": "#/$defs/nonEmptyString"
         }
       }
     }

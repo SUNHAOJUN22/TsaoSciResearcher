@@ -1,6 +1,6 @@
 # 科研能力 AI 示意图谱
 
-以下 25 张 AI 概念图依据仓库架构、能力合同、验证器和明确执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
+以下 29 张 AI 概念图依据仓库架构、能力合同、验证器和明确执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
 
 ## 1. 科研操作系统架构
 
@@ -101,3 +101,20 @@
 ## 25. 高分子绝缘多尺度策略
 
 ![高分子绝缘多尺度策略](assets/ai/polymer_multiscale_case_study.svg)
+
+
+## 26. Scientific Passport 合同矩阵
+
+![Scientific Passport 合同矩阵](assets/ai/scientific_passport_matrix.svg)
+
+## 27. 证据成熟度阶梯
+
+![证据成熟度阶梯](assets/ai/evidence_maturity_ladder.svg)
+
+## 28. 科研决策就绪门
+
+![科研决策就绪门](assets/ai/decision_readiness_gate.svg)
+
+## 29. 主动证据学习闭环
+
+![主动证据学习闭环](assets/ai/active_evidence_learning_loop.svg)

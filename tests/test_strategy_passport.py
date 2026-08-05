@@ -21,7 +21,7 @@ def test_scientific_passport_is_schema_valid_and_bound_to_strategy() -> None:
     )
     jsonschema.Draft202012Validator(SCHEMA).validate(result)
     passport = result["scientific_passport"]
-    assert result["schema_version"] == "1.1"
+    assert result["schema_version"] == "1.2"
     assert passport["strategy_id"] == result["strategy_id"]
     assert passport["evidence_contract"]["maturity_level"] == "E3-experimental"
     assert passport["evidence_contract"]["declared_only"] is True
@@ -62,5 +62,82 @@ def test_evidence_maturity_distinguishes_hypothesis_computation_and_industry() -
 def test_schema_rejects_fabricated_evidence_maturity() -> None:
     result = advise_computation_strategy("Estimate a band gap.", ["band gap"])
     result["scientific_passport"]["evidence_contract"]["maturity_rank"] = 9
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.Draft202012Validator(SCHEMA).validate(result)
+
+
+def test_item_level_evidence_inventory_is_deterministic_and_unverified() -> None:
+    result = advise_computation_strategy(
+        "Predict conductivity from a mechanistic transport model.",
+        ["conductivity"],
+        ["300 K", "fixed electric field"],
+        available_evidence=[
+            "peer-reviewed literature analysis",
+            "converged DFT simulation calculation",
+            "independent conductivity experiment measurement",
+        ],
+    )
+    evidence = result["scientific_passport"]["evidence_contract"]
+    inventory = evidence["evidence_inventory"]
+    assert [item["declared_rank"] for item in inventory] == [1, 2, 3]
+    assert len({item["evidence_id"] for item in inventory}) == 3
+    assert all(item["verification_status"] == "declared-unverified" for item in inventory)
+    assert evidence["maturity_rank"] == 3
+
+
+def test_claim_contract_blocks_under_supported_causal_language() -> None:
+    result = advise_computation_strategy(
+        "Does a defect state cause industrial product quality changes?",
+        ["product quality"],
+        ["fixed chemistry and processing"],
+        available_evidence=["literature review"],
+    )
+    claim = result["scientific_passport"]["claim_contract"]
+    readiness = result["decision_readiness"]
+    assert claim["claim_type"] == "causal"
+    assert claim["minimum_evidence_rank"] == 3
+    assert claim["status"] == "insufficient"
+    assert readiness["status"] == "blocked"
+    assert "CLAIM_EVIDENCE_INSUFFICIENT" in readiness["blocking_codes"]
+    assert "SCALE_BRIDGE_MISSING" in readiness["blocking_codes"]
+    assert readiness["automatic_approval"] is False
+
+
+def test_predictive_computational_baseline_can_reach_human_review() -> None:
+    result = advise_computation_strategy(
+        "Predict pressure drop for non-Newtonian flow.",
+        ["pressure drop"],
+        ["steady inlet flow", "specified geometry"],
+        available_evidence=["mesh-converged CFD simulation and hold-out calculation"],
+    )
+    claim = result["scientific_passport"]["claim_contract"]
+    readiness = result["decision_readiness"]
+    assert claim["claim_type"] == "predictive"
+    assert claim["status"] == "baseline-met"
+    assert readiness["status"] == "ready-for-human-review"
+    assert readiness["blocking_codes"] == []
+    assert readiness["human_review_required"] is True
+    assert readiness["next_best_evidence"]
+
+
+def test_readiness_blocks_missing_observable_and_evidence_baseline() -> None:
+    result = advise_computation_strategy(
+        "Develop a multiscale simulation strategy for this material.",
+        conditions=["300 K"],
+    )
+    readiness = result["decision_readiness"]
+    assert readiness["status"] == "blocked"
+    assert "OBSERVABLE_MISSING" in readiness["blocking_codes"]
+    assert "EVIDENCE_BASELINE_MISSING" in readiness["blocking_codes"]
+
+
+def test_schema_rejects_automatic_scientific_approval() -> None:
+    result = advise_computation_strategy(
+        "Predict a band gap.",
+        ["band gap"],
+        ["fixed crystal structure"],
+        available_evidence=["converged DFT calculation"],
+    )
+    result["decision_readiness"]["automatic_approval"] = True
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.Draft202012Validator(SCHEMA).validate(result)

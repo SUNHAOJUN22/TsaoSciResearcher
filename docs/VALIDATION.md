@@ -72,3 +72,8 @@ Thresholds are intentionally platform-tolerant and detect large regressions. Any
 ## Scientific Passport contract gates
 
 The computation-strategy schema requires a Scientific Passport and integrity gates. Regression verifies evidence maturity `E0`–`E4`, declared-only evidence semantics, deterministic passport binding, unsupported causal-language review, blocked unbridged scale jumps, competing-mechanism requirements, and rejection of fabricated maturity values.
+
+
+## Decision-readiness contract
+
+Computation-strategy schema 1.2 requires item-level evidence inventory, a claim contract and a decision-readiness record. Validation must reject automatic approval, invalid evidence identifiers, out-of-range maturity values and unknown readiness states. A `ready-for-human-review` result is planning readiness only; it is not execution, validation or scientific acceptance.

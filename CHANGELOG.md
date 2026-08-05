@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.7.2 - 2026-08-05
+
+- Add item-level declared evidence inventory with stable identifiers, detected maturity, markers and explicit unverified status.
+- Add descriptive, predictive, mechanistic and causal claim contracts with minimum evidence requirements and admissible-language boundaries.
+- Add deterministic decision readiness, blocker/review codes and next-best-evidence actions; automatic approval remains structurally impossible.
+- Expand the visual atlas from 25 to 29 repository-local AI-generated conceptual diagrams for Passport, evidence maturity, readiness and active validation.
+
 - Add deterministic Scientific Passport output with model, bridge, evidence, and uncertainty contracts.
 - Add evidence maturity E0-E4 plus causal-claim, scale-jump, and competing-mechanism integrity gates.
 - Add schema, cross-platform regression, README, and validation documentation for the new contracts.

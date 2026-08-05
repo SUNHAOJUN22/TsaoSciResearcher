@@ -142,6 +142,50 @@ _CAUSAL_MARKERS = (
     "机制",
     "由于",
 )
+_STRICT_CAUSAL_MARKERS = (
+    "cause",
+    "causes",
+    "caused by",
+    "causal",
+    "control",
+    "controls",
+    "controlled by",
+    "determine",
+    "determines",
+    "drive",
+    "drives",
+    "lead to",
+    "leads to",
+    "导致",
+    "因果",
+    "控制",
+    "决定",
+    "驱动",
+)
+_MECHANISTIC_MARKERS = (
+    "mechanism",
+    "mechanistic",
+    "pathway",
+    "mediates",
+    "governs",
+    "机理",
+    "机制",
+    "路径",
+    "支配",
+)
+_PREDICTIVE_MARKERS = (
+    "predict",
+    "prediction",
+    "forecast",
+    "estimate",
+    "classify",
+    "screen",
+    "预测",
+    "预报",
+    "估计",
+    "分类",
+    "筛选",
+)
 _SCALE_TARGET_MARKERS: tuple[tuple[int, tuple[str, ...]], ...] = (
     (
         4,
@@ -1504,17 +1548,44 @@ def _marker_hits(text: str, markers: tuple[str, ...]) -> list[str]:
     return list(dict.fromkeys(marker for marker in markers if marker in text))
 
 
-def _evidence_maturity(evidence: list[str]) -> dict[str, Any]:
-    text = f" {_normalize(' '.join(evidence))} "
+def _detect_evidence_level(value: str) -> tuple[int, str, list[str]]:
+    text = f" {_normalize(value)} "
     rank = 0
     level = "E0-hypothesis-only"
-    detected: list[str] = []
+    matched: list[str] = []
     for candidate_rank, candidate_level, markers in _EVIDENCE_LEVELS:
-        if _marker_hits(text, markers):
-            detected.append(candidate_level)
+        hits = _marker_hits(text, markers)
+        if hits:
+            matched.extend(hits)
             if candidate_rank > rank:
                 rank = candidate_rank
                 level = candidate_level
+    return rank, level, list(dict.fromkeys(matched))
+
+
+def _evidence_maturity(evidence: list[str]) -> dict[str, Any]:
+    rank = 0
+    level = "E0-hypothesis-only"
+    detected: list[str] = []
+    inventory: list[dict[str, Any]] = []
+    for item in evidence:
+        item_rank, item_level, matched = _detect_evidence_level(item)
+        evidence_id = hashlib.sha256(item.encode("utf-8")).hexdigest()[:12]
+        inventory.append(
+            {
+                "evidence_id": f"EVI-{evidence_id}",
+                "statement": item,
+                "declared_rank": item_rank,
+                "declared_level": item_level,
+                "matched_markers": matched,
+                "verification_status": "declared-unverified",
+            }
+        )
+        if item_level not in detected:
+            detected.append(item_level)
+        if item_rank > rank:
+            rank = item_rank
+            level = item_level
     if not detected:
         detected = ["E0-hypothesis-only"]
     next_evidence = {
@@ -1540,13 +1611,122 @@ def _evidence_maturity(evidence: list[str]) -> dict[str, Any]:
         ],
     }
     return {
-        "classification_basis": "lexical classification of user-declared evidence; this is not independent validation",
+        "classification_basis": "item-level lexical classification of user-declared evidence; this is not independent validation",
         "declared_only": True,
         "maturity_rank": rank,
         "maturity_level": level,
         "levels_detected": detected,
         "evidence_items": evidence,
+        "evidence_inventory": inventory,
         "minimum_next_evidence": next_evidence[rank],
+    }
+
+
+def _claim_contract(text: str, evidence_rank: int) -> dict[str, Any]:
+    causal = _marker_hits(text, _STRICT_CAUSAL_MARKERS)
+    mechanistic = _marker_hits(text, _MECHANISTIC_MARKERS)
+    predictive = _marker_hits(text, _PREDICTIVE_MARKERS)
+    if causal:
+        claim_type = "causal"
+        triggers = causal
+        minimum_rank = 3
+        required_evidence = [
+            "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
+            "independent measurement and at least one competing-mechanism test",
+        ]
+    elif mechanistic:
+        claim_type = "mechanistic"
+        triggers = mechanistic
+        minimum_rank = 2
+        required_evidence = [
+            "a reproducible model or experiment that exposes the proposed mechanism",
+            "a discriminating observable that can reject a plausible alternative mechanism",
+        ]
+    elif predictive:
+        claim_type = "predictive"
+        triggers = predictive
+        minimum_rank = 2
+        required_evidence = [
+            "hold-out or prospective validation under declared conditions",
+            "calibrated uncertainty against the decision threshold",
+        ]
+    else:
+        claim_type = "descriptive"
+        triggers = []
+        minimum_rank = 1
+        required_evidence = [
+            "a traceable literature, analytical, computational, or measurement baseline",
+            "explicit units, conditions, and scope for the descriptive statement",
+        ]
+    if evidence_rank < minimum_rank:
+        status = "insufficient"
+    elif claim_type in {"causal", "mechanistic"}:
+        status = "guarded"
+    else:
+        status = "baseline-met"
+    return {
+        "claim_type": claim_type,
+        "triggers": triggers,
+        "minimum_evidence_rank": minimum_rank,
+        "observed_evidence_rank": evidence_rank,
+        "status": status,
+        "required_evidence": required_evidence,
+        "language_boundary": "The contract limits admissible wording; it does not independently verify the declared evidence or establish the claim.",
+    }
+
+
+def _decision_readiness(
+    *,
+    observables: list[str],
+    conditions: list[str],
+    evidence_contract: dict[str, Any],
+    claim_contract: dict[str, Any],
+    integrity_gates: dict[str, Any],
+    ladder: list[dict[str, Any]],
+) -> dict[str, Any]:
+    blocking_codes: list[str] = []
+    review_codes: list[str] = []
+    if not observables:
+        blocking_codes.append("OBSERVABLE_MISSING")
+    if evidence_contract["maturity_rank"] == 0:
+        blocking_codes.append("EVIDENCE_BASELINE_MISSING")
+    if claim_contract["status"] == "insufficient":
+        blocking_codes.append("CLAIM_EVIDENCE_INSUFFICIENT")
+    scale_status = integrity_gates["scale_jump"]["status"]
+    if scale_status == "blocked":
+        blocking_codes.append("SCALE_BRIDGE_MISSING")
+    elif scale_status == "review-required":
+        review_codes.append("SCALE_BRIDGE_REVIEW_REQUIRED")
+    if not conditions:
+        review_codes.append("OPERATING_CONDITIONS_UNSPECIFIED")
+    if claim_contract["status"] == "guarded":
+        review_codes.append("CLAIM_LANGUAGE_REVIEW_REQUIRED")
+    if integrity_gates["causal_claim"]["status"] == "review-required":
+        review_codes.append("CAUSAL_IDENTIFICATION_REVIEW_REQUIRED")
+    if blocking_codes:
+        status = "blocked"
+    elif review_codes:
+        status = "review-required"
+    else:
+        status = "ready-for-human-review"
+    next_best = list(
+        dict.fromkeys(
+            [
+                *evidence_contract["minimum_next_evidence"],
+                *claim_contract["required_evidence"],
+                *[item for method in ladder[:2] for item in method["validation"][:1]],
+                "compare at least one plausible competing mechanism before accepting the preferred explanation",
+            ]
+        )
+    )[:6]
+    return {
+        "status": status,
+        "automatic_approval": False,
+        "human_review_required": True,
+        "blocking_codes": blocking_codes,
+        "review_codes": list(dict.fromkeys(review_codes)),
+        "next_best_evidence": next_best,
+        "handoff_rule": "External execution planning may proceed only after blockers are closed, review items are addressed, and a qualified human approves a checksum-bound handoff.",
     }
 
 
@@ -1762,6 +1942,7 @@ def advise_computation_strategy(
 
     strategy_id = f"FPS-{digest}"
     evidence_contract = _evidence_maturity(clean_evidence)
+    claim_contract = _claim_contract(combined, evidence_contract["maturity_rank"])
     integrity_gates = {
         "causal_claim": _causal_claim_gate(combined, evidence_contract["maturity_rank"]),
         "scale_jump": _scale_jump_gate(primary, secondary, combined, bridge_variables),
@@ -1771,8 +1952,16 @@ def advise_computation_strategy(
             "minimum_alternatives": 1,
         },
     }
+    decision_readiness = _decision_readiness(
+        observables=clean_observables,
+        conditions=clean_conditions,
+        evidence_contract=evidence_contract,
+        claim_contract=claim_contract,
+        integrity_gates=integrity_gates,
+        ladder=ladder,
+    )
     scientific_passport = {
-        "passport_version": "1.0",
+        "passport_version": "1.1",
         "strategy_id": strategy_id,
         "model_contract": {
             "state_variables": list(primary.state_variables),
@@ -1797,6 +1986,7 @@ def advise_computation_strategy(
             ],
         },
         "evidence_contract": evidence_contract,
+        "claim_contract": claim_contract,
         "uncertainty_contract": {
             "categories": [
                 "parameter",
@@ -1813,7 +2003,7 @@ def advise_computation_strategy(
     }
 
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "strategy_id": strategy_id,
         "status": "advisory-only",
         "question": clean_question,
@@ -1840,6 +2030,7 @@ def advise_computation_strategy(
         },
         "scientific_passport": scientific_passport,
         "integrity_gates": integrity_gates,
+        "decision_readiness": decision_readiness,
         "validation_plan": list(
             dict.fromkeys(
                 [

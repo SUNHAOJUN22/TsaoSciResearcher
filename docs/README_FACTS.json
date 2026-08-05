@@ -59,7 +59,7 @@
     "3.13"
   ],
   "repository_assets": {
-    "ai_diagrams": 25,
+    "ai_diagrams": 29,
     "references": 23,
     "templates": 14,
     "test_modules": 40
@@ -89,7 +89,7 @@
       "schemas/v2/workflow.schema.json"
     ]
   },
-  "version": "0.7.1",
+  "version": "0.7.2",
   "workflows": {
     "count": 15,
     "items": [

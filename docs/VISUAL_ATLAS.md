@@ -1,6 +1,6 @@
 # Scientific Capability Visual Atlas
 
-These 25 AI-generated conceptual diagrams are derived from repository architecture, capability contracts, validators and explicit execution boundaries. They are documentation assets, not scientific results or execution receipts.
+These 29 AI-generated conceptual diagrams are derived from repository architecture, capability contracts, validators and explicit execution boundaries. They are documentation assets, not scientific results or execution receipts.
 
 ## 1. Research OS architecture
 
@@ -101,3 +101,20 @@ These 25 AI-generated conceptual diagrams are derived from repository architectu
 ## 25. Polymer-insulation multiscale strategy
 
 ![Polymer-insulation multiscale strategy](assets/ai/polymer_multiscale_case_study.svg)
+
+
+## 26. Scientific Passport contract matrix
+
+![Scientific Passport contract matrix](assets/ai/scientific_passport_matrix.svg)
+
+## 27. Evidence maturity ladder
+
+![Evidence maturity ladder](assets/ai/evidence_maturity_ladder.svg)
+
+## 28. Scientific decision readiness gate
+
+![Scientific decision readiness gate](assets/ai/decision_readiness_gate.svg)
+
+## 29. Active evidence learning loop
+
+![Active evidence learning loop](assets/ai/active_evidence_learning_loop.svg)

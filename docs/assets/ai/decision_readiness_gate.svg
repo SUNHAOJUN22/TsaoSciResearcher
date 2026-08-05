@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img">
+<title>Scientific Decision Readiness Gate</title>
+<desc>Conceptual blocker, review and ready-for-human-review states before external scientific execution.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071426"/><stop offset="1" stop-color="#132b4b"/></linearGradient>
+  <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".28"/></filter>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7dd3fc"/></marker>
+</defs>
+<rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+<rect x="36" y="32" width="1128" height="636" rx="24" fill="none" stroke="#27496d" stroke-width="2"/>
+<text x="70" y="92" fill="#f8fafc" font-size="34" font-family="Arial, sans-serif" font-weight="700">Scientific Decision Readiness Gate</text>
+<rect x="70" y="112" width="220" height="6" rx="3" fill="url(#accent)"/>
+
+<g font-family="Arial, sans-serif">
+  <rect x="85" y="165" width="260" height="310" rx="22" fill="#172033" stroke="#ef4444" stroke-width="3" filter="url(#shadow)"/>
+  <text x="215" y="210" text-anchor="middle" fill="#fecaca" font-size="27" font-weight="700">BLOCKED</text>
+  <text x="110" y="260" fill="#fee2e2" font-size="18">• observable missing</text>
+  <text x="110" y="302" fill="#fee2e2" font-size="18">• no evidence baseline</text>
+  <text x="110" y="344" fill="#fee2e2" font-size="18">• claim under-supported</text>
+  <text x="110" y="386" fill="#fee2e2" font-size="18">• scale bridge missing</text>
+  <rect x="470" y="165" width="260" height="310" rx="22" fill="#172033" stroke="#f59e0b" stroke-width="3" filter="url(#shadow)"/>
+  <text x="600" y="210" text-anchor="middle" fill="#fde68a" font-size="27" font-weight="700">REVIEW</text>
+  <text x="495" y="260" fill="#fef3c7" font-size="18">• causal language</text>
+  <text x="495" y="302" fill="#fef3c7" font-size="18">• bridge uncertainty</text>
+  <text x="495" y="344" fill="#fef3c7" font-size="18">• conditions incomplete</text>
+  <text x="495" y="386" fill="#fef3c7" font-size="18">• expert judgement</text>
+  <rect x="855" y="165" width="260" height="310" rx="22" fill="#172033" stroke="#22c55e" stroke-width="3" filter="url(#shadow)"/>
+  <text x="985" y="210" text-anchor="middle" fill="#bbf7d0" font-size="25" font-weight="700">HUMAN REVIEW</text>
+  <text x="880" y="260" fill="#dcfce7" font-size="18">• baseline met</text>
+  <text x="880" y="302" fill="#dcfce7" font-size="18">• no hard blocker</text>
+  <text x="880" y="344" fill="#dcfce7" font-size="18">• next evidence defined</text>
+  <text x="880" y="386" fill="#dcfce7" font-size="18">• no automatic approval</text>
+  <path d="M350 320 H455" stroke="#7dd3fc" stroke-width="5" marker-end="url(#arrow)"/>
+  <path d="M735 320 H840" stroke="#7dd3fc" stroke-width="5" marker-end="url(#arrow)"/>
+  <rect x="300" y="520" width="600" height="70" rx="18" fill="#0f3a54" stroke="#38bdf8"/>
+  <text x="600" y="564" text-anchor="middle" fill="#e0f2fe" font-size="21">Checksum-bound external handoff only after qualified approval</text>
+</g>
+
+<text x="70" y="645" fill="#94a3b8" font-size="16" font-family="Arial, sans-serif">AI-generated conceptual illustration · not experimental or solver output</text>
+</svg>

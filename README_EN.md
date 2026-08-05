@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **Release 0.7.1** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
+> **Release 0.7.2** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
 ## Executive view
 
@@ -45,7 +45,7 @@ The runtime exposes one deterministic entry point and a machine-readable scienti
 | Reproducibility | deterministic capsules, safe archives, content hashes, SBOM, release validation and isolated distribution checks |
 | Quality control | evidence/claim consistency, scientific-quality blockers, figure contracts, citation boundaries and human-approval gates |
 
-The repository currently contains **15** primary workflows, **19** JSON Schemas, **7** domain packs and **25** AI-generated conceptual diagrams.
+The repository currently contains **15** primary workflows, **19** JSON Schemas, **7** domain packs and **29** AI-generated conceptual diagrams.
 
 Read the detailed [original requirements audit](docs/ORIGINAL_REQUIREMENTS_AUDIT.md), [capability coverage matrix](docs/CAPABILITY_COVERAGE_MATRIX.md), [architecture mapping](docs/README_ARCHITECTURE_MAPPING.md), and [README audit report](docs/README_AUDIT_REPORT.md).
 
@@ -121,6 +121,27 @@ A higher lexical maturity level does not certify evidence quality. It records wh
 <table>
 <tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Conceptual Scientific Passport evidence contract"/><br/><strong>Passport evidence contract</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="Conceptual scale bridge contract"/><br/><strong>Scale-bridge contract</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="Conceptual causal and scale-jump guard"/><br/><strong>Causal and scale-jump guard</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="Conceptual uncertainty contract"/><br/><strong>Uncertainty acceptance contract</strong></td></tr>
+</table>
+
+
+### Decision readiness and next-best evidence
+
+The strategy result now aggregates every contract into an explicit planning state:
+
+```text
+blocked
+  → close observable, evidence, claim-support, or scale-bridge blockers
+review-required
+  → resolve causal language, operating-domain, or cross-scale review items
+ready-for-human-review
+  → qualified reviewer may approve a checksum-bound external handoff
+```
+
+`automatic_approval` is structurally fixed to `false`. The runtime also returns ordered `next_best_evidence` actions assembled from the current maturity gap, claim type, method validation requirements and competing-mechanism rule.
+
+<table>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Conceptual Scientific Passport contract matrix"/><br/><strong>Scientific Passport contract matrix</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="Conceptual evidence maturity ladder"/><br/><strong>Item-level E0–E4 evidence ladder</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="Conceptual scientific decision readiness gate"/><br/><strong>Blocker and review gate</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="Conceptual active evidence learning loop"/><br/><strong>Next-best evidence loop</strong></td></tr>
 </table>
 
 ## Architecture and data flow
@@ -343,7 +364,7 @@ The catalog explicitly separates a discoverable capability contract from proof t
 
 ## Visual atlas
 
-The complete **25-diagram** atlas is embedded below and documented bilingually in [docs/VISUAL_ATLAS.md](docs/VISUAL_ATLAS.md). Every SVG is repository-local, self-contained, and includes accessible `<title>` and `<desc>` metadata.
+The complete **29-diagram** atlas is embedded below and documented bilingually in [docs/VISUAL_ATLAS.md](docs/VISUAL_ATLAS.md). Every SVG is repository-local, self-contained, and includes accessible `<title>` and `<desc>` metadata.
 
 <table>
 <tr><td width="50%"><img src="docs/assets/ai/research_os_architecture.svg" alt="Research OS architecture"/><br/><strong>1 · Research OS architecture</strong></td><td width="50%"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="Multi-agent orchestration"/><br/><strong>2 · Multi-agent orchestration</strong></td></tr>
@@ -359,6 +380,8 @@ The complete **25-diagram** atlas is embedded below and documented bilingually i
 <tr><td width="50%"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="Laboratory data quality"/><br/><strong>21 · Laboratory quality</strong></td><td width="50%"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="Scientific writing evidence chain"/><br/><strong>22 · Writing evidence chain</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="Scientific figure edit guard"/><br/><strong>23 · Figure edit guard</strong></td><td width="50%"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="Human approval acceptance boundary"/><br/><strong>24 · Human acceptance</strong></td></tr>
 <tr><td colspan="2"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="Polymer multiscale case study"/><br/><strong>25 · Polymer-insulation multiscale case</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport contract matrix"/><br/><strong>26 · Scientific Passport matrix</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="Evidence maturity ladder"/><br/><strong>27 · Evidence maturity ladder</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="Decision readiness gate"/><br/><strong>28 · Decision readiness gate</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="Active evidence learning loop"/><br/><strong>29 · Active evidence loop</strong></td></tr>
 </table>
 
 ## Known limitations and integrity boundary

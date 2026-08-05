@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.1",
-  "strategy_id": "FPS-4b465b9c9b76b26e",
+  "schema_version": "1.2",
+  "strategy_id": "FPS-3532d803e477f062",
   "status": "advisory-only",
   "question": "How do interfacial trap states control charge transport and breakdown?",
   "observables": [
@@ -12,7 +12,9 @@
   ],
   "constraints": [],
   "available_evidence": [
-    "TSDC and PEA experiment measurements"
+    "peer-reviewed literature analysis",
+    "converged DFT simulation calculation",
+    "independent TSDC and PEA experiment measurements"
   ],
   "classification": {
     "primary_regime": "charge-transport-dielectric",
@@ -276,8 +278,8 @@
     "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist."
   },
   "scientific_passport": {
-    "passport_version": "1.0",
-    "strategy_id": "FPS-4b465b9c9b76b26e",
+    "passport_version": "1.1",
+    "strategy_id": "FPS-3532d803e477f062",
     "model_contract": {
       "state_variables": [
         "carrier density",
@@ -329,20 +331,77 @@
       ]
     },
     "evidence_contract": {
-      "classification_basis": "lexical classification of user-declared evidence; this is not independent validation",
+      "classification_basis": "item-level lexical classification of user-declared evidence; this is not independent validation",
       "declared_only": true,
       "maturity_rank": 3,
       "maturity_level": "E3-experimental",
       "levels_detected": [
+        "E1-theoretical",
+        "E2-computational",
         "E3-experimental"
       ],
       "evidence_items": [
-        "TSDC and PEA experiment measurements"
+        "peer-reviewed literature analysis",
+        "converged DFT simulation calculation",
+        "independent TSDC and PEA experiment measurements"
+      ],
+      "evidence_inventory": [
+        {
+          "evidence_id": "EVI-12dbb6448e22",
+          "statement": "peer-reviewed literature analysis",
+          "declared_rank": 1,
+          "declared_level": "E1-theoretical",
+          "matched_markers": [
+            "literature",
+            "review"
+          ],
+          "verification_status": "declared-unverified"
+        },
+        {
+          "evidence_id": "EVI-8ccbc7efa86b",
+          "statement": "converged DFT simulation calculation",
+          "declared_rank": 2,
+          "declared_level": "E2-computational",
+          "matched_markers": [
+            "simulation",
+            "calculation",
+            "dft"
+          ],
+          "verification_status": "declared-unverified"
+        },
+        {
+          "evidence_id": "EVI-bdc105a8704b",
+          "statement": "independent TSDC and PEA experiment measurements",
+          "declared_rank": 3,
+          "declared_level": "E3-experimental",
+          "matched_markers": [
+            "experiment",
+            "measurement",
+            "measurements",
+            "tsdc",
+            "pea"
+          ],
+          "verification_status": "declared-unverified"
+        }
       ],
       "minimum_next_evidence": [
         "demonstrate transferability across samples, operators, or operating conditions",
         "seek pilot, field, or manufacturing validation when the decision is industrial"
       ]
+    },
+    "claim_contract": {
+      "claim_type": "causal",
+      "triggers": [
+        "control"
+      ],
+      "minimum_evidence_rank": 3,
+      "observed_evidence_rank": 3,
+      "status": "guarded",
+      "required_evidence": [
+        "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
+        "independent measurement and at least one competing-mechanism test"
+      ],
+      "language_boundary": "The contract limits admissible wording; it does not independently verify the declared evidence or establish the claim."
     },
     "uncertainty_contract": {
       "categories": [
@@ -398,6 +457,24 @@
       "rule": "A preferred mechanism must be tested against at least one plausible alternative.",
       "minimum_alternatives": 1
     }
+  },
+  "decision_readiness": {
+    "status": "review-required",
+    "automatic_approval": false,
+    "human_review_required": true,
+    "blocking_codes": [],
+    "review_codes": [
+      "CLAIM_LANGUAGE_REVIEW_REQUIRED"
+    ],
+    "next_best_evidence": [
+      "demonstrate transferability across samples, operators, or operating conditions",
+      "seek pilot, field, or manufacturing validation when the decision is industrial",
+      "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
+      "independent measurement and at least one competing-mechanism test",
+      "spectroscopy",
+      "current-voltage-temperature trends"
+    ],
+    "handoff_rule": "External execution planning may proceed only after blockers are closed, review items are addressed, and a qualified human approves a checksum-bound handoff."
   },
   "validation_plan": [
     "test conservation laws, symmetries, units, and limiting cases",

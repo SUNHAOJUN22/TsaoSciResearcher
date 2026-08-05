@@ -132,7 +132,7 @@
         "pkg:pypi/types-jsonschema@4.26.0.20260518",
         "pkg:pypi/types-pyyaml@6.0.12.20260518"
       ],
-      "ref": "pkg:pypi/tsao-sci-researcher@0.7.1"
+      "ref": "pkg:pypi/tsao-sci-researcher@0.7.2"
     },
     {
       "dependsOn": [],
@@ -193,11 +193,11 @@
   ],
   "metadata": {
     "component": {
-      "bom-ref": "pkg:pypi/tsao-sci-researcher@0.7.1",
+      "bom-ref": "pkg:pypi/tsao-sci-researcher@0.7.2",
       "name": "tsao-sci-researcher",
-      "purl": "pkg:pypi/tsao-sci-researcher@0.7.1",
+      "purl": "pkg:pypi/tsao-sci-researcher@0.7.2",
       "type": "application",
-      "version": "0.7.1"
+      "version": "0.7.2"
     },
     "properties": [
       {
@@ -214,7 +214,7 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:9cf421d9-4397-5194-ade0-82fd66bf5f50",
+  "serialNumber": "urn:uuid:12ed7fa7-e634-59e8-b259-80e377ffe73e",
   "specVersion": "1.6",
   "version": 1
 }

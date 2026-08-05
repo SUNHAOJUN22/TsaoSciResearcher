@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **正式版本 0.7.1** · Apache-2.0 · Python 3.10–3.13 · 确定性 CLI 与 Python API
+> **正式版本 0.7.2** · Apache-2.0 · Python 3.10–3.13 · 确定性 CLI 与 Python API
 
 ## 系统总览
 
@@ -45,7 +45,7 @@ TsaoSciResearcher 是一个**科研任务路由器、研究状态机、证据合
 | 可复现性 | 确定性胶囊、安全归档、内容哈希、SBOM、发布验证和隔离安装验证 |
 | 质量控制 | 证据/主张一致性、科研质量阻断、图件合同、引文边界与人工审批门 |
 
-仓库当前包含 **15** 个主工作流、**19** 个 JSON Schema、**7** 个领域包和 **25** 张 AI 生成概念图。
+仓库当前包含 **15** 个主工作流、**19** 个 JSON Schema、**7** 个领域包和 **29** 张 AI 生成概念图。
 
 详细证据见：[原始需求审计](docs/ORIGINAL_REQUIREMENTS_AUDIT.md)、[能力覆盖矩阵](docs/CAPABILITY_COVERAGE_MATRIX.md)、[架构映射](docs/README_ARCHITECTURE_MAPPING.md)和 [README 审计报告](docs/README_AUDIT_REPORT.md)。
 
@@ -121,6 +121,27 @@ E0 仅假设 → E1 理论/文献 → E2 计算
 <table>
 <tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Scientific Passport 证据合同概念图"/><br/><strong>科学护照证据合同</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="尺度桥合同概念图"/><br/><strong>尺度桥合同</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="因果与尺度跳跃防线概念图"/><br/><strong>因果与尺度跳跃防线</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性合同概念图"/><br/><strong>不确定性验收合同</strong></td></tr>
+</table>
+
+
+### 决策就绪状态与下一最佳证据
+
+策略输出现在会把全部合同汇总为明确的规划状态：
+
+```text
+blocked（阻断）
+  → 关闭观测量、证据基线、主张支撑或尺度桥缺口
+review-required（需要复核）
+  → 处理因果语言、适用域或跨尺度复核项
+ready-for-human-review（可进入人工评审）
+  → 合格评审者可批准校验和绑定的外部执行交接
+```
+
+`automatic_approval` 在 Schema 中固定为 `false`。运行时还会依据证据成熟度缺口、主张类型、方法验证要求和竞争机制规则，返回有序的 `next_best_evidence` 动作。
+
+<table>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport 合同矩阵概念图"/><br/><strong>Scientific Passport 合同矩阵</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="证据成熟度阶梯概念图"/><br/><strong>逐项 E0–E4 证据阶梯</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="科研决策就绪门概念图"/><br/><strong>阻断与复核门</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="主动证据学习闭环概念图"/><br/><strong>下一最佳证据闭环</strong></td></tr>
 </table>
 
 ## 架构与数据流
@@ -343,7 +364,7 @@ python -m tsao_researcher capsule verify pp-cable-study.zip
 
 ## 科研 AI 示意图谱
 
-完整的 **25 张图**图谱如下，并在 [docs/VISUAL_ATLAS.zh-CN.md](docs/VISUAL_ATLAS.zh-CN.md) 中提供双语说明。每张 SVG 均保存在仓库内、完全自包含，并包含可访问性的 `<title>` 和 `<desc>` 元数据。
+完整的 **29 张图**图谱如下，并在 [docs/VISUAL_ATLAS.zh-CN.md](docs/VISUAL_ATLAS.zh-CN.md) 中提供双语说明。每张 SVG 均保存在仓库内、完全自包含，并包含可访问性的 `<title>` 和 `<desc>` 元数据。
 
 <table>
 <tr><td width="50%"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/><br/><strong>1 · 科研操作系统架构</strong></td><td width="50%"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体编排"/><br/><strong>2 · 多智能体编排</strong></td></tr>
@@ -359,6 +380,8 @@ python -m tsao_researcher capsule verify pp-cable-study.zip
 <tr><td width="50%"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="实验室数据质量"/><br/><strong>21 · 实验室质量</strong></td><td width="50%"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="科研写作证据链"/><br/><strong>22 · 写作证据链</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="科研图件编辑防线"/><br/><strong>23 · 图件编辑防线</strong></td><td width="50%"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="人工审批验收边界"/><br/><strong>24 · 人工验收</strong></td></tr>
 <tr><td colspan="2"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="聚合物多尺度案例"/><br/><strong>25 · 聚合物绝缘多尺度案例</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport 合同矩阵"/><br/><strong>26 · Scientific Passport 矩阵</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="证据成熟度阶梯"/><br/><strong>27 · 证据成熟度阶梯</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="决策就绪门"/><br/><strong>28 · 决策就绪门</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="主动证据学习闭环"/><br/><strong>29 · 主动证据闭环</strong></td></tr>
 </table>
 
 ## 已知限制与科研诚信边界

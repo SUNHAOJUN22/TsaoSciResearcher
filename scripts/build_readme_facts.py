@@ -42,6 +42,10 @@ VISUAL_ATLAS_ASSETS = (
     "docs/assets/ai/scientific_figure_edit_guard.svg",
     "docs/assets/ai/human_approval_acceptance_boundary.svg",
     "docs/assets/ai/polymer_multiscale_case_study.svg",
+    "docs/assets/ai/scientific_passport_matrix.svg",
+    "docs/assets/ai/evidence_maturity_ladder.svg",
+    "docs/assets/ai/decision_readiness_gate.svg",
+    "docs/assets/ai/active_evidence_learning_loop.svg",
 )
 
 
