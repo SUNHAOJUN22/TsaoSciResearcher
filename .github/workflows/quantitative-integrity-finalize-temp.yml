@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2'
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3'
     strategy:
       fail-fast: false
       matrix:
@@ -82,7 +82,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2' &&
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3' &&
       needs.compatibility.result != 'success'
     needs: compatibility
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v2'
+      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 70
