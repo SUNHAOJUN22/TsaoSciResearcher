@@ -60,12 +60,17 @@ def main() -> None:
         raise SystemExit(f"staged part set mismatch: {actual!r}")
 
     fragments: list[str] = []
+    mismatches: list[str] = []
     for name in expected:
         fragment = (STAGE / name).read_text(encoding="ascii").strip()
         digest = _sha256(fragment.encode("ascii"))
         if digest != PART_SHA256[name]:
-            raise SystemExit(f"{name} checksum mismatch: {digest}")
+            mismatches.append(
+                f"{name}: expected={PART_SHA256[name]} actual={digest} chars={len(fragment)}"
+            )
         fragments.append(fragment)
+    if mismatches:
+        raise SystemExit("staged payload checksum mismatches:\n" + "\n".join(mismatches))
 
     encoded = "".join(fragments)
     if len(encoded) != BASE64_CHARS or _sha256(encoded.encode("ascii")) != BASE64_SHA256:
