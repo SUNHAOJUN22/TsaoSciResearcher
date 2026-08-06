@@ -47,6 +47,22 @@ PATHS = {
     "tests/test_strategy_quantitative_integrity.py",
     "tsao_researcher/strategy.py",
 }
+STRATEGY_SIM114_BEFORE = """    if explicit and not transfer_markers:
+        status = \"blocked\"
+    elif explicit:
+        status = \"review-required\"
+    elif not conditions:
+        status = \"review-required\"
+    else:
+        status = \"pass\"
+"""
+STRATEGY_SIM114_AFTER = """    if explicit and not transfer_markers:
+        status = \"blocked\"
+    elif explicit or not conditions:
+        status = \"review-required\"
+    else:
+        status = \"pass\"
+"""
 
 
 def _sha256(value: bytes) -> str:
@@ -98,6 +114,16 @@ def main() -> None:
         content = files[relative]
         if not isinstance(content, str) or "\x00" in content:
             raise SystemExit(f"invalid text payload: {relative}")
+        if relative == "tsao_researcher/strategy.py":
+            occurrences = content.count(STRATEGY_SIM114_BEFORE)
+            if occurrences != 1:
+                raise SystemExit(
+                    "strategy SIM114 repair precondition mismatch: "
+                    f"expected=1 actual={occurrences}"
+                )
+            content = content.replace(
+                STRATEGY_SIM114_BEFORE, STRATEGY_SIM114_AFTER, 1
+            )
         pure = PurePosixPath(relative)
         if pure.is_absolute() or "." in pure.parts or ".." in pure.parts:
             raise SystemExit(f"unsafe payload path: {relative}")
