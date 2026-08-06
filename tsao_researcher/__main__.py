@@ -70,6 +70,21 @@ def main() -> None:
     )
     strategy_parser.add_argument("--output", help="optional JSON output path")
 
+    math_parser = sub.add_parser(
+        "math",
+        help="list versioned mathematical explanation contracts without running a solver",
+    )
+    math_parser.add_argument(
+        "--contract",
+        help="optional stable contract identifier; omit to list all contracts",
+    )
+    math_parser.add_argument(
+        "--language",
+        choices=["en", "zh-CN", "both"],
+        default="both",
+        help="localize explanatory text while preserving equations and stable identifiers",
+    )
+
     init_parser = sub.add_parser("init", help="initialize a traceable project")
     init_parser.add_argument("--name", required=True)
     init_parser.add_argument("--question", required=True)
@@ -150,6 +165,16 @@ def main() -> None:
 
             write_json(args.output, result)
         _emit(result)
+    elif args.command == "math":
+        from .mathematical_contracts import (
+            get_mathematical_contract,
+            list_mathematical_contracts,
+        )
+
+        if args.contract:
+            _emit(get_mathematical_contract(args.contract, args.language))
+        else:
+            _emit(list_mathematical_contracts(args.language))
     elif args.command == "init":
         from .state import initialize
 
