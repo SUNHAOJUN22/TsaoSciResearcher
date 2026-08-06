@@ -10,6 +10,7 @@ nav:
   - Visual atlas: VISUAL_ATLAS.md
   - Architecture: ARCHITECTURE.md
   - CLI: CLI.md
+  - Mathematical contracts: MATHEMATICAL_CONTRACTS.md
   - Validation: VALIDATION.md
   - Scientific quality: SCIENTIFIC_QUALITY.md
   - First-principles strategy: FIRST_PRINCIPLES_STRATEGY.md
