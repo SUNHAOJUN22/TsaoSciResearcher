@@ -87,3 +87,14 @@ def test_math_cli_emits_machine_readable_contract(
     assert payload["solver_executed"] is False
     assert payload["automatic_approval"] is False
     assert [item["contract_id"] for item in payload["contracts"]] == ["decision-readiness"]
+
+
+def test_math_cli_lists_all_contracts(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["tsao-researcher", "math", "--language", "en"])
+    main()
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["language"] == "en"
+    assert len(payload["contracts"]) >= 8
