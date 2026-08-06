@@ -13,6 +13,9 @@ import zlib
 ROOT = Path(__file__).resolve().parents[1]
 STAGE = ROOT / ".tsr-finalize"
 PARTS = tuple(f"part-{index:03d}.b64" for index in range(5))
+EXPECTED_BASE64_CHARS = 40148
+EXPECTED_RAW_BYTES = 30111
+EXPECTED_RAW_SHA256 = "ce8611076d941a7ce2487845f5acd0cac21c3244e551875d5b3d1388221a13d2"
 ALLOWED = {
     "CHANGELOG.md",
     "CITATION.cff",
@@ -53,6 +56,14 @@ MANDATORY = {
 
 def _decode_payload(raw: bytes) -> object:
     attempts: list[tuple[str, bytes]] = [("direct", raw)]
+    try:
+        stream = zlib.decompressobj(16 + zlib.MAX_WBITS)
+        candidate = stream.decompress(raw) + stream.flush()
+        print(f"gzip-stream bytes={len(candidate)} eof={stream.eof}")
+        if candidate:
+            attempts.append(("gzip-stream", candidate))
+    except zlib.error as exc:
+        print(f"gzip-stream probe failed: {exc}")
     for label, decoder in (("zlib", zlib.decompress), ("gzip", gzip.decompress)):
         try:
             attempts.append((label, decoder(raw)))
@@ -76,12 +87,19 @@ def main() -> None:
         raise SystemExit(f"staged payload parts mismatch: {actual_names!r}")
     encoded = "".join((STAGE / name).read_text(encoding="ascii").strip() for name in PARTS)
     raw = base64.b64decode(encoded, validate=True)
+    raw_sha256 = hashlib.sha256(raw).hexdigest()
     print(
         "staged payload",
         f"base64_chars={len(encoded)}",
         f"raw_bytes={len(raw)}",
-        f"sha256={hashlib.sha256(raw).hexdigest()}",
+        f"sha256={raw_sha256}",
     )
+    if len(encoded) != EXPECTED_BASE64_CHARS:
+        raise SystemExit(f"staged payload base64 length mismatch: {len(encoded)}")
+    if len(raw) != EXPECTED_RAW_BYTES:
+        raise SystemExit(f"staged payload byte length mismatch: {len(raw)}")
+    if raw_sha256 != EXPECTED_RAW_SHA256:
+        raise SystemExit(f"staged payload checksum mismatch: {raw_sha256}")
     payload = _decode_payload(raw)
     if isinstance(payload, dict) and isinstance(payload.get("files"), dict):
         files = payload["files"]
