@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: tsr-v075-readonly-verification
@@ -18,7 +19,7 @@ env:
 
 jobs:
   compatibility:
-    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification.'
+    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification again.'
     strategy:
       fail-fast: false
       matrix:
@@ -45,7 +46,7 @@ jobs:
           bash .tsr-v075/run_candidate.sh compatibility
 
   export-candidate:
-    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification.'
+    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification again.'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -76,3 +77,15 @@ jobs:
           path: ../candidate-v075.zip
           if-no-files-found: error
           retention-days: 2
+
+  report:
+    if: always() && github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification again.'
+    needs: [compatibility, export-candidate]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMPATIBILITY: ${{ needs.compatibility.result }}
+          EXPORT: ${{ needs.export-candidate.result }}
+        shell: bash
+        run: gh issue comment 206 --repo "$GITHUB_REPOSITORY" --body "read_only_v075_run=${GITHUB_RUN_ID} compatibility=${COMPATIBILITY} export=${EXPORT}"
