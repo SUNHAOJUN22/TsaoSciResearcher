@@ -50,6 +50,10 @@ VISUAL_ATLAS_ASSETS = (
     "docs/assets/ai/applicability_extrapolation_guard.svg",
     "docs/assets/ai/evidence_conflict_resolution.svg",
     "docs/assets/ai/mechanism_identifiability_gate.svg",
+    "docs/assets/ai/mathematical_contract_registry.svg",
+    "docs/assets/ai/decision_readiness_lattice.svg",
+    "docs/assets/ai/uncertainty_propagation_budget.svg",
+    "docs/assets/ai/multiscale_bridge_error_budget.svg",
 )
 
 
@@ -73,7 +77,7 @@ def build_facts(root: Path = ROOT) -> dict[str, Any]:
         path.relative_to(root).as_posix() for path in (root / "templates").rglob("*") if path.is_file()
     )
 
-    facts: dict[str, Any] = {
+    return {
         "schema_version": "1.0",
         "version": (root / "VERSION").read_text(encoding="utf-8", errors="strict").strip(),
         "license": manifest["license"],
@@ -99,7 +103,6 @@ def build_facts(root: Path = ROOT) -> dict[str, Any]:
             "templates": len(templates),
         },
     }
-    return facts
 
 
 def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
@@ -134,6 +137,7 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
         "docs/README_AUDIT_REPORT.md",
         "docs/CAPABILITY_COVERAGE_MATRIX.md",
         "docs/README_ARCHITECTURE_MAPPING.md",
+        "docs/MATHEMATICAL_CONTRACTS.md",
         "docs/VALIDATION_EVIDENCE.json",
         "docs/test-dashboard.html",
         "docs/test-dashboard.svg",
@@ -145,10 +149,30 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append(f"README.md does not link to {relative}")
         if relative not in chinese:
             errors.append(f"README.zh-CN.md does not link to {relative}")
+
+    required_boundary_tokens = [
+        "python -m tsao_researcher math",
+        '"solver_executed": false',
+        '"automatic_approval": false',
+        "AI-generated conceptual illustration",
+    ]
+    for token in required_boundary_tokens:
+        if token not in english:
+            errors.append(f"README.md missing mathematical or visual boundary token: {token}")
+    chinese_boundary_tokens = [
+        "python -m tsao_researcher math",
+        '"solver_executed": false',
+        '"automatic_approval": false',
+        "AI 生成概念示意图",
+    ]
+    for token in chinese_boundary_tokens:
+        if token not in chinese:
+            errors.append(f"README.zh-CN.md missing mathematical or visual boundary token: {token}")
+
     english_atlas = (root / "docs/VISUAL_ATLAS.md").read_text(encoding="utf-8", errors="strict")
     chinese_atlas = (root / "docs/VISUAL_ATLAS.zh-CN.md").read_text(encoding="utf-8", errors="strict")
-    if len(VISUAL_ATLAS_ASSETS) < 25 or len(set(VISUAL_ATLAS_ASSETS)) != len(VISUAL_ATLAS_ASSETS):
-        errors.append("visual atlas must contain at least 25 unique AI diagrams")
+    if len(VISUAL_ATLAS_ASSETS) != 37 or len(set(VISUAL_ATLAS_ASSETS)) != len(VISUAL_ATLAS_ASSETS):
+        errors.append("visual atlas must contain exactly 37 unique AI diagrams")
     for relative in VISUAL_ATLAS_ASSETS:
         path = root / relative
         if not path.is_file() or path.is_symlink():
