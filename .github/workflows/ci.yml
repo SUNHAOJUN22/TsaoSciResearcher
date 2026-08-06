@@ -6,9 +6,12 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -21,6 +24,7 @@ env:
 
 jobs:
   compatibility:
+    if: github.event_name != 'issues'
     name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 18
@@ -67,6 +71,7 @@ jobs:
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
 
   full-validation:
+    if: github.event_name != 'issues'
     name: full-validation-and-release-evidence
     needs: compatibility
     runs-on: ubuntu-latest
@@ -168,3 +173,76 @@ jobs:
             site
           if-no-files-found: error
           retention-days: 14
+
+  v075-candidate-compatibility:
+    if: github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
+    name: v075-candidate-${{ matrix.os }}-py${{ matrix.python-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, python-version: "3.10"}
+          - {os: ubuntu-latest, python-version: "3.13"}
+          - {os: windows-latest, python-version: "3.12"}
+          - {os: macos-latest, python-version: "3.12"}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with: {ref: "${{ github.sha }}", fetch-depth: 0}
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+          bash .tsr-v075/run_candidate.sh compatibility
+
+  v075-candidate-export:
+    if: github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
+    needs: v075-candidate-compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with: {ref: "${{ github.sha }}", fetch-depth: 0}
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          bash .tsr-v075/run_candidate.sh compatibility
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-07
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+          rm -rf .git .coverage .hypothesis .mypy_cache .pytest_cache .ruff_cache site build dist *.egg-info tsao_researcher/*.egg-info
+          cd .. && zip -qr candidate-v075.zip TsaoSciResearcher
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: candidate-v075-${{ github.sha }}
+          path: ../candidate-v075.zip
+          if-no-files-found: error
+          retention-days: 2
+
+  v075-candidate-report:
+    if: always() && github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
+    needs: [v075-candidate-compatibility, v075-candidate-export]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMPATIBILITY: ${{ needs.v075-candidate-compatibility.result }}
+          EXPORT: ${{ needs.v075-candidate-export.result }}
+        shell: bash
+        run: gh issue comment "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" --body "read_only_v075_run=${GITHUB_RUN_ID} compatibility=${COMPATIBILITY} export=${EXPORT}"
