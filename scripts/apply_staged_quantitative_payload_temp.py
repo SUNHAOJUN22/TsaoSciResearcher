@@ -56,7 +56,7 @@ def _decode_payload(raw: bytes) -> object:
     for label, decoder in (("zlib", zlib.decompress), ("gzip", gzip.decompress)):
         try:
             attempts.append((label, decoder(raw)))
-        except (OSError, zlib.error):
+        except (OSError, EOFError, zlib.error):
             continue
     errors: list[str] = []
     for label, candidate in attempts:
