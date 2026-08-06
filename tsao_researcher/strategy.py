@@ -268,6 +268,167 @@ _REGIME_SCALE_TIER = {
     "multiscale-general": 4,
 }
 
+_EXTRAPOLATION_MARKERS = (
+    "extrapolat",
+    "outside domain",
+    "out-of-domain",
+    "domain shift",
+    "transfer to",
+    "scale up",
+    "外推",
+    "域外",
+    "跨域",
+    "迁移到",
+    "放大到",
+)
+_TRANSFER_VALIDATION_MARKERS = (
+    "transfer validation",
+    "transferability",
+    "external validation",
+    "prospective validation",
+    "hold-out condition",
+    "across samples",
+    "across operators",
+    "across operating conditions",
+    "pilot validation",
+    "field validation",
+    "迁移验证",
+    "外部验证",
+    "前瞻验证",
+    "跨样品",
+    "跨操作者",
+    "跨工况",
+    "中试验证",
+    "现场验证",
+)
+_SUPPORT_MARKERS = (
+    "support",
+    "supports",
+    "supported",
+    "confirm",
+    "confirms",
+    "consistent with",
+    "agreement with",
+    "validate",
+    "validated",
+    "支持",
+    "证实",
+    "一致",
+    "吻合",
+    "验证通过",
+)
+_CHALLENGE_MARKERS = (
+    "contradict",
+    "contradicts",
+    "inconsistent",
+    "opposite",
+    "null result",
+    "no effect",
+    "failed to reproduce",
+    "not reproduced",
+    "negative result",
+    "矛盾",
+    "不一致",
+    "相反",
+    "无显著",
+    "未复现",
+    "负结果",
+)
+_IDENTIFIABILITY_WARNING_MARKERS = (
+    "non-identifiable",
+    "not identifiable",
+    "unidentifiable",
+    "equifinal",
+    "equifinality",
+    "parameter confounding",
+    "model equivalent",
+    "collinear",
+    "不可辨识",
+    "无法辨识",
+    "等效模型",
+    "参数混淆",
+    "共线",
+)
+_DISCRIMINATION_MARKERS = (
+    "alternative mechanism",
+    "competing mechanism",
+    "discriminating observable",
+    "identifiability",
+    "sensitivity analysis",
+    "ablation",
+    "counterfactual",
+    "hold-out",
+    "替代机制",
+    "竞争机制",
+    "判别观测量",
+    "可辨识性",
+    "敏感性分析",
+    "消融",
+    "反事实",
+)
+_UNIT_TOKEN_RE = re.compile(
+    r"(?<![0-9A-Za-z_])"
+    r"(?P<value>[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)"
+    r"\s*(?P<unit>kV/mm|V/mm|V/m|MV/m|C/m\^?3|A/m\^?2|S/m|W/(?:m[·*]?)?K|"
+    r"kg/m\^?3|mol/L|mmol/L|GPa|MPa|kPa|Pa|bar|eV|meV|keV|K|°C|℃|C|"
+    r"nm|[µμu]m|mm|cm|km|m|ns|[µμu]s|ms|min|h|s|GHz|MHz|kHz|Hz|rpm|%)"
+    r"(?![0-9A-Za-z_])",
+    re.IGNORECASE,
+)
+_NUMBER_RE = re.compile(r"(?<![0-9A-Za-z_])[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?")
+_UNIT_DIMENSIONS = {
+    "k": ("K", "temperature"),
+    "°c": ("degC", "temperature"),
+    "℃": ("degC", "temperature"),
+    "c": ("degC", "temperature"),
+    "ev": ("eV", "energy"),
+    "mev": ("meV", "energy"),
+    "kev": ("keV", "energy"),
+    "pa": ("Pa", "pressure"),
+    "kpa": ("kPa", "pressure"),
+    "mpa": ("MPa", "pressure"),
+    "gpa": ("GPa", "pressure"),
+    "bar": ("bar", "pressure"),
+    "v/m": ("V/m", "electric-field"),
+    "mv/m": ("MV/m", "electric-field"),
+    "v/mm": ("V/mm", "electric-field"),
+    "kv/mm": ("kV/mm", "electric-field"),
+    "c/m3": ("C/m3", "charge-density"),
+    "c/m^3": ("C/m3", "charge-density"),
+    "a/m2": ("A/m2", "current-density"),
+    "a/m^2": ("A/m2", "current-density"),
+    "s/m": ("S/m", "conductivity"),
+    "w/mk": ("W/mK", "thermal-conductivity"),
+    "w/m·k": ("W/mK", "thermal-conductivity"),
+    "w/m*k": ("W/mK", "thermal-conductivity"),
+    "kg/m3": ("kg/m3", "mass-density"),
+    "kg/m^3": ("kg/m3", "mass-density"),
+    "mol/l": ("mol/L", "concentration"),
+    "mmol/l": ("mmol/L", "concentration"),
+    "%": ("%", "fraction"),
+    "hz": ("Hz", "frequency"),
+    "khz": ("kHz", "frequency"),
+    "mhz": ("MHz", "frequency"),
+    "ghz": ("GHz", "frequency"),
+    "rpm": ("rpm", "rotation-rate"),
+    "s": ("s", "time"),
+    "ms": ("ms", "time"),
+    "us": ("us", "time"),
+    "µs": ("us", "time"),
+    "μs": ("us", "time"),
+    "ns": ("ns", "time"),
+    "min": ("min", "time"),
+    "h": ("h", "time"),
+    "m": ("m", "length"),
+    "km": ("km", "length"),
+    "cm": ("cm", "length"),
+    "mm": ("mm", "length"),
+    "um": ("um", "length"),
+    "µm": ("um", "length"),
+    "μm": ("um", "length"),
+    "nm": ("nm", "length"),
+}
+
 
 @dataclass(frozen=True, slots=True)
 class MethodTemplate:
@@ -1703,6 +1864,23 @@ def _decision_readiness(
         review_codes.append("CLAIM_LANGUAGE_REVIEW_REQUIRED")
     if integrity_gates["causal_claim"]["status"] == "review-required":
         review_codes.append("CAUSAL_IDENTIFICATION_REVIEW_REQUIRED")
+    quantity_status = integrity_gates["quantity_dimension"]["status"]
+    if quantity_status == "blocked":
+        blocking_codes.append("QUANTITY_DIMENSION_CONFLICT")
+    elif quantity_status == "review-required":
+        review_codes.append("QUANTITY_UNIT_REVIEW_REQUIRED")
+    applicability_status = integrity_gates["applicability_extrapolation"]["status"]
+    if applicability_status == "blocked":
+        blocking_codes.append("EXTRAPOLATION_UNVALIDATED")
+    elif applicability_status == "review-required":
+        review_codes.append("APPLICABILITY_REVIEW_REQUIRED")
+    if integrity_gates["evidence_conflict"]["status"] == "review-required":
+        review_codes.append("EVIDENCE_CONFLICT_REVIEW_REQUIRED")
+    identifiability_status = integrity_gates["identifiability"]["status"]
+    if identifiability_status == "blocked":
+        blocking_codes.append("IDENTIFIABILITY_BLOCKED")
+    elif identifiability_status == "review-required":
+        review_codes.append("IDENTIFIABILITY_REVIEW_REQUIRED")
     if blocking_codes:
         status = "blocked"
     elif review_codes:
@@ -1716,9 +1894,13 @@ def _decision_readiness(
                 *claim_contract["required_evidence"],
                 *[item for method in ladder[:2] for item in method["validation"][:1]],
                 "compare at least one plausible competing mechanism before accepting the preferred explanation",
+                *integrity_gates["quantity_dimension"]["required_checks"][:1],
+                *integrity_gates["applicability_extrapolation"]["required_checks"][:1],
+                *integrity_gates["evidence_conflict"]["required_checks"][:1],
+                *integrity_gates["identifiability"]["required_checks"][:1],
             ]
         )
-    )[:6]
+    )[:8]
     return {
         "status": status,
         "automatic_approval": False,
@@ -1788,6 +1970,156 @@ def _scale_jump_gate(
         "target_markers": target_markers,
         "bridge_variables": bridge_variables,
         "missing_bridge_requirements": missing,
+    }
+
+
+def _quantity_label(statement: str, start: int, end: int) -> str:
+    label = _normalize(f"{statement[:start]} {statement[end:]}")
+    label = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", " ", label).strip()
+    return label or "declared quantity"
+
+
+def _quantity_dimension_gate(statements: list[str]) -> dict[str, Any]:
+    parsed: list[dict[str, Any]] = []
+    missing_units: list[str] = []
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for statement in statements:
+        occupied: list[tuple[int, int]] = []
+        for match in _UNIT_TOKEN_RE.finditer(statement):
+            unit_key = _normalize(match.group("unit")).replace(" ", "")
+            normalized_unit, dimension = _UNIT_DIMENSIONS[unit_key]
+            label = _quantity_label(statement, match.start(), match.end())
+            if label == "declared quantity":
+                label = f"declared {dimension} quantity"
+            record = {
+                "statement": statement,
+                "label": label,
+                "value": match.group("value"),
+                "unit": match.group("unit"),
+                "normalized_unit": normalized_unit,
+                "dimension": dimension,
+            }
+            parsed.append(record)
+            groups.setdefault(record["label"], []).append(record)
+            occupied.append(match.span())
+        for number in _NUMBER_RE.finditer(statement):
+            if not any(start <= number.start() and number.end() <= end for start, end in occupied):
+                missing_units.append(statement)
+                break
+    dimension_conflicts: list[str] = []
+    unit_variations: list[str] = []
+    for label, records in groups.items():
+        dimensions = {record["dimension"] for record in records}
+        units = {record["normalized_unit"] for record in records}
+        if len(dimensions) > 1:
+            dimension_conflicts.append(label)
+        elif len(units) > 1:
+            unit_variations.append(label)
+    if dimension_conflicts:
+        status = "blocked"
+    elif missing_units or unit_variations:
+        status = "review-required"
+    else:
+        status = "pass"
+    return {
+        "status": status,
+        "parsed_quantities": parsed,
+        "missing_unit_statements": list(dict.fromkeys(missing_units)),
+        "dimension_conflicts": dimension_conflicts,
+        "unit_variations": unit_variations,
+        "rule": "Every decision-critical numerical quantity must carry an interpretable unit and preserve dimensional consistency across comparisons and scale bridges.",
+        "required_checks": [
+            "declare units for every decision-critical numerical input and observable",
+            "convert compared quantities to compatible dimensions before inference",
+            "record any unit conversion and tolerance in the evidence trail",
+        ],
+    }
+
+
+def _applicability_gate(text: str, conditions: list[str], evidence: list[str]) -> dict[str, Any]:
+    extrapolation_markers = _marker_hits(text, _EXTRAPOLATION_MARKERS)
+    evidence_text = _normalize(" ".join(evidence))
+    transfer_markers = _marker_hits(evidence_text, _TRANSFER_VALIDATION_MARKERS)
+    explicit = bool(extrapolation_markers)
+    if explicit and not transfer_markers:
+        status = "blocked"
+    elif explicit or not conditions:
+        status = "review-required"
+    else:
+        status = "pass"
+    return {
+        "status": status,
+        "explicit_extrapolation": explicit,
+        "extrapolation_markers": extrapolation_markers,
+        "declared_domain": conditions or ["not specified"],
+        "transfer_evidence_markers": transfer_markers,
+        "rule": "Predictions outside the declared calibration and validation domain require independent transfer evidence and uncertainty inflation; in-domain accuracy cannot be assumed to transfer.",
+        "required_checks": [
+            "state the calibrated and independently validated operating domain",
+            "identify every requested target condition outside that domain",
+            "obtain independent transfer validation before industrial or safety-critical use",
+            "report extrapolation uncertainty separately from in-domain uncertainty",
+        ],
+    }
+
+
+def _evidence_conflict_gate(evidence: list[str]) -> dict[str, Any]:
+    supporting_ids: list[str] = []
+    challenging_ids: list[str] = []
+    neutral_ids: list[str] = []
+    for item in evidence:
+        evidence_id = f"EVI-{hashlib.sha256(item.encode('utf-8')).hexdigest()[:12]}"
+        normalized = _normalize(item)
+        supports = bool(_marker_hits(normalized, _SUPPORT_MARKERS))
+        challenges = bool(_marker_hits(normalized, _CHALLENGE_MARKERS))
+        if challenges:
+            challenging_ids.append(evidence_id)
+        if supports:
+            supporting_ids.append(evidence_id)
+        if not supports and not challenges:
+            neutral_ids.append(evidence_id)
+    conflict = bool(supporting_ids and challenging_ids)
+    status = "review-required" if challenging_ids else "pass"
+    return {
+        "status": status,
+        "conflict_detected": conflict,
+        "supporting_evidence_ids": supporting_ids,
+        "challenging_evidence_ids": challenging_ids,
+        "neutral_evidence_ids": neutral_ids,
+        "rule": "Supporting, null, negative, and contradictory evidence must remain visible; evidence maturity cannot erase disagreement or failed replication.",
+        "required_checks": [
+            "reconcile differences in specimen, method, boundary condition, and uncertainty",
+            "retain negative, null, and failed-replication results in the evidence record",
+            "avoid pooling incompatible evidence until the source of disagreement is tested",
+        ],
+    }
+
+
+def _identifiability_gate(
+    text: str, observables: list[str], evidence: list[str], claim_type: str
+) -> dict[str, Any]:
+    warning_markers = _marker_hits(text, _IDENTIFIABILITY_WARNING_MARKERS)
+    comparison_text = _normalize(" ".join([text, *evidence]))
+    comparison_markers = _marker_hits(comparison_text, _DISCRIMINATION_MARKERS)
+    if warning_markers or not observables:
+        status = "blocked"
+    elif claim_type in {"causal", "mechanistic"} and not comparison_markers:
+        status = "review-required"
+    else:
+        status = "pass"
+    return {
+        "status": status,
+        "warning_markers": warning_markers,
+        "comparison_markers": comparison_markers,
+        "discriminating_observables": observables,
+        "minimum_alternatives": 1,
+        "rule": "A mechanism or parameter set is decision-usable only when the declared observables can distinguish it from at least one plausible alternative under the stated uncertainty.",
+        "required_checks": [
+            "test at least one plausible alternative mechanism or model class",
+            "evaluate structural and practical parameter identifiability",
+            "use observables that change differently under competing explanations",
+            "report equivalence classes when the available data cannot identify a unique mechanism",
+        ],
     }
 
 
@@ -1943,9 +2275,21 @@ def advise_computation_strategy(
     strategy_id = f"FPS-{digest}"
     evidence_contract = _evidence_maturity(clean_evidence)
     claim_contract = _claim_contract(combined, evidence_contract["maturity_rank"])
+    quantity_dimension_contract = _quantity_dimension_gate(
+        [clean_question, *clean_observables, *clean_conditions]
+    )
+    applicability_contract = _applicability_gate(combined, clean_conditions, clean_evidence)
+    evidence_conflict_contract = _evidence_conflict_gate(clean_evidence)
+    identifiability_contract = _identifiability_gate(
+        combined, clean_observables, clean_evidence, claim_contract["claim_type"]
+    )
     integrity_gates = {
         "causal_claim": _causal_claim_gate(combined, evidence_contract["maturity_rank"]),
         "scale_jump": _scale_jump_gate(primary, secondary, combined, bridge_variables),
+        "quantity_dimension": quantity_dimension_contract,
+        "applicability_extrapolation": applicability_contract,
+        "evidence_conflict": evidence_conflict_contract,
+        "identifiability": identifiability_contract,
         "mechanism_competition": {
             "status": "required",
             "rule": "A preferred mechanism must be tested against at least one plausible alternative.",
@@ -1961,7 +2305,7 @@ def advise_computation_strategy(
         ladder=ladder,
     )
     scientific_passport = {
-        "passport_version": "1.1",
+        "passport_version": "1.2",
         "strategy_id": strategy_id,
         "model_contract": {
             "state_variables": list(primary.state_variables),
@@ -1987,6 +2331,10 @@ def advise_computation_strategy(
         },
         "evidence_contract": evidence_contract,
         "claim_contract": claim_contract,
+        "quantity_dimension_contract": quantity_dimension_contract,
+        "applicability_contract": applicability_contract,
+        "evidence_conflict_contract": evidence_conflict_contract,
+        "identifiability_contract": identifiability_contract,
         "uncertainty_contract": {
             "categories": [
                 "parameter",
@@ -2003,7 +2351,7 @@ def advise_computation_strategy(
     }
 
     return {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "strategy_id": strategy_id,
         "status": "advisory-only",
         "question": clean_question,

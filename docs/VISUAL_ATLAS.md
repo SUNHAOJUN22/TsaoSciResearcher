@@ -1,6 +1,6 @@
 # Scientific Capability Visual Atlas
 
-These 29 AI-generated conceptual diagrams are derived from repository architecture, capability contracts, validators and explicit execution boundaries. They are documentation assets, not scientific results or execution receipts.
+These 33 AI-generated conceptual diagrams are derived from repository architecture, capability contracts, validators and explicit execution boundaries. They are documentation assets, not scientific results or execution receipts.
 
 ## 1. Research OS architecture
 
@@ -118,3 +118,20 @@ These 29 AI-generated conceptual diagrams are derived from repository architectu
 ## 29. Active evidence learning loop
 
 ![Active evidence learning loop](assets/ai/active_evidence_learning_loop.svg)
+
+
+## 30. Quantity, unit and dimension contract
+
+![Quantity, unit and dimension contract](assets/ai/quantity_dimension_contract.svg)
+
+## 31. Applicability domain and extrapolation guard
+
+![Applicability domain and extrapolation guard](assets/ai/applicability_extrapolation_guard.svg)
+
+## 32. Evidence conflict resolution
+
+![Evidence conflict resolution](assets/ai/evidence_conflict_resolution.svg)
+
+## 33. Mechanism and parameter identifiability gate
+
+![Mechanism and parameter identifiability gate](assets/ai/mechanism_identifiability_gate.svg)

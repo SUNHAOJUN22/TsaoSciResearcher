@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.7.3 - 2026-08-06
+
+- Add machine-readable quantity, unit and dimension contracts with normalized physical dimensions, missing-unit review and same-label dimension-conflict blocking.
+- Add applicability-domain and extrapolation guards that require independent transfer evidence before micro-to-device, process or industrial use.
+- Preserve supporting, challenging, neutral and failed-replication evidence as separate identifiers and require review when evidence conflicts.
+- Add mechanism and parameter identifiability gates for competing explanations, discriminating observables, equifinality and non-identifiable models.
+- Upgrade computation-strategy Schema to 1.3 and Scientific Passport to 1.2 with deterministic decision-readiness codes and adversarial regression tests.
+- Expand the bilingual visual atlas from 29 to 33 repository-local AI-generated conceptual SVG diagrams and document their non-evidentiary boundary.
+
 ## 0.7.2 - 2026-08-05
 
 - Add item-level declared evidence inventory with stable identifiers, detected maturity, markers and explicit unverified status.

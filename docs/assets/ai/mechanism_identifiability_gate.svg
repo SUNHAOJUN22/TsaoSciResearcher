@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+<title id="title">Mechanism and Parameter Identifiability Gate</title><desc id="desc">A conceptual diagram comparing competing mechanisms through discriminating observables and blocking non-identifiable or equifinal model claims.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061522"/><stop offset="0.55" stop-color="#0e2a43"/><stop offset="1" stop-color="#251f48"/></linearGradient>
+  <linearGradient id="signal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#29dcff"/><stop offset="1" stop-color="#72f0c8"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#65e7ff"/></marker>
+</defs>
+<rect width="1400" height="760" rx="28" fill="url(#bg)"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif">
+  <text x="70" y="70" font-size="36" font-weight="700" fill="#f5fbff">Mechanism &amp; Parameter Identifiability Gate</text>
+  <text x="70" y="106" font-size="18" fill="#b9cad8">A good fit is not a unique mechanism: competing explanations must produce distinguishable predictions.</text>
+
+  <rect x="70" y="170" width="290" height="170" rx="22" fill="#122842" stroke="#35dcff" stroke-width="2"/>
+  <text x="98" y="212" font-size="21" font-weight="700" fill="#f5fbff">Mechanism A</text>
+  <text x="98" y="248" font-size="16" fill="#aeeeff">trap-assisted hopping</text>
+  <path d="M110 296 C155 250 205 330 250 280 S325 255 335 300" fill="none" stroke="#35dcff" stroke-width="4"/>
+
+  <rect x="70" y="385" width="290" height="170" rx="22" fill="#2d1b39" stroke="#b18cff" stroke-width="2"/>
+  <text x="98" y="427" font-size="21" font-weight="700" fill="#f5fbff">Mechanism B</text>
+  <text x="98" y="463" font-size="16" fill="#e2d8ff">interface-limited transport</text>
+  <path d="M110 511 C150 505 178 445 225 478 S300 520 335 455" fill="none" stroke="#b18cff" stroke-width="4"/>
+
+  <rect x="455" y="200" width="410" height="325" rx="28" fill="#0d263d" stroke="#72f0c8" stroke-width="2"/>
+  <text x="485" y="244" font-size="23" font-weight="700" fill="#f5fbff">Discriminating observables</text>
+  <line x1="525" y1="460" x2="815" y2="460" stroke="#607e90" stroke-width="2"/>
+  <line x1="525" y1="460" x2="525" y2="290" stroke="#607e90" stroke-width="2"/>
+  <path d="M535 430 C600 390 650 360 805 320" fill="none" stroke="#35dcff" stroke-width="4"/>
+  <path d="M535 415 C625 420 680 390 805 405" fill="none" stroke="#b18cff" stroke-width="4"/>
+  <circle cx="670" cy="365" r="8" fill="#72f0c8"/>
+  <line x1="670" y1="365" x2="670" y2="405" stroke="#ffd166" stroke-width="3" stroke-dasharray="6 5"/>
+  <text x="570" y="285" font-size="15" fill="#a9bfce">temperature / field / time</text>
+  <text x="555" y="500" font-size="15" fill="#d8e9f5">different slopes → mechanism can be tested</text>
+  <path d="M360 255 L440 310" stroke="#65e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M360 470 L440 415" stroke="#65e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="950" y="170" width="380" height="115" rx="20" fill="#102b45" stroke="#72f0c8" stroke-width="2"/>
+  <text x="980" y="210" font-size="20" font-weight="700" fill="#f5fbff">Structural identifiability</text>
+  <text x="980" y="242" font-size="15" fill="#c4d6e2">Does ideal data determine unique parameters?</text>
+  <rect x="950" y="315" width="380" height="115" rx="20" fill="#102b45" stroke="#ffd166" stroke-width="2"/>
+  <text x="980" y="355" font-size="20" font-weight="700" fill="#f5fbff">Practical identifiability</text>
+  <text x="980" y="387" font-size="15" fill="#c4d6e2">Do noise and finite data preserve separation?</text>
+  <rect x="950" y="460" width="380" height="115" rx="20" fill="#351b2c" stroke="#ff7895" stroke-width="2"/>
+  <text x="980" y="500" font-size="20" font-weight="700" fill="#f5fbff">Equifinality guard</text>
+  <text x="980" y="532" font-size="15" fill="#ffd0da">indistinguishable models → BLOCK</text>
+  <path d="M865 360 L935 360" stroke="#65e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="70" y="610" width="1260" height="55" rx="17" fill="#0b2138" stroke="url(#signal)" stroke-width="2"/>
+  <text x="100" y="644" font-size="17" fill="#e6f8ff">At least one plausible alternative + one observable with different predicted response + uncertainty-aware comparison</text>
+  <rect x="70" y="680" width="1260" height="44" rx="14" fill="#091d31" stroke="url(#signal)"/>
+  <text x="100" y="709" font-size="16" fill="#d8e9f5">Machine-readable outcome: PASS · IDENTIFIABILITY_REVIEW_REQUIRED · IDENTIFIABILITY_BLOCKED</text>
+</g></svg>

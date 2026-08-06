@@ -9,7 +9,7 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **Release 0.7.2** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
+> **Release 0.7.3** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
 ## Executive view
 
@@ -45,7 +45,7 @@ The runtime exposes one deterministic entry point and a machine-readable scienti
 | Reproducibility | deterministic capsules, safe archives, content hashes, SBOM, release validation and isolated distribution checks |
 | Quality control | evidence/claim consistency, scientific-quality blockers, figure contracts, citation boundaries and human-approval gates |
 
-The repository currently contains **15** primary workflows, **19** JSON Schemas, **7** domain packs and **29** AI-generated conceptual diagrams.
+The repository currently contains **15** primary workflows, **19** JSON Schemas, **7** domain packs and **33** AI-generated conceptual diagrams.
 
 Read the detailed [original requirements audit](docs/ORIGINAL_REQUIREMENTS_AUDIT.md), [capability coverage matrix](docs/CAPABILITY_COVERAGE_MATRIX.md), [architecture mapping](docs/README_ARCHITECTURE_MAPPING.md), and [README audit report](docs/README_AUDIT_REPORT.md).
 
@@ -122,6 +122,32 @@ A higher lexical maturity level does not certify evidence quality. It records wh
 <tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Conceptual Scientific Passport evidence contract"/><br/><strong>Passport evidence contract</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="Conceptual scale bridge contract"/><br/><strong>Scale-bridge contract</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="Conceptual causal and scale-jump guard"/><br/><strong>Causal and scale-jump guard</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="Conceptual uncertainty contract"/><br/><strong>Uncertainty acceptance contract</strong></td></tr>
 </table>
+
+
+### Quantitative integrity, applicability and identifiability contracts
+
+Scientific claims are now checked against four additional machine-readable contracts before a strategy can reach a human-review handoff:
+
+| Contract | What is checked | Runtime consequence |
+|---|---|---|
+| Quantity–Dimension Contract | parsed values, units, dimensions, comparison labels and conversion requirements | missing units require review; incompatible dimensions under the same label are blocked |
+| Applicability Contract | declared operating domain, explicit extrapolation markers and independent transfer evidence | unvalidated extrapolation is blocked; declared transfer evidence still requires human review |
+| Evidence-Conflict Contract | supporting, challenging and neutral evidence IDs | contradictory or negative evidence remains visible and prevents silent pooling |
+| Identifiability Contract | competing mechanisms, warning markers, parameter uniqueness and discriminating observables | equifinality/non-identifiability is blocked; unsupported mechanism selection requires review |
+
+```text
+number + unit → normalized dimension → comparable label → PASS / REVIEW / BLOCK
+calibrated domain → transfer evidence → uncertainty inflation → guarded extrapolation
+support + challenge → conflict ledger → reconciliation / replication → human review
+mechanism A vs B → discriminating observable → identifiable or equivalence class
+```
+
+<table>
+<tr><td width="50%"><img src="docs/assets/ai/quantity_dimension_contract.svg" alt="Conceptual quantity unit and dimension contract"/><br/><strong>Quantity, unit and dimension contract</strong></td><td width="50%"><img src="docs/assets/ai/applicability_extrapolation_guard.svg" alt="Conceptual applicability domain and extrapolation guard"/><br/><strong>Applicability and extrapolation guard</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/evidence_conflict_resolution.svg" alt="Conceptual evidence conflict resolution ledger"/><br/><strong>Evidence-conflict ledger</strong></td><td width="50%"><img src="docs/assets/ai/mechanism_identifiability_gate.svg" alt="Conceptual mechanism and parameter identifiability gate"/><br/><strong>Mechanism identifiability gate</strong></td></tr>
+</table>
+
+These controls are conservative lexical and structural guards. They do not independently verify the supplied data, establish a physical mechanism, or replace domain-qualified review.
 
 
 ### Decision readiness and next-best evidence
@@ -364,7 +390,7 @@ The catalog explicitly separates a discoverable capability contract from proof t
 
 ## Visual atlas
 
-The complete **29-diagram** atlas is embedded below and documented bilingually in [docs/VISUAL_ATLAS.md](docs/VISUAL_ATLAS.md). Every SVG is repository-local, self-contained, and includes accessible `<title>` and `<desc>` metadata.
+The complete **33-diagram** atlas is embedded below and documented bilingually in [docs/VISUAL_ATLAS.md](docs/VISUAL_ATLAS.md). Every SVG is repository-local, self-contained, and includes accessible `<title>` and `<desc>` metadata.
 
 <table>
 <tr><td width="50%"><img src="docs/assets/ai/research_os_architecture.svg" alt="Research OS architecture"/><br/><strong>1 · Research OS architecture</strong></td><td width="50%"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="Multi-agent orchestration"/><br/><strong>2 · Multi-agent orchestration</strong></td></tr>
@@ -382,6 +408,8 @@ The complete **29-diagram** atlas is embedded below and documented bilingually i
 <tr><td colspan="2"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="Polymer multiscale case study"/><br/><strong>25 · Polymer-insulation multiscale case</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport contract matrix"/><br/><strong>26 · Scientific Passport matrix</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="Evidence maturity ladder"/><br/><strong>27 · Evidence maturity ladder</strong></td></tr>
 <tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="Decision readiness gate"/><br/><strong>28 · Decision readiness gate</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="Active evidence learning loop"/><br/><strong>29 · Active evidence loop</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/quantity_dimension_contract.svg" alt="Quantity unit and dimension contract"/><br/><strong>30 · Quantity and dimension contract</strong></td><td width="50%"><img src="docs/assets/ai/applicability_extrapolation_guard.svg" alt="Applicability and extrapolation guard"/><br/><strong>31 · Applicability guard</strong></td></tr>
+<tr><td width="50%"><img src="docs/assets/ai/evidence_conflict_resolution.svg" alt="Evidence conflict resolution"/><br/><strong>32 · Evidence conflict resolution</strong></td><td width="50%"><img src="docs/assets/ai/mechanism_identifiability_gate.svg" alt="Mechanism identifiability gate"/><br/><strong>33 · Identifiability gate</strong></td></tr>
 </table>
 
 ## Known limitations and integrity boundary

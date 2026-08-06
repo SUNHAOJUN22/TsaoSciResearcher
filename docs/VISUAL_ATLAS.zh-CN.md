@@ -1,6 +1,6 @@
 # 科研能力 AI 示意图谱
 
-以下 29 张 AI 概念图依据仓库架构、能力合同、验证器和明确执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
+以下 33 张 AI 概念图依据仓库架构、能力合同、验证器和明确执行边界生成。它们属于文档资产，不是科学结果，也不是外部执行凭据。
 
 ## 1. 科研操作系统架构
 
@@ -118,3 +118,20 @@
 ## 29. 主动证据学习闭环
 
 ![主动证据学习闭环](assets/ai/active_evidence_learning_loop.svg)
+
+
+## 30. 数值、单位与量纲合同
+
+![数值、单位与量纲合同](assets/ai/quantity_dimension_contract.svg)
+
+## 31. 适用域与外推防线
+
+![适用域与外推防线](assets/ai/applicability_extrapolation_guard.svg)
+
+## 32. 证据冲突处置
+
+![证据冲突处置](assets/ai/evidence_conflict_resolution.svg)
+
+## 33. 机制与参数可辨识性门
+
+![机制与参数可辨识性门](assets/ai/mechanism_identifiability_gate.svg)

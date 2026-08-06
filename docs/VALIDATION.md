@@ -76,4 +76,16 @@ The computation-strategy schema requires a Scientific Passport and integrity gat
 
 ## Decision-readiness contract
 
-Computation-strategy schema 1.2 requires item-level evidence inventory, a claim contract and a decision-readiness record. Validation must reject automatic approval, invalid evidence identifiers, out-of-range maturity values and unknown readiness states. A `ready-for-human-review` result is planning readiness only; it is not execution, validation or scientific acceptance.
+Computation-strategy schema 1.3 requires item-level evidence inventory, a claim contract and a decision-readiness record. Validation must reject automatic approval, invalid evidence identifiers, out-of-range maturity values and unknown readiness states. A `ready-for-human-review` result is planning readiness only; it is not execution, validation or scientific acceptance.
+
+
+## Quantitative-integrity and transferability gates
+
+Computation-strategy Schema 1.3 and Scientific Passport 1.2 add four conservative planning controls:
+
+- quantity/unit parsing, normalized dimensions, missing-unit review and incompatible-dimension blocking;
+- declared applicability domains, explicit extrapolation detection and independent transfer-evidence review;
+- stable supporting/challenging/neutral evidence identifiers with conflict retention;
+- structural/practical identifiability, competing-mechanism comparison and equifinality blocking.
+
+These gates are deterministic software controls. They do not validate the caller's measurements, certify unit conversions for every specialist ontology, prove a mechanism or grant scientific acceptance. Regression includes normal, missing-unit, contradictory-evidence, extrapolation and deliberately incompatible-dimension cases.

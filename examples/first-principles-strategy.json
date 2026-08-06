@@ -1,14 +1,15 @@
 {
-  "schema_version": "1.2",
-  "strategy_id": "FPS-3532d803e477f062",
+  "schema_version": "1.3",
+  "strategy_id": "FPS-3398cbfff19ce545",
   "status": "advisory-only",
-  "question": "How do interfacial trap states control charge transport and breakdown?",
+  "question": "How do interfacial trap states control charge transport and breakdown under a possible scale extrapolation?",
   "observables": [
-    "trap energy distribution",
-    "space-charge density"
+    "trap energy distribution 1.0 eV",
+    "space-charge density 20 C/m3"
   ],
   "conditions": [
-    "applied electric field"
+    "303 K",
+    "20 kV/mm"
   ],
   "constraints": [],
   "available_evidence": [
@@ -25,11 +26,13 @@
       "electronic-structure"
     ],
     "scores": {
-      "charge-transport-dielectric": 11,
+      "charge-transport-dielectric": 7,
       "electronic-structure": 7
     },
-    "clarification_required": false,
-    "clarification_questions": []
+    "clarification_required": true,
+    "clarification_questions": [
+      "Define the decision-critical observable, unit, acceptable error, and comparison baseline."
+    ]
   },
   "first_principles_frame": {
     "degrees_of_freedom": [
@@ -231,8 +234,8 @@
         "joint inference only when bridge variables are identifiable"
       ],
       "target_observables": [
-        "trap energy distribution",
-        "space-charge density"
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
       ],
       "rationale": "The question activates more than one physical regime; coupling must use measurable bridge variables and propagate uncertainty.",
       "assumptions": [
@@ -272,14 +275,14 @@
       "electron density",
       "ionic geometry",
       "occupation",
-      "trap energy distribution",
-      "space-charge density"
+      "trap energy distribution 1.0 eV",
+      "space-charge density 20 C/m3"
     ],
     "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist."
   },
   "scientific_passport": {
-    "passport_version": "1.1",
-    "strategy_id": "FPS-3532d803e477f062",
+    "passport_version": "1.2",
+    "strategy_id": "FPS-3398cbfff19ce545",
     "model_contract": {
       "state_variables": [
         "carrier density",
@@ -301,7 +304,8 @@
         "representative chemistry and morphology are available"
       ],
       "applicability_domain": [
-        "applied electric field"
+        "303 K",
+        "20 kV/mm"
       ],
       "failure_conditions": [
         "calculated state hierarchy cannot explain temperature/field trends",
@@ -321,8 +325,8 @@
         "electron density",
         "ionic geometry",
         "occupation",
-        "trap energy distribution",
-        "space-charge density"
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
       ],
       "acceptance_tests": [
         "bridge variables are measurable or independently inferable",
@@ -403,6 +407,105 @@
       ],
       "language_boundary": "The contract limits admissible wording; it does not independently verify the declared evidence or establish the claim."
     },
+    "quantity_dimension_contract": {
+      "status": "pass",
+      "parsed_quantities": [
+        {
+          "statement": "trap energy distribution 1.0 eV",
+          "label": "trap energy distribution",
+          "value": "1.0",
+          "unit": "eV",
+          "normalized_unit": "eV",
+          "dimension": "energy"
+        },
+        {
+          "statement": "space-charge density 20 C/m3",
+          "label": "space charge density",
+          "value": "20",
+          "unit": "C/m3",
+          "normalized_unit": "C/m3",
+          "dimension": "charge-density"
+        },
+        {
+          "statement": "303 K",
+          "label": "declared temperature quantity",
+          "value": "303",
+          "unit": "K",
+          "normalized_unit": "K",
+          "dimension": "temperature"
+        },
+        {
+          "statement": "20 kV/mm",
+          "label": "declared electric-field quantity",
+          "value": "20",
+          "unit": "kV/mm",
+          "normalized_unit": "kV/mm",
+          "dimension": "electric-field"
+        }
+      ],
+      "missing_unit_statements": [],
+      "dimension_conflicts": [],
+      "unit_variations": [],
+      "rule": "Every decision-critical numerical quantity must carry an interpretable unit and preserve dimensional consistency across comparisons and scale bridges.",
+      "required_checks": [
+        "declare units for every decision-critical numerical input and observable",
+        "convert compared quantities to compatible dimensions before inference",
+        "record any unit conversion and tolerance in the evidence trail"
+      ]
+    },
+    "applicability_contract": {
+      "status": "blocked",
+      "explicit_extrapolation": true,
+      "extrapolation_markers": [
+        "extrapolat"
+      ],
+      "declared_domain": [
+        "303 K",
+        "20 kV/mm"
+      ],
+      "transfer_evidence_markers": [],
+      "rule": "Predictions outside the declared calibration and validation domain require independent transfer evidence and uncertainty inflation; in-domain accuracy cannot be assumed to transfer.",
+      "required_checks": [
+        "state the calibrated and independently validated operating domain",
+        "identify every requested target condition outside that domain",
+        "obtain independent transfer validation before industrial or safety-critical use",
+        "report extrapolation uncertainty separately from in-domain uncertainty"
+      ]
+    },
+    "evidence_conflict_contract": {
+      "status": "pass",
+      "conflict_detected": false,
+      "supporting_evidence_ids": [],
+      "challenging_evidence_ids": [],
+      "neutral_evidence_ids": [
+        "EVI-12dbb6448e22",
+        "EVI-8ccbc7efa86b",
+        "EVI-bdc105a8704b"
+      ],
+      "rule": "Supporting, null, negative, and contradictory evidence must remain visible; evidence maturity cannot erase disagreement or failed replication.",
+      "required_checks": [
+        "reconcile differences in specimen, method, boundary condition, and uncertainty",
+        "retain negative, null, and failed-replication results in the evidence record",
+        "avoid pooling incompatible evidence until the source of disagreement is tested"
+      ]
+    },
+    "identifiability_contract": {
+      "status": "review-required",
+      "warning_markers": [],
+      "comparison_markers": [],
+      "discriminating_observables": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "minimum_alternatives": 1,
+      "rule": "A mechanism or parameter set is decision-usable only when the declared observables can distinguish it from at least one plausible alternative under the stated uncertainty.",
+      "required_checks": [
+        "test at least one plausible alternative mechanism or model class",
+        "evaluate structural and practical parameter identifiability",
+        "use observables that change differently under competing explanations",
+        "report equivalence classes when the available data cannot identify a unique mechanism"
+      ]
+    },
     "uncertainty_contract": {
       "categories": [
         "parameter",
@@ -414,8 +517,8 @@
         "scale-transfer"
       ],
       "propagation_target": [
-        "trap energy distribution",
-        "space-charge density"
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
       ],
       "acceptance_rule": "Report uncertainty against the decision threshold and declare extrapolation outside the calibration and validation domain."
     }
@@ -447,10 +550,109 @@
         "electron density",
         "ionic geometry",
         "occupation",
-        "trap energy distribution",
-        "space-charge density"
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
       ],
       "missing_bridge_requirements": []
+    },
+    "quantity_dimension": {
+      "status": "pass",
+      "parsed_quantities": [
+        {
+          "statement": "trap energy distribution 1.0 eV",
+          "label": "trap energy distribution",
+          "value": "1.0",
+          "unit": "eV",
+          "normalized_unit": "eV",
+          "dimension": "energy"
+        },
+        {
+          "statement": "space-charge density 20 C/m3",
+          "label": "space charge density",
+          "value": "20",
+          "unit": "C/m3",
+          "normalized_unit": "C/m3",
+          "dimension": "charge-density"
+        },
+        {
+          "statement": "303 K",
+          "label": "declared temperature quantity",
+          "value": "303",
+          "unit": "K",
+          "normalized_unit": "K",
+          "dimension": "temperature"
+        },
+        {
+          "statement": "20 kV/mm",
+          "label": "declared electric-field quantity",
+          "value": "20",
+          "unit": "kV/mm",
+          "normalized_unit": "kV/mm",
+          "dimension": "electric-field"
+        }
+      ],
+      "missing_unit_statements": [],
+      "dimension_conflicts": [],
+      "unit_variations": [],
+      "rule": "Every decision-critical numerical quantity must carry an interpretable unit and preserve dimensional consistency across comparisons and scale bridges.",
+      "required_checks": [
+        "declare units for every decision-critical numerical input and observable",
+        "convert compared quantities to compatible dimensions before inference",
+        "record any unit conversion and tolerance in the evidence trail"
+      ]
+    },
+    "applicability_extrapolation": {
+      "status": "blocked",
+      "explicit_extrapolation": true,
+      "extrapolation_markers": [
+        "extrapolat"
+      ],
+      "declared_domain": [
+        "303 K",
+        "20 kV/mm"
+      ],
+      "transfer_evidence_markers": [],
+      "rule": "Predictions outside the declared calibration and validation domain require independent transfer evidence and uncertainty inflation; in-domain accuracy cannot be assumed to transfer.",
+      "required_checks": [
+        "state the calibrated and independently validated operating domain",
+        "identify every requested target condition outside that domain",
+        "obtain independent transfer validation before industrial or safety-critical use",
+        "report extrapolation uncertainty separately from in-domain uncertainty"
+      ]
+    },
+    "evidence_conflict": {
+      "status": "pass",
+      "conflict_detected": false,
+      "supporting_evidence_ids": [],
+      "challenging_evidence_ids": [],
+      "neutral_evidence_ids": [
+        "EVI-12dbb6448e22",
+        "EVI-8ccbc7efa86b",
+        "EVI-bdc105a8704b"
+      ],
+      "rule": "Supporting, null, negative, and contradictory evidence must remain visible; evidence maturity cannot erase disagreement or failed replication.",
+      "required_checks": [
+        "reconcile differences in specimen, method, boundary condition, and uncertainty",
+        "retain negative, null, and failed-replication results in the evidence record",
+        "avoid pooling incompatible evidence until the source of disagreement is tested"
+      ]
+    },
+    "identifiability": {
+      "status": "review-required",
+      "warning_markers": [],
+      "comparison_markers": [],
+      "discriminating_observables": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "minimum_alternatives": 1,
+      "rule": "A mechanism or parameter set is decision-usable only when the declared observables can distinguish it from at least one plausible alternative under the stated uncertainty.",
+      "required_checks": [
+        "test at least one plausible alternative mechanism or model class",
+        "evaluate structural and practical parameter identifiability",
+        "use observables that change differently under competing explanations",
+        "report equivalence classes when the available data cannot identify a unique mechanism"
+      ]
     },
     "mechanism_competition": {
       "status": "required",
@@ -459,12 +661,15 @@
     }
   },
   "decision_readiness": {
-    "status": "review-required",
+    "status": "blocked",
     "automatic_approval": false,
     "human_review_required": true,
-    "blocking_codes": [],
+    "blocking_codes": [
+      "EXTRAPOLATION_UNVALIDATED"
+    ],
     "review_codes": [
-      "CLAIM_LANGUAGE_REVIEW_REQUIRED"
+      "CLAIM_LANGUAGE_REVIEW_REQUIRED",
+      "IDENTIFIABILITY_REVIEW_REQUIRED"
     ],
     "next_best_evidence": [
       "demonstrate transferability across samples, operators, or operating conditions",
@@ -472,7 +677,9 @@
       "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
       "independent measurement and at least one competing-mechanism test",
       "spectroscopy",
-      "current-voltage-temperature trends"
+      "current-voltage-temperature trends",
+      "compare at least one plausible competing mechanism before accepting the preferred explanation",
+      "declare units for every decision-critical numerical input and observable"
     ],
     "handoff_rule": "External execution planning may proceed only after blockers are closed, review items are addressed, and a qualified human approves a checksum-bound handoff."
   },

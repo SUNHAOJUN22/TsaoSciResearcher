@@ -21,8 +21,9 @@ def test_scientific_passport_is_schema_valid_and_bound_to_strategy() -> None:
     )
     jsonschema.Draft202012Validator(SCHEMA).validate(result)
     passport = result["scientific_passport"]
-    assert result["schema_version"] == "1.2"
+    assert result["schema_version"] == "1.3"
     assert passport["strategy_id"] == result["strategy_id"]
+    assert passport["passport_version"] == "1.2"
     assert passport["evidence_contract"]["maturity_level"] == "E3-experimental"
     assert passport["evidence_contract"]["declared_only"] is True
     assert result["integrity_gates"]["causal_claim"]["status"] == "guarded"

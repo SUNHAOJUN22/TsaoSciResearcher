@@ -110,7 +110,7 @@
   },
   "properties": {
     "schema_version": {
-      "const": "1.2"
+      "const": "1.3"
     },
     "strategy_id": {
       "type": "string",
@@ -309,11 +309,15 @@
         "bridge_contract",
         "evidence_contract",
         "claim_contract",
+        "quantity_dimension_contract",
+        "applicability_contract",
+        "evidence_conflict_contract",
+        "identifiability_contract",
         "uncertainty_contract"
       ],
       "properties": {
         "passport_version": {
-          "const": "1.1"
+          "const": "1.2"
         },
         "strategy_id": {
           "type": "string",
@@ -529,6 +533,214 @@
               "$ref": "#/$defs/nonEmptyString"
             }
           }
+        },
+        "quantity_dimension_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "parsed_quantities",
+            "missing_unit_statements",
+            "dimension_conflicts",
+            "unit_variations",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "parsed_quantities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "statement",
+                  "label",
+                  "value",
+                  "unit",
+                  "normalized_unit",
+                  "dimension"
+                ],
+                "properties": {
+                  "statement": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$"
+                  },
+                  "unit": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "normalized_unit": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "dimension": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                }
+              }
+            },
+            "missing_unit_statements": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "dimension_conflicts": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "unit_variations": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "applicability_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "explicit_extrapolation",
+            "extrapolation_markers",
+            "declared_domain",
+            "transfer_evidence_markers",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "explicit_extrapolation": {
+              "type": "boolean"
+            },
+            "extrapolation_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "declared_domain": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "transfer_evidence_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "evidence_conflict_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "conflict_detected",
+            "supporting_evidence_ids",
+            "challenging_evidence_ids",
+            "neutral_evidence_ids",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required"
+              ]
+            },
+            "conflict_detected": {
+              "type": "boolean"
+            },
+            "supporting_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "challenging_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "neutral_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "identifiability_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "warning_markers",
+            "comparison_markers",
+            "discriminating_observables",
+            "minimum_alternatives",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "warning_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "comparison_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "discriminating_observables": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "minimum_alternatives": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
         }
       }
     },
@@ -538,6 +750,10 @@
       "required": [
         "causal_claim",
         "scale_jump",
+        "quantity_dimension",
+        "applicability_extrapolation",
+        "evidence_conflict",
+        "identifiability",
         "mechanism_competition"
       ],
       "properties": {
@@ -637,6 +853,214 @@
             "minimum_alternatives": {
               "type": "integer",
               "minimum": 1
+            }
+          }
+        },
+        "quantity_dimension": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "parsed_quantities",
+            "missing_unit_statements",
+            "dimension_conflicts",
+            "unit_variations",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "parsed_quantities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "statement",
+                  "label",
+                  "value",
+                  "unit",
+                  "normalized_unit",
+                  "dimension"
+                ],
+                "properties": {
+                  "statement": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$"
+                  },
+                  "unit": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "normalized_unit": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "dimension": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                }
+              }
+            },
+            "missing_unit_statements": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "dimension_conflicts": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "unit_variations": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "applicability_extrapolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "explicit_extrapolation",
+            "extrapolation_markers",
+            "declared_domain",
+            "transfer_evidence_markers",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "explicit_extrapolation": {
+              "type": "boolean"
+            },
+            "extrapolation_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "declared_domain": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            },
+            "transfer_evidence_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "evidence_conflict": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "conflict_detected",
+            "supporting_evidence_ids",
+            "challenging_evidence_ids",
+            "neutral_evidence_ids",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required"
+              ]
+            },
+            "conflict_detected": {
+              "type": "boolean"
+            },
+            "supporting_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "challenging_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "neutral_evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^EVI-[0-9a-f]{12}$"
+              },
+              "uniqueItems": true
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
+            }
+          }
+        },
+        "identifiability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "warning_markers",
+            "comparison_markers",
+            "discriminating_observables",
+            "minimum_alternatives",
+            "rule",
+            "required_checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "review-required",
+                "blocked"
+              ]
+            },
+            "warning_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "comparison_markers": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "discriminating_observables": {
+              "$ref": "#/$defs/uniqueStrings"
+            },
+            "minimum_alternatives": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "rule": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "required_checks": {
+              "$ref": "#/$defs/nonEmptyUniqueStrings"
             }
           }
         }

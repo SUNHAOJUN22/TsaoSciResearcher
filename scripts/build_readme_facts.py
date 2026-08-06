@@ -46,6 +46,10 @@ VISUAL_ATLAS_ASSETS = (
     "docs/assets/ai/evidence_maturity_ladder.svg",
     "docs/assets/ai/decision_readiness_gate.svg",
     "docs/assets/ai/active_evidence_learning_loop.svg",
+    "docs/assets/ai/quantity_dimension_contract.svg",
+    "docs/assets/ai/applicability_extrapolation_guard.svg",
+    "docs/assets/ai/evidence_conflict_resolution.svg",
+    "docs/assets/ai/mechanism_identifiability_gate.svg",
 )
 
 

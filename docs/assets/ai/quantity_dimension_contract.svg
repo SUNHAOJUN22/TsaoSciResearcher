@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+<title id="title">Quantity, Unit and Dimension Contract</title><desc id="desc">A conceptual scientific control diagram that parses numerical statements, normalizes units, groups comparable quantities and blocks dimensionally invalid comparisons.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061526"/><stop offset="0.55" stop-color="#0c2a43"/><stop offset="1" stop-color="#132b52"/></linearGradient>
+  <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#25d8ff"/><stop offset="1" stop-color="#65f4ce"/></linearGradient>
+  <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8e7dff"/><stop offset="1" stop-color="#d081ff"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#5fe7ff"/></marker>
+</defs>
+<rect width="1400" height="760" rx="28" fill="url(#bg)"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif">
+  <text x="70" y="70" font-size="36" font-weight="700" fill="#f4fbff">Quantity · Unit · Dimension Contract</text>
+  <text x="70" y="106" font-size="18" fill="#b8cada">Numbers become scientific evidence only after units, dimensions and comparison labels are explicit.</text>
+  <rect x="70" y="150" width="1260" height="4" rx="2" fill="url(#cyan)" opacity="0.9"/>
+
+  <rect x="70" y="195" width="270" height="190" rx="22" fill="#102c48" stroke="#2cdcff" stroke-width="2"/>
+  <text x="98" y="235" font-size="21" font-weight="700" fill="#f4fbff">1 · Parse statements</text>
+  <text x="98" y="272" font-size="17" fill="#91eaff">barrier 1.0 eV</text>
+  <text x="98" y="304" font-size="17" fill="#91eaff">temperature 303 K</text>
+  <text x="98" y="336" font-size="17" fill="#91eaff">field 20 kV/mm</text>
+  <circle cx="300" cy="235" r="15" fill="#153b5c" stroke="#65f4ce"/><text x="294" y="241" font-size="17" fill="#65f4ce">✓</text>
+
+  <rect x="390" y="195" width="270" height="190" rx="22" fill="#102c48" stroke="#65f4ce" stroke-width="2"/>
+  <text x="418" y="235" font-size="21" font-weight="700" fill="#f4fbff">2 · Normalize units</text>
+  <rect x="418" y="264" width="98" height="38" rx="10" fill="#0a2036" stroke="#48d7ff"/><text x="439" y="289" font-size="16" fill="#dff8ff">kV/mm</text>
+  <path d="M525 283 L568 283" stroke="#5fe7ff" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="578" y="264" width="54" height="38" rx="10" fill="#0a2036" stroke="#65f4ce"/><text x="594" y="289" font-size="16" fill="#dff8ff">V/m</text>
+  <text x="418" y="335" font-size="15" fill="#b8cada">conversion recorded</text>
+  <text x="418" y="360" font-size="15" fill="#b8cada">tolerance remains explicit</text>
+
+  <rect x="710" y="195" width="270" height="190" rx="22" fill="#102c48" stroke="#a98cff" stroke-width="2"/>
+  <text x="738" y="235" font-size="21" font-weight="700" fill="#f4fbff">3 · Group by meaning</text>
+  <rect x="738" y="265" width="215" height="34" rx="9" fill="#171e42"/><text x="754" y="288" font-size="15" fill="#dbcfff">label: barrier</text>
+  <rect x="738" y="311" width="215" height="34" rx="9" fill="#171e42"/><text x="754" y="334" font-size="15" fill="#dbcfff">dimension: energy</text>
+  <rect x="738" y="357" width="215" height="8" rx="4" fill="url(#violet)"/>
+
+  <rect x="1030" y="195" width="300" height="190" rx="22" fill="#102c48" stroke="#ffb86a" stroke-width="2"/>
+  <text x="1058" y="235" font-size="21" font-weight="700" fill="#f4fbff">4 · Gate the inference</text>
+  <text x="1058" y="275" font-size="16" fill="#65f4ce">PASS</text><text x="1115" y="275" font-size="15" fill="#b8cada">compatible dimensions</text>
+  <text x="1058" y="314" font-size="16" fill="#ffd166">REVIEW</text><text x="1135" y="314" font-size="15" fill="#b8cada">missing unit / conversion</text>
+  <text x="1058" y="353" font-size="16" fill="#ff7895">BLOCK</text><text x="1126" y="353" font-size="15" fill="#b8cada">same label, wrong dimension</text>
+
+  <path d="M340 290 L380 290" stroke="#5fe7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M660 290 L700 290" stroke="#5fe7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M980 290 L1020 290" stroke="#5fe7ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="110" y="460" width="540" height="155" rx="22" fill="#0b2138" stroke="#65f4ce" stroke-width="2"/>
+  <text x="142" y="501" font-size="21" font-weight="700" fill="#f4fbff">Valid comparison</text>
+  <text x="142" y="538" font-size="18" fill="#b9f9e4">electric field: 20 kV/mm ↔ 2.0×10⁷ V/m</text>
+  <path d="M145 574 L610 574" stroke="#65f4ce" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="600" cy="574" r="13" fill="#65f4ce" filter="url(#glow)"/>
+
+  <rect x="750" y="460" width="540" height="155" rx="22" fill="#2c172a" stroke="#ff7895" stroke-width="2"/>
+  <text x="782" y="501" font-size="21" font-weight="700" fill="#f4fbff">Dimension conflict</text>
+  <text x="782" y="538" font-size="18" fill="#ffd0d9">barrier: 1.0 eV ↔ 2.0 K</text>
+  <path d="M784 574 L1248 574" stroke="#ff7895" stroke-width="7" stroke-linecap="round" opacity="0.75"/>
+  <path d="M994 552 L1030 596 M1030 552 L994 596" stroke="#fff0f3" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+
+  <rect x="70" y="680" width="1260" height="44" rx="14" fill="#091d31" stroke="url(#cyan)"/>
+  <text x="100" y="709" font-size="16" fill="#d8e9f5">Machine-readable outcome: PASS · REVIEW-REQUIRED · QUANTITY_DIMENSION_CONFLICT</text>
+</g></svg>
