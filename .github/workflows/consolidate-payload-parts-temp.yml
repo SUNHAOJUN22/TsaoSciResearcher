@@ -1,0 +1,71 @@
+name: One-time payload part consolidation
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: tsr-v073-payload-consolidation
+  cancel-in-progress: false
+
+jobs:
+  consolidate:
+    if: >-
+      github.event.issue.number == 202 &&
+      github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
+      github.event.comment.user.login == 'SUNHAOJUN22' &&
+      github.event.comment.body == 'consolidate_token=TSR-20260806-parts-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Consolidate and verify corrected parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$GITHUB_SHA"
+          cat .tsr-finalize-v2/part-003a.b64 .tsr-finalize-v2/part-003b.b64 \
+            > .tsr-finalize-v2/part-003.b64
+          cat .tsr-finalize-v2/part-008a.b64 .tsr-finalize-v2/part-008b.b64 \
+            > .tsr-finalize-v2/part-008.b64
+          test "$(wc -c < .tsr-finalize-v2/part-003.b64)" -eq 8000
+          test "$(wc -c < .tsr-finalize-v2/part-008.b64)" -eq 8000
+          echo 'fca6f4fa747c74124faae3b05566e2fbcd3820573d48a54c2aac625af8c9fa4b  .tsr-finalize-v2/part-003.b64' | sha256sum -c -
+          echo '26c3e50bd6289d9c73b78f47f4087f48f689cfb358601c01b03b8a6d6237a7b6  .tsr-finalize-v2/part-008.b64' | sha256sum -c -
+          rm .tsr-finalize-v2/part-003a.b64 .tsr-finalize-v2/part-003b.b64 \
+             .tsr-finalize-v2/part-008a.b64 .tsr-finalize-v2/part-008b.b64
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .tsr-finalize-v2
+          git commit -m 'ci: consolidate corrected payload parts [skip ci]'
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$GITHUB_SHA"
+          git push origin HEAD:main
+
+      - name: Report success
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh issue comment 202 --repo "$GITHUB_REPOSITORY" \
+            --body "status=payload-parts-consolidated final_commit=$(git rev-parse HEAD) workflow_run_id=${GITHUB_RUN_ID}"
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh issue comment 202 --repo "$GITHUB_REPOSITORY" \
+            --body "status=payload-parts-consolidation-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
