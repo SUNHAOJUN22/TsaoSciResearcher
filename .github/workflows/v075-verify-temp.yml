@@ -18,7 +18,7 @@ env:
 
 jobs:
   compatibility:
-    if: github.event.issue.number == 206 && github.event.comment.body == 'verify_token=TSR-20260807-v075-readonly'
+    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification.'
     strategy:
       fail-fast: false
       matrix:
@@ -45,7 +45,7 @@ jobs:
           bash .tsr-v075/run_candidate.sh compatibility
 
   export-candidate:
-    if: github.event.issue.number == 206 && github.event.comment.body == 'verify_token=TSR-20260807-v075-readonly'
+    if: github.event.issue.number == 206 && github.event.comment.body == 'Please run the read-only v0.7.5 verification.'
     needs: compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 30
