@@ -38,7 +38,7 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "implementation_relation": {
             "en": "Pedagogical abstraction of deterministic rules and bounded ranking; weights are not exposed as a fitted statistical model.",
-            "zh-CN": "对确定性规则和有界排序的教学抽象；这些权重不是已拟合统计模型的公开参数。",
+            "zh-CN": "对确定性规则和有界排序的教学抽象; 这些权重不是已拟合统计模型的公开参数。",
         },
     },
     {
@@ -56,7 +56,7 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "implementation_relation": {
             "en": "The runtime parses declared quantities and applies conservative structural guards; it is not a general symbolic-units algebra system.",
-            "zh-CN": "运行时解析已声明数量并执行保守结构化防线；它不是通用符号单位代数系统。",
+            "zh-CN": "运行时解析已声明数量并执行保守结构化防线; 它不是通用符号单位代数系统。",
         },
     },
     {
@@ -75,7 +75,7 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "implementation_relation": {
             "en": "The equation is a conceptual normalized-distance model; the current runtime uses explicit lexical and structural extrapolation markers.",
-            "zh-CN": "该方程是概念性归一距离模型；当前运行时使用显式词汇与结构化外推标记。",
+            "zh-CN": "该方程是概念性归一距离模型; 当前运行时使用显式词汇与结构化外推标记。",
         },
     },
     {
@@ -90,7 +90,7 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "decision_use": {
             "en": "Preserves negative results and contradictory observations instead of silently pooling them into a positive conclusion.",
-            "zh-CN": "保留负结果和矛盾观测，避免将其静默合并成正向结论。",
+            "zh-CN": "保留负结果和矛盾观测, 避免将其静默合并成正向结论。",
         },
         "implementation_relation": {
             "en": "Maps directly to supporting, challenging, and neutral evidence identifiers in the strategy contract.",
@@ -110,11 +110,11 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "decision_use": {
             "en": "Requires discriminating observables before selecting one mechanism or unique parameter set.",
-            "zh-CN": "在选择单一机制或唯一参数组之前，要求具备区分性观测量。",
+            "zh-CN": "在选择单一机制或唯一参数组之前, 要求具备区分性观测量。",
         },
         "implementation_relation": {
             "en": "The runtime currently applies conservative warnings for competing mechanisms, equifinality, and missing discriminating observables; it does not compute a numerical Jacobian.",
-            "zh-CN": "当前运行时对竞争机制、等效多解和缺失区分性观测量执行保守警告；并不计算数值雅可比矩阵。",
+            "zh-CN": "当前运行时对竞争机制、等效多解和缺失区分性观测量执行保守警告; 并不计算数值雅可比矩阵。",
         },
     },
     {
@@ -136,7 +136,7 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "implementation_relation": {
             "en": "Defines the required uncertainty categories and propagation intent; numerical covariance propagation remains an external analysis task.",
-            "zh-CN": "定义必需的不确定性类别与传播意图；数值协方差传播仍属于外部分析任务。",
+            "zh-CN": "定义必需的不确定性类别与传播意图; 数值协方差传播仍属于外部分析任务。",
         },
     },
     {
@@ -151,11 +151,11 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "decision_use": {
             "en": "Prevents an unvalidated micro-to-industrial jump by requiring measurable bridge variables and acceptance tests at each scale.",
-            "zh-CN": "通过要求每个尺度具备可测桥接变量和验收测试，防止未经验证的微观到工业尺度跳跃。",
+            "zh-CN": "通过要求每个尺度具备可测桥接变量和验收测试, 防止未经验证的微观到工业尺度跳跃。",
         },
         "implementation_relation": {
             "en": "Represents the bridge-contract design principle; the repository records bridge requirements but does not execute homogenisation or process simulation.",
-            "zh-CN": "表达尺度桥合同的设计原则；仓库记录桥接要求，但不执行均匀化或流程模拟。",
+            "zh-CN": "表达尺度桥合同的设计原则; 仓库记录桥接要求, 但不执行均匀化或流程模拟。",
         },
     },
     {
@@ -172,11 +172,11 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
         "decision_use": {
             "en": "The weakest mandatory contract controls readiness: BLOCK precedes REVIEW, and REVIEW precedes PASS.",
-            "zh-CN": "最弱的强制合同决定整体就绪度：阻断优先于复核，复核优先于通过。",
+            "zh-CN": "最弱的强制合同决定整体就绪度: 阻断优先于复核, 复核优先于通过。",
         },
         "implementation_relation": {
             "en": "Matches the repository's conservative blocker/review aggregation and fixed automatic_approval=false boundary.",
-            "zh-CN": "对应仓库的保守阻断/复核聚合逻辑，以及 automatic_approval=false 的固定边界。",
+            "zh-CN": "对应仓库的保守阻断/复核聚合逻辑, 以及 automatic_approval=false 的固定边界。",
         },
     },
 )
@@ -189,8 +189,6 @@ def _localized(value: Any, language: Language) -> Any:
                 return deepcopy(value)
             return value[language]
         return {key: _localized(item, language) for key, item in value.items()}
-    if isinstance(value, list):
-        return [_localized(item, language) for item in value]
     return deepcopy(value)
 
 
