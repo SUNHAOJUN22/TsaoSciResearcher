@@ -134,11 +134,17 @@ def main() -> None:
         with target.open("w", encoding="utf-8", newline="\n") as handle:
             handle.write(content)
 
+    manifest_text = "\n".join(sorted(PATHS)) + "\n"
     runner_temp = Path(os.environ.get("RUNNER_TEMP", "/tmp"))
-    runner_temp.mkdir(parents=True, exist_ok=True)
-    (runner_temp / "tsr_payload_paths.txt").write_text(
-        "\n".join(sorted(PATHS)) + "\n", encoding="utf-8", newline="\n"
-    )
+    manifest_dirs = [runner_temp]
+    posix_tmp = Path("/tmp")
+    if os.name != "nt" and runner_temp != posix_tmp:
+        manifest_dirs.append(posix_tmp)
+    for manifest_dir in manifest_dirs:
+        manifest_dir.mkdir(parents=True, exist_ok=True)
+        (manifest_dir / "tsr_payload_paths.txt").write_text(
+            manifest_text, encoding="utf-8", newline="\n"
+        )
     print(
         "quantitative-integrity payload applied",
         f"files={len(PATHS)}",
