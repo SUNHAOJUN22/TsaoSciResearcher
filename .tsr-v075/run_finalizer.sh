@@ -101,4 +101,5 @@ target.write_text(text, encoding="utf-8", newline="\n")
 PY
 
 chmod +x "$TARGET"
+# The marker comment below is intentionally removed with the temporary directory.
 exec bash "$TARGET" finalize
