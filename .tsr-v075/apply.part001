@@ -1,0 +1,170 @@
+    value = json.loads(resource.read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError("mathematical contract schema root must be an object")
+    jsonschema.Draft202012Validator.check_schema(value)
+    return value
+
+
+def get_mathematical_contract_schema() -> dict[str, Any]:
+    "Return a defensive copy of the packaged Draft 2020-12 schema."
+
+    return deepcopy(_load_mathematical_contract_schema())
+
+
+def validate_mathematical_contract_payload(payload: dict[str, Any]) -> None:
+    "Validate one mathematical-contract registry payload."
+
+    jsonschema.Draft202012Validator(_load_mathematical_contract_schema()).validate(payload)
+'''
+replace_once(
+    "tsao_researcher/mathematical_contracts.py",
+    "\n\ndef _localized(value: Any, language: Language) -> Any:\n",
+    schema_functions + "\n\ndef _localized(value: Any, language: Language) -> Any:\n",
+)
+
+old_list_return = '''    return {
+        "schema_version": _SCHEMA_VERSION,
+        "language": language,
+        "advisory_only": True,
+        "solver_executed": False,
+        "automatic_approval": False,
+        "contracts": [_localized(contract, language) for contract in _CONTRACTS],
+    }
+'''
+new_list_return = '''    payload = {
+        "schema_version": _SCHEMA_VERSION,
+        "schema_id": _SCHEMA_ID,
+        "language": language,
+        "advisory_only": True,
+        "solver_executed": False,
+        "automatic_approval": False,
+        "contracts": [_localized(contract, language) for contract in _CONTRACTS],
+    }
+    validate_mathematical_contract_payload(payload)
+    return payload
+'''
+replace_once("tsao_researcher/mathematical_contracts.py", old_list_return, new_list_return)
+replace_once(
+    "tsao_researcher/mathematical_contracts.py",
+    '            payload["contracts"] = [contract]\n            return payload\n',
+    '            payload["contracts"] = [contract]\n'
+    '            validate_mathematical_contract_payload(payload)\n'
+    '            return payload\n',
+)
+
+replace_once(
+    "tsao_researcher/__main__.py",
+    '''    math_parser.add_argument(
+        "--language",
+        choices=["en", "zh-CN", "both"],
+        default="both",
+        help="localize explanatory text while preserving equations and stable identifiers",
+    )
+''',
+    '''    math_parser.add_argument(
+        "--language",
+        choices=["en", "zh-CN", "both"],
+        default="both",
+        help="localize explanatory text while preserving equations and stable identifiers",
+    )
+    math_parser.add_argument(
+        "--schema",
+        action="store_true",
+        help="emit the packaged Draft 2020-12 registry schema",
+    )
+    math_parser.add_argument("--output", help="optional JSON output path")
+''',
+)
+replace_once(
+    "tsao_researcher/__main__.py",
+    '''    elif args.command == "math":
+        from .mathematical_contracts import (
+            get_mathematical_contract,
+            list_mathematical_contracts,
+        )
+
+        if args.contract:
+            _emit(get_mathematical_contract(args.contract, args.language))
+        else:
+            _emit(list_mathematical_contracts(args.language))
+''',
+    '''    elif args.command == "math":
+        from .mathematical_contracts import (
+            get_mathematical_contract,
+            get_mathematical_contract_schema,
+            list_mathematical_contracts,
+        )
+
+        if args.schema and args.contract:
+            math_parser.error("--schema cannot be combined with --contract")
+        if args.schema:
+            result = get_mathematical_contract_schema()
+        elif args.contract:
+            result = get_mathematical_contract(args.contract, args.language)
+        else:
+            result = list_mathematical_contracts(args.language)
+        if args.output:
+            from .io import write_json
+
+            write_json(args.output, result)
+        _emit(result)
+''',
+)
+
+validator_script = r'''#!/usr/bin/env python3
+"Validate the canonical and packaged mathematical-contract registry artifacts."
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from collections.abc import Sequence
+from pathlib import Path
+from typing import Any
+
+import jsonschema
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, atomic_write_text
+from tsao_researcher.mathematical_contracts import (
+    get_mathematical_contract,
+    get_mathematical_contract_schema,
+    list_mathematical_contracts,
+    validate_mathematical_contract_payload,
+)
+
+CANONICAL_SCHEMA = ROOT / "schemas/v2/mathematical-contract-registry.schema.json"
+PACKAGED_SCHEMA = ROOT / "tsao_researcher/data/schemas/mathematical-contract-registry.schema.json"
+EXAMPLE = ROOT / "examples/mathematical-contract.json"
+
+
+def _load(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError(f"JSON root must be an object: {path.relative_to(ROOT)}")
+    return value
+
+
+def _expected_example() -> dict[str, Any]:
+    return get_mathematical_contract("decision-readiness", "both")
+
+
+def validate_all() -> dict[str, Any]:
+    canonical = _load(CANONICAL_SCHEMA)
+    packaged = _load(PACKAGED_SCHEMA)
+    if canonical != packaged:
+        raise ValueError("packaged mathematical-contract schema is stale")
+    if canonical != get_mathematical_contract_schema():
+        raise ValueError("runtime mathematical-contract schema differs from canonical schema")
+    jsonschema.Draft202012Validator.check_schema(canonical)
+
+    all_ids: set[str] = set()
+    for language in ("both", "en", "zh-CN"):
+        payload = list_mathematical_contracts(language)
+        validate_mathematical_contract_payload(payload)
+        for contract in payload["contracts"]:
+            contract_id = contract["contract_id"]
+            validate_mathematical_contract_payload(
