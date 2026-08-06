@@ -74,7 +74,9 @@ jobs:
           python scripts/sync_runtime_data.py --check
           python scripts/validate_schemas.py
           python scripts/build_readme_facts.py --check
-          python -m ruff format --check scripts tsao_researcher tests
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            python -m ruff format --check scripts tsao_researcher tests
+          fi
           python -m ruff check scripts tsao_researcher tests
           python -m tsao_researcher strategy \
             "Can a 1.0 eV trap measurement predict product quality by extrapolation?" \
@@ -125,7 +127,7 @@ jobs:
           test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$GITHUB_SHA"
 
       - name: Set up locked Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        uses: actions/setup-python@a309ff8b426b58ec2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
           cache: pip
