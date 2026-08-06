@@ -65,6 +65,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           rm -f .github/workflows/v074-finalize-temp.yml
           python scripts/bump_version.py 0.7.4
+          python -m ruff format scripts tsao_researcher tests
           python scripts/build_readme_facts.py --write
           python -m pip install --disable-pip-version-check -e . --no-deps --force-reinstall
           python -m compileall -q scripts tsao_researcher tests
@@ -73,10 +74,8 @@ jobs:
           python scripts/sync_runtime_data.py --check
           python scripts/validate_schemas.py
           python scripts/build_readme_facts.py --check
+          python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
-          if [ "$RUNNER_OS" != "Windows" ]; then
-            python -m ruff format --check scripts tsao_researcher tests
-          fi
           python -m tsao_researcher --version
           python -m tsao_researcher math --contract decision-readiness --language both
           python -m tsao_researcher strategy \
@@ -98,12 +97,11 @@ jobs:
       - name: Report compatibility failure
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
           gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --body "status=v074-compatibility-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
 
   finalize:
     if: >-
