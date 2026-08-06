@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.7.4 - 2026-08-06
+
+- Add a versioned bilingual `mathematical_contracts` runtime API and `math` CLI covering capability ranking, quantity/dimension consistency, applicability and extrapolation, evidence conflict, identifiability, uncertainty propagation, multiscale bridge error, and conservative decision readiness.
+- Fix the scientific boundary in every mathematical-contract response with `advisory_only=true`, `solver_executed=false`, and `automatic_approval=false`.
+- Rewrite the English and Chinese README files around acceptance scope, architecture, eight mathematical contracts, scientific-use strategy, real CLI/API examples, testing gates, performance limits, and the external-execution boundary.
+- Expand the repository-local conceptual visual atlas from 33 to 37 accessible SVG diagrams, adding the mathematical contract registry, readiness lattice, uncertainty budget, and multiscale bridge error budget.
+- Add regression tests, permanent four-platform CI coverage, MkDocs navigation, CLI documentation, README contract validation, and regenerated release evidence for the new interface.
+
 ## 0.7.3 - 2026-08-06
 
 - Add machine-readable quantity, unit and dimension contracts with normalized physical dimensions, missing-unit review and same-label dimension-conflict blocking.
