@@ -1,230 +1,300 @@
 <div align="center">
   <img src="assets/logo.svg" alt="TsaoSciResearcher 标志" width="118" />
   <h1>TsaoSciResearcher</h1>
-  <p><strong>证据优先的科研控制层</strong></p>
-  <p>科学问题 → 证据 → 策略 → 受控执行 → 验证 → 可复现实体</p>
+  <p><strong>证据优先的科研策略、合同、交接与验证控制层</strong></p>
+  <p>科学问题 → 模型合同 → 证据合同 → 受控外部执行 → 回执 → 验收证据</p>
 
-[English](README.md) · [文档](docs/index.md) · [架构](docs/ARCHITECTURE.md) · [验证](docs/VALIDATION.md) · [科研图谱](docs/VISUAL_ATLAS.zh-CN.md)
+[English](README.md) · [文档](docs/index.md) · [架构](docs/ARCHITECTURE.md) · [数理合同](docs/MATHEMATICAL_CONTRACTS.md) · [验证](docs/VALIDATION.md) · [视觉图谱](docs/VISUAL_ATLAS.zh-CN.md)
 
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-> **正式版本 0.7.3** · Apache-2.0 · Python 3.10–3.13 · 确定性 CLI 与 Python API
+> **正式版本 0.7.4** · Apache-2.0 · Python 3.10–3.13 · 确定性 CLI 与 Python API
 
-## 系统总览
+## 1. 面向验收的项目总览
 
-TsaoSciResearcher 是一个**科研任务路由器、研究状态机、证据合同系统、第一性原理策略顾问、受控计算交接层与可复现边界**。它用于回答：需要知道什么、最低充分方法是什么、哪类证据能够证伪机制、在接受结果前必须记录哪些信息。
+TsaoSciResearcher 是一个**科研控制层**，不是数值求解器。它负责科研问题路由、能力合同检索、第一性原理策略护照生成、矛盾证据保留、数量与单位防线、适用域与可辨识性边界、校验和绑定的外部计算交接、执行回执验证，以及确定性可复现胶囊导出。
 
-它不会在缺少可校验外部执行证据时，声称数据库已查询、仪器已运行，或 DFT、MD、FEM、CFD、流程模拟已经完成。
+除非用户提供外部产生且可通过校验和核验的执行证据，本仓库不会声称 DFT、量子化学、分子动力学、FEM、CFD、流程模拟、HPC、数据库检索或实验室工作已经发生。
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统概念架构"/><br/><strong>科研操作控制层</strong></td>
-<td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="多尺度科学管线概念图"/><br/><strong>尺度感知的科学还原</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="证据与主张图概念图"/><br/><strong>证据—主张可追溯</strong></td>
-<td width="50%"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="可复现质量门概念图"/><br/><strong>通过显式质量门验收</strong></td>
-</tr>
-</table>
+以下实现规模由机器自动校验：
 
-> 仓库中的全部科研图均为**用于文档说明的 AI 生成概念示意图**，不是实验观测、测量数据、数值求解结果，也不能证明外部计算已经执行。
+| 交付事实 | 已核验值 |
+|---|---:|
+| 能力合同 | **341** |
+| 保留的旧版/通用合同 | **158** |
+| 保留的工作簿命名 | **322** |
+| 领域计算/工程合同 | **164** |
+| 通用领域占位项 | **0** |
+| 运行时新增能力 | **19** |
+| 主工作流 | **15** |
+| JSON Schema | **19** |
+| 领域包 | **7** |
+| AI 生成概念示意图 | **37** |
 
-## 实际实现的能力
+验收证据文件：[README 审计](docs/README_AUDIT_REPORT.md)、[能力覆盖矩阵](docs/CAPABILITY_COVERAGE_MATRIX.md)、[架构映射](docs/README_ARCHITECTURE_MAPPING.md)、[验证证据](docs/VALIDATION_EVIDENCE.json)、[HTML 测试仪表板](docs/test-dashboard.html)与 [SVG 测试仪表板](docs/test-dashboard.svg)。
 
-运行时提供一个确定性入口和机器可读的科研控制模型：
+> 仓库中的全部图示均为**用于文档说明的 AI 生成概念示意图**。它们不是实验观测、测量数据、数值求解结果，也不能证明外部计算已经执行。
 
-| 已实现层 | 可核验能力 |
-|---|---|
-| 任务路由 | 中英文确定性路由；支持正向/负向语义、优先级、置信度和明确的澄清状态 |
-| 能力检索 | 共 **341** 个能力合同，其中保留 **322** 个工作簿命名、**164** 个领域计算/工程合同、**158** 个旧版/通用合同，并新增 **19** 个运行时能力 |
-| 合同质量 | 通用领域占位项为 **0**；对实现级别、来源链、审批要求和计算交接等嵌套结构进行验证 |
-| 研究状态 | 标准 `.tsao-research/` 项目状态、哈希链接事件、受控状态转移与失败回滚 |
-| 科学推理 | 第一性原理方法阶梯，以及 Scientific Passport、证据成熟度、因果防线、尺度跳跃防线、证伪与不确定性合同 |
-| 外部计算 | 为 DFT、量子化学、MD、FEM、CFD、流程/HPC 与仪器运行提供校验和绑定的交接与执行回执 |
-| 可复现性 | 确定性胶囊、安全归档、内容哈希、SBOM、发布验证和隔离安装验证 |
-| 质量控制 | 证据/主张一致性、科研质量阻断、图件合同、引文边界与人工审批门 |
+## 2. 仓库实际实现的职责
 
-仓库当前包含 **15** 个主工作流、**19** 个 JSON Schema、**7** 个领域包和 **33** 张 AI 生成概念图。
-
-详细证据见：[原始需求审计](docs/ORIGINAL_REQUIREMENTS_AUDIT.md)、[能力覆盖矩阵](docs/CAPABILITY_COVERAGE_MATRIX.md)、[架构映射](docs/README_ARCHITECTURE_MAPPING.md)和 [README 审计报告](docs/README_AUDIT_REPORT.md)。
-
-## 科学推理模型
-
-方法选择由决策问题背后的物理决定，而不是由流行软件名称决定。
+| 层次 | 已实现职责 | 明确边界 |
+|---|---|---|
+| 路由层 | 中英文确定性分类、正负语义、优先级与澄清状态 | 分类不会执行被选择的方法 |
+| 能力检索层 | 已验证 v2 能力目录、有界过滤和防御性复制 | 能力相关性不等于科学证明 |
+| 策略顾问层 | 方法阶梯、观测量、条件、假设、证伪、验证与不确定性合同 | 输出始终为建议性 |
+| Scientific Passport | 模型、尺度桥、证据、不确定性、适用域、冲突与可辨识性合同 | 自动批准被结构性禁用 |
+| 项目状态层 | 标准 `.tsao-research/` 状态、哈希链接事件和受控转移 | 状态词不能替代证据 |
+| 交接与回执层 | 输入校验和合同和用户提供的外部执行回执 | 仓库不会启动外部引擎 |
+| 可复现层 | 确定性胶囊、安全归档、SBOM 和发布验证 | 可复现证据不等于物理真实性 |
 
 ```text
 科学问题
     ↓
-决策关键观测量与可接受证据
+决策关键观测量、单位与验收阈值
     ↓
-自由度、状态变量、储库和约束
-    ↓
-守恒律、对称性、热力学与统计力学
-    ↓
-长度 / 时间 / 能量尺度及尺度桥
+状态变量、控制规律、储库和约束
     ↓
 最低充分、可证伪模型
     ↓
-验证、不确定性量化与升级条件
+适用域、证据冲突、可辨识性和尺度桥质量门
     ↓
-经批准的外部交接 → 执行回执 → 独立科学验收
+合格人工评审
+    ↓
+校验和绑定的外部交接 → 回执 → 独立验收
 ```
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯概念图"/><br/><strong>最低充分方法阶梯</strong></td>
-<td width="50%"><img src="docs/assets/ai/scientific_problem_method_decision_tree.svg" alt="科学问题方法决策树概念图"/><br/><strong>问题—方法决策树</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性量化与验证概念图"/><br/><strong>验证与不确定性闭环</strong></td>
-<td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="科研诚信与因果边界概念图"/><br/><strong>因果与科研诚信防线</strong></td>
-</tr>
-</table>
-
-### 科学问题 → 推荐起始模型
-
-| 科学问题 | 首先还原 | 最低充分起始方法 | 仅在证据要求时升级 |
-|---|---|---|---|
-| 电子结构、缺陷、陷阱与界面 | 电荷/自旋、对称性、静电与边界条件 | 经收敛验证的周期或团簇 DFT | 杂化泛函、嵌入、GW/BSE 或更高等级波函数方法 |
-| 反应势垒与选择性 | 化学计量、候选网络与详细平衡 | 过渡态/路径搜索与能量学 | 增强采样、微观动力学、动力学蒙特卡洛与传递耦合 |
-| 构象、溶剂化与自由能 | 系综、储库、集体变量和相关时间 | 配套自由能估计的 MD/Monte Carlo | QM/MM、从头算 MD 或经验证的粗粒化 |
-| 聚合物形貌与结晶 | 链连接性、熵—焓竞争与序参量 | 标度/SCFT，随后使用 CGMD、DPD 或相场 | 化学映射、均匀化与工艺耦合 |
-| 流动、传热与传质 | 守恒律、无量纲数和本构闭合 | 解析/控制体/一维降阶模型 | 网格收敛 CFD 与耦合多物理场 |
-| 力学、黏弹与断裂 | 动量/能量平衡、材料对称性和可辨识性 | 降阶力学或 FEM | 相场/黏聚断裂与微结构本构 |
-| 电荷输运与击穿 | 电子/陷阱态、电化学势、Poisson 与电荷守恒 | 跳跃/kMC 或漂移—扩散—Poisson | 电—热、形貌演化与随机失效耦合 |
-| 反应器与分子量分布 | 质量/能量平衡、停留时间和群体状态 | CSTR/PFR/网络加群体平衡 | 反应器 CFD、流程动态、贝叶斯标定或数字孪生 |
-| 欠定的混合多尺度问题 | 观测量、单位、储库、竞争机制 | 成本最低的可证伪降阶模型 | 通过可测桥接变量进行不确定性驱动的逐级耦合 |
-
-`strategy` 输出始终标记为建议性结果，并明确记录求解器未执行。
-
-
-### Scientific Passport 与机器可读科研诚信门
-
-每个策略现在都携带一个与确定性 `strategy_id` 绑定的 **Scientific Passport（科学护照）**：
-
-| 合同 | 机器可读内容 | 验收边界 |
-|---|---|---|
-| Model Contract | 状态变量、控制规律、假设、适用域与失效条件 | 模型不得越过已声明适用域使用 |
-| Bridge Contract | 来源尺度、可测桥接变量与跨尺度验收测试 | 微观结果直接跳到工业结论时自动阻断或转人工复核 |
-| Evidence Contract | 已声明证据及 `E0`–`E4` 成熟度 | 明确标记为“声明分类”，不冒充独立核验 |
-| Uncertainty Contract | 参数、数值、采样、边界、测量、模型形式与尺度传递不确定性 | 不确定性必须传播到决策观测量和阈值 |
-| Integrity Gates | 因果语言防线、尺度跳跃防线与竞争机制要求 | 相关性或视觉一致不能升级为因果证明 |
-
-```text
-E0 仅假设 → E1 理论/文献 → E2 计算
-          → E3 独立实验 → E4 中试/工业验证
-```
-
-较高的词汇分级不等于证据质量认证。系统只记录调用者声明的证据类型，并给出进入更高验收等级所需的最低下一步证据。
-
-<table>
-<tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="Scientific Passport 证据合同概念图"/><br/><strong>科学护照证据合同</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="尺度桥合同概念图"/><br/><strong>尺度桥合同</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="因果与尺度跳跃防线概念图"/><br/><strong>因果与尺度跳跃防线</strong></td><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性合同概念图"/><br/><strong>不确定性验收合同</strong></td></tr>
-</table>
-
-
-### 数值完整性、适用域与可辨识性合同
-
-策略进入人工评审交接之前，系统会再执行四类机器可读科学合同：
-
-| 合同 | 检查内容 | 运行时后果 |
-|---|---|---|
-| 数值—量纲合同 | 数值、单位、量纲、比较标签与换算要求 | 缺少单位转人工复核；同一标签下量纲冲突直接阻断 |
-| 适用域合同 | 已声明工况、显式外推词与独立迁移验证 | 未验证外推直接阻断；即使声明迁移证据仍需人工复核 |
-| 证据冲突合同 | 支持、挑战与中性证据的独立 ID | 反例、负结果和矛盾证据保持可见，不允许静默合并 |
-| 可辨识性合同 | 竞争机制、风险词、参数唯一性与区分性观测量 | 等效多解/不可辨识直接阻断；无竞争解释时要求复核 |
-
-```text
-数值 + 单位 → 归一量纲 → 可比较标签 → 通过 / 复核 / 阻断
-标定适用域 → 迁移证据 → 不确定性膨胀 → 受控外推
-支持 + 反证 → 冲突账本 → 条件核对 / 复现 → 人工评审
-机制 A vs B → 区分性观测量 → 可辨识或等价类
-```
-
-<table>
-<tr><td width="50%"><img src="docs/assets/ai/quantity_dimension_contract.svg" alt="数值单位与量纲合同概念图"/><br/><strong>数值、单位与量纲合同</strong></td><td width="50%"><img src="docs/assets/ai/applicability_extrapolation_guard.svg" alt="适用域与外推防线概念图"/><br/><strong>适用域与外推防线</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/evidence_conflict_resolution.svg" alt="证据冲突处置账本概念图"/><br/><strong>证据冲突账本</strong></td><td width="50%"><img src="docs/assets/ai/mechanism_identifiability_gate.svg" alt="机制与参数可辨识性门概念图"/><br/><strong>机制可辨识性门</strong></td></tr>
-</table>
-
-这些合同属于保守的词汇与结构防错机制，不会独立核验输入数据、自动证明物理机制，也不能替代具备资格的领域评审。
-
-
-### 决策就绪状态与下一最佳证据
-
-策略输出现在会把全部合同汇总为明确的规划状态：
-
-```text
-blocked（阻断）
-  → 关闭观测量、证据基线、主张支撑或尺度桥缺口
-review-required（需要复核）
-  → 处理因果语言、适用域或跨尺度复核项
-ready-for-human-review（可进入人工评审）
-  → 合格评审者可批准校验和绑定的外部执行交接
-```
-
-`automatic_approval` 在 Schema 中固定为 `false`。运行时还会依据证据成熟度缺口、主张类型、方法验证要求和竞争机制规则，返回有序的 `next_best_evidence` 动作。
-
-<table>
-<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport 合同矩阵概念图"/><br/><strong>Scientific Passport 合同矩阵</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="证据成熟度阶梯概念图"/><br/><strong>逐项 E0–E4 证据阶梯</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="科研决策就绪门概念图"/><br/><strong>阻断与复核门</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="主动证据学习闭环概念图"/><br/><strong>下一最佳证据闭环</strong></td></tr>
-</table>
-
-## 架构与数据流
+## 3. 系统架构
 
 ```text
 CLI / Python API
       │
-      ├── router ──> 一个主工作流 + 有界次级工作流
-      ├── capability search ──> 已验证合同和实现边界
-      ├── strategy adviser ──> 方法阶梯、假设、验证与 UQ
-      ├── project state ──> 哈希事件、审批、风险和产物
-      ├── handoff / receipt ──> 外部执行边界和输出哈希
-      └── capsule / verification ──> 确定性归档与完整性检查
+      ├── router.py ───────────────> 有界主工作流
+      ├── capabilities.py ─────────> 已验证能力合同
+      ├── strategy.py ─────────────> Scientific Passport 与科研质量门
+      ├── mathematical_contracts.py> 版本化方程与解释边界
+      ├── state.py ─────────────────> 哈希链接项目状态
+      ├── handoff.py / receipts.py ─> 外部执行证据边界
+      └── capsule.py ───────────────> 确定性可复现归档
 ```
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进路由与加载概念图"/><br/><strong>先路由，再加载</strong></td>
-<td width="50%"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目账本与来源链概念图"/><br/><strong>分离且哈希链接的账本</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="计算交接边界概念图"/><br/><strong>受控外部执行</strong></td>
-<td width="50%"><img src="docs/assets/ai/project_state_machine.svg" alt="项目状态机概念图"/><br/><strong>保持事实语义的状态转移</strong></td>
-</tr>
-</table>
+![科研操作控制架构](docs/assets/ai/research_os_architecture.svg)
 
-## 科研生命周期
+![渐进式路由与加载](docs/assets/ai/progressive_routing_loading.svg)
 
-15 个主工作流覆盖完整控制链：
+![计算交接边界](docs/assets/ai/computation_handoff_boundary.svg)
+
+## 4. 机器可读数理合同
+
+`math` 命令公开八个稳定、双语的数理合同。它们属于**解释与决策支持合同**，不会执行求解器、拟合参数、自动传播数值协方差，也不会独立验证用户提供的证据。
+
+```bash
+python -m tsao_researcher math
+python -m tsao_researcher math --contract decision-readiness --language en
+python -m tsao_researcher math --contract quantity-dimension --language zh-CN
+```
+
+每个响应固定声明科研边界：
+
+```json
+{
+  "schema_version": "1.0",
+  "advisory_only": true,
+  "solver_executed": false,
+  "automatic_approval": false
+}
+```
+
+### 4.1 能力排序抽象
+
+\[
+S(c\mid q,o,e)=w_qR(q,c)+w_oR(o,c)+w_eM(e,c)-w_xC(c)
+\]
+
+- \(c\)：候选能力
+- \(q\)：科研问题
+- \(o\)：决策关键观测量
+- \(e\)：已声明证据上下文
+- \(C(c)\)：冲突或排除惩罚
+
+该式是对确定性路由与有界排序的教学抽象。运行时不会声称这些权重是已经拟合的统计参数。
+
+### 4.2 数量、单位与量纲合同
+
+\[
+x=(v,u,d), \qquad d_{\mathrm{left}}=d_{\mathrm{right}}
+\]
+
+当决策依赖定量比较时，科研主张应明确数值 \(v\)、单位 \(u\) 与物理量纲 \(d\)。缺失单位需要复核；同一比较标签下的量纲不相容会被阻断。
+
+### 4.3 适用域与外推风险
+
+\[
+r_{\mathrm{extra}}=\frac{d(x,\mathcal A)}{\max(s_{\mathcal A},\varepsilon)}
+\]
+
+其中 \(x\) 是目标条件，\(\mathcal A\) 是声明适用域，\(s_{\mathcal A}\) 是适用域特征尺度。当前运行时采用保守的词汇与结构化外推标记，不会在缺少数据时伪装成已经计算了该归一距离。
+
+### 4.4 证据三分与冲突账本
+
+\[
+E=(E_{+},E_{-},E_{0}),\qquad
+\kappa=\mathbf 1[E_{+}\neq\varnothing\land E_{-}\neq\varnothing]
+\]
+
+- \(E_+\)：支持证据
+- \(E_-\)：挑战或反驳证据
+- \(E_0\)：中性或未决证据
+
+负结果和矛盾证据始终保持可见，不会被静默平均成正向结论。
+
+### 4.5 机制与参数可辨识性
+
+\[
+D_{ij}(O,C)>\tau
+\qquad\text{或}\qquad
+\operatorname{rank}(J_{\theta})=p
+\]
+
+竞争机制 \(i\) 与 \(j\) 必须在条件 \(C\) 下具有区分性观测量 \(O\)。唯一参数结论需要足够的敏感性秩。仓库负责记录要求和保守警告；数值雅可比矩阵仍需外部分析工具计算。
+
+### 4.6 决策观测量不确定性预算
+
+\[
+\Sigma_y\approx
+J\Sigma_{\theta}J^{\mathsf T}
++\Sigma_{\mathrm{num}}
++\Sigma_{\mathrm{sample}}
++\Sigma_{\mathrm{model}}
++\Sigma_{\mathrm{transfer}}
+\]
+
+不确定性必须传播到真正用于接受或拒绝的观测量。合同区分参数、数值、采样、模型形式和尺度传递不确定性，避免它们被一个笼统的“置信度”词语掩盖。
+
+### 4.7 多尺度桥接误差预算
+
+\[
+U_{\mathrm{bridge}}^2=
+U_{\mathrm{source}}^2+
+U_{\mathrm{mapping}}^2+
+U_{\mathrm{closure}}^2+
+U_{\mathrm{target}}^2
+\]
+
+微观结果不能直接跳到工业结论。每个尺度桥都必须声明可测桥接变量、映射假设、闭合验证和目标尺度验收证据。
+
+### 4.8 保守决策就绪度聚合
+
+\[
+G=\min\left(
+ g_{\mathrm{quantity}},
+ g_{\mathrm{applicability}},
+ g_{\mathrm{evidence}},
+ g_{\mathrm{identifiability}},
+ g_{\mathrm{bridge}}
+\right)
+\]
+
+最弱的强制合同决定整体就绪度：
 
 ```text
-research-question      deep-research          systematic-review
-research-design        experiment-design      data-analysis
-scientific-figure      scientific-writing     peer-review
-technical-report       project-management     patent-and-transfer
-research-integrity     laboratory             computation-handoff
+BLOCK < REVIEW < PASS
 ```
+
+软件 `PASS` 仅表示当前声明中没有剩余软件阻断项，不等于科学证明，也不能绕过合格人工评审。
+
+![数理合同目录](docs/assets/ai/mathematical_contract_registry.svg)
+
+![决策就绪度格](docs/assets/ai/decision_readiness_lattice.svg)
+
+![不确定性传播预算](docs/assets/ai/uncertainty_propagation_budget.svg)
+
+![多尺度桥接误差预算](docs/assets/ai/multiscale_bridge_error_budget.svg)
+
+详细双语解释见：[docs/MATHEMATICAL_CONTRACTS.md](docs/MATHEMATICAL_CONTRACTS.md)。
+
+## 5. 科学模型还原策略
+
+本仓库从决策问题背后的物理结构选择方法，而不是从流行软件名称选择方法。
+
+### 5.1 从控制结构出发
+
+一般状态模型可写为：
+
+\[
+\dot{x}=f(x,u,\theta)+\epsilon_{\mathrm{model}},
+\qquad y=h(x,\theta)+\epsilon_{\mathrm{measurement}}
+\]
+
+策略必须声明：
+
+1. 状态变量 \(x\)、控制量 \(u\) 与参数 \(\theta\)；
+2. 观测量 \(y\) 与验收阈值；
+3. 储库、约束、边界条件与初始条件；
+4. 能够证伪候选机制的最小模型；
+5. 数值、实验与尺度传递验证要求。
+
+对守恒广延量 \(\phi\)，控制体结构为：
+
+\[
+\frac{\mathrm d}{\mathrm dt}\int_{\Omega}\rho\phi\,\mathrm dV
++\int_{\partial\Omega}\mathbf J_{\phi}\cdot\mathbf n\,\mathrm dA
+=\int_{\Omega}s_{\phi}\,\mathrm dV
+\]
+
+该式不表示已经存在网格、本构关系或求解器运行。它用于规定外部 CFD、FEM、传递过程或流程模拟交接前必须具备哪些守恒与闭合声明。
+
+### 5.2 最低充分方法阶梯
+
+| 问题类型 | 最低充分起始模型 | 需要升级的证据 |
+|---|---|---|
+| 电子结构、缺陷与界面 | 经收敛验证的团簇或周期 DFT | 泛函敏感性、有限尺寸和参考态失效 |
+| 反应机制与选择性 | 路径/过渡态能量学和微观动力学骨架 | 缺失路径、溶剂/动力学效应和传递耦合 |
+| 构象与自由能 | 带收敛估计的系综 MD/MC | 采样不足、力场失效或电子反应性 |
+| 形貌与相演化 | 标度/SCFT/CGMD/DPD/相场 | 映射失效、化学分辨不足或工艺耦合 |
+| 流动、传热与传质 | 解析/控制体/一维降阶模型 | 闭合失效、几何效应、不稳定性或多物理耦合 |
+| 力学与断裂 | 降阶力学或 FEM | 本构不可辨识、局域化、黏聚或相场需求 |
+| 反应工程 | 质量/能量平衡加动力学/群体模型 | 停留时间非均匀、反应器 CFD 或装置数据标定 |
+| 混合多尺度问题 | 成本最低的可证伪降阶模型 | 已验证桥接变量与量化传递不确定性 |
+
+## 6. Scientific Passport 与验收策略
+
+每个策略记录：
+
+| 合同 | 必须声明的内容 | 典型阻断项 |
+|---|---|---|
+| 模型合同 | 变量、控制规律、假设、适用域和失效条件 | 未定义观测量或适用域 |
+| 数量合同 | 数值、单位、量纲和比较标签 | 缺失单位或量纲不相容 |
+| 适用域合同 | 标定域、迁移证据和外推标记 | 在域外进行无支撑迁移 |
+| 证据合同 | 支持、挑战与未决证据 ID | 隐藏冲突或缺失证据 |
+| 可辨识性合同 | 竞争机制与区分性观测量 | 等效多解或无依据唯一机制 |
+| 尺度桥合同 | 来源/目标尺度、桥接变量和验收测试 | 直接从微观跳到工业结论 |
+| 不确定性合同 | 参数、数值、采样、模型与传递不确定性 | 不确定性未传播到决策量 |
+
+推荐使用策略：
 
 ```text
-proposed → planned → running → completed → checked → validated → accepted
-                                      ↘ rejected / superseded
+1. 先路由，再加载
+2. 定义决策观测量、单位和阈值
+3. 还原控制结构与竞争机制
+4. 选择最低充分、可证伪模型
+5. 暴露证据冲突、适用域、可辨识性和尺度桥
+6. 定义验证与不确定性验收阈值
+7. 获得合格人工审批
+8. 创建校验和绑定的外部交接
+9. 记录回执和输出哈希
+10. 仅在独立验证后接受结果
 ```
 
-状态词不能替代证据。`completed`、`checked`、`validated` 和 `accepted` 是不同状态。
+![Scientific Passport 合同矩阵](docs/assets/ai/scientific_passport_matrix.svg)
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研生产管线概念图"/><br/><strong>端到端科研生产流</strong></td>
-<td width="50%"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体编排概念图"/><br/><strong>有边界的智能体编排</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据引文完整性概念图"/><br/><strong>引文与证据完整性</strong></td>
-<td width="50%"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="人工审批边界概念图"/><br/><strong>合格人员验收边界</strong></td>
-</tr>
-</table>
+![证据成熟度阶梯](docs/assets/ai/evidence_maturity_ladder.svg)
 
-## 安装
+![科研诚信与因果防线](docs/assets/ai/scientific_integrity_causality_guard.svg)
+
+## 7. CLI 使用方法
+
+### 安装
 
 ```bash
 git clone https://github.com/SUNHAOJUN22/TsaoSciResearcher.git
@@ -233,18 +303,14 @@ python -m pip install -e .
 python -m tsao_researcher --version
 ```
 
-运行时依赖仅保留 PyYAML 和 jsonschema。开发、文档、绘图和构建依赖定义在 `pyproject.toml`，CI 精确版本锁定在 `requirements-ci.lock`。
-
-## 快速开始
-
-### 1. 路由科研任务
+### 路由科研任务
 
 ```bash
 python -m tsao_researcher route \
   "设计一个可追溯的陷阱控制电荷输运多尺度研究"
 ```
 
-### 2. 检索经过验证的能力合同
+### 检索能力合同
 
 ```bash
 python -m tsao_researcher search \
@@ -253,184 +319,229 @@ python -m tsao_researcher search \
   --limit 10
 ```
 
-### 3. 推导第一性原理策略
+### 生成策略但不执行求解器
 
 ```bash
 python -m tsao_researcher strategy \
-  "界面陷阱态如何控制电荷输运？" \
-  --observable "陷阱能级分布" \
-  --observable "空间电荷密度" \
-  --condition "外加电场" \
-  --evidence "TSDC 与 PEA 测量"
+  "界面陷阱态如何控制电导率和击穿？" \
+  --observable "trap energy 1.0 eV" \
+  --observable "conductivity S/m" \
+  --condition "303 K" \
+  --condition "20 kV/mm" \
+  --evidence "independent experiment measurement" \
+  --output strategy.json
 ```
 
-### 4. 初始化并验证项目
+### 查询数理合同
+
+```bash
+python -m tsao_researcher math
+python -m tsao_researcher math --contract uncertainty-budget --language both
+```
+
+### 初始化并验证项目
 
 ```bash
 python -m tsao_researcher init \
-  --name pp-cable-study \
-  --question "哪一种机制抑制空间电荷？" \
-  --research-type mixed \
-  --output work
+  --name "Mechanism study" \
+  --question "Which mechanism is identifiable?" \
+  --research-type mechanistic \
+  --output study
 
-python -m tsao_researcher verify work/pp-cable-study
+python -m tsao_researcher verify study
 ```
 
-### 5. 记录外部执行证据
+### 记录外部执行证据
 
 ```bash
-python -m tsao_researcher receipt record work/pp-cable-study \
-  --handoff HANDOFF-001 \
-  --engine gromacs \
-  --engine-version 2026.1 \
-  --command "gmx" --command "mdrun" --command "-deffnm" --command "prod" \
+python -m tsao_researcher receipt record study/.tsao-research \
+  --handoff computation/job.json \
+  --engine Gaussian \
+  --engine-version 16 \
+  --command g16 \
+  --command job.com \
   --exit-code 0 \
-  --output results/prod.log \
-  --started-at 2026-08-05T01:00:00Z \
-  --finished-at 2026-08-05T02:00:00Z
+  --output computation/result.out \
+  --started-at 2026-08-06T00:00:00Z \
+  --finished-at 2026-08-06T00:10:00Z
 
-python -m tsao_researcher receipt verify work/pp-cable-study
+python -m tsao_researcher receipt verify study/.tsao-research
 ```
 
-### 6. 导出并验证确定性胶囊
+### 导出确定性胶囊
 
 ```bash
-python -m tsao_researcher capsule export work/pp-cable-study \
-  --output pp-cable-study.zip \
+python -m tsao_researcher capsule export study/.tsao-research \
+  --output study.zip \
   --mode full
-
-python -m tsao_researcher capsule verify pp-cable-study.zip
+python -m tsao_researcher capsule verify study.zip
 ```
 
-## 输入与输出
+## 8. Python API
 
-| 输入 | 输出 |
-|---|---|
-| 科学问题或任务文本 | 主工作流、次级工作流、置信度、澄清和审批标志 |
-| 能力检索词 | 按相关度排序的能力合同、领域、工作流、实现级别与交接边界 |
-| 观测量、条件、约束和证据 | 科学域、模型阶梯、假设、必要输入、验证、证伪与 UQ 方案 |
-| 项目元数据和状态请求 | 标准项目目录与哈希链接事件 |
-| 经批准的外部运行元数据 | 与交接和输出哈希绑定的执行回执 |
-| 项目状态 | 确定性元数据/完整可复现胶囊 |
-| 质量请求、证据和主张注册表 | 带明确原因的通过/阻断结果，而非静默接受 |
+```python
+from tsao_researcher.mathematical_contracts import get_mathematical_contract
+from tsao_researcher.strategy import advise_computation_strategy
 
-## 性能与效率设计
+contract = get_mathematical_contract("decision-readiness", "zh-CN")
+assert contract["solver_executed"] is False
+assert contract["automatic_approval"] is False
 
-优化后的运行时保持确定性输出，同时消除不必要工作：
+strategy = advise_computation_strategy(
+    "一个测量能否区分两个机制？",
+    ["rate constant 1/s", "selectivity %"],
+    ["350 K", "1 bar"],
+    ["必须保留矛盾证据"],
+    ["independent experiment"],
+)
+assert strategy["status"] == "advisory-only"
+```
 
-- 路由规则和正则表达式仅编译一次并缓存；
-- 字面量预筛选在不可能命中时避免正则开销；
-- 仅在正向触发后扫描负向触发条件；
-- 内置默认规则不再反复解析路径和读取文件状态；
-- 能力目录使用缓存的不可变源记录和有界防御性复制；
-- 科学策略触发词按科学域一次性归一化和编译；
-- 基准采用中英文混合任务与混合能力查询，避免单一热缓存输入制造虚假加速；
-- 超过阈值时性能门直接失败，而不是只打印耗时。
+## 9. 测试与交付门禁
 
-这些优化加速的是**科研控制层**，不会改变外部 DFT、MD、FEM、CFD 或流程求解器的物理精度与本体运行时间。
+永久 CI 覆盖：
 
-## 质量保证
+- Ubuntu / Python 3.10
+- Ubuntu / Python 3.13
+- Windows / Python 3.12
+- macOS / Python 3.12
 
-`main` 质量管线包括：
+Linux 完整资格门包括：
 
-- 仓库与结构审计；
-- 19 个 JSON Schema 验证；
-- 完整、逆序和固定随机顺序回归；
-- 行覆盖与分支覆盖，最低门槛 85%；
-- Ruff 格式与静态检查；
-- Mypy strict 类型检查；
-- Bandit 源码安全检查；
-- 排除本地 editable 包后，对解析出的第三方依赖环境执行漏洞审计；
-- 确定性 SBOM 与校验和；
-- 面向关键科学与来源链不变量的变异测试；
-- 混合输入的有界性能基准；
-- 两次源码发布包逐字节一致性；
-- wheel/sdist 构建、隔离安装与真实 CLI 验收。
+```text
+全量 pytest 回归
+行覆盖率与分支覆盖率
+逆序与固定随机顺序测试
+Ruff format 与 lint
+Mypy 严格类型检查
+Bandit 源码安全检查
+严格 pip-audit
+19 个 Schema 校验
+README 与生成工件一致性
+SBOM 与仓库树摘要
+MkDocs strict 构建
+变异冒烟测试
+性能冒烟测试
+确定性源码发行包
+wheel 和 sdist 隔离安装
+```
 
-机器可读与可视化证据：
+本地执行：
 
-- [验证证据](docs/VALIDATION_EVIDENCE.json)
-- [测试仪表板 HTML](docs/test-dashboard.html)
-- [测试仪表板 SVG](docs/test-dashboard.svg)
-- [验证协议](docs/VALIDATION.md)
-- [科研质量示例](docs/SCIENTIFIC_QUALITY_EXAMPLES.json)
-- [SBOM](docs/SBOM.cdx.json)
+```bash
+python -m pip install -r requirements-ci.lock
+python -m pip install -e . --no-deps
+python -m pytest -q -p hypothesis.extra.pytestplugin
+python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov \
+  --cov=tsao_researcher --cov-branch
+python -m ruff format --check scripts tsao_researcher tests
+python -m ruff check scripts tsao_researcher tests
+python -m mypy scripts tsao_researcher
+python -m bandit -q -lll -r scripts tsao_researcher
+python scripts/performance_smoke.py
+python scripts/run_mutation_smoke.py
+python scripts/build_readme_facts.py --check
+python scripts/generate_checksums.py --check
+mkdocs build --strict
+```
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链与发布证明概念图"/><br/><strong>供应链证据</strong></td>
-<td width="50%"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容性矩阵概念图"/><br/><strong>安装合同</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="实验室与数据质量概念图"/><br/><strong>实验与数据质量</strong></td>
-<td width="50%"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="科研图件编辑防线概念图"/><br/><strong>图件诚信边界</strong></td>
-</tr>
-</table>
+## 10. 性能指标的真实含义
 
-## 能力模型
+性能测试覆盖 Python 控制层：
 
-| 实现级别 | 含义 |
-|---|---|
-| `native-research` | 在本仓库内提供确定性实现 |
-| `computation-delegated` | 需要外部科学引擎；仓库提供规划、校验和绑定交接与回执验证 |
-| `human-review` | 必须由合格人员审批，不能自动接受 |
+- 科研任务路由；
+- 能力目录加载与检索；
+- 策略构建；
+- Schema 与归档验证；
+- 确定性打包。
 
-能力目录明确区分“可发现的能力合同”和“外部系统已执行的证据”。
+这些指标**不代表** DFT、MD、FEM、CFD、流程模拟、GPU、MPI 或实验室执行获得加速。外部引擎必须有各自固定输入、软硬件环境、收敛容差、许可证与合格基准。
 
-<table>
-<tr>
-<td width="50%"><img src="docs/assets/ai/capability_landscape.svg" alt="能力全景概念图"/><br/><strong>能力全景</strong></td>
-<td width="50%"><img src="docs/assets/ai/capability_implementation_levels.svg" alt="能力实现层级概念图"/><br/><strong>实现层级</strong></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/assets/ai/original_requirements_coverage.svg" alt="原始需求覆盖概念图"/><br/><strong>原始需求覆盖</strong></td>
-<td width="50%"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="科研写作证据链概念图"/><br/><strong>写作—证据链</strong></td>
-</tr>
-</table>
+## 11. 完整 AI 概念图谱
 
-## 科研 AI 示意图谱
-
-完整的 **33 张图**图谱如下，并在 [docs/VISUAL_ATLAS.zh-CN.md](docs/VISUAL_ATLAS.zh-CN.md) 中提供双语说明。每张 SVG 均保存在仓库内、完全自包含，并包含可访问性的 `<title>` 和 `<desc>` 元数据。
+### 科研控制与架构
 
 <table>
-<tr><td width="50%"><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/><br/><strong>1 · 科研操作系统架构</strong></td><td width="50%"><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多智能体编排"/><br/><strong>2 · 多智能体编排</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/evidence_claim_graph.svg" alt="证据主张图"/><br/><strong>3 · 证据—主张图</strong></td><td width="50%"><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="多尺度科学管线"/><br/><strong>4 · 多尺度科学管线</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="可复现质量门"/><br/><strong>5 · 可复现质量门</strong></td><td width="50%"><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="计算交接边界"/><br/><strong>6 · 计算交接</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/project_state_machine.svg" alt="项目状态机"/><br/><strong>7 · 项目状态机</strong></td><td width="50%"><img src="docs/assets/ai/capability_landscape.svg" alt="能力全景"/><br/><strong>8 · 能力全景</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/original_requirements_coverage.svg" alt="原始需求覆盖"/><br/><strong>9 · 需求覆盖</strong></td><td width="50%"><img src="docs/assets/ai/capability_implementation_levels.svg" alt="能力实现级别"/><br/><strong>10 · 实现级别</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进路由与加载"/><br/><strong>11 · 渐进路由</strong></td><td width="50%"><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目账本与来源"/><br/><strong>12 · 账本与来源链</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据引文完整性"/><br/><strong>13 · 引文完整性</strong></td><td width="50%"><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研生产管线"/><br/><strong>14 · 科研生产</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容性矩阵"/><br/><strong>15 · 安装矩阵</strong></td><td width="50%"><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链发布证明"/><br/><strong>16 · 发布证明</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯"/><br/><strong>17 · 策略阶梯</strong></td><td width="50%"><img src="docs/assets/ai/scientific_problem_method_decision_tree.svg" alt="科学问题方法决策树"/><br/><strong>18 · 方法决策树</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性量化与验证"/><br/><strong>19 · UQ 与验证</strong></td><td width="50%"><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="科研诚信与因果防线"/><br/><strong>20 · 诚信防线</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/laboratory_data_quality.svg" alt="实验室数据质量"/><br/><strong>21 · 实验室质量</strong></td><td width="50%"><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="科研写作证据链"/><br/><strong>22 · 写作证据链</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="科研图件编辑防线"/><br/><strong>23 · 图件编辑防线</strong></td><td width="50%"><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="人工审批验收边界"/><br/><strong>24 · 人工验收</strong></td></tr>
-<tr><td colspan="2"><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="聚合物多尺度案例"/><br/><strong>25 · 聚合物绝缘多尺度案例</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport 合同矩阵"/><br/><strong>26 · Scientific Passport 矩阵</strong></td><td width="50%"><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="证据成熟度阶梯"/><br/><strong>27 · 证据成熟度阶梯</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/decision_readiness_gate.svg" alt="决策就绪门"/><br/><strong>28 · 决策就绪门</strong></td><td width="50%"><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="主动证据学习闭环"/><br/><strong>29 · 主动证据闭环</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/quantity_dimension_contract.svg" alt="数值单位与量纲合同"/><br/><strong>30 · 数值与量纲合同</strong></td><td width="50%"><img src="docs/assets/ai/applicability_extrapolation_guard.svg" alt="适用域与外推防线"/><br/><strong>31 · 适用域防线</strong></td></tr>
-<tr><td width="50%"><img src="docs/assets/ai/evidence_conflict_resolution.svg" alt="证据冲突处置"/><br/><strong>32 · 证据冲突处置</strong></td><td width="50%"><img src="docs/assets/ai/mechanism_identifiability_gate.svg" alt="机制可辨识性门"/><br/><strong>33 · 可辨识性门</strong></td></tr>
+<tr><td><img src="docs/assets/ai/research_os_architecture.svg" alt="科研操作系统架构"/></td><td><img src="docs/assets/ai/multi_agent_orchestration.svg" alt="多代理编排"/></td></tr>
+<tr><td><img src="docs/assets/ai/progressive_routing_loading.svg" alt="渐进式路由加载"/></td><td><img src="docs/assets/ai/project_state_machine.svg" alt="项目状态机"/></td></tr>
+<tr><td><img src="docs/assets/ai/project_ledgers_provenance.svg" alt="项目账本与来源链"/></td><td><img src="docs/assets/ai/research_production_pipeline.svg" alt="科研生产流水线"/></td></tr>
 </table>
 
-## 已知限制与科研诚信边界
+### 能力、证据与需求
 
-- 实时文献检索、专有数据库与连接器访问取决于宿主环境。
-- PDF 解析、绘图和 DOCX/PPT/LaTeX 渲染委托给宿主工具。
-- 仓库推荐科学方法，但不内置所有求解器、力场、赝势、仪器驱动或实验方案。
-- 在有效回执和输出哈希存在前，外部计算不能视为已执行。
-- 软件质量门通过不等于物理正确、临床有效、专利自由实施、安全或科学结论已经成立。
-- 高影响因果、医疗、安全、科研诚信和专利决策需要合格人员复核。
+<table>
+<tr><td><img src="docs/assets/ai/capability_landscape.svg" alt="能力图谱"/></td><td><img src="docs/assets/ai/capability_implementation_levels.svg" alt="能力实现级别"/></td></tr>
+<tr><td><img src="docs/assets/ai/original_requirements_coverage.svg" alt="原始需求覆盖"/></td><td><img src="docs/assets/ai/evidence_claim_graph.svg" alt="证据主张图"/></td></tr>
+<tr><td><img src="docs/assets/ai/evidence_citation_integrity_loop.svg" alt="证据引文完整性闭环"/></td><td><img src="docs/assets/ai/reproducibility_quality_gates.svg" alt="可复现质量门"/></td></tr>
+</table>
 
-## 仓库证据与来源
+### 策略、数理与多尺度推理
 
-- [README 审计](docs/README_AUDIT_REPORT.md)
-- [能力覆盖](docs/CAPABILITY_COVERAGE_MATRIX.md)
-- [架构映射](docs/README_ARCHITECTURE_MAPPING.md)
-- [机器可读 README 事实](docs/README_FACTS.json)
-- [验证证据](docs/VALIDATION_EVIDENCE.json)
-- [工程审计报告](docs/engineering-audit-report.pdf)
-- [更新日志](CHANGELOG.md)
-- [安全策略](SECURITY.md)
-- [引用元数据](CITATION.cff)
+<table>
+<tr><td><img src="docs/assets/ai/first_principles_strategy_ladder.svg" alt="第一性原理策略阶梯"/></td><td><img src="docs/assets/ai/scientific_problem_method_decision_tree.svg" alt="科学方法决策树"/></td></tr>
+<tr><td><img src="docs/assets/ai/multiscale_science_pipeline.svg" alt="多尺度科学流水线"/></td><td><img src="docs/assets/ai/polymer_multiscale_case_study.svg" alt="多尺度案例图"/></td></tr>
+<tr><td><img src="docs/assets/ai/mathematical_contract_registry.svg" alt="数理合同目录"/></td><td><img src="docs/assets/ai/decision_readiness_lattice.svg" alt="决策就绪度格"/></td></tr>
+<tr><td><img src="docs/assets/ai/uncertainty_propagation_budget.svg" alt="不确定性传播预算"/></td><td><img src="docs/assets/ai/multiscale_bridge_error_budget.svg" alt="多尺度桥接误差预算"/></td></tr>
+</table>
 
-代码采用 Apache-2.0 许可证。能力名称用于标识科研任务和接口，不代表对第三方科学软件或服务的所有权、隶属关系或内置访问权。
+### 科研诚信与定量质量门
+
+<table>
+<tr><td><img src="docs/assets/ai/scientific_passport_matrix.svg" alt="Scientific Passport 矩阵"/></td><td><img src="docs/assets/ai/evidence_maturity_ladder.svg" alt="证据成熟度阶梯"/></td></tr>
+<tr><td><img src="docs/assets/ai/decision_readiness_gate.svg" alt="决策就绪度门"/></td><td><img src="docs/assets/ai/active_evidence_learning_loop.svg" alt="主动证据学习闭环"/></td></tr>
+<tr><td><img src="docs/assets/ai/quantity_dimension_contract.svg" alt="数量量纲合同"/></td><td><img src="docs/assets/ai/applicability_extrapolation_guard.svg" alt="适用域外推防线"/></td></tr>
+<tr><td><img src="docs/assets/ai/evidence_conflict_resolution.svg" alt="证据冲突处理"/></td><td><img src="docs/assets/ai/mechanism_identifiability_gate.svg" alt="机制可辨识性门"/></td></tr>
+<tr><td><img src="docs/assets/ai/uncertainty_quantification_validation.svg" alt="不确定性量化与验证"/></td><td><img src="docs/assets/ai/scientific_integrity_causality_guard.svg" alt="科研诚信因果防线"/></td></tr>
+</table>
+
+### 外部执行、实验、写作与发布
+
+<table>
+<tr><td><img src="docs/assets/ai/computation_handoff_boundary.svg" alt="计算交接边界"/></td><td><img src="docs/assets/ai/human_approval_acceptance_boundary.svg" alt="人工审批边界"/></td></tr>
+<tr><td><img src="docs/assets/ai/laboratory_data_quality.svg" alt="实验室数据质量"/></td><td><img src="docs/assets/ai/scientific_writing_evidence_chain.svg" alt="科学写作证据链"/></td></tr>
+<tr><td><img src="docs/assets/ai/scientific_figure_edit_guard.svg" alt="科研图件编辑防线"/></td><td><img src="docs/assets/ai/installation_compatibility_matrix.svg" alt="安装兼容性矩阵"/></td></tr>
+<tr><td><img src="docs/assets/ai/supply_chain_release_attestation.svg" alt="供应链发布证明"/></td><td></td></tr>
+</table>
+
+> 以上均为用于仓库文档说明的 AI 生成概念示意图，不代表实验数据、测量结果、求解器云图、轨迹或已完成的外部执行。
+
+## 12. 仓库结构
+
+```text
+.
+├── tsao_researcher/
+│   ├── router.py
+│   ├── capabilities.py
+│   ├── strategy.py
+│   ├── mathematical_contracts.py
+│   ├── state.py
+│   ├── handoff.py
+│   ├── receipts.py
+│   └── capsule.py
+├── scripts/
+├── tests/
+├── schemas/
+├── workflows/
+├── domain-packs/
+├── docs/
+├── examples/
+├── README.md
+├── README.zh-CN.md
+├── VERSION
+└── SHA256SUMS
+```
+
+## 13. 科学与交付边界
+
+软件质量门可以证明确定性行为、Schema 一致性、可追溯性、安全状态、打包可复现性和当前声明中不存在阻断项，但不能证明一个物理机制为真。
+
+最终科学验收仍需按任务提供：
+
+- 合格领域专家评审；
+- 固定外部输入和引擎版本；
+- 收敛性与敏感性证据；
+- 校准测量与不确定性；
+- 独立复现或验证；
+- 校验和绑定的回执与输出。
+
+**TsaoSciResearcher 控制科研工作流，但不会冒充仍需真实执行和验证的科学过程。**
