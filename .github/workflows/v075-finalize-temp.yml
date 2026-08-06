@@ -109,3 +109,5 @@ jobs:
         run: |
           gh issue comment 206 --repo "$GITHUB_REPOSITORY" \
             --body "status=v075-compatibility-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
+
+# qualification trigger: 2026-08-07
