@@ -23,7 +23,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3'
+      github.event.comment.body == 'finalize_token=TSR-20260806-quant-v5'
     strategy:
       fail-fast: false
       matrix:
@@ -35,7 +35,7 @@ jobs:
           - os: windows-latest
             python-version: "3.12"
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 28
+    timeout-minutes: 32
     steps:
       - name: Checkout exact staged main
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -56,14 +56,18 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Apply checksum-bound candidate
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Apply the repository-staged candidate
         run: |
-          python scripts/apply_quantitative_integrity_temp.py
-          python -c "from pathlib import Path; [Path(p).unlink(missing_ok=True) for p in ('.github/workflows/quantitative-integrity-finalize-temp.yml', '.github/workflows/snapshot-export-temp.yml', 'scripts/apply_quantitative_integrity_temp.py')]"
+          python scripts/apply_staged_quantitative_payload_temp.py
+          python -c "from pathlib import Path; Path('VERSION').write_text('0.7.3\n', encoding='utf-8', newline='\n'); Path('README_EN.md').write_text(Path('README.md').read_text(encoding='utf-8'), encoding='utf-8', newline='\n'); Path('README_CN.md').write_text(Path('README.zh-CN.md').read_text(encoding='utf-8'), encoding='utf-8', newline='\n')"
+          python scripts/sync_version.py --write
+          python -c "from pathlib import Path; Path('README_CN.md').write_text(Path('README.zh-CN.md').read_text(encoding='utf-8'), encoding='utf-8', newline='\n')"
+          python -c "from pathlib import Path; import shutil; [Path(p).unlink(missing_ok=True) for p in ('.github/workflows/quantitative-integrity-finalize-temp.yml', '.github/workflows/snapshot-export-temp.yml', 'scripts/apply_quantitative_integrity_temp.py', 'scripts/apply_staged_quantitative_payload_temp.py')]; shutil.rmtree('.tsr-finalize', ignore_errors=True)"
           python -m ruff format tsao_researcher/strategy.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py scripts/build_readme_facts.py
+          python scripts/sync_runtime_data.py --write
           python scripts/build_readme_facts.py --write
+          python -m pip install --disable-pip-version-check -e . --no-deps --force-reinstall
+          python -m pip check
 
       - name: Windows and Linux scientific contracts
         env:
@@ -72,9 +76,11 @@ jobs:
           python -m compileall -q scripts tsao_researcher tests
           python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py tests/test_readme_facts.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_v071_hardening.py
           python scripts/validate_schemas.py
+          python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
           python scripts/build_readme_facts.py --check
           python -m ruff check tsao_researcher/strategy.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py scripts/build_readme_facts.py
-          python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict industrial product quality?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
+          python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict industrial product quality by extrapolation?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
 
   report-compatibility-failure:
     if: >-
@@ -82,7 +88,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3' &&
+      github.event.comment.body == 'finalize_token=TSR-20260806-quant-v5' &&
       needs.compatibility.result != 'success'
     needs: compatibility
     runs-on: ubuntu-latest
@@ -99,10 +105,10 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'finalize_token=TSR-20260805-quant-v3'
+      github.event.comment.body == 'finalize_token=TSR-20260806-quant-v5'
     needs: compatibility
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 80
     steps:
       - name: Checkout exact staged main
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -133,17 +139,23 @@ jobs:
           python -m pip check
 
       - name: Apply candidate and refresh deterministic artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/apply_quantitative_integrity_temp.py
+          python scripts/apply_staged_quantitative_payload_temp.py
+          printf '0.7.3\n' > VERSION
+          cp README.md README_EN.md
+          cp README.zh-CN.md README_CN.md
+          python scripts/sync_version.py --write
+          cp README.zh-CN.md README_CN.md
+          rm -rf .tsr-finalize
           rm -f \
             .github/workflows/quantitative-integrity-finalize-temp.yml \
             .github/workflows/snapshot-export-temp.yml \
-            scripts/apply_quantitative_integrity_temp.py
+            scripts/apply_quantitative_integrity_temp.py \
+            scripts/apply_staged_quantitative_payload_temp.py
           python -m ruff format tsao_researcher/strategy.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py scripts/build_readme_facts.py
+          python scripts/sync_runtime_data.py --write
           python -m tsao_researcher strategy \
             "How do interfacial trap states control charge transport and breakdown under a possible scale extrapolation?" \
             --observable "trap energy distribution 1.0 eV" \
@@ -156,11 +168,13 @@ jobs:
             --output examples/first-principles-strategy.json
           python scripts/build_readme_facts.py --write
           python scripts/build_sbom.py --write
-          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-05
+          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-06
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
+          python -m pip install --disable-pip-version-check -e . --no-deps --force-reinstall
+          python -m pip check
 
       - name: Repository schema README and documentation gates
         shell: bash
@@ -197,7 +211,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=json:artifacts/coverage.json
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
-          TSR_TEST_ORDER_SEED=20260805 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+          TSR_TEST_ORDER_SEED=20260806 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
@@ -224,50 +238,65 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf .coverage .coverage.* .hypothesis .mypy_cache .pytest_cache .ruff_cache artifacts build dist dist-a dist-b dist-python site ./*.egg-info tsao_researcher/*.egg-info
-          cat > /tmp/allowed-paths.txt <<'EOF'
-          .github/workflows/quantitative-integrity-finalize-temp.yml
-          .github/workflows/snapshot-export-temp.yml
-          CHANGELOG.md
-          CITATION.cff
-          README.md
-          README.zh-CN.md
-          README_CN.md
-          README_EN.md
-          SHA256SUMS
-          SKILL.md
-          VERSION
-          agents/openai.yaml
-          docs/README_FACTS.json
-          docs/SBOM.cdx.json
-          docs/SCIENTIFIC_QUALITY_EXAMPLES.json
-          docs/VALIDATION.md
-          docs/VALIDATION_EVIDENCE.json
-          docs/VISUAL_ATLAS.md
-          docs/VISUAL_ATLAS.zh-CN.md
-          docs/assets/ai/applicability_extrapolation_guard.svg
-          docs/assets/ai/evidence_conflict_resolution.svg
-          docs/assets/ai/mechanism_identifiability_gate.svg
-          docs/assets/ai/quantity_dimension_contract.svg
-          docs/engineering-audit-report.pdf
-          docs/research-quality-dashboard.html
-          docs/research-quality-dashboard.svg
-          docs/test-dashboard.html
-          docs/test-dashboard.svg
-          examples/first-principles-strategy.json
-          manifest.json
-          pyproject.toml
-          schemas/v2/computation-strategy.schema.json
-          scripts/apply_quantitative_integrity_temp.py
-          scripts/build_readme_facts.py
-          tests/test_strategy_passport.py
-          tests/test_strategy_quantitative_integrity.py
-          tsao_researcher/strategy.py
-          EOF
-          git status --porcelain=v1 | cut -c4- | LC_ALL=C sort > /tmp/actual-paths.txt
-          LC_ALL=C sort -o /tmp/allowed-paths.txt /tmp/allowed-paths.txt
-          comm -23 /tmp/actual-paths.txt /tmp/allowed-paths.txt > /tmp/unexpected-paths.txt
-          test ! -s /tmp/unexpected-paths.txt || { cat /tmp/unexpected-paths.txt; exit 1; }
-          test -s /tmp/actual-paths.txt
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          root = Path.cwd()
+          payload_paths = {
+              line.strip()
+              for line in (Path('/tmp') / 'tsr_payload_paths.txt').read_text(encoding='utf-8').splitlines()
+              if line.strip()
+          }
+          generated = {
+              '.github/workflows/quantitative-integrity-finalize-temp.yml',
+              '.github/workflows/snapshot-export-temp.yml',
+              '.tsr-finalize/part-000.b64',
+              '.tsr-finalize/part-001.b64',
+              '.tsr-finalize/part-002.b64',
+              '.tsr-finalize/part-003.b64',
+              '.tsr-finalize/part-004.b64',
+              'README_CN.md',
+              'README_EN.md',
+              'SHA256SUMS',
+              'VERSION',
+              'CITATION.cff',
+              'SKILL.md',
+              'agents/openai.yaml',
+              'manifest.json',
+              'pyproject.toml',
+              'scripts/apply_quantitative_integrity_temp.py',
+              'scripts/apply_staged_quantitative_payload_temp.py',
+              'docs/README_FACTS.json',
+              'docs/SBOM.cdx.json',
+              'docs/SCIENTIFIC_QUALITY_EXAMPLES.json',
+              'docs/VALIDATION_EVIDENCE.json',
+              'docs/engineering-audit-report.pdf',
+              'docs/research-quality-dashboard.html',
+              'docs/research-quality-dashboard.svg',
+              'docs/test-dashboard.html',
+              'docs/test-dashboard.svg',
+              'examples/first-principles-strategy.json',
+          }
+          allowed = payload_paths | generated
+          output = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)
+          actual = set()
+          for line in output.splitlines():
+              if not line:
+                  continue
+              path = line[3:]
+              if ' -> ' in path:
+                  path = path.split(' -> ', 1)[1]
+              actual.add(path.strip('"'))
+          unexpected = sorted(actual - allowed)
+          if unexpected:
+              raise SystemExit('unexpected changed paths: ' + ', '.join(unexpected))
+          if not actual:
+              raise SystemExit('candidate produced no changes')
+          if (root / '.tsr-finalize').exists():
+              raise SystemExit('.tsr-finalize was not removed')
+          print(f'exact final scope PASS ({len(actual)} changed paths)')
+          PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
