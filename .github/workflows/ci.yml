@@ -6,11 +6,9 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -24,7 +22,7 @@ env:
 
 jobs:
   compatibility:
-    if: github.event_name != 'issues'
+    if: ${{ !contains(github.event.head_commit.message, '[v075-finalize]') }}
     name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 18
@@ -71,7 +69,7 @@ jobs:
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
 
   full-validation:
-    if: github.event_name != 'issues'
+    if: ${{ !contains(github.event.head_commit.message, '[v075-finalize]') }}
     name: full-validation-and-release-evidence
     needs: compatibility
     runs-on: ubuntu-latest
@@ -174,9 +172,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  v075-candidate-compatibility:
-    if: github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
-    name: v075-candidate-${{ matrix.os }}-py${{ matrix.python-version }}
+# BEGIN V075 TEMP FINALIZER
+  v075-finalize-compatibility:
+    if: ${{ contains(github.event.head_commit.message, '[v075-finalize]') }}
+    name: v075-finalize-${{ matrix.os }}-py${{ matrix.python-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -202,11 +201,11 @@ jobs:
           python -m pip check
           bash .tsr-v075/run_candidate.sh compatibility
 
-  v075-candidate-export:
-    if: github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
-    needs: v075-candidate-compatibility
+  v075-finalize:
+    if: ${{ contains(github.event.head_commit.message, '[v075-finalize]') }}
+    needs: v075-finalize-compatibility
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with: {ref: "${{ github.sha }}", fetch-depth: 0}
@@ -216,33 +215,31 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-ci.lock
       - shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
-          bash .tsr-v075/run_candidate.sh compatibility
-          python scripts/build_sbom.py --write
-          python scripts/build_validation_evidence.py --write --preflight --evidence-date 2026-08-07
-          python scripts/build_test_dashboard.py --write
-          python scripts/build_research_quality_dashboard.py --write
-          python scripts/build_engineering_report.py --write
-          python scripts/generate_checksums.py --write
-          rm -rf .git .coverage .hypothesis .mypy_cache .pytest_cache .ruff_cache site build dist *.egg-info tsao_researcher/*.egg-info
-          cd .. && zip -qr candidate-v075.zip TsaoSciResearcher
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: candidate-v075-${{ github.sha }}
-          path: ../candidate-v075.zip
-          if-no-files-found: error
-          retention-days: 2
+          python -m pip check
+          bash .tsr-v075/run_finalizer.sh
+      - if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: gh issue comment 206 --repo "$GITHUB_REPOSITORY" --body "status=v075-finalized final_commit=$(git rev-parse HEAD) workflow_run_id=${GITHUB_RUN_ID} ubuntu_windows_macos_and_full_gates=PASS"
+      - if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: gh issue comment 206 --repo "$GITHUB_REPOSITORY" --body "status=v075-finalization-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
 
-  v075-candidate-report:
-    if: always() && github.event_name == 'issues' && github.event.issue.title == '[TSR] Execute v0.7.5 candidate verification'
-    needs: [v075-candidate-compatibility, v075-candidate-export]
+  v075-finalize-compatibility-failure:
+    if: ${{ always() && contains(github.event.head_commit.message, '[v075-finalize]') && needs.v075-finalize-compatibility.result != 'success' }}
+    needs: v075-finalize-compatibility
     runs-on: ubuntu-latest
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMPATIBILITY: ${{ needs.v075-candidate-compatibility.result }}
-          EXPORT: ${{ needs.v075-candidate-export.result }}
         shell: bash
-        run: gh issue comment "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" --body "read_only_v075_run=${GITHUB_RUN_ID} compatibility=${COMPATIBILITY} export=${EXPORT}"
+        run: gh issue comment 206 --repo "$GITHUB_REPOSITORY" --body "status=v075-compatibility-failed staged_source=${GITHUB_SHA} workflow_run_id=${GITHUB_RUN_ID}"
+# END V075 TEMP FINALIZER
