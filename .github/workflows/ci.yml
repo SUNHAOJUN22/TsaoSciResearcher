@@ -55,13 +55,14 @@ jobs:
           PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
         run: |
           python -m compileall -q scripts tsao_researcher tests
-          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py tests/test_readme_facts.py tests/test_v071_hardening.py
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py tests/test_mathematical_contracts.py tests/test_readme_facts.py tests/test_v071_hardening.py
           python -m tsao_researcher --version
           python -m tsao_researcher route "run an actual DFT calculation"
           python -m tsao_researcher search "polymer molecular dynamics" --limit 3
           python -m tsao_researcher quality examples/scientific-quality-check.json
           python -m tsao_researcher strategy "How do trap states control charge transport?" --observable "trap energy" --condition "applied electric field"
           python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict product quality by extrapolation?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
+          python -m tsao_researcher math --contract decision-readiness --language both
           python scripts/validate_schemas.py
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
 
@@ -102,6 +103,7 @@ jobs:
           python scripts/route_task.py --self-test
           python scripts/validate_figure.py examples/figure-contract.json
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python -m tsao_researcher math --contract uncertainty-budget --language en
           mkdocs build --strict
       - name: Complete regression
         run: |
