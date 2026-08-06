@@ -18,7 +18,7 @@ jobs:
       github.event.issue.number == 202 &&
       github.event.issue.title == '[TSR] v0.7.3 quantitative integrity finalization' &&
       github.event.comment.user.login == 'SUNHAOJUN22' &&
-      github.event.comment.body == 'consolidate_token=TSR-20260806-parts-v1'
+      github.event.comment.body == 'consolidate_token=TSR-20260806-parts-v2'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -34,16 +34,50 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$GITHUB_SHA"
-          cat .tsr-finalize-v2/part-003a.b64 .tsr-finalize-v2/part-003b.b64 \
+          cat > /tmp/fragment-sha256.txt <<'EOF'
+          dd51a0dc526813c829cf2cd78dd2240e29f7cecdfbec138dba6bfec9799a32ea  .tsr-finalize-v2/part-003a.b64
+          6c875a11d3b20bf80045c114e1a7f5ee2bf69d389eecdbf1d4b7af54e1f45cea  .tsr-finalize-v2/part-003b0.b64
+          11c88f60bb2331c5f2dc2f9c72866466f231aaddf6f6bb1982676d16d9b17405  .tsr-finalize-v2/part-003b1.b64
+          5d37bd703558b15b1d7238d77299819daecd636a0fc77079c23e50014c517f01  .tsr-finalize-v2/part-003b2.b64
+          426b4fe0af2e5e77bd47bf1f8206af280e446c669c6bdced1443e8d14534446c  .tsr-finalize-v2/part-003b3.b64
+          960430677f8a99fc926387f597a09835e50f4e3b01caf84c8e0a026badb0c64a  .tsr-finalize-v2/part-008a.b64
+          d52a8188681da2b51ef46fc64888c2f80c230b5bd39f37b35e2552e7522eefe9  .tsr-finalize-v2/part-008b0.b64
+          1c0f55391afd007bcc6ce9fc85682182eef9e80b3a100495409cb7187b4186a0  .tsr-finalize-v2/part-008b1.b64
+          bca3e531e21f0d41123a3241fe9c52f45475ef6852048523b3ffdfd6bf29df7e  .tsr-finalize-v2/part-008b2.b64
+          ea4fe6b339cffe583ad429d61cf6dc427eb1a8595e2714b5d74f93e511f9d3a9  .tsr-finalize-v2/part-008b3.b64
+          EOF
+          sha256sum -c /tmp/fragment-sha256.txt
+          cat \
+            .tsr-finalize-v2/part-003a.b64 \
+            .tsr-finalize-v2/part-003b0.b64 \
+            .tsr-finalize-v2/part-003b1.b64 \
+            .tsr-finalize-v2/part-003b2.b64 \
+            .tsr-finalize-v2/part-003b3.b64 \
             > .tsr-finalize-v2/part-003.b64
-          cat .tsr-finalize-v2/part-008a.b64 .tsr-finalize-v2/part-008b.b64 \
+          cat \
+            .tsr-finalize-v2/part-008a.b64 \
+            .tsr-finalize-v2/part-008b0.b64 \
+            .tsr-finalize-v2/part-008b1.b64 \
+            .tsr-finalize-v2/part-008b2.b64 \
+            .tsr-finalize-v2/part-008b3.b64 \
             > .tsr-finalize-v2/part-008.b64
           test "$(wc -c < .tsr-finalize-v2/part-003.b64)" -eq 8000
           test "$(wc -c < .tsr-finalize-v2/part-008.b64)" -eq 8000
           echo 'fca6f4fa747c74124faae3b05566e2fbcd3820573d48a54c2aac625af8c9fa4b  .tsr-finalize-v2/part-003.b64' | sha256sum -c -
           echo '26c3e50bd6289d9c73b78f47f4087f48f689cfb358601c01b03b8a6d6237a7b6  .tsr-finalize-v2/part-008.b64' | sha256sum -c -
-          rm .tsr-finalize-v2/part-003a.b64 .tsr-finalize-v2/part-003b.b64 \
-             .tsr-finalize-v2/part-008a.b64 .tsr-finalize-v2/part-008b.b64
+          rm -f \
+            .tsr-finalize-v2/part-003a.b64 \
+            .tsr-finalize-v2/part-003b.b64 \
+            .tsr-finalize-v2/part-003b0.b64 \
+            .tsr-finalize-v2/part-003b1.b64 \
+            .tsr-finalize-v2/part-003b2.b64 \
+            .tsr-finalize-v2/part-003b3.b64 \
+            .tsr-finalize-v2/part-008a.b64 \
+            .tsr-finalize-v2/part-008b.b64 \
+            .tsr-finalize-v2/part-008b0.b64 \
+            .tsr-finalize-v2/part-008b1.b64 \
+            .tsr-finalize-v2/part-008b2.b64 \
+            .tsr-finalize-v2/part-008b3.b64
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .tsr-finalize-v2
