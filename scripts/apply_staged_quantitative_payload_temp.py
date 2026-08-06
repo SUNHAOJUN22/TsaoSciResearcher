@@ -25,6 +25,16 @@ PART_SHA256 = {
     "part-010.b64": "e0e02c3d4d2d8d0ebe30ce794207159baafc1ff2bb47552dcbe5dadd9dc83aaf",
     "part-011.b64": "873b0f7f417ca01e897e3a31e6893f7d39bcd8f06840da542d26833fdc30b29d",
 }
+SPLIT_PART_SHA256 = {
+    "part-003a.b64": "dd51a0dc526813c829cf2cd78dd2240e29f7cecdfbec138dba6bfec9799a32ea",
+    "part-003b.b64": "65c25f3ccd0c290cdd1ce3004eb6f8a8b508411f8e2090401c9ec1a780546496",
+    "part-008a.b64": "960430677f8a99fc926387f597a09835e50f4e3b01caf84c8e0a026badb0c64a",
+    "part-008b.b64": "dd217765e992b07aff60ca9528549562b9cd4dfaac0b6526a120b7441fc69877",
+}
+SPLIT_REPLACEMENTS = {
+    "part-003.b64": ("part-003a.b64", "part-003b.b64"),
+    "part-008.b64": ("part-008a.b64", "part-008b.b64"),
+}
 BASE64_CHARS = 81212
 BASE64_SHA256 = "bc58d21b3386df7976279d7da801630206fe366113675e70b33b38135a1302d9"
 COMPRESSED_BYTES = 60908
@@ -53,20 +63,38 @@ def _sha256(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+def _read_fragment(name: str, expected_digest: str, mismatches: list[str]) -> str:
+    fragment = (STAGE / name).read_text(encoding="ascii").strip()
+    digest = _sha256(fragment.encode("ascii"))
+    if digest != expected_digest:
+        mismatches.append(
+            f"{name}: expected={expected_digest} actual={digest} chars={len(fragment)}"
+        )
+    return fragment
+
+
 def main() -> None:
     actual = sorted(path.name for path in STAGE.glob("part-*.b64") if path.is_file())
-    expected = sorted(PART_SHA256)
-    if actual != expected:
+    expected_files = sorted(set(PART_SHA256) | set(SPLIT_PART_SHA256))
+    if actual != expected_files:
         raise SystemExit(f"staged part set mismatch: {actual!r}")
 
     fragments: list[str] = []
     mismatches: list[str] = []
-    for name in expected:
-        fragment = (STAGE / name).read_text(encoding="ascii").strip()
-        digest = _sha256(fragment.encode("ascii"))
-        if digest != PART_SHA256[name]:
+    for name, expected_digest in PART_SHA256.items():
+        split_names = SPLIT_REPLACEMENTS.get(name)
+        if split_names:
+            fragment = "".join(
+                _read_fragment(split_name, SPLIT_PART_SHA256[split_name], mismatches)
+                for split_name in split_names
+            )
+        else:
+            fragment = _read_fragment(name, expected_digest, mismatches)
+        combined_digest = _sha256(fragment.encode("ascii"))
+        if combined_digest != expected_digest:
             mismatches.append(
-                f"{name}: expected={PART_SHA256[name]} actual={digest} chars={len(fragment)}"
+                f"{name} assembled: expected={expected_digest} "
+                f"actual={combined_digest} chars={len(fragment)}"
             )
         fragments.append(fragment)
     if mismatches:
