@@ -1,0 +1,62 @@
+name: One-time exact Ruff finalizer
+
+on:
+  push:
+    branches:
+      - agent/final-acceptance-20260807
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tsao-researcher-ruff-finalizer
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout acceptance branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: agent/final-acceptance-20260807
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install exact CI dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+      - name: Apply exact formatter
+        run: |
+          python -m ruff format \
+            scripts/audit_repository.py \
+            scripts/build_validation_evidence.py \
+            scripts/sync_version.py \
+            tests/test_final_acceptance_preflight.py \
+            tests/test_schemas.py \
+            tsao_researcher/mathematical_contracts.py
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m pytest -q -p hypothesis.extra.pytestplugin
+      - name: Remove temporary workflow and publish formatted tree
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/format-final-acceptance-once.yml
+          git add scripts/audit_repository.py \
+            scripts/build_validation_evidence.py \
+            scripts/sync_version.py \
+            tests/test_final_acceptance_preflight.py \
+            tests/test_schemas.py \
+            tsao_researcher/mathematical_contracts.py
+          git diff --cached --check
+          git commit -m 'style: apply exact final acceptance formatting'
+          git push origin HEAD:agent/final-acceptance-20260807
