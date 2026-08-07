@@ -1,6 +1,6 @@
 # 科研能力 AI 概念图谱
 
-> 正式版本 0.7.4 · 37 张 AI 生成概念示意图
+> 正式版本 0.7.4 · 38 张 AI 生成概念示意图
 
 本图谱用于说明仓库架构、科研合同、验证边界与外部执行生命周期。每张 SVG 都是带有 `<title>` 和 `<desc>` 无障碍元数据的概念文档工件。它们均不是实验数据、测量结果、求解器输出，也不能证明外部计算已经执行。
 
@@ -38,6 +38,7 @@
 | ![就绪度格](assets/ai/decision_readiness_lattice.svg) | 保守的阻断—复核—通过顺序 |
 | ![不确定性预算](assets/ai/uncertainty_propagation_budget.svg) | 决策观测量不确定性传播 |
 | ![尺度桥误差预算](assets/ai/multiscale_bridge_error_budget.svg) | 来源、映射、闭合与目标不确定性 |
+| ![Schema 验证流水线](assets/ai/mathematical_contract_schema_pipeline.svg) | 规范 Schema、包内镜像、运行时校验与交付工件 |
 
 ## Scientific Passport 与科研诚信门
 
@@ -71,5 +72,6 @@
 1. 概念图可以解释软件架构或科研控制逻辑。
 2. 不得将其描述为实测、仿真或实验验证结果。
 3. 公式图必须保留 `python -m tsao_researcher math` 返回的同等局限说明。
-4. 外部执行图必须保留 handoff/receipt 边界。
-5. 科学验收始终由合格人员作出。
+4. Schema 图必须保留 `solver_executed=false` 与 `automatic_approval=false`，不得在视觉上暗示真实求解已经发生。
+5. 外部执行图必须保留 handoff/receipt 边界。
+6. 科学验收始终由合格人员作出。
