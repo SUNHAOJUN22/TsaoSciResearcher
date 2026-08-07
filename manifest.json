@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "capability_count": 341,
   "workflow_count": 15,
-  "schema_count": 19,
+  "schema_count": 20,
   "entrypoint": "SKILL.md",
   "agent_metadata": "agents/openai.yaml",
   "capability_index": "capabilities/v2/index.json",
