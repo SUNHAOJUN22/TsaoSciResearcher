@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.sync_version import render
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "final_acceptance_preflight.py"
 
@@ -28,3 +30,14 @@ def test_final_acceptance_preflight_contract() -> None:
     assert report["status"] == "PASS", report["issues"]
     assert report["solver_or_experiment_executed"] is False
     assert report["automatic_scientific_approval"] is False
+
+    rendered = render("9.8.7")
+    assert "> **Release 9.8.7 · acceptance-hardened main**" in rendered[
+        ROOT / "README.md"
+    ]
+    assert "> **Release 9.8.7 · acceptance-hardened main**" in rendered[
+        ROOT / "README_EN.md"
+    ]
+    assert "> **正式版本 9.8.7 · 验收加固 main**" in rendered[
+        ROOT / "README.zh-CN.md"
+    ]
