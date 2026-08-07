@@ -1,0 +1,40 @@
+name: Temporary strict-MkDocs link repair
+
+on:
+  push:
+    branches:
+      - agent/final-acceptance-20260807
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout acceptance branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: agent/final-acceptance-20260807
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Repair documentation links and remove this workflow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("docs/MATHEMATICAL_CONTRACTS.md")
+          text = path.read_text(encoding="utf-8")
+          old = "../schemas/v2/mathematical-contract-registry.schema.json"
+          new = "https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/schemas/v2/mathematical-contract-registry.schema.json"
+          if old not in text:
+              raise SystemExit("expected schema link not found")
+          path.write_text(text.replace(old, new), encoding="utf-8")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix-mkdocs-link-temporary.yml
+          git add docs/MATHEMATICAL_CONTRACTS.md
+          git diff --cached --check
+          git commit -m "docs: repair mathematical-contract schema links"
+          git push origin HEAD:agent/final-acceptance-20260807
