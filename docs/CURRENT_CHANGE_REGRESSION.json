@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "base_commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
+  "evidence_date": "2026-08-07",
+  "scope": "schema-backed mathematical-contract delivery and composite evidence hardening",
+  "environment": "isolated local Python 3.11 test slice reconstructed from the accepted repository interfaces",
+  "tests_passed": 8,
+  "tests_failed": 0,
+  "checks": {
+    "pytest_focused": "PASS",
+    "draft_2020_12_schema_validation": "PASS",
+    "three_language_payload_validation": "PASS",
+    "single_contract_validation": "PASS",
+    "boundary_forgery_rejection": "PASS",
+    "cli_schema_output": "PASS",
+    "cli_file_stdout_json_equivalence": "PASS",
+    "compileall": "PASS"
+  },
+  "changed_files": [
+    {
+      "path": "tsao_researcher/mathematical_contracts.py",
+      "sha256": "169ef3461822682d968e0355db56a6af68a030fd549153d64320b4963373a207"
+    }
+  ],
+  "scope_note": "The cryptographic focus manifest pins the decision-critical runtime module. The final GitHub compare is used separately to verify the complete published path set against the accepted baseline.",
+  "current_end_to_end_ci": "NOT_RUN",
+  "scientific_boundary": "No solver, external computation, instrument, or laboratory execution is asserted by this regression."
+}
