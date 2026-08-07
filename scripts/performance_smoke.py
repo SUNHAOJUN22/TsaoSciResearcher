@@ -221,8 +221,8 @@ def main() -> None:
 
         def validate_schemas() -> None:
             schemas = sorted((ROOT / "schemas").glob("*.json")) + sorted((ROOT / "schemas/v2").glob("*.json"))
-            if len(schemas) != 19:
-                raise SystemExit(f"expected 19 schemas, found {len(schemas)}")
+            if len(schemas) != 20:
+                raise SystemExit(f"expected 20 schemas, found {len(schemas)}")
             for schema_path in schemas:
                 schema = json.loads(schema_path.read_text(encoding="utf-8"))
                 jsonschema.Draft202012Validator.check_schema(schema)
