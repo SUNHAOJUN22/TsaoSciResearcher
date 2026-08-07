@@ -15,7 +15,7 @@ import json
 import sys
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 ROOT = Path(__file__).resolve().parents[1]
 LEGACY_PATH = Path(__file__).with_name("audit_repository_legacy.py")
@@ -35,7 +35,13 @@ CURRENT_V2_SCHEMAS = {
 }
 
 
-def _legacy_module() -> Any:
+class _LegacyAuditModule(Protocol):
+    V2_SCHEMAS: set[str]
+
+    def audit(self) -> dict[str, Any]: ...
+
+
+def _legacy_module() -> _LegacyAuditModule:
     spec = importlib.util.spec_from_file_location(
         "tsao_sci_audit_repository_legacy",
         LEGACY_PATH,
@@ -45,8 +51,9 @@ def _legacy_module() -> Any:
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
-    module.V2_SCHEMAS = set(CURRENT_V2_SCHEMAS)
-    return module
+    typed_module = cast(_LegacyAuditModule, module)
+    typed_module.V2_SCHEMAS = set(CURRENT_V2_SCHEMAS)
+    return typed_module
 
 
 def audit() -> dict[str, Any]:
