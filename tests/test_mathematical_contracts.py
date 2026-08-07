@@ -2,19 +2,24 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 
+import jsonschema
 import pytest
 
 from tsao_researcher.__main__ import main
 from tsao_researcher.mathematical_contracts import (
     get_mathematical_contract,
+    get_mathematical_contract_schema,
     list_mathematical_contracts,
+    validate_mathematical_contract_payload,
 )
 
 
 def test_contract_registry_is_versioned_bilingual_and_conservative() -> None:
     payload = list_mathematical_contracts()
     assert payload["schema_version"] == "1.0"
+    assert payload["schema_id"].endswith("mathematical-contract-registry.schema.json")
     assert payload["advisory_only"] is True
     assert payload["solver_executed"] is False
     assert payload["automatic_approval"] is False
@@ -98,3 +103,64 @@ def test_math_cli_lists_all_contracts(
     payload = json.loads(capsys.readouterr().out)
     assert payload["language"] == "en"
     assert len(payload["contracts"]) >= 8
+
+
+def test_schema_validates_all_localizations_and_rejects_boundary_forgery() -> None:
+    schema = get_mathematical_contract_schema()
+    assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert schema["$id"].endswith("mathematical-contract-registry.schema.json")
+    jsonschema.Draft202012Validator.check_schema(schema)
+
+    for language in ("both", "en", "zh-CN"):
+        payload = list_mathematical_contracts(language)
+        assert payload["schema_id"] == schema["$id"]
+        validate_mathematical_contract_payload(payload)
+
+    forged = list_mathematical_contracts()
+    forged["solver_executed"] = True
+    with pytest.raises(jsonschema.ValidationError):
+        validate_mathematical_contract_payload(forged)
+
+
+def test_math_cli_schema_and_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["tsao-researcher", "math", "--schema"])
+    main()
+    schema = json.loads(capsys.readouterr().out)
+    assert schema["$id"].endswith("mathematical-contract-registry.schema.json")
+
+    output = tmp_path / "contract.json"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "tsao-researcher",
+            "math",
+            "--contract",
+            "decision-readiness",
+            "--language",
+            "both",
+            "--output",
+            str(output),
+        ],
+    )
+    main()
+    emitted = json.loads(capsys.readouterr().out)
+    assert json.loads(output.read_text(encoding="utf-8")) == emitted
+    validate_mathematical_contract_payload(emitted)
+
+
+def test_math_cli_rejects_schema_contract_combination(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["tsao-researcher", "math", "--schema", "--contract", "decision-readiness"],
+    )
+    with pytest.raises(SystemExit) as exc:
+        main()
+    assert exc.value.code == 2
