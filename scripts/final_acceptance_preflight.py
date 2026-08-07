@@ -14,13 +14,13 @@ import os
 import platform
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
 SCHEMA = "tsao.final-acceptance-preflight/v1"
 REPOSITORY = "TsaoSciResearcher"
 MIN_PYTHON = (3, 10)
+MAX_SVG_BYTES = 2_000_000
 ALLOWED_PLATFORM_FAMILIES = ("windows", "linux")
 EXTERNAL_BOUNDARY_MARKER = "automatic_approval"
 REQUIRED_PATHS = (
@@ -60,19 +60,38 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _issue(issues: list[dict[str, str]], code: str, path: str, detail: str) -> None:
+def _issue(
+    issues: list[dict[str, str]],
+    code: str,
+    path: str,
+    detail: str,
+) -> None:
     issues.append({"code": code, "path": path, "detail": detail})
 
 
 def _check_svg(path: Path, issues: list[dict[str, str]]) -> None:
+    """Validate a bounded, repository-owned SVG without parsing active XML."""
+
     try:
-        root = ET.parse(path).getroot()
-    except (OSError, ET.ParseError) as exc:
-        _issue(issues, "svg_invalid", str(path), str(exc))
+        size = path.stat().st_size
+        if size > MAX_SVG_BYTES:
+            _issue(
+                issues,
+                "svg_too_large",
+                str(path),
+                f"SVG exceeds the {MAX_SVG_BYTES}-byte acceptance limit",
+            )
+            return
+        text = path.read_text(encoding="utf-8", errors="strict")
+    except (OSError, UnicodeError) as exc:
+        _issue(issues, "svg_unreadable", str(path), str(exc))
         return
-    if not root.tag.endswith("svg"):
-        _issue(issues, "svg_root_invalid", str(path), "Root element must be <svg>")
-    text = " ".join((node.text or "") for node in root.iter())
+
+    normalized = text.lstrip("\ufeff \t\r\n")
+    if "<svg" not in normalized[:512].casefold():
+        _issue(issues, "svg_root_invalid", str(path), "Opening <svg> tag is missing")
+    if "</svg>" not in normalized[-2048:].casefold():
+        _issue(issues, "svg_not_closed", str(path), "Closing </svg> tag is missing")
     for marker in ("AI-ASSISTED", "NOT SCIENTIFIC DATA", REPOSITORY):
         if marker not in text:
             _issue(issues, "svg_marker_missing", str(path), marker)
@@ -103,11 +122,19 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
     for relative in REQUIRED_PATHS:
         path = root / relative
         if not path.is_file():
-            _issue(issues, "required_path_missing", relative, "Required acceptance surface is missing")
+            _issue(
+                issues,
+                "required_path_missing",
+                relative,
+                "Required acceptance surface is missing",
+            )
             continue
         identities[relative] = _sha256(path)
 
-    textual_paths = [root / "pyproject.toml", root / ".github" / "workflows" / "ci.yml"]
+    textual_paths = [
+        root / "pyproject.toml",
+        root / ".github" / "workflows" / "ci.yml",
+    ]
     for path in textual_paths:
         if not path.is_file():
             continue
@@ -133,7 +160,12 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
             "\\[",
         ):
             if marker not in text:
-                _issue(issues, "acceptance_readme_marker_missing", "README_ACCEPTANCE.md", marker)
+                _issue(
+                    issues,
+                    "acceptance_readme_marker_missing",
+                    "README_ACCEPTANCE.md",
+                    marker,
+                )
 
     svg = root / "docs" / "assets" / "acceptance" / "final-acceptance-map.svg"
     if svg.is_file():
@@ -150,13 +182,25 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
         "solver_or_experiment_executed": False,
         "automatic_scientific_approval": False,
         "critical_file_sha256": dict(sorted(identities.items())),
-        "issues": sorted(issues, key=lambda item: (item["code"], item["path"], item["detail"])),
+        "issues": sorted(
+            issues,
+            key=lambda item: (item["code"], item["path"], item["detail"]),
+        ),
     }
 
 
 def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False) + "\n"
+    data = (
+        json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            indent=2,
+            allow_nan=False,
+        )
+        + "\n"
+    )
     with tempfile.NamedTemporaryFile(
         "w",
         encoding="utf-8",
@@ -171,7 +215,11 @@ def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=Path(__file__).resolve().parents[1],
+    )
     parser.add_argument("--output", type=Path)
     parser.add_argument("--json", action="store_true", help="Emit compact JSON on stdout")
     args = parser.parse_args(argv)
