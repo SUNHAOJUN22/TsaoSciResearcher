@@ -54,6 +54,7 @@ VISUAL_ATLAS_ASSETS = (
     "docs/assets/ai/decision_readiness_lattice.svg",
     "docs/assets/ai/uncertainty_propagation_budget.svg",
     "docs/assets/ai/multiscale_bridge_error_budget.svg",
+    "docs/assets/ai/mathematical_contract_schema_pipeline.svg",
 )
 
 
@@ -138,6 +139,7 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
         "docs/CAPABILITY_COVERAGE_MATRIX.md",
         "docs/README_ARCHITECTURE_MAPPING.md",
         "docs/MATHEMATICAL_CONTRACTS.md",
+        "schemas/v2/mathematical-contract-registry.schema.json",
         "docs/VALIDATION_EVIDENCE.json",
         "docs/test-dashboard.html",
         "docs/test-dashboard.svg",
@@ -152,6 +154,8 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
 
     required_boundary_tokens = [
         "python -m tsao_researcher math",
+        "python -m tsao_researcher math --schema",
+        '"schema_id":',
         '"solver_executed": false',
         '"automatic_approval": false',
         "AI-generated conceptual illustration",
@@ -161,6 +165,8 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append(f"README.md missing mathematical or visual boundary token: {token}")
     chinese_boundary_tokens = [
         "python -m tsao_researcher math",
+        "python -m tsao_researcher math --schema",
+        '"schema_id":',
         '"solver_executed": false',
         '"automatic_approval": false',
         "AI 生成概念示意图",
@@ -171,8 +177,8 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
 
     english_atlas = (root / "docs/VISUAL_ATLAS.md").read_text(encoding="utf-8", errors="strict")
     chinese_atlas = (root / "docs/VISUAL_ATLAS.zh-CN.md").read_text(encoding="utf-8", errors="strict")
-    if len(VISUAL_ATLAS_ASSETS) != 37 or len(set(VISUAL_ATLAS_ASSETS)) != len(VISUAL_ATLAS_ASSETS):
-        errors.append("visual atlas must contain exactly 37 unique AI diagrams")
+    if len(VISUAL_ATLAS_ASSETS) != 38 or len(set(VISUAL_ATLAS_ASSETS)) != len(VISUAL_ATLAS_ASSETS):
+        errors.append("visual atlas must contain exactly 38 unique AI diagrams")
     for relative in VISUAL_ATLAS_ASSETS:
         path = root / relative
         if not path.is_file() or path.is_symlink():
