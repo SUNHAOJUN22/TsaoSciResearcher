@@ -62,7 +62,9 @@ jobs:
           python -m tsao_researcher quality examples/scientific-quality-check.json
           python -m tsao_researcher strategy "How do trap states control charge transport?" --observable "trap energy" --condition "applied electric field"
           python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict product quality by extrapolation?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
-          python -m tsao_researcher math --contract decision-readiness --language both
+          python -m tsao_researcher math --schema
+          python -m tsao_researcher math --contract decision-readiness --language both --output artifacts-math-contract.json
+          python scripts/validate_mathematical_contracts.py --check
           python scripts/validate_schemas.py
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
 
@@ -90,6 +92,7 @@ jobs:
           python scripts/sync_version.py --check
           python scripts/sync_runtime_data.py --check
           python scripts/validate_schemas.py
+          python scripts/validate_mathematical_contracts.py --check
           python scripts/audit_repository.py
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
@@ -103,7 +106,8 @@ jobs:
           python scripts/route_task.py --self-test
           python scripts/validate_figure.py examples/figure-contract.json
           python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
-          python -m tsao_researcher math --contract uncertainty-budget --language en
+          python -m tsao_researcher math --schema
+          python -m tsao_researcher math --contract uncertainty-budget --language both --output artifacts-math-contract.json
           mkdocs build --strict
       - name: Complete regression
         run: |
