@@ -84,6 +84,12 @@ def main() -> None:
         default="both",
         help="localize explanatory text while preserving equations and stable identifiers",
     )
+    math_parser.add_argument(
+        "--schema",
+        action="store_true",
+        help="emit the packaged Draft 2020-12 registry schema",
+    )
+    math_parser.add_argument("--output", help="optional JSON output path")
 
     init_parser = sub.add_parser("init", help="initialize a traceable project")
     init_parser.add_argument("--name", required=True)
@@ -168,13 +174,23 @@ def main() -> None:
     elif args.command == "math":
         from .mathematical_contracts import (
             get_mathematical_contract,
+            get_mathematical_contract_schema,
             list_mathematical_contracts,
         )
 
-        if args.contract:
-            _emit(get_mathematical_contract(args.contract, args.language))
+        if args.schema and args.contract:
+            math_parser.error("--schema cannot be combined with --contract")
+        if args.schema:
+            result = get_mathematical_contract_schema()
+        elif args.contract:
+            result = get_mathematical_contract(args.contract, args.language)
         else:
-            _emit(list_mathematical_contracts(args.language))
+            result = list_mathematical_contracts(args.language)
+        if args.output:
+            from .io import write_json
+
+            write_json(args.output, result)
+        _emit(result)
     elif args.command == "init":
         from .state import initialize
 
