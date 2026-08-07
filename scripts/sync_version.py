@@ -104,7 +104,12 @@ def main() -> None:
     mode.add_argument("--check", action="store_true")
     args = parser.parse_args()
     version = canonical_version()
-    expected = render(version)
+    try:
+        expected = render(version)
+    except ValueError as exc:
+        if args.check:
+            raise SystemExit(f"version metadata is stale: {exc}") from None
+        raise
     stale = [
         path
         for path, content in expected.items()
