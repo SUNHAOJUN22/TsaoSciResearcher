@@ -52,21 +52,16 @@
     ]
   },
   "license": "Apache-2.0",
-  "python": [
-    "3.10",
-    "3.11",
-    "3.12",
-    "3.13"
-  ],
+  "python": ["3.10", "3.11", "3.12", "3.13"],
   "repository_assets": {
-    "ai_diagrams": 37,
+    "ai_diagrams": 38,
     "references": 23,
     "templates": 14,
     "test_modules": 42
   },
   "schema_version": "1.0",
   "schemas": {
-    "count": 19,
+    "count": 20,
     "items": [
       "schemas/artifact-manifest.schema.json",
       "schemas/capability.schema.json",
@@ -81,6 +76,7 @@
       "schemas/v2/computation-strategy.schema.json",
       "schemas/v2/execution-receipt.schema.json",
       "schemas/v2/handoff.schema.json",
+      "schemas/v2/mathematical-contract-registry.schema.json",
       "schemas/v2/project.schema.json",
       "schemas/v2/reproducibility-capsule.schema.json",
       "schemas/v2/routing.schema.json",
