@@ -14,7 +14,7 @@ class TestRepositoryAudit(unittest.TestCase):
         self.assertEqual(result["checks"]["capabilities"]["v2_extension_loaded"], 1)
         self.assertEqual(result["checks"]["capabilities"]["v2_loaded"], 341)
         self.assertEqual(result["checks"]["workflows"]["count"], 15)
-        self.assertEqual(result["checks"]["schemas"]["total"], 19)
+        self.assertEqual(result["checks"]["schemas"]["total"], 20)
         self.assertEqual(result["checks"]["domain_packs"]["count"], 7)
 
 
