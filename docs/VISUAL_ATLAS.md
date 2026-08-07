@@ -1,6 +1,6 @@
 # Scientific Capability Visual Atlas
 
-> Release 0.7.4 · 37 AI-generated conceptual illustrations
+> Release 0.7.4 · 38 AI-generated conceptual illustrations
 
 This atlas documents the repository's architecture, scientific contracts, validation boundaries, and external-execution lifecycle. Every SVG is a conceptual documentation artifact with accessible `<title>` and `<desc>` metadata. None of these figures is experimental data, a measured result, a solver output, or proof that an external computation ran.
 
@@ -38,6 +38,7 @@ This atlas documents the repository's architecture, scientific contracts, valida
 | ![Readiness lattice](assets/ai/decision_readiness_lattice.svg) | Conservative BLOCK–REVIEW–PASS ordering |
 | ![Uncertainty budget](assets/ai/uncertainty_propagation_budget.svg) | Decision-observable uncertainty propagation |
 | ![Bridge error budget](assets/ai/multiscale_bridge_error_budget.svg) | Source, mapping, closure, and target uncertainty |
+| ![Schema validation pipeline](assets/ai/mathematical_contract_schema_pipeline.svg) | Canonical Schema, package mirror, runtime validation, and delivery artifact |
 
 ## Scientific Passport and integrity gates
 
@@ -71,5 +72,6 @@ This atlas documents the repository's architecture, scientific contracts, valida
 1. A conceptual figure may explain software architecture or scientific-control logic.
 2. It must not be described as a measured, simulated, or experimentally validated result.
 3. Formula diagrams must preserve the same limitations returned by `python -m tsao_researcher math`.
-4. External-execution diagrams must preserve the handoff/receipt boundary.
-5. Scientific acceptance remains a qualified human decision.
+4. Schema diagrams must preserve `solver_executed=false` and `automatic_approval=false` rather than visually implying execution.
+5. External-execution diagrams must preserve the handoff/receipt boundary.
+6. Scientific acceptance remains a qualified human decision.
