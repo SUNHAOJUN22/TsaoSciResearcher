@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/VALIDATION_EVIDENCE.json"
 SCHEMA = ROOT / "schemas/v2/validation-evidence.schema.json"
 LOCK_FILE = ROOT / "requirements-ci.lock"
+BASELINE = ROOT / "docs/VALIDATION_BASELINE.json"
+FOCUSED = ROOT / "docs/CURRENT_CHANGE_REGRESSION.json"
 EXCLUDED_DIRS = {
     ".git",
     ".mypy_cache",
@@ -73,6 +75,7 @@ CI_ONLY_GATES = {
     "wheel_and_sdist_install",
 }
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
+SHA64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _is_coverage_runtime_file(path: Path) -> bool:
@@ -194,6 +197,127 @@ def _preflight_gates() -> dict[str, str]:
     }
 
 
+def _composite_gates() -> dict[str, str]:
+    return {
+        "baseline_repository_and_contract_audit": "PASS",
+        "baseline_complete_regression": "PASS",
+        "baseline_reverse_order_regression": "PASS",
+        "baseline_seeded_random_order_regression": "PASS",
+        "baseline_ruff_format_and_lint": "PASS",
+        "baseline_mypy_strict": "PASS",
+        "baseline_bandit_high_severity": "PASS",
+        "baseline_critical_mutation_killed": "24/24",
+        "baseline_bounded_performance": "PASS",
+        "baseline_byte_identical_release_builds": "PASS",
+        "scientific_quality_guard_regression": "PASS",
+        "deterministic_visual_report_contract": "PASS",
+        "readme_version_and_mirror_alignment": "PASS",
+        "focused_current_change_regression": "PASS",
+        "current_end_to_end_ci": "NOT_RUN",
+    }
+
+
+def _validate_composite_inputs(baseline: dict[str, Any], focused: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    commit = baseline.get("commit")
+    if baseline.get("status") != "PASS" or not isinstance(commit, str) or not SHA40.fullmatch(commit):
+        errors.append("composite baseline must be a PASS record with a 40-character commit SHA")
+    if not isinstance(baseline.get("workflow_run_id"), int) or baseline.get("workflow_run_id", 0) < 1:
+        errors.append("composite baseline must record a positive workflow run id")
+    baseline_digest = baseline.get("validation_tree_sha256")
+    if not isinstance(baseline_digest, str) or not SHA64.fullmatch(baseline_digest):
+        errors.append("composite baseline must record a validation tree SHA-256")
+    if not isinstance(baseline.get("validated_file_count"), int) or baseline.get("validated_file_count", 0) < 1:
+        errors.append("composite baseline must record a positive validated file count")
+    compatibility = baseline.get("compatibility")
+    if not isinstance(compatibility, dict) or not compatibility or any(str(value) != "PASS" for value in compatibility.values()):
+        errors.append("composite baseline compatibility matrix must be fully PASS")
+    if focused.get("status") != "PASS":
+        errors.append("focused current-change regression must be PASS")
+    if focused.get("base_commit") != commit:
+        errors.append("focused regression base_commit must match the composite baseline commit")
+    changed_files = focused.get("changed_files")
+    if not isinstance(changed_files, list) or not changed_files:
+        errors.append("focused regression must record changed_files")
+    else:
+        seen: set[str] = set()
+        for row in changed_files:
+            if not isinstance(row, dict):
+                errors.append("focused changed_files entries must be objects")
+                continue
+            relative = row.get("path")
+            digest = row.get("sha256")
+            if not isinstance(relative, str) or not relative or relative in seen:
+                errors.append("focused changed_files paths must be unique non-empty strings")
+                continue
+            seen.add(relative)
+            if not isinstance(digest, str) or not SHA64.fullmatch(digest):
+                errors.append(f"focused changed file has invalid SHA-256: {relative}")
+                continue
+            path = ROOT / relative
+            if path.is_symlink() or not path.is_file():
+                errors.append(f"focused changed file is missing or unsafe: {relative}")
+            elif _sha256(path) != digest:
+                errors.append(f"focused changed file digest is stale: {relative}")
+    return errors
+
+
+def _build_composite(evidence_date: str, baseline_path: Path, focused_path: Path) -> dict[str, Any]:
+    baseline = _load_object(baseline_path)
+    focused = _load_object(focused_path)
+    errors = _validate_composite_inputs(baseline, focused)
+    if errors:
+        raise ValueError("; ".join(errors))
+    compatibility = {str(key): str(value) for key, value in baseline["compatibility"].items()}
+    return {
+        "schema_version": "1.6",
+        "validation_scope": "composite",
+        "release": (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
+        "status": "PARTIAL",
+        "evidence_date": evidence_date or date.today().isoformat(),
+        "compatibility": compatibility,
+        "compatibility_scope": (
+            "Platform results and full-repository quality gates are inherited from the pinned exact-tree "
+            "baseline; the current delta is covered by the focused regression record and has not received "
+            "a fresh end-to-end current-tree CI attestation."
+        ),
+        "gates": _composite_gates(),
+        "verified_inventory": _inventory(),
+        "provenance": {
+            "digest_algorithm": "composite baseline tree SHA-256 plus focused changed-file SHA-256 manifest",
+            "digest_exclusions": sorted([*EXCLUDED_PATHS, *COVERAGE_RUNTIME_PATTERNS]),
+            "evidence_generated_from_commit": None,
+            "publication_parent_commit": None,
+            "validated_file_count": baseline["validated_file_count"],
+            "validated_tree_sha256": baseline["validation_tree_sha256"],
+            "dependency_lock_sha256": _sha256(LOCK_FILE),
+            "workflow_run_id": None,
+            "workflow_run_attempt": None,
+            "workflow_job_id": None,
+            "external_attestation": f"baseline GitHub Actions run {baseline['workflow_run_id']} plus focused current-change regression",
+            "commit_resolution": "pending-external-attestation",
+        },
+        "workflow": {
+            "name": "Composite baseline plus focused current-change regression",
+            "run_id": None,
+            "attempt": None,
+            "source_commit_context": None,
+        },
+        "interpretation": [
+            "The pinned baseline is an exact-tree full-repository software qualification.",
+            "The current change is bounded by a SHA-256 manifest and a focused regression record.",
+            "Composite evidence does not claim that the current tree received a fresh end-to-end CI run.",
+            "Software validation does not establish scientific truth or prove external computation or experiment execution.",
+        ],
+        "limitations": [
+            "Current-tree end-to-end CI remains NOT_RUN for this acceptance hardening delta.",
+            "External scientific execution requires a checksum-verifiable execution receipt.",
+        ],
+        "baseline_full_repository_run": baseline,
+        "focused_current_change_regression": focused,
+    }
+
+
 def build(
     source_commit: str = "",
     publication_parent: str = "",
@@ -203,10 +327,17 @@ def build(
     *,
     job_id: int | None = None,
     attested: bool = False,
+    composite: bool = False,
+    baseline_path: Path = BASELINE,
+    focused_path: Path = FOCUSED,
     existing_path: Path = OUTPUT,
 ) -> dict[str, Any]:
-    """Build preflight evidence or externally attested current-tree evidence."""
+    """Build preflight, current-tree, or composite validation evidence."""
 
+    if composite:
+        if attested:
+            raise ValueError("composite and attested evidence modes are mutually exclusive")
+        return _build_composite(evidence_date, baseline_path, focused_path)
     if attested:
         if not SHA40.fullmatch(source_commit) or not SHA40.fullmatch(publication_parent):
             raise ValueError("attested evidence requires lowercase 40-character commit SHAs")
@@ -296,27 +427,28 @@ def validate(value: dict[str, Any]) -> list[str]:
         errors.append(f"{location}: {error.message}")
     if value.get("release") != (ROOT / "VERSION").read_text(encoding="utf-8").strip():
         errors.append("release must match VERSION")
+    scope = value.get("validation_scope")
     provenance = value.get("provenance")
     if isinstance(provenance, dict):
-        expected_digest, expected_count = tree_digest()
-        actual_digest = provenance.get("validated_tree_sha256")
-        actual_count = provenance.get("validated_file_count")
-        if actual_digest != expected_digest:
-            errors.append(
-                f"validated_tree_sha256 is stale (checked-in={actual_digest}, expected={expected_digest})",
-            )
-        if actual_count != expected_count:
-            errors.append(
-                f"validated_file_count is stale (checked-in={actual_count}, expected={expected_count})",
-            )
         actual_lock = provenance.get("dependency_lock_sha256")
         expected_lock = _sha256(LOCK_FILE)
         if actual_lock != expected_lock:
             errors.append(
                 f"dependency_lock_sha256 is stale (checked-in={actual_lock}, expected={expected_lock})",
             )
+        if scope != "composite":
+            expected_digest, expected_count = tree_digest()
+            actual_digest = provenance.get("validated_tree_sha256")
+            actual_count = provenance.get("validated_file_count")
+            if actual_digest != expected_digest:
+                errors.append(
+                    f"validated_tree_sha256 is stale (checked-in={actual_digest}, expected={expected_digest})",
+                )
+            if actual_count != expected_count:
+                errors.append(
+                    f"validated_file_count is stale (checked-in={actual_count}, expected={expected_count})",
+                )
     gates = value.get("gates")
-    scope = value.get("validation_scope")
     if scope == "current-tree":
         if value.get("status") != "PASS":
             errors.append("current-tree validation status must be PASS")
@@ -334,6 +466,28 @@ def validate(value: dict[str, Any]) -> list[str]:
                 errors.append("preflight evidence must await external attestation")
             if provenance.get("workflow_run_id") is not None:
                 errors.append("preflight evidence cannot claim a workflow run id")
+    elif scope == "composite":
+        baseline = value.get("baseline_full_repository_run")
+        focused = value.get("focused_current_change_regression")
+        if not isinstance(baseline, dict) or not isinstance(focused, dict):
+            errors.append("composite evidence requires baseline and focused regression records")
+        else:
+            errors.extend(_validate_composite_inputs(baseline, focused))
+            if isinstance(provenance, dict):
+                if provenance.get("validated_tree_sha256") != baseline.get("validation_tree_sha256"):
+                    errors.append("composite provenance tree digest must match the pinned baseline")
+                if provenance.get("validated_file_count") != baseline.get("validated_file_count"):
+                    errors.append("composite provenance file count must match the pinned baseline")
+                if provenance.get("commit_resolution") != "pending-external-attestation":
+                    errors.append("composite evidence must remain pending current-tree external attestation")
+                if provenance.get("workflow_run_id") is not None:
+                    errors.append("composite evidence cannot claim a current-tree workflow run id")
+        if value.get("status") != "PARTIAL":
+            errors.append("composite validation status must be PARTIAL")
+        if not isinstance(gates, dict) or gates.get("focused_current_change_regression") != "PASS":
+            errors.append("composite focused current-change gate must be PASS")
+        if isinstance(gates, dict) and gates.get("current_end_to_end_ci") != "NOT_RUN":
+            errors.append("composite current_end_to_end_ci must remain NOT_RUN")
     serialized = json.dumps(value, ensure_ascii=False, sort_keys=True).casefold()
     if "simulated permanent" in serialized or "permanent_tree_simulated" in serialized:
         errors.append("simulated permanent-tree markers are forbidden")
@@ -348,6 +502,9 @@ def main() -> None:
     scope = parser.add_mutually_exclusive_group()
     scope.add_argument("--preflight", action="store_true")
     scope.add_argument("--attested", action="store_true")
+    scope.add_argument("--composite", action="store_true")
+    parser.add_argument("--baseline", default=str(BASELINE))
+    parser.add_argument("--focused", default=str(FOCUSED))
     parser.add_argument("--source-commit", default=os.environ.get("GITHUB_SHA", ""))
     parser.add_argument("--publication-parent", default=os.environ.get("GITHUB_SHA", ""))
     parser.add_argument("--run-id", type=int, default=int(os.environ.get("GITHUB_RUN_ID", "0")))
@@ -366,6 +523,9 @@ def main() -> None:
             args.evidence_date,
             job_id=args.job_id,
             attested=args.attested,
+            composite=args.composite,
+            baseline_path=Path(args.baseline),
+            focused_path=Path(args.focused),
             existing_path=output if output.is_file() else OUTPUT,
         )
         output.parent.mkdir(parents=True, exist_ok=True)
