@@ -20,7 +20,8 @@ Language = Literal["en", "zh-CN", "both"]
 
 _SCHEMA_VERSION = "1.0"
 _SCHEMA_ID = (
-    "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json"
+    "https://sunhaojun22.github.io/TsaoSciResearcher/"
+    "schemas/v2/mathematical-contract-registry.schema.json"
 )
 _SCHEMA_RESOURCE = ("data", "schemas", "mathematical-contract-registry.schema.json")
 
@@ -33,97 +34,94 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
             "c": {"en": "candidate capability", "zh-CN": "候选能力"},
             "q": {"en": "scientific question", "zh-CN": "科学问题"},
             "o": {"en": "decision-critical observable", "zh-CN": "决策关键观测量"},
-            "e": {"en": "declared evidence context", "zh-CN": "声明的证据上下文"},
+            "e": {"en": "declared evidence context", "zh-CN": "已声明证据上下文"},
             "R": {"en": "relevance term", "zh-CN": "相关性项"},
-            "M": {"en": "evidence-match term", "zh-CN": "证据匹配项"},
+            "M": {"en": "evidence-method compatibility", "zh-CN": "证据—方法相容性"},
             "C": {"en": "conflict or exclusion penalty", "zh-CN": "冲突或排除惩罚"},
         },
         "decision_use": {
-            "en": "Explains deterministic bounded capability ranking without pretending the weights were statistically fitted.",
-            "zh-CN": "解释确定性有界能力排序, 不声称权重来自统计拟合。",
+            "en": "Explains why routing and capability retrieval combine relevance, observability, evidence fit, and negative semantics.",
+            "zh-CN": "说明路由和能力检索为何同时考虑相关性、可观测性、证据匹配与负向语义。",
         },
         "implementation_relation": {
-            "en": "The runtime performs lexical and contract-aware ranking; this equation is the stable explanatory abstraction.",
-            "zh-CN": "运行时执行词法与合同感知排序; 该方程是稳定的解释性抽象。",
+            "en": "Pedagogical abstraction of deterministic rules and bounded ranking; weights are not exposed as a fitted statistical model.",
+            "zh-CN": "对确定性规则和有界排序的教学抽象; 这些权重不是已拟合统计模型的公开参数。",
         },
     },
     {
         "contract_id": "quantity-dimension",
-        "title": {"en": "Quantity, unit, and dimension contract", "zh-CN": "数值、单位与量纲合同"},
-        "equation": "x=(v,u,d), d_left=d_right",
+        "title": {"en": "Quantity, unit, and dimension contract", "zh-CN": "数量、单位与量纲合同"},
+        "equation": "x=(v,u,d),  d_left=d_right",
         "symbols": {
-            "x": {"en": "declared physical quantity", "zh-CN": "声明的物理量"},
-            "v": {"en": "numeric value", "zh-CN": "数值"},
+            "v": {"en": "numerical value", "zh-CN": "数值"},
             "u": {"en": "unit", "zh-CN": "单位"},
             "d": {"en": "physical dimension", "zh-CN": "物理量纲"},
         },
         "decision_use": {
-            "en": "Blocks quantitative comparison when units are absent or physical dimensions are incompatible.",
-            "zh-CN": "当单位缺失或量纲不兼容时阻止定量比较。",
+            "en": "Prevents comparisons between missing-unit quantities or incompatible physical dimensions.",
+            "zh-CN": "防止对缺失单位或物理量纲不相容的数量进行比较。",
         },
         "implementation_relation": {
-            "en": "Backs the strategy adviser's quantity extraction, missing-unit warnings, and dimension-conflict gates.",
-            "zh-CN": "对应策略模块的物理量提取、单位缺失警告与量纲冲突门。",
+            "en": "The runtime parses declared quantities and applies conservative structural guards; it is not a general symbolic-units algebra system.",
+            "zh-CN": "运行时解析已声明数量并执行保守结构化防线; 它不是通用符号单位代数系统。",
         },
     },
     {
-        "contract_id": "applicability-risk",
+        "contract_id": "applicability-extrapolation",
         "title": {"en": "Applicability and extrapolation risk", "zh-CN": "适用域与外推风险"},
         "equation": "r_extra=d(x,A)/max(s_A,epsilon)",
         "symbols": {
-            "r_extra": {"en": "normalized extrapolation risk", "zh-CN": "归一化外推风险"},
             "x": {"en": "target condition", "zh-CN": "目标条件"},
-            "A": {"en": "declared applicability domain", "zh-CN": "声明的适用域"},
+            "A": {"en": "declared applicability domain", "zh-CN": "声明适用域"},
             "s_A": {"en": "characteristic domain scale", "zh-CN": "适用域特征尺度"},
             "epsilon": {"en": "positive numerical guard", "zh-CN": "正数值保护项"},
         },
         "decision_use": {
-            "en": "Requires review when the target condition lies outside a declared or validated domain.",
-            "zh-CN": "当目标条件位于声明或验证域外时要求复核。",
+            "en": "Shows why transfer beyond a calibrated domain requires evidence, uncertainty inflation, and human review.",
+            "zh-CN": "说明为何超出标定域的迁移必须具有证据、不确定性膨胀与人工复核。",
         },
         "implementation_relation": {
-            "en": "The current runtime uses conservative lexical and structural extrapolation markers rather than fabricating a distance from absent calibration data.",
-            "zh-CN": "当前运行时采用保守的词法与结构外推标记, 不会在缺失标定数据时伪造距离。",
+            "en": "The equation is a conceptual normalized-distance model; the current runtime uses explicit lexical and structural extrapolation markers.",
+            "zh-CN": "该方程是概念性归一距离模型; 当前运行时使用显式词汇与结构化外推标记。",
         },
     },
     {
-        "contract_id": "evidence-triad",
-        "title": {"en": "Evidence triad and conflict ledger", "zh-CN": "证据三分法与冲突台账"},
-        "equation": "E=(E_plus,E_minus,E_zero), kappa=1[E_plus!=empty and E_minus!=empty]",
+        "contract_id": "evidence-conflict",
+        "title": {"en": "Evidence triad and conflict ledger", "zh-CN": "证据三分与冲突账本"},
+        "equation": "E=(E_plus,E_minus,E_zero),  kappa=1[E_plus!=empty and E_minus!=empty]",
         "symbols": {
-            "E_plus": {"en": "supporting evidence", "zh-CN": "支持性证据"},
-            "E_minus": {"en": "challenging or refuting evidence", "zh-CN": "挑战或反驳性证据"},
+            "E_plus": {"en": "supporting evidence", "zh-CN": "支持证据"},
+            "E_minus": {"en": "challenging or refuting evidence", "zh-CN": "挑战或反驳证据"},
             "E_zero": {"en": "neutral or unresolved evidence", "zh-CN": "中性或未决证据"},
             "kappa": {"en": "conflict indicator", "zh-CN": "冲突指示量"},
         },
         "decision_use": {
-            "en": "Prevents contradictory evidence from being silently averaged into a positive claim.",
-            "zh-CN": "防止相互矛盾的证据被静默平均为正面结论。",
+            "en": "Preserves negative results and contradictory observations instead of silently pooling them into a positive conclusion.",
+            "zh-CN": "保留负结果和矛盾观测, 避免将其静默合并成正向结论。",
         },
         "implementation_relation": {
-            "en": "Matches the Scientific Passport evidence ledger and conflict gate.",
-            "zh-CN": "对应 Scientific Passport 的证据台账与冲突门。",
+            "en": "Maps directly to supporting, challenging, and neutral evidence identifiers in the strategy contract.",
+            "zh-CN": "直接对应策略合同中的支持、挑战和中性证据标识。",
         },
     },
     {
-        "contract_id": "identifiability",
-        "title": {"en": "Mechanism and parameter identifiability", "zh-CN": "机理与参数可辨识性"},
-        "equation": "D_ij(O,C)>tau or rank(J_theta)=p",
+        "contract_id": "mechanism-identifiability",
+        "title": {"en": "Mechanism and parameter identifiability", "zh-CN": "机制与参数可辨识性"},
+        "equation": "D_ij(O,C)>tau  or  rank(J_theta)=p",
         "symbols": {
-            "D_ij": {"en": "discrimination between mechanisms i and j", "zh-CN": "机理 i 与 j 的可区分度"},
-            "O": {"en": "discriminating observables", "zh-CN": "判别观测量"},
-            "C": {"en": "experimental or computational conditions", "zh-CN": "实验或计算条件"},
-            "tau": {"en": "decision threshold", "zh-CN": "决策阈值"},
+            "D_ij": {"en": "distinguishability of mechanisms i and j", "zh-CN": "机制 i 与 j 的可区分度"},
+            "O": {"en": "observable set", "zh-CN": "观测量集合"},
+            "C": {"en": "conditions and constraints", "zh-CN": "条件与约束"},
             "J_theta": {"en": "parameter-sensitivity Jacobian", "zh-CN": "参数敏感性雅可比矩阵"},
-            "p": {"en": "number of free parameters", "zh-CN": "自由参数个数"},
+            "p": {"en": "number of parameters under consideration", "zh-CN": "待辨识参数数量"},
         },
         "decision_use": {
-            "en": "Requires discriminating observables for unique mechanism or parameter claims.",
-            "zh-CN": "唯一机理或参数结论必须具有可判别观测量。",
+            "en": "Requires discriminating observables before selecting one mechanism or unique parameter set.",
+            "zh-CN": "在选择单一机制或唯一参数组之前, 要求具备区分性观测量。",
         },
         "implementation_relation": {
-            "en": "The runtime records competing mechanisms and conservative identifiability warnings; numerical Jacobian construction remains external.",
-            "zh-CN": "运行时记录竞争机理与保守可辨识性警告; 数值雅可比矩阵仍由外部分析构建。",
+            "en": "The runtime currently applies conservative warnings for competing mechanisms, equifinality, and missing discriminating observables; it does not compute a numerical Jacobian.",
+            "zh-CN": "当前运行时对竞争机制、等效多解和缺失区分性观测量执行保守警告; 并不计算数值雅可比矩阵。",
         },
     },
     {
@@ -149,23 +147,22 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
         },
     },
     {
-        "contract_id": "scale-bridge",
+        "contract_id": "multiscale-bridge",
         "title": {"en": "Multiscale bridge error budget", "zh-CN": "多尺度桥接误差预算"},
         "equation": "U_bridge^2=U_source^2+U_mapping^2+U_closure^2+U_target^2",
         "symbols": {
-            "U_bridge": {"en": "total bridge uncertainty", "zh-CN": "总桥接不确定性"},
-            "U_source": {"en": "source-scale uncertainty", "zh-CN": "源尺度不确定性"},
-            "U_mapping": {"en": "mapping uncertainty", "zh-CN": "映射不确定性"},
+            "U_source": {"en": "source-scale uncertainty", "zh-CN": "来源尺度不确定性"},
+            "U_mapping": {"en": "mapping or coarse-graining uncertainty", "zh-CN": "映射或粗粒化不确定性"},
             "U_closure": {"en": "closure-model uncertainty", "zh-CN": "闭合模型不确定性"},
             "U_target": {"en": "target-scale validation uncertainty", "zh-CN": "目标尺度验证不确定性"},
         },
         "decision_use": {
-            "en": "Blocks a direct microscopic-to-industrial conclusion unless bridge variables and target-scale validation are declared.",
-            "zh-CN": "若未声明桥接变量与目标尺度验证, 则阻止从微观结果直接跳到工业结论。",
+            "en": "Prevents an unvalidated micro-to-industrial jump by requiring measurable bridge variables and acceptance tests at each scale.",
+            "zh-CN": "通过要求每个尺度具备可测桥接变量和验收测试, 防止未经验证的微观到工业尺度跳跃。",
         },
         "implementation_relation": {
-            "en": "Backs the strategy adviser's bridge contracts and direct-scale-jump warnings.",
-            "zh-CN": "对应策略模块的桥接合同与直接跨尺度警告。",
+            "en": "Represents the bridge-contract design principle; the repository records bridge requirements but does not execute homogenisation or process simulation.",
+            "zh-CN": "表达尺度桥合同的设计原则; 仓库记录桥接要求, 但不执行均匀化或流程模拟。",
         },
     },
     {
@@ -194,10 +191,8 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
 
 @lru_cache(maxsize=1)
 def _load_mathematical_contract_schema() -> dict[str, Any]:
-    resource = files("tsao_researcher")
-    for part in _SCHEMA_RESOURCE:
-        resource = resource.joinpath(part)
-    value = json.loads(resource.read_text(encoding="utf-8"))
+    resource = files("tsao_researcher").joinpath(*_SCHEMA_RESOURCE)
+    value = json.loads(resource.read_text(encoding="utf-8", errors="strict"))
     if not isinstance(value, dict):
         raise ValueError("mathematical contract schema root must be an object")
     jsonschema.Draft202012Validator.check_schema(value)
@@ -226,11 +221,11 @@ def _localized(value: Any, language: Language) -> Any:
     return deepcopy(value)
 
 
-def get_mathematical_contracts(language: Language = "both") -> dict[str, Any]:
-    """Return the stable mathematical contract registry in one language."""
+def list_mathematical_contracts(language: Language = "both") -> dict[str, Any]:
+    """Return a deterministic, defensive copy of all mathematical contracts."""
 
     if language not in {"en", "zh-CN", "both"}:
-        raise ValueError("language must be en, zh-CN, or both")
+        raise ValueError("language must be one of: en, zh-CN, both")
     payload = {
         "schema_version": _SCHEMA_VERSION,
         "schema_id": _SCHEMA_ID,
@@ -245,23 +240,13 @@ def get_mathematical_contracts(language: Language = "both") -> dict[str, Any]:
 
 
 def get_mathematical_contract(contract_id: str, language: Language = "both") -> dict[str, Any]:
-    """Return one named contract while preserving the registry envelope."""
+    """Return one contract by stable identifier."""
 
-    payload = get_mathematical_contracts(language)
-    matches = [
-        contract for contract in payload["contracts"] if contract["contract_id"] == contract_id
-    ]
-    if not matches:
-        raise KeyError(contract_id)
-    payload["contracts"] = matches
-    validate_mathematical_contract_payload(payload)
-    return payload
-
-
-__all__ = [
-    "Language",
-    "get_mathematical_contract",
-    "get_mathematical_contract_schema",
-    "get_mathematical_contracts",
-    "validate_mathematical_contract_payload",
-]
+    payload = list_mathematical_contracts(language)
+    for contract in payload["contracts"]:
+        if contract["contract_id"] == contract_id:
+            payload["contracts"] = [contract]
+            validate_mathematical_contract_payload(payload)
+            return payload
+    available = ", ".join(contract["contract_id"] for contract in _CONTRACTS)
+    raise KeyError(f"unknown mathematical contract: {contract_id}; available: {available}")
