@@ -8,20 +8,27 @@ external simulation has been executed.
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
+from functools import lru_cache
+from importlib.resources import files
 from typing import Any, Literal
+
+import jsonschema
 
 Language = Literal["en", "zh-CN", "both"]
 
 _SCHEMA_VERSION = "1.0"
+_SCHEMA_ID = (
+    "https://sunhaojun22.github.io/TsaoSciResearcher/"
+    "schemas/v2/mathematical-contract-registry.schema.json"
+)
+_SCHEMA_RESOURCE = ("data", "schemas", "mathematical-contract-registry.schema.json")
 
 _CONTRACTS: tuple[dict[str, Any], ...] = (
     {
         "contract_id": "capability-ranking",
-        "title": {
-            "en": "Capability-ranking abstraction",
-            "zh-CN": "能力排序抽象",
-        },
+        "title": {"en": "Capability-ranking abstraction", "zh-CN": "能力排序抽象"},
         "equation": "S(c|q,o,e)=w_q R(q,c)+w_o R(o,c)+w_e M(e,c)-w_x C(c)",
         "symbols": {
             "c": {"en": "candidate capability", "zh-CN": "候选能力"},
@@ -182,6 +189,28 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
 )
 
 
+@lru_cache(maxsize=1)
+def _load_mathematical_contract_schema() -> dict[str, Any]:
+    resource = files("tsao_researcher").joinpath(*_SCHEMA_RESOURCE)
+    value = json.loads(resource.read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError("mathematical contract schema root must be an object")
+    jsonschema.Draft202012Validator.check_schema(value)
+    return value
+
+
+def get_mathematical_contract_schema() -> dict[str, Any]:
+    """Return a defensive copy of the packaged Draft 2020-12 schema."""
+
+    return deepcopy(_load_mathematical_contract_schema())
+
+
+def validate_mathematical_contract_payload(payload: dict[str, Any]) -> None:
+    """Validate one mathematical-contract registry payload."""
+
+    jsonschema.Draft202012Validator(_load_mathematical_contract_schema()).validate(payload)
+
+
 def _localized(value: Any, language: Language) -> Any:
     if isinstance(value, dict):
         if set(value) == {"en", "zh-CN"}:
@@ -197,14 +226,17 @@ def list_mathematical_contracts(language: Language = "both") -> dict[str, Any]:
 
     if language not in {"en", "zh-CN", "both"}:
         raise ValueError("language must be one of: en, zh-CN, both")
-    return {
+    payload = {
         "schema_version": _SCHEMA_VERSION,
+        "schema_id": _SCHEMA_ID,
         "language": language,
         "advisory_only": True,
         "solver_executed": False,
         "automatic_approval": False,
         "contracts": [_localized(contract, language) for contract in _CONTRACTS],
     }
+    validate_mathematical_contract_payload(payload)
+    return payload
 
 
 def get_mathematical_contract(contract_id: str, language: Language = "both") -> dict[str, Any]:
@@ -214,6 +246,7 @@ def get_mathematical_contract(contract_id: str, language: Language = "both") -> 
     for contract in payload["contracts"]:
         if contract["contract_id"] == contract_id:
             payload["contracts"] = [contract]
+            validate_mathematical_contract_payload(payload)
             return payload
     available = ", ".join(contract["contract_id"] for contract in _CONTRACTS)
     raise KeyError(f"unknown mathematical contract: {contract_id}; available: {available}")
