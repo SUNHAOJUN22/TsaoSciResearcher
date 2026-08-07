@@ -12,8 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def schemas() -> list[dict[str, object]]:
     return [
         json.loads(path.read_text(encoding="utf-8"))
-        for path in sorted((ROOT / "schemas").glob("*.json"))
-        + sorted((ROOT / "schemas/v2").glob("*.json"))
+        for path in sorted((ROOT / "schemas").glob("*.json")) + sorted((ROOT / "schemas/v2").glob("*.json"))
     ]
 
 

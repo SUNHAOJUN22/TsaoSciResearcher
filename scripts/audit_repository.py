@@ -80,9 +80,7 @@ def audit() -> dict[str, Any]:
 
     manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("schema_count") != 20:
-        errors.append(
-            f"manifest schema_count={manifest.get('schema_count')!r}, expected 20"
-        )
+        errors.append(f"manifest schema_count={manifest.get('schema_count')!r}, expected 20")
     compatibility = manifest.get("compatibility")
     if not isinstance(compatibility, dict) or compatibility.get("macos") is not False:
         errors.append("manifest compatibility.macos must be false")
@@ -99,9 +97,7 @@ def audit() -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(
-        description="Audit the complete TsaoSciResearcher repository"
-    )
+    parser = argparse.ArgumentParser(description="Audit the complete TsaoSciResearcher repository")
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
     result = audit()

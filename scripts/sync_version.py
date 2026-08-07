@@ -110,16 +110,11 @@ def main() -> None:
         if args.check:
             raise SystemExit(f"version metadata is stale: {exc}") from None
         raise
-    stale = [
-        path
-        for path, content in expected.items()
-        if path.read_text(encoding="utf-8") != content
-    ]
+    stale = [path for path, content in expected.items() if path.read_text(encoding="utf-8") != content]
     if args.check:
         if stale:
             raise SystemExit(
-                "version metadata is stale: "
-                + ", ".join(path.relative_to(ROOT).as_posix() for path in stale)
+                "version metadata is stale: " + ", ".join(path.relative_to(ROOT).as_posix() for path in stale)
             )
         print(f"version metadata PASS ({version})")
         return

@@ -20,8 +20,7 @@ Language = Literal["en", "zh-CN", "both"]
 
 _SCHEMA_VERSION = "1.0"
 _SCHEMA_ID = (
-    "https://sunhaojun22.github.io/TsaoSciResearcher/"
-    "schemas/v2/mathematical-contract-registry.schema.json"
+    "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json"
 )
 _SCHEMA_RESOURCE = ("data", "schemas", "mathematical-contract-registry.schema.json")
 
