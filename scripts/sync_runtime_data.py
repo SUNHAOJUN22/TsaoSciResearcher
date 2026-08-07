@@ -12,6 +12,8 @@ MAPPINGS = {
     ROOT / "capabilities/v2/capabilities.json": ROOT / "tsao_researcher/data/capabilities/capabilities.json",
     ROOT / "capabilities/v2/extensions.json": ROOT / "tsao_researcher/data/capabilities/extensions.json",
     ROOT / "routing/router-rules-v2.json": ROOT / "tsao_researcher/data/routing/router-rules-v2.json",
+    ROOT / "schemas/v2/mathematical-contract-registry.schema.json": ROOT
+    / "tsao_researcher/data/schemas/mathematical-contract-registry.schema.json",
 }
 
 
