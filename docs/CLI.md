@@ -17,21 +17,36 @@ python -m tsao_researcher verify .
 
 ```bash
 python -m tsao_researcher math
+python -m tsao_researcher math --schema
 python -m tsao_researcher math --contract decision-readiness --language en
 python -m tsao_researcher math --contract quantity-dimension --language zh-CN
+python -m tsao_researcher math --contract uncertainty-budget --output contract.json
+python scripts/validate_mathematical_contracts.py --check
 ```
 
-The `math` command is advisory and machine-readable. Every response declares:
+The `math` command is advisory and machine-readable. Contract responses declare a stable schema identifier and the fixed scientific boundary:
 
 ```json
 {
+  "schema_id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json",
   "advisory_only": true,
   "solver_executed": false,
   "automatic_approval": false
 }
 ```
 
-It explains the repository's scoring, quantity/dimension, applicability, evidence-conflict, identifiability, uncertainty, multiscale-bridge, and readiness contracts. It does not calculate scientific results.
+`--schema` emits the packaged Draft 2020-12 contract. `--output` persists the same JSON object that is emitted to stdout. The offline validator checks the canonical Schema, package mirror, three language modes, single-contract payloads, the canonical example, and the fixed false execution/approval boundaries.
+
+The equations explain the repository's scoring, quantity/dimension, applicability, evidence-conflict, identifiability, uncertainty, multiscale-bridge, and readiness contracts. They do not calculate scientific results.
+
+## Acceptance evidence modes
+
+```bash
+python scripts/build_validation_evidence.py --check
+python scripts/generate_checksums.py --check
+```
+
+The checked-in acceptance hardening record may use `validation_scope="composite"`: a pinned full-repository baseline is combined with a SHA-256-bound focused regression. Composite evidence never claims that current-tree end-to-end CI ran when it did not.
 
 ## Execution evidence
 
