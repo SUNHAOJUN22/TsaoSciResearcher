@@ -34,7 +34,7 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
-      - name: Apply exact formatter and focused qualification
+      - name: Format and qualify the exact clean tree
         run: |
           python -m ruff format \
             scripts/audit_repository.py \
@@ -43,20 +43,15 @@ jobs:
             tests/test_final_acceptance_preflight.py \
             tests/test_schemas.py \
             tsao_researcher/mathematical_contracts.py
+          rm -f .github/workflows/format-final-acceptance-once.yml
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m pytest -q
-      - name: Remove temporary workflow and publish formatted tree
+      - name: Publish formatted clean tree
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm .github/workflows/format-final-acceptance-once.yml
-          git add scripts/audit_repository.py \
-            scripts/build_validation_evidence.py \
-            scripts/sync_version.py \
-            tests/test_final_acceptance_preflight.py \
-            tests/test_schemas.py \
-            tsao_researcher/mathematical_contracts.py
+          git add -A
           git diff --cached --check
           git commit -m 'style: apply exact final acceptance formatting'
           git push origin HEAD:agent/final-acceptance-20260807
