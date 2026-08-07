@@ -20,8 +20,7 @@ Language = Literal["en", "zh-CN", "both"]
 
 _SCHEMA_VERSION = "1.0"
 _SCHEMA_ID = (
-    "https://sunhaojun22.github.io/TsaoSciResearcher/"
-    "schemas/v2/mathematical-contract-registry.schema.json"
+    "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json"
 )
 _SCHEMA_RESOURCE = ("data", "schemas", "mathematical-contract-registry.schema.json")
 
@@ -191,8 +190,10 @@ _CONTRACTS: tuple[dict[str, Any], ...] = (
 
 @lru_cache(maxsize=1)
 def _load_mathematical_contract_schema() -> dict[str, Any]:
-    resource = files("tsao_researcher").joinpath(*_SCHEMA_RESOURCE)
-    value = json.loads(resource.read_text(encoding="utf-8", errors="strict"))
+    resource = files("tsao_researcher")
+    for part in _SCHEMA_RESOURCE:
+        resource = resource.joinpath(part)
+    value = json.loads(resource.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         raise ValueError("mathematical contract schema root must be an object")
     jsonschema.Draft202012Validator.check_schema(value)
