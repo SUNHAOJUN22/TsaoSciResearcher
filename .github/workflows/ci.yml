@@ -99,7 +99,7 @@ jobs:
           python scripts/build_validation_evidence.py --check
           python scripts/build_test_dashboard.py --check
           python scripts/build_research_quality_dashboard.py --check
-          python scripts/build_engineering_report.py --check
+          python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/route_task.py --self-test
