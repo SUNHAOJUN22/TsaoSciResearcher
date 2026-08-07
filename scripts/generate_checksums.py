@@ -79,6 +79,12 @@ def _validation_scope(root: Path = ROOT) -> str:
     return str(value.get("validation_scope", "unknown"))
 
 
+def rendered_checksum(root: Path = ROOT) -> str:
+    """Return the governed checksum record for the current validation scope."""
+
+    return DEFERRED_COMPOSITE if _validation_scope(root) == "composite" else build(root)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Write or verify the deterministic repository-tree checksum."
@@ -89,7 +95,7 @@ def main() -> None:
     args = parser.parse_args()
     checksum_path = ROOT / "SHA256SUMS"
     if args.write:
-        expected = build()
+        expected = rendered_checksum()
         atomic_write_text(checksum_path, expected)
         print(f"wrote {checksum_path}: {expected.strip()}")
         return
@@ -97,19 +103,19 @@ def main() -> None:
         print("SHA256SUMS is missing or unsafe", file=sys.stderr)
         raise SystemExit(1)
     actual = checksum_path.read_text(encoding="utf-8", errors="strict")
-    if _validation_scope() == "composite":
-        if actual != DEFERRED_COMPOSITE:
-            print("SHA256SUMS must explicitly defer the digest in composite evidence mode", file=sys.stderr)
-            raise SystemExit(1)
-        print("repository-tree checksum NOT RECORDED: composite evidence mode")
-        return
-    expected = build()
+    expected = rendered_checksum()
     if actual != expected:
-        print("SHA256SUMS is stale; run scripts/generate_checksums.py --write", file=sys.stderr)
-        print(f"checked-in: {actual.strip()}", file=sys.stderr)
-        print(f"expected:   {expected.strip()}", file=sys.stderr)
+        if _validation_scope() == "composite":
+            print("SHA256SUMS must explicitly defer the digest in composite evidence mode", file=sys.stderr)
+        else:
+            print("SHA256SUMS is stale; run scripts/generate_checksums.py --write", file=sys.stderr)
+            print(f"checked-in: {actual.strip()}", file=sys.stderr)
+            print(f"expected:   {expected.strip()}", file=sys.stderr)
         raise SystemExit(1)
-    print(f"repository-tree checksum PASS: {expected.strip()}")
+    if expected == DEFERRED_COMPOSITE:
+        print("repository-tree checksum NOT RECORDED: composite evidence mode")
+    else:
+        print(f"repository-tree checksum PASS: {expected.strip()}")
 
 
 if __name__ == "__main__":
