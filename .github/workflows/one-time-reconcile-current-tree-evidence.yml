@@ -1,0 +1,81 @@
+name: One-time reconcile current-tree evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/reconcile-current-tree-evidence.trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tsao-researcher-evidence-reconciliation
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact acceptance branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: agent/reconcile-current-tree-evidence-20260808
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+
+      - name: Install exact CI dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+
+      - name: Apply evidence and README reconciliation
+        run: |
+          python .github/reconcile-validation-evidence.py
+          python -m ruff format scripts/build_validation_evidence.py tests/test_validation_evidence_contract.py
+          rm -f .github/reconcile-validation-evidence.py
+          python scripts/build_validation_evidence.py --write --composite
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --write
+
+      - name: Qualify complete clean tree
+        run: |
+          python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
+          python scripts/validate_schemas.py
+          python scripts/validate_mathematical_contracts.py --check
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/final_acceptance_preflight.py --root . --json
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m pytest -q
+          mkdocs build --strict
+
+      - name: Publish reconciled branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix: align validation evidence with Windows Linux qualification'
+          git push origin HEAD:agent/reconcile-current-tree-evidence-20260808
