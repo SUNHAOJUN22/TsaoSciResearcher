@@ -37,7 +37,7 @@
     "windows_python_3_12": "PASS"
   },
   "compatibility_scope": "Platform results and full-repository quality gates are inherited from the pinned exact-tree baseline; the current delta is covered by the focused regression record and has not received a fresh end-to-end current-tree CI attestation.",
-  "evidence_date": "2026-08-07",
+  "evidence_date": "2026-08-08",
   "focused_current_change_regression": {
     "base_commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
     "changed_files": [

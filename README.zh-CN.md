@@ -9,6 +9,17 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
+<!-- LOCALIZED_VISION_ZH:START -->
+## 中文项目愿景图：从科学问题到可证伪、可交接的研究路线
+
+<p align="center">
+  <img src="docs/localized-vision/researcher-vision-zh.svg" width="100%" alt="TsaoSciResearcher 中文证据优先科研控制架构">
+</p>
+
+> 图中公式映射能力路由、量纲、证据冲突、不确定度、尺度桥和回执验证代码；图不是论文证据、实验结果或自动科学批准。
+
+<!-- LOCALIZED_VISION_ZH:END -->
+
 > **正式版本 0.7.4 · 验收加固 main** · Apache-2.0 · Python 3.10–3.13 · 确定性 CLI 与 Python API
 
 ## 1. 这个仓库究竟是什么

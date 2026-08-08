@@ -9,6 +9,17 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
+<!-- LOCALIZED_VISION_EN:START -->
+## Project vision: from scientific questions to falsifiable, transferable research plans
+
+<p align="center">
+  <img src="docs/localized-vision/researcher-vision-en.svg" width="100%" alt="TsaoSciResearcher English evidence-first research control architecture">
+</p>
+
+> The equations map to capability routing, dimensional checks, evidence conflict, uncertainty, scale bridges and receipt verification. The figure is not paper evidence, an experiment or automatic scientific approval.
+
+<!-- LOCALIZED_VISION_EN:END -->
+
 > **Release 0.7.4 · acceptance-hardened main** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
 ## 1. What this repository is
