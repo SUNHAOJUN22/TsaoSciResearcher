@@ -32,9 +32,9 @@ Every contract payload contains:
 }
 ```
 
-The canonical Schema is [`schemas/v2/mathematical-contract-registry.schema.json`](../schemas/v2/mathematical-contract-registry.schema.json). The installed package carries a byte-identical mirror under `tsao_researcher/data/schemas/` and `scripts/sync_runtime_data.py` checks that the two copies stay synchronized.
+The canonical Schema is [`schemas/v2/mathematical-contract-registry.schema.json`](https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/schemas/v2/mathematical-contract-registry.schema.json). The installed package carries a byte-identical mirror under `tsao_researcher/data/schemas/` and `scripts/sync_runtime_data.py` checks that the two copies stay synchronized.
 
-规范 Schema 位于 [`schemas/v2/mathematical-contract-registry.schema.json`](../schemas/v2/mathematical-contract-registry.schema.json)。安装包在 `tsao_researcher/data/schemas/` 中携带逐字节一致的镜像，并由 `scripts/sync_runtime_data.py` 检查二者是否同步。
+规范 Schema 位于 [`schemas/v2/mathematical-contract-registry.schema.json`](https://github.com/SUNHAOJUN22/TsaoSciResearcher/blob/main/schemas/v2/mathematical-contract-registry.schema.json)。安装包在 `tsao_researcher/data/schemas/` 中携带逐字节一致的镜像，并由 `scripts/sync_runtime_data.py` 检查二者是否同步。
 
 ![Mathematical contract schema pipeline](assets/ai/mathematical_contract_schema_pipeline.svg)
 

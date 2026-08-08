@@ -13,13 +13,19 @@
       "mathematical_contracts_percent": 100.0
     },
     "evidence_date": "2026-08-06",
-    "mutation": {"killed": 24, "total": 24},
+    "mutation": {
+      "killed": 24,
+      "total": 24
+    },
     "release": "0.7.4",
     "repository_tree_file_count": 408,
     "repository_tree_sha256": "9514c4e54ae0179fc80a322a9d30adc82f836d961b6c9b3890c35a893b13bda8",
     "scientific_boundary": "software control layer only; no external DFT, quantum chemistry, MD, FEM, CFD, process, HPC, instrument, or laboratory execution is implied",
     "status": "PASS",
-    "tests": {"complete_regression": 314, "failures": 0},
+    "tests": {
+      "complete_regression": 314,
+      "failures": 0
+    },
     "validated_file_count": 403,
     "validation_tree_sha256": "d2db96ff752e85a0680c32b9808219d5b875a9b9a03df151f91ee424aac3b58a",
     "workflow_run_id": 31089852037
@@ -35,7 +41,10 @@
   "focused_current_change_regression": {
     "base_commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
     "changed_files": [
-      {"path": "tsao_researcher/mathematical_contracts.py", "sha256": "169ef3461822682d968e0355db56a6af68a030fd549153d64320b4963373a207"}
+      {
+        "path": "tsao_researcher/mathematical_contracts.py",
+        "sha256": "39973fe44b6bedee8371a205417eebefd9fc99a825a601daad945f666d0efad3"
+      }
     ],
     "checks": {
       "boundary_forgery_rejection": "PASS",
@@ -89,7 +98,14 @@
     "dependency_lock_sha256": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5",
     "digest_algorithm": "composite baseline tree SHA-256 plus focused changed-file SHA-256 manifest",
     "digest_exclusions": [
-      ".coverage", ".coverage.*", "SHA256SUMS", "docs/QUALITY_HISTORY.json", "docs/VALIDATION_EVIDENCE.json", "docs/engineering-audit-report.pdf", "docs/test-dashboard.html", "docs/test-dashboard.svg"
+      ".coverage",
+      ".coverage.*",
+      "SHA256SUMS",
+      "docs/QUALITY_HISTORY.json",
+      "docs/VALIDATION_EVIDENCE.json",
+      "docs/engineering-audit-report.pdf",
+      "docs/test-dashboard.html",
+      "docs/test-dashboard.svg"
     ],
     "evidence_generated_from_commit": null,
     "external_attestation": "baseline GitHub Actions run 31089852037 plus focused current-change regression",
@@ -110,7 +126,7 @@
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 19,
     "schemas": 20,
-    "test_modules": 42,
+    "test_modules": 43,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },

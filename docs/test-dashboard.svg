@@ -21,37 +21,67 @@
 <text x="622" y="232" class="muted small">explicitly disclosed</text>
 <rect x="865" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="887" y="160" class="muted small">Test modules</text>
-<text x="887" y="207" class="value">42</text>
+<text x="887" y="207" class="value">43</text>
 <text x="887" y="232" class="muted small">repository modules</text>
 <text x="70" y="302" class="label">Recorded platform baseline</text>
 <rect x="70" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <circle cx="93" cy="345" r="7" fill="#247a48"/>
-<text x="110" y="351" class="small">macOS · Python 3.12</text>
+<text x="110" y="351" class="small">macOS / Python 3.12</text>
 <rect x="335" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <circle cx="358" cy="345" r="7" fill="#247a48"/>
-<text x="375" y="351" class="small">Ubuntu · Python 3.10</text>
+<text x="375" y="351" class="small">Ubuntu / Python 3.10</text>
 <rect x="600" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <circle cx="623" cy="345" r="7" fill="#247a48"/>
-<text x="640" y="351" class="small">Ubuntu · Python 3.13</text>
+<text x="640" y="351" class="small">Ubuntu / Python 3.13</text>
 <rect x="865" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
 <circle cx="888" cy="345" r="7" fill="#247a48"/>
-<text x="905" y="351" class="small">Windows · Python 3.12</text>
+<text x="905" y="351" class="small">Windows / Python 3.12</text>
 <text x="70" y="407" class="label">Scoped validation gates</text>
-<text x="70" y="442" class="small">Baseline Bandit high severity</text><rect x="510" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="484" class="small">Baseline bounded performance</text><rect x="510" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="526" class="small">Baseline byte-identical releases</text><rect x="510" y="501" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="519" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="568" class="small">Baseline complete regression</text><rect x="510" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="610" class="small">Baseline critical mutation smoke</text><rect x="510" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="603" text-anchor="middle" class="small" fill="#247a48">24/24</text>
-<text x="70" y="652" class="small">Baseline strict Mypy</text><rect x="510" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="694" class="small">Baseline repository + contract audit</text><rect x="510" y="669" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="687" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="70" y="736" class="small">Baseline reverse-order regression</text><rect x="510" y="711" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="558" y="729" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="442" class="small">Baseline Ruff format + lint</text><rect x="1060" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="484" class="small">Baseline seeded-random regression</text><rect x="1060" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="526" class="small">Current-tree end-to-end CI</text><rect x="1060" y="501" width="96" height="27" rx="13" fill="#fff7dd" stroke="#9a6700"/><text x="1108" y="519" text-anchor="middle" class="small" fill="#9a6700">NOT_RUN</text>
-<text x="620" y="568" class="small">Deterministic visual-report contract</text><rect x="1060" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="610" class="small">Focused current-change regression</text><rect x="1060" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="603" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="652" class="small">README/version/mirror alignment</text><rect x="1060" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
-<text x="620" y="694" class="small">Scientific-quality guard regression</text><rect x="1060" y="669" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/><text x="1108" y="687" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="442" class="small">Baseline repository and contract audit</text>
+<rect x="510" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="484" class="small">Baseline complete regression</text>
+<rect x="510" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="526" class="small">Baseline reverse-order regression</text>
+<rect x="510" y="501" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="519" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="568" class="small">Baseline seeded-random regression</text>
+<rect x="510" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="610" class="small">Baseline Ruff format and lint</text>
+<rect x="510" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="603" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="652" class="small">Baseline strict Mypy</text>
+<rect x="510" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="694" class="small">Baseline Bandit high-severity scan</text>
+<rect x="510" y="669" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="687" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="70" y="736" class="small">Baseline critical mutation gate</text>
+<rect x="510" y="711" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="558" y="729" text-anchor="middle" class="small" fill="#247a48">24/24</text>
+<text x="620" y="442" class="small">Baseline bounded performance</text>
+<rect x="1060" y="417" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="435" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="484" class="small">Baseline byte-identical release</text>
+<rect x="1060" y="459" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="477" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="526" class="small">Current scientific-quality guards</text>
+<rect x="1060" y="501" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="519" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="568" class="small">Current visual-report contract</text>
+<rect x="1060" y="543" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="561" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="610" class="small">README version and mirror alignment</text>
+<rect x="1060" y="585" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="603" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="652" class="small">Focused current-change regression</text>
+<rect x="1060" y="627" width="96" height="27" rx="13" fill="#eaf8ef" stroke="#247a48"/>
+<text x="1108" y="645" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="620" y="694" class="small">Current-tree end-to-end CI</text>
+<rect x="1060" y="669" width="96" height="27" rx="13" fill="#fff7dd" stroke="#9a6700"/>
+<text x="1108" y="687" text-anchor="middle" class="small" fill="#9a6700">NOT_RUN</text>
 <rect x="70" y="750" width="1060" height="1" fill="#d8e0ea"/>
 <text x="70" y="778" class="muted small">Inventory: 341 capability contracts · 322 named contracts · 15 workflows · 20 schemas · 7 domain packs · 0 placeholders</text>
 </svg>

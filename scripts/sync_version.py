@@ -12,7 +12,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION_PATH = ROOT / "VERSION"
-SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$")
+SEMVER_TOKEN = r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?"
+SEMVER = re.compile(rf"^{SEMVER_TOKEN}$")
 
 
 def canonical_version() -> str:
@@ -22,7 +23,14 @@ def canonical_version() -> str:
     return value
 
 
-def _replace_once(text: str, pattern: str, replacement: str, label: str, *, flags: int = 0) -> str:
+def _replace_once(
+    text: str,
+    pattern: str,
+    replacement: str,
+    label: str,
+    *,
+    flags: int = 0,
+) -> str:
     updated, count = re.subn(pattern, replacement, text, count=1, flags=flags)
     if count != 1:
         raise ValueError(f"version anchor missing or ambiguous: {label}")
@@ -73,8 +81,8 @@ def render(version: str) -> dict[Path, str]:
         text = path.read_text(encoding="utf-8", errors="strict")
         outputs[path] = _replace_once(
             text,
-            r"(?m)^> \*\*Release [^*]+\*\*",
-            f"> **Release {version}**",
+            rf"(?m)^(> \*\*Release ){SEMVER_TOKEN}",
+            rf"\g<1>{version}",
             name,
         )
 
@@ -82,8 +90,8 @@ def render(version: str) -> dict[Path, str]:
     chinese = chinese_path.read_text(encoding="utf-8", errors="strict")
     outputs[chinese_path] = _replace_once(
         chinese,
-        r"(?m)^> \*\*正式版本 [^*]+\*\*",
-        f"> **正式版本 {version}**",
+        rf"(?m)^(> \*\*正式版本 ){SEMVER_TOKEN}",
+        rf"\g<1>{version}",
         "README.zh-CN.md",
     )
     return outputs
@@ -96,7 +104,12 @@ def main() -> None:
     mode.add_argument("--check", action="store_true")
     args = parser.parse_args()
     version = canonical_version()
-    expected = render(version)
+    try:
+        expected = render(version)
+    except ValueError as exc:
+        if args.check:
+            raise SystemExit(f"version metadata is stale: {exc}") from None
+        raise
     stale = [path for path, content in expected.items() if path.read_text(encoding="utf-8") != content]
     if args.check:
         if stale:

@@ -19,7 +19,7 @@
   "changed_files": [
     {
       "path": "tsao_researcher/mathematical_contracts.py",
-      "sha256": "169ef3461822682d968e0355db56a6af68a030fd549153d64320b4963373a207"
+      "sha256": "39973fe44b6bedee8371a205417eebefd9fc99a825a601daad945f666d0efad3"
     }
   ],
   "scope_note": "The cryptographic focus manifest pins the decision-critical runtime module. The final GitHub compare is used separately to verify the complete published path set against the accepted baseline.",

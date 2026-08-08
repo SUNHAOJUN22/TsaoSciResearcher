@@ -59,7 +59,7 @@ def test_schema_validation_cli() -> None:
     from scripts.validate_schemas import validate_all
 
     result = validate_all(ROOT)
-    assert result == {"valid": True, "schemas": 19, "draft": "2020-12"}
+    assert result == {"valid": True, "schemas": 20, "draft": "2020-12"}
 
 
 def test_canonical_handoff_template_matches_v2_schema() -> None:

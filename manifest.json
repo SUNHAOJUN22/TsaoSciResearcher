@@ -17,7 +17,7 @@
     "open_agent_skills": true,
     "windows": true,
     "linux": true,
-    "macos": true,
+    "macos": false,
     "python": [
       "3.10",
       "3.11",

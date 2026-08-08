@@ -227,10 +227,17 @@ def _validate_composite_inputs(baseline: dict[str, Any], focused: dict[str, Any]
     baseline_digest = baseline.get("validation_tree_sha256")
     if not isinstance(baseline_digest, str) or not SHA64.fullmatch(baseline_digest):
         errors.append("composite baseline must record a validation tree SHA-256")
-    if not isinstance(baseline.get("validated_file_count"), int) or baseline.get("validated_file_count", 0) < 1:
+    if (
+        not isinstance(baseline.get("validated_file_count"), int)
+        or baseline.get("validated_file_count", 0) < 1
+    ):
         errors.append("composite baseline must record a positive validated file count")
     compatibility = baseline.get("compatibility")
-    if not isinstance(compatibility, dict) or not compatibility or any(str(value) != "PASS" for value in compatibility.values()):
+    if (
+        not isinstance(compatibility, dict)
+        or not compatibility
+        or any(str(value) != "PASS" for value in compatibility.values())
+    ):
         errors.append("composite baseline compatibility matrix must be fully PASS")
     if focused.get("status") != "PASS":
         errors.append("focused current-change regression must be PASS")

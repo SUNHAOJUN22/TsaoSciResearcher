@@ -52,12 +52,17 @@
     ]
   },
   "license": "Apache-2.0",
-  "python": ["3.10", "3.11", "3.12", "3.13"],
+  "python": [
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13"
+  ],
   "repository_assets": {
     "ai_diagrams": 38,
     "references": 23,
     "templates": 14,
-    "test_modules": 42
+    "test_modules": 43
   },
   "schema_version": "1.0",
   "schemas": {
