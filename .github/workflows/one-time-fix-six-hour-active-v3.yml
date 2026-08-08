@@ -1,10 +1,8 @@
-name: One-time repair Researcher six-hour harness v3
+name: One-time repair Researcher six-hour harness v4
 
 on:
   push:
     branches: [main]
-  issue_comment:
-    types: [created]
 
 permissions:
   contents: write
@@ -12,12 +10,7 @@ permissions:
 
 jobs:
   repair:
-    if: >-
-      (github.event_name == 'push' &&
-       contains(github.event.head_commit.message || '', '[run-researcher-repair-v3]')) ||
-      (github.event_name == 'issue_comment' &&
-       github.event.issue.number == 212 &&
-       github.event.comment.body == '/fix-six-hour-active-v3')
+    if: contains(github.event.head_commit.message || '', '[run-researcher-repair-v4]')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -35,55 +28,25 @@ jobs:
 
           active_path = Path('.github/workflows/one-time-six-hour-active.yml')
           text = active_path.read_text(encoding='utf-8')
-
           replacements = (
               ('/run-six-hour-active-v1', '/run-six-hour-active-v3', 3),
-              (
-                  'python -m pytest -q -p hypothesis.extra.pytestplugin',
-                  'python -m pytest -q',
-                  2,
-              ),
-              (
-                  'mkdir -p six-hour-evidence',
-                  'mkdir -p "$RUNNER_TEMP/six-hour-evidence"',
-                  2,
-              ),
-              (
-                  'evidence_dir = Path("six-hour-evidence")',
-                  'evidence_dir = Path(os.environ["RUNNER_TEMP"]) / "six-hour-evidence"',
-                  2,
-              ),
+              ('python -m pytest -q -p hypothesis.extra.pytestplugin', 'python -m pytest -q', 2),
+              ('mkdir -p six-hour-evidence', 'mkdir -p "$RUNNER_TEMP/six-hour-evidence"', 2),
+              ('evidence_dir = Path("six-hour-evidence")', 'evidence_dir = Path(os.environ["RUNNER_TEMP"]) / "six-hour-evidence"', 2),
           )
           for old, new, expected in replacements:
               observed = text.count(old)
               if observed != expected:
-                  raise SystemExit(
-                      f'active workflow drift for {old!r}: '
-                      f'expected {expected}, observed {observed}'
-                  )
+                  raise SystemExit(f'workflow drift for {old!r}: expected {expected}, observed {observed}')
               text = text.replace(old, new)
 
           old_upload = 'path: six-hour-evidence/'
           if text.count(old_upload) != 2:
-              raise SystemExit('active workflow upload-path count drifted')
-          runner_temp = '$' + '{{ runner.temp }}'
-          text = text.replace(
-              old_upload,
-              f'path: {runner_temp}/six-hour-evidence/',
-          )
-
-          forbidden = (
-              '/run-six-hour-active-v1',
-              '-p hypothesis.extra.pytestplugin',
-              'mkdir -p six-hour-evidence',
-              'Path("six-hour-evidence")',
-              'path: six-hour-evidence/',
-          )
-          remaining = [token for token in forbidden if token in text]
-          if remaining:
-              raise SystemExit(f'uncorrected tokens remain: {remaining}')
-
+              raise SystemExit('upload path count drifted')
+          expression = '$' + '{{ runner.temp }}'
+          text = text.replace(old_upload, f'path: {expression}/six-hour-evidence/')
           active_path.write_text(text, encoding='utf-8')
+
           for relative in (
               '.github/workflows/one-time-fix-six-hour-active.yml',
               '.github/workflows/one-time-fix-six-hour-active-v3.yml',
@@ -114,12 +77,4 @@ jobs:
           PUBLISHED_SHA: ${{ steps.publish.outputs.sha }}
         run: |
           set -euo pipefail
-          gh issue comment 212 --repo "$GITHUB_REPOSITORY" --body "RESEARCHER_SIX_HOUR_REPAIR_V3: **${{ job.status }}**
-
-- published harness commit: \`${PUBLISHED_SHA:-UNPUBLISHED}\`
-- next exact command: \`/run-six-hour-active-v3\`
-- duplicate Hypothesis plugin registration removed
-- soak evidence moved to runner-temporary storage
-- previous failed runs contribute \`0 ns\`
-
-No scientific, coverage, security, dependency or approval threshold was changed."
+          gh issue comment 212 --repo "$GITHUB_REPOSITORY" --body "RESEARCHER_REPAIR_V4 status=${{ job.status }} published_sha=${PUBLISHED_SHA:-UNPUBLISHED} next=/run-six-hour-active-v3 previous_active_ns=0"
