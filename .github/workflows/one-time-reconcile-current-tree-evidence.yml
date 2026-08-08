@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - name: Check out exact acceptance branch
+      - name: Check out exact main
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          ref: agent/reconcile-current-tree-evidence-20260808
+          ref: main
           fetch-depth: 0
           persist-credentials: true
 
@@ -40,9 +40,10 @@ jobs:
 
       - name: Apply evidence and README reconciliation
         run: |
+          git rev-parse HEAD > /tmp/reconciliation-baseline
           python .github/reconcile-validation-evidence.py
           python -m ruff format scripts/build_validation_evidence.py tests/test_validation_evidence_contract.py
-          rm -f .github/reconcile-validation-evidence.py
+          rm -f .github/reconcile-validation-evidence.py .github/reconcile-current-tree-evidence.trigger
           python scripts/build_validation_evidence.py --write --composite
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
@@ -71,11 +72,17 @@ jobs:
           python -m pytest -q
           mkdocs build --strict
 
-      - name: Publish reconciled branch
+      - name: Publish reconciled main tree
         run: |
+          baseline=$(cat /tmp/reconciliation-baseline)
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$baseline" || {
+            echo 'main moved during reconciliation; refusing stale overwrite' >&2
+            exit 1
+          }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
           git commit -m 'fix: align validation evidence with Windows Linux qualification'
-          git push origin HEAD:agent/reconcile-current-tree-evidence-20260808
+          git push origin HEAD:main
