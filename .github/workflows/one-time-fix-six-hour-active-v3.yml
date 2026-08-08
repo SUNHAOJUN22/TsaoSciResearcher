@@ -1,6 +1,8 @@
 name: One-time repair Researcher six-hour harness v3
 
 on:
+  push:
+    branches: [main]
   issue_comment:
     types: [created]
 
@@ -11,8 +13,11 @@ permissions:
 jobs:
   repair:
     if: >-
-      github.event.issue.number == 212 &&
-      github.event.comment.body == '/fix-six-hour-active-v3'
+      (github.event_name == 'push' &&
+       contains(github.event.head_commit.message || '', '[run-researcher-repair-v3]')) ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.number == 212 &&
+       github.event.comment.body == '/fix-six-hour-active-v3')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
