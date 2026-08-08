@@ -23,8 +23,15 @@ def test_canonical_version_matches_all_derived_metadata() -> None:
 def test_sync_version_check_detects_stale_metadata() -> None:
     readme = ROOT / "README_EN.md"
     original = readme.read_text(encoding="utf-8")
+    version = canonical_version()
+    governed_anchor = f"> **Release {version}"
+    stale_anchor = "> **Release 0.0.0-stale"
+    assert original.count(governed_anchor) == 1
     try:
-        readme.write_text(original.replace("Release ", "Release stale-", 1), encoding="utf-8")
+        readme.write_text(
+            original.replace(governed_anchor, stale_anchor, 1),
+            encoding="utf-8",
+        )
         result = subprocess.run(
             [sys.executable, "scripts/sync_version.py", "--check"],
             cwd=ROOT,
