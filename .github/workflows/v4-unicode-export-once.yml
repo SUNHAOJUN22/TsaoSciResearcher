@@ -17,7 +17,7 @@ jobs:
     if: >-
       github.event.issue.pull_request == null &&
       github.event.comment.user.login == github.repository_owner &&
-      contains(github.event.comment.body, '/export-v4-unicode-candidate')
+      contains(github.event.comment.body, '/export-v4-unicode-candidate-v2')
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
@@ -44,6 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/apply_v4_unicode_bindings.py
+          git add -u .github/workflows
           python scripts/validate_unicode_integrity.py --normalize --write
           python -m ruff format scripts/validate_unicode_integrity.py scripts/apply_v4_unicode_bindings.py scripts/final_acceptance_preflight.py tests/test_unicode_integrity.py
           python scripts/validate_unicode_integrity.py --write
@@ -135,4 +136,4 @@ jobs:
           OUTCOME: ${{ job.status }}
           CANDIDATE: ${{ steps.candidate.outputs.sha }}
         run: |
-          gh issue comment "$ISSUE" --body "V4_RESEARCHER_EXACT_EXPORT outcome=${OUTCOME} candidate=${CANDIDATE:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} bundle=uploaded unicode=whole-tree-strict preflight=bound controller=removed branch=main-only"
+          gh issue comment "$ISSUE" --body "V4_RESEARCHER_EXACT_EXPORT_V2 outcome=${OUTCOME} candidate=${CANDIDATE:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} bundle=uploaded unicode=whole-tree-strict preflight=bound index=controller-deletion-staged branch=main-only"
