@@ -45,33 +45,32 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Generate bilingual current-main design
+      - name: Generate bilingual design and restore governed workflow surface
         run: |
+          set -euo pipefail
           node scripts/refresh-current-main-readme.mjs --write
           cp README.md README_EN.md
           node scripts/refresh-current-main-readme.mjs --check
+          rm .github/workflows/current-main-readme-refresh.yml
           python scripts/generate_checksums.py --write
           git diff --check
-      - name: Create local exact-tree candidate
+      - name: Create controller-free exact-tree candidate
         id: candidate
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
+          git add -A \
+            .github/workflows/current-main-readme-refresh.yml \
             README.md \
             README_EN.md \
             README.zh-CN.md \
             docs/CURRENT_MAIN_ACCEPTANCE.md \
             docs/current-main \
             SHA256SUMS
-          if git diff --cached --quiet; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-          else
-            git commit -m 'docs: refresh current-main bilingual acceptance design'
-            echo 'changed=true' >> "$GITHUB_OUTPUT"
-          fi
+          git commit -m 'docs: publish current-main bilingual acceptance design'
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
       - name: Run research-control, mathematical and evidence gates
         run: |
           set -euo pipefail
@@ -92,8 +91,7 @@ jobs:
             tests/test_mathematical_contracts.py \
             tests/test_readme_facts.py \
             tests/test_final_acceptance_preflight.py
-      - name: Rebase and publish candidate
-        if: steps.candidate.outputs.changed == 'true'
+      - name: Rebase and publish qualified candidate
         run: |
           set -euo pipefail
           git fetch origin main
@@ -107,4 +105,4 @@ jobs:
           OUTCOME: ${{ job.status }}
           CHANGED: ${{ steps.candidate.outputs.changed }}
         run: |
-          gh issue comment "$ISSUE" --body "CURRENT_MAIN_README_REFRESH_V2 outcome=${OUTCOME} changed=${CHANGED:-unknown} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} automatic_approval=false"
+          gh issue comment "$ISSUE" --body "CURRENT_MAIN_README_REFRESH_V2 outcome=${OUTCOME} changed=${CHANGED:-unknown} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} automatic_approval=false controller=self_removed"
