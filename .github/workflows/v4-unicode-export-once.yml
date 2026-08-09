@@ -17,7 +17,7 @@ jobs:
     if: >-
       github.event.issue.pull_request == null &&
       github.event.comment.user.login == github.repository_owner &&
-      contains(github.event.comment.body, '/export-v4-unicode-candidate-v2')
+      contains(github.event.comment.body, '/export-v4-unicode-candidate-v3')
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
@@ -43,6 +43,25 @@ jobs:
       - name: Build controller-free Unicode-bound candidate
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          generator = Path('scripts/refresh-current-main-readme.mjs')
+          text = generator.read_text(encoding='utf-8')
+          old = "const BAD = ['\\uFFFD', 'Ã', 'Â', 'â€', '锟斤拷'];\n"
+          new = """const codepoints = (...values) => String.fromCodePoint(...values);
+const BAD = [
+  codepoints(0xfffd),
+  codepoints(0x00c3),
+  codepoints(0x00c2),
+  codepoints(0x00e2, 0x20ac),
+  codepoints(0x951f, 0x65a4, 0x62f7),
+];
+"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one literal BAD marker array, found {text.count(old)}')
+          generator.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
+          PY
           python scripts/apply_v4_unicode_bindings.py
           git add -u .github/workflows
           python scripts/validate_unicode_integrity.py --normalize --write
@@ -136,4 +155,4 @@ jobs:
           OUTCOME: ${{ job.status }}
           CANDIDATE: ${{ steps.candidate.outputs.sha }}
         run: |
-          gh issue comment "$ISSUE" --body "V4_RESEARCHER_EXACT_EXPORT_V2 outcome=${OUTCOME} candidate=${CANDIDATE:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} bundle=uploaded unicode=whole-tree-strict preflight=bound index=controller-deletion-staged branch=main-only"
+          gh issue comment "$ISSUE" --body "V4_RESEARCHER_EXACT_EXPORT_V3 outcome=${OUTCOME} candidate=${CANDIDATE:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} bundle=uploaded unicode=whole-tree-strict mojibake_fixtures=runtime preflight=bound branch=main-only"
