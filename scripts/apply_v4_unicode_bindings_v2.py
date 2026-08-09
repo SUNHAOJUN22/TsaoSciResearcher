@@ -28,17 +28,14 @@ def insert_before(text: str, anchor: str, block: str, marker: str, label: str) -
 
 def insert_command(text: str, anchor_command: str, command: str, label: str) -> str:
     lines = text.splitlines()
-    existing = [index for index, line in enumerate(lines) if line.strip() == command]
-    if len(existing) == 1:
-        return text
-    if existing:
-        raise RuntimeError(f"{label}: Unicode command count={len(existing)}")
     anchors = [
         index for index, line in enumerate(lines) if line.strip() == anchor_command
     ]
     if len(anchors) != 1:
         raise RuntimeError(f"{label}: anchor count={len(anchors)}")
     index = anchors[0]
+    if index > 0 and lines[index - 1].strip() == command:
+        return text
     indent = lines[index][: len(lines[index]) - len(lines[index].lstrip())]
     lines.insert(index, f"{indent}{command}")
     return "\n".join(lines) + ("\n" if text.endswith("\n") else "")
