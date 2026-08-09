@@ -478,3 +478,36 @@ External computations and experiments must be independently executed, recorded a
 ## 14. License
 
 Apache-2.0.
+
+<!-- CURRENT_MAIN_ACCEPTANCE_V2:START -->
+## Current `main`: question–contract–evidence–receipt loop
+
+<p align="center"><img src="docs/current-main/tsao-researcher-current-main-en.svg" width="100%" alt="Current `main`: question–contract–evidence–receipt loop"></p>
+
+> This figure is generated from current code contracts and is a research-control concept, not a paper, experiment or automatic approval result.
+
+### Core mathematical contracts
+
+$$
+G = min(g_quantity, g_applicability, g_evidence, g_identifiability, g_bridge)
+$$
+
+$$
+Σ_y = J Σ_x Jᵀ + Σ_model + Σ_scale
+$$
+
+$$
+H_receipt = SHA256(contract ∥ input ∥ engine ∥ environment ∥ result)
+$$
+
+### Usage strategy
+
+1. Define the decision, observables, conditions and dimensions before selecting models or tools.
+2. Separate sourced, computed and inferred claims; evidence conflicts must not be silently merged.
+3. Scale bridges must report identifiability, propagation assumptions and uncertainty budgets.
+4. External execution enters acceptance only with a complete receipt identity; new commits invalidate old-SHA evidence.
+
+> **Responsibility boundary：** The repository generates research strategies, contracts, evidence controls and external-execution receipts; automatic_approval=false and it does not replace experts, experiments or third-party solver qualification.
+
+Execution prompt: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
+<!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->

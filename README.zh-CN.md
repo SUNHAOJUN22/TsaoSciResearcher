@@ -473,3 +473,36 @@ python -m tsao_researcher capsule verify project-full.zip
 ## 14. 许可证
 
 Apache-2.0。
+
+<!-- CURRENT_MAIN_ACCEPTANCE_V2:START -->
+## 当前 `main`：问题—合同—证据—回执闭环
+
+<p align="center"><img src="docs/current-main/tsao-researcher-current-main-zh.svg" width="100%" alt="当前 `main`：问题—合同—证据—回执闭环"></p>
+
+> 该图由当前代码合同生成，是研究控制架构概念图，不是论文、实验或自动批准结果。
+
+### 核心数理合同
+
+$$
+G = min(g_quantity, g_applicability, g_evidence, g_identifiability, g_bridge)
+$$
+
+$$
+Σ_y = J Σ_x Jᵀ + Σ_model + Σ_scale
+$$
+
+$$
+H_receipt = SHA256(contract ∥ input ∥ engine ∥ environment ∥ result)
+$$
+
+### 使用策略
+
+1. 先定义决策、可观测量、条件与量纲，再选择模型或工具。
+2. 将声明分为来源证据、计算证据和推断；冲突不得静默合并。
+3. 尺度桥必须显式报告可辨识性、传播假设和不确定度预算。
+4. 外部执行只有在回执身份完整时才可进入验收；新提交使旧 SHA 证据失效。
+
+> **责任边界：** 该仓库生成研究策略、合同、证据控制与外部执行回执；automatic_approval=false，不能替代专家、实验或第三方求解器资格。
+
+执行提示词: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
+<!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->
