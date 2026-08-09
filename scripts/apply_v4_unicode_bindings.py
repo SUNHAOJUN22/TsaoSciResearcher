@@ -67,7 +67,7 @@ def main() -> int:
 
     ci_path = ROOT / ".github" / "workflows" / "ci.yml"
     ci = ci_path.read_text(encoding="utf-8")
-    compile_anchor = "          python -m compileall -q tsao_researcher scripts\n"
+    compile_anchor = "          python -m compileall -q scripts tsao_researcher tests\n"
     ci = replace_once(
         ci,
         compile_anchor,
@@ -88,7 +88,7 @@ def main() -> int:
     controller = ROOT / ".github" / "workflows" / "v4-unicode-export-once.yml"
     controller.unlink()
     legacy = ROOT / ".github" / "workflows" / "v4-unicode-hardening-once.yml"
-    legacy.unlink()
+    legacy.unlink(missing_ok=True)
     return 0
 
 
