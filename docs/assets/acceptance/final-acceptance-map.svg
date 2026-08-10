@@ -42,7 +42,7 @@
   <circle cx="32" cy="32" r="15" fill="#22C55E" opacity="0.9"/>
   <text x="58" y="39" class="stage">MODEL</text>
   <text x="24" y="82" class="zh">模型合同</text>
-  <text x="24" y="118" class="detail">ẋ=f(x,u,θ)</text>
+  <text x="24" y="118" class="detail">ẋ=f(x,u,θ)</text>
 </g><g transform="translate(985 350)">
   <rect width="240" height="150" rx="24" fill="#101D35" stroke="#F59E0B" stroke-width="3"/>
   <circle cx="32" cy="32" r="15" fill="#F59E0B" opacity="0.9"/>

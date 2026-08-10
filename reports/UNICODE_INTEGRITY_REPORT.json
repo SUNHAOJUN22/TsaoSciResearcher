@@ -1,0 +1,14 @@
+{
+  "bom_files": [],
+  "control_character_failures": [],
+  "failures": [],
+  "invalid_utf8": [],
+  "line_ending_failures": [],
+  "mojibake_failures": [],
+  "nfc_failures": [],
+  "replacement_characters": [],
+  "scanned_text_files": 422,
+  "schema_version": "tsao.unicode-integrity/v1",
+  "unsafe_paths": [],
+  "verdict": "PASS"
+}

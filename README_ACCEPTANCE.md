@@ -14,7 +14,7 @@
 |---:|---|---|
 | 1 | **QUESTION / 科学问题** | `q · objective` |
 | 2 | **OBSERVABLE / 决策观测量** | `y · unit · threshold` |
-| 3 | **MODEL / 模型合同** | `ẋ=f(x,u,θ)` |
+| 3 | **MODEL / 模型合同** | `ẋ=f(x,u,θ)` |
 | 4 | **EVIDENCE / 证据三分** | `E⁺ · E⁻ · E⁰` |
 | 5 | **DECISION / 保守决策** | `BLOCK ≺ REVIEW ≺ PASS` |
 
