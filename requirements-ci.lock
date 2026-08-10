@@ -2,6 +2,7 @@
 PyYAML==6.0.3
 jsonschema==4.26.0
 defusedxml==0.7.1
+types-defusedxml==0.7.0.20260504
 pytest==9.0.3
 hypothesis==6.157.2
 coverage==7.15.2
