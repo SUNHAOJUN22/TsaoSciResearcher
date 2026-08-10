@@ -1,4 +1,5 @@
 name: Current main qualification once
+# Re-run after Unicode audit gains a strict-Git production path and non-Git pure-test path.
 
 on:
   push:
@@ -127,4 +128,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict unicode_api=git-strict+non-git-pure-test dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation controller=self-removed"
