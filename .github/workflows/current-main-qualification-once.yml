@@ -43,7 +43,7 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Run complete controller-free qualification
+      - name: Rebuild stale generated evidence on controller-free tree
         shell: bash
         run: |
           set -euo pipefail
@@ -58,6 +58,34 @@ jobs:
           python scripts/build_readme_facts.py --check
           python scripts/build_sbom.py --check
           python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
+          python scripts/generate_checksums.py --write
+          git add -u
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              '.github/workflows/current-main-qualification-once.yml',
+              'SHA256SUMS',
+              'docs/SCIENTIFIC_QUALITY_EXAMPLES.json',
+              'docs/research-quality-dashboard.html',
+              'docs/research-quality-dashboard.svg',
+              'docs/test-dashboard.html',
+              'docs/test-dashboard.svg',
+          }
+          paths = set(subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines())
+          unexpected = sorted(paths - allowed)
+          if unexpected:
+              raise SystemExit(f'unexpected generated changes: {unexpected}')
+          if '.github/workflows/current-main-qualification-once.yml' not in paths:
+              raise SystemExit('one-time controller deletion is not staged')
+          if 'docs/test-dashboard.html' not in paths:
+              raise SystemExit('expected stale test dashboard was not regenerated')
+          PY
+      - name: Run complete qualification on regenerated exact tree
+        shell: bash
+        run: |
+          set -euo pipefail
           python scripts/build_test_dashboard.py --check
           python scripts/build_research_quality_dashboard.py --check
           python scripts/generate_checksums.py --check
@@ -69,8 +97,8 @@ jobs:
           python -m mypy tsao_researcher scripts
           python -m bandit -q -r tsao_researcher scripts -x tests -ll
           python -m mkdocs build --strict --clean --site-dir "$RUNNER_TEMP/tsao-researcher-site"
+          git diff --exit-code
           git diff --check --cached
-          test "$(git diff --cached --name-only)" = '.github/workflows/current-main-qualification-once.yml'
       - name: Publish exact qualified clean tree
         id: publish
         shell: bash
@@ -81,7 +109,7 @@ jobs:
           test "$remote_sha" = "$parent"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore(ci): remove completed current-main qualifier'
+          git commit -m 'chore(ci): bind dashboards to final clean tree'
           qualified="$(git rev-parse HEAD)"
           test "$(git rev-parse HEAD^)" = "$parent"
           git push origin HEAD:main
@@ -94,4 +122,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict dashboards=regenerated-exact-tree controller=self-removed"
