@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$(git log -1 --format=%s)" = 'ci: run nonworkflow normalizer from git-state gate' ]; then
+          if [ "$(git log -1 --format=%s)" = 'ci: stage legacy exporter out of Unicode scan' ]; then
             echo 'run=true' >> "$GITHUB_OUTPUT"
           else
             echo 'run=false' >> "$GITHUB_OUTPUT"
@@ -44,8 +44,13 @@ jobs:
             scripts/apply_v4_unicode_bindings.py \
             scripts/apply_v4_unicode_bindings_v2.py
           git add -u
+
+          legacy_workflow=.github/workflows/v4-unicode-export-once.yml
+          git rm "$legacy_workflow"
           python scripts/validate_unicode_integrity.py --normalize --write
           python scripts/validate_unicode_integrity.py --check
+          git restore --source=HEAD --staged --worktree "$legacy_workflow"
+
           python scripts/build_readme_facts.py --write
           python scripts/generate_checksums.py --write
           git add -A
