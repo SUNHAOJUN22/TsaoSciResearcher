@@ -104,11 +104,7 @@ def _filesystem_text_files(root: Path, output: Path | None = None) -> list[Path]
     """Enumerate a non-Git test tree deterministically without changing CLI semantics."""
 
     excluded_output = output.resolve() if output else None
-    selected = [
-        path
-        for path in root.rglob("*")
-        if _selected_text_path(root, path, excluded_output)
-    ]
+    selected = [path for path in root.rglob("*") if _selected_text_path(root, path, excluded_output)]
     return sorted(selected, key=lambda item: item.relative_to(root).as_posix())
 
 
@@ -167,9 +163,7 @@ def normalize_file(path: Path) -> bool:
     text = original.decode("utf-8", errors="strict")
     if text.startswith(chr(0xFEFF)):
         text = text[1:]
-    normalized = unicodedata.normalize(
-        "NFC", text.replace("\r\n", "\n").replace("\r", "\n")
-    )
+    normalized = unicodedata.normalize("NFC", text.replace("\r\n", "\n").replace("\r", "\n"))
     rendered = (normalized.rstrip("\n") + "\n").encode("utf-8")
     if rendered == original:
         return False
@@ -217,8 +211,7 @@ def audit_repository(
             {
                 f"U+{ord(character):04X}"
                 for character in text
-                if unicodedata.category(character) == "Cc"
-                and character not in {"\n", "\t"}
+                if unicodedata.category(character) == "Cc" and character not in {"\n", "\t"}
             }
         )
         if controls:
@@ -229,11 +222,7 @@ def audit_repository(
 
     for values in categories.values():
         values.sort(key=lambda item: (item["path"], item["detail"]))
-    failures = [
-        {"category": key, **item}
-        for key in CATEGORY_KEYS
-        for item in categories[key]
-    ]
+    failures = [{"category": key, **item} for key in CATEGORY_KEYS for item in categories[key]]
     return {
         "schema_version": SCHEMA,
         "verdict": "PASS" if not failures else "FAIL",

@@ -26,6 +26,14 @@
       "version": "7.15.2"
     },
     {
+      "bom-ref": "pkg:pypi/defusedxml@0.7.1",
+      "name": "defusedxml",
+      "purl": "pkg:pypi/defusedxml@0.7.1",
+      "scope": "required",
+      "type": "library",
+      "version": "0.7.1"
+    },
+    {
       "bom-ref": "pkg:pypi/hypothesis@6.157.2",
       "name": "hypothesis",
       "purl": "pkg:pypi/hypothesis@6.157.2",
@@ -98,6 +106,14 @@
       "version": "0.15.22"
     },
     {
+      "bom-ref": "pkg:pypi/types-defusedxml@0.7.0.20260504",
+      "name": "types-defusedxml",
+      "purl": "pkg:pypi/types-defusedxml@0.7.0.20260504",
+      "scope": "required",
+      "type": "library",
+      "version": "0.7.0.20260504"
+    },
+    {
       "bom-ref": "pkg:pypi/types-jsonschema@4.26.0.20260518",
       "name": "types-jsonschema",
       "purl": "pkg:pypi/types-jsonschema@4.26.0.20260518",
@@ -120,6 +136,7 @@
         "pkg:pypi/bandit@1.9.4",
         "pkg:pypi/build@1.5.0",
         "pkg:pypi/coverage@7.15.2",
+        "pkg:pypi/defusedxml@0.7.1",
         "pkg:pypi/hypothesis@6.157.2",
         "pkg:pypi/jsonschema@4.26.0",
         "pkg:pypi/mkdocs@1.6.1",
@@ -129,6 +146,7 @@
         "pkg:pypi/pytest-cov@7.1.0",
         "pkg:pypi/pyyaml@6.0.3",
         "pkg:pypi/ruff@0.15.22",
+        "pkg:pypi/types-defusedxml@0.7.0.20260504",
         "pkg:pypi/types-jsonschema@4.26.0.20260518",
         "pkg:pypi/types-pyyaml@6.0.12.20260518"
       ],
@@ -145,6 +163,10 @@
     {
       "dependsOn": [],
       "ref": "pkg:pypi/coverage@7.15.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/defusedxml@0.7.1"
     },
     {
       "dependsOn": [],
@@ -184,6 +206,10 @@
     },
     {
       "dependsOn": [],
+      "ref": "pkg:pypi/types-defusedxml@0.7.0.20260504"
+    },
+    {
+      "dependsOn": [],
       "ref": "pkg:pypi/types-jsonschema@4.26.0.20260518"
     },
     {
@@ -206,7 +232,7 @@
       },
       {
         "name": "tsao:lock-sha256",
-        "value": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5"
+        "value": "90d60ba96155a1101b2af22d2eadcff870ab77a7cd807dd03bf708adbcb25eee"
       },
       {
         "name": "tsao:truth-boundary",
@@ -214,7 +240,7 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:54daacfc-38aa-512d-91bc-b967bce12f23",
+  "serialNumber": "urn:uuid:d9984b77-d920-536d-b4fe-22cc64629a56",
   "specVersion": "1.6",
   "version": 1
 }

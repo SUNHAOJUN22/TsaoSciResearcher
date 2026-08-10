@@ -11,9 +11,7 @@ from scripts.validate_unicode_integrity import (
 
 
 def test_clean_unicode_tree_passes_deterministically(tmp_path: Path) -> None:
-    (tmp_path / "README.md").write_text(
-        "安全 scientific text\n", encoding="utf-8", newline="\n"
-    )
+    (tmp_path / "README.md").write_text("安全 scientific text\n", encoding="utf-8", newline="\n")
 
     first = audit_repository(tmp_path)
     second = audit_repository(tmp_path)
@@ -28,19 +26,11 @@ def test_unicode_failures_are_structured(tmp_path: Path) -> None:
     (tmp_path / "crlf.txt").write_bytes(b"text\r\n")
     (tmp_path / "missing.py").write_bytes(b"value = 1")
     (tmp_path / "double.json").write_bytes(b"{}\n\n")
-    (tmp_path / "replacement.md").write_text(
-        f"bad {chr(0xFFFD)} text\n", encoding="utf-8", newline="\n"
-    )
-    (tmp_path / "nfc.md").write_text(
-        f"caf{'e' + chr(0x0301)}\n", encoding="utf-8", newline="\n"
-    )
-    (tmp_path / "control.txt").write_text(
-        f"bad{chr(0)}value\n", encoding="utf-8", newline="\n"
-    )
+    (tmp_path / "replacement.md").write_text(f"bad {chr(0xFFFD)} text\n", encoding="utf-8", newline="\n")
+    (tmp_path / "nfc.md").write_text(f"caf{'e' + chr(0x0301)}\n", encoding="utf-8", newline="\n")
+    (tmp_path / "control.txt").write_text(f"bad{chr(0)}value\n", encoding="utf-8", newline="\n")
     mojibake = "".join(chr(value) for value in (0x00E4, 0x00B8, 0x00AD))
-    (tmp_path / "mojibake.md").write_text(
-        f"bad {mojibake} text\n", encoding="utf-8", newline="\n"
-    )
+    (tmp_path / "mojibake.md").write_text(f"bad {mojibake} text\n", encoding="utf-8", newline="\n")
 
     report = audit_repository(tmp_path)
 
@@ -74,9 +64,7 @@ def test_git_worktree_keeps_tracked_file_inventory_strict(tmp_path: Path) -> Non
     tracked.write_text("安全 tracked text\n", encoding="utf-8", newline="\n")
     subprocess.run(["git", "-C", str(tmp_path), "add", "tracked.md"], check=True)
 
-    (tmp_path / "untracked.md").write_text(
-        f"bad {chr(0xFFFD)} text\n", encoding="utf-8", newline="\n"
-    )
+    (tmp_path / "untracked.md").write_text(f"bad {chr(0xFFFD)} text\n", encoding="utf-8", newline="\n")
 
     report = audit_repository(tmp_path)
 

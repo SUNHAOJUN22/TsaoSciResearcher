@@ -1,102 +1,49 @@
 {
-  "baseline_full_repository_run": {
-    "commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
-    "compatibility": {
-      "macos_python_3_12": "PASS",
-      "ubuntu_python_3_10": "PASS",
-      "ubuntu_python_3_13": "PASS",
-      "windows_python_3_12": "PASS"
-    },
-    "coverage": {
-      "branch_percent": 93.438,
-      "line_percent": 95.827,
-      "mathematical_contracts_percent": 100.0
-    },
-    "evidence_date": "2026-08-06",
-    "mutation": {
-      "killed": 24,
-      "total": 24
-    },
-    "release": "0.7.4",
-    "repository_tree_file_count": 408,
-    "repository_tree_sha256": "9514c4e54ae0179fc80a322a9d30adc82f836d961b6c9b3890c35a893b13bda8",
-    "scientific_boundary": "software control layer only; no external DFT, quantum chemistry, MD, FEM, CFD, process, HPC, instrument, or laboratory execution is implied",
-    "status": "PASS",
-    "tests": {
-      "complete_regression": 314,
-      "failures": 0
-    },
-    "validated_file_count": 403,
-    "validation_tree_sha256": "d2db96ff752e85a0680c32b9808219d5b875a9b9a03df151f91ee424aac3b58a",
-    "workflow_run_id": 31089852037
-  },
   "compatibility": {
     "macos_python_3_12": "PASS",
     "ubuntu_python_3_10": "PASS",
     "ubuntu_python_3_13": "PASS",
     "windows_python_3_12": "PASS"
   },
-  "compatibility_scope": "Platform results and full-repository quality gates are inherited from the pinned exact-tree baseline; the current delta is covered by the focused regression record and has not received a fresh end-to-end current-tree CI attestation.",
-  "evidence_date": "2026-08-08",
-  "focused_current_change_regression": {
-    "base_commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
-    "changed_files": [
-      {
-        "path": "tsao_researcher/mathematical_contracts.py",
-        "sha256": "39973fe44b6bedee8371a205417eebefd9fc99a825a601daad945f666d0efad3"
-      }
-    ],
-    "checks": {
-      "boundary_forgery_rejection": "PASS",
-      "cli_file_stdout_json_equivalence": "PASS",
-      "cli_schema_output": "PASS",
-      "compileall": "PASS",
-      "draft_2020_12_schema_validation": "PASS",
-      "pytest_focused": "PASS",
-      "single_contract_validation": "PASS",
-      "three_language_payload_validation": "PASS"
-    },
-    "current_end_to_end_ci": "NOT_RUN",
-    "environment": "isolated local Python 3.11 test slice reconstructed from the accepted repository interfaces",
-    "evidence_date": "2026-08-07",
-    "scientific_boundary": "No solver, external computation, instrument, or laboratory execution is asserted by this regression.",
-    "scope": "schema-backed mathematical-contract delivery and composite evidence hardening",
-    "scope_note": "The cryptographic focus manifest pins the decision-critical runtime module. The final GitHub compare is used separately to verify the complete published path set against the accepted baseline.",
-    "status": "PASS",
-    "tests_failed": 0,
-    "tests_passed": 8
-  },
+  "compatibility_scope": "Recorded compatibility results are a prior release baseline. CI-only gates for this source tree remain explicitly NOT_RUN or PARTIAL until an external attestation is created.",
+  "evidence_date": "2026-08-10",
   "gates": {
-    "baseline_bandit_high_severity": "PASS",
-    "baseline_bounded_performance": "PASS",
-    "baseline_byte_identical_release_builds": "PASS",
-    "baseline_complete_regression": "PASS",
-    "baseline_critical_mutation_killed": "24/24",
-    "baseline_mypy_strict": "PASS",
-    "baseline_repository_and_contract_audit": "PASS",
-    "baseline_reverse_order_regression": "PASS",
-    "baseline_ruff_format_and_lint": "PASS",
-    "baseline_seeded_random_order_regression": "PASS",
-    "current_end_to_end_ci": "NOT_RUN",
-    "deterministic_visual_report_contract": "PASS",
-    "focused_current_change_regression": "PASS",
-    "readme_version_and_mirror_alignment": "PASS",
-    "scientific_quality_guard_regression": "PASS"
+    "bandit_high_severity": "NOT_RUN",
+    "bounded_performance": "LOCAL_PREFLIGHT",
+    "byte_identical_release_builds": "LOCAL_PREFLIGHT",
+    "complete_regression": "PARTIAL",
+    "coverage_line_and_branch": "LOCAL_PREFLIGHT",
+    "critical_mutation_killed": "NOT_RUN",
+    "dependency_vulnerability_audit": "NOT_RUN",
+    "deterministic_sbom": "PASS",
+    "deterministic_visual_reports": "PASS",
+    "docs_build": "NOT_RUN",
+    "execution_receipts": "LOCAL_PREFLIGHT",
+    "json_schemas_19": "PASS",
+    "mypy_strict": "NOT_RUN",
+    "repository_and_contract_audit": "PASS",
+    "reproducibility_capsule": "LOCAL_PREFLIGHT",
+    "reverse_order_regression": "NOT_RUN",
+    "ruff_format_and_lint": "NOT_RUN",
+    "scientific_quality_guards": "PASS",
+    "seeded_random_order_regression": "NOT_RUN",
+    "validation_tree_digest": "PASS",
+    "wheel_and_sdist_install": "NOT_RUN"
   },
   "interpretation": [
-    "The pinned baseline is an exact-tree full-repository software qualification.",
-    "The current change is bounded by a SHA-256 manifest and a focused regression record.",
-    "Composite evidence does not claim that the current tree received a fresh end-to-end CI run.",
-    "Software validation does not establish scientific truth or prove external computation or experiment execution."
+    "This checked-in record is intentionally PARTIAL and must not be interpreted as a completed CI run.",
+    "The source-tree digest records the candidate content before external CI attestation.",
+    "CI-only gates remain NOT_RUN or PARTIAL until GitHub Actions produces artifacts/VALIDATION_EVIDENCE.json and publication-attestation.json.",
+    "Software checks do not grant scientific acceptance of external calculations or experiments."
   ],
   "limitations": [
-    "Current-tree end-to-end CI remains NOT_RUN for this acceptance hardening delta.",
+    "Checked-in preflight evidence is not a substitute for the external CI attestation.",
     "External scientific execution requires a checksum-verifiable execution receipt."
   ],
   "provenance": {
     "commit_resolution": "pending-external-attestation",
-    "dependency_lock_sha256": "f4f83a4a3cfa87b8ff66707417480f160e13680a1b4f208b1b819994f85160c5",
-    "digest_algorithm": "composite baseline tree SHA-256 plus focused changed-file SHA-256 manifest",
+    "dependency_lock_sha256": "90d60ba96155a1101b2af22d2eadcff870ab77a7cd807dd03bf708adbcb25eee",
+    "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
     "digest_exclusions": [
       ".coverage",
       ".coverage.*",
@@ -108,10 +55,10 @@
       "docs/test-dashboard.svg"
     ],
     "evidence_generated_from_commit": null,
-    "external_attestation": "baseline GitHub Actions run 31089852037 plus focused current-change regression",
+    "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
-    "validated_file_count": 403,
-    "validated_tree_sha256": "d2db96ff752e85a0680c32b9808219d5b875a9b9a03df151f91ee424aac3b58a",
+    "validated_file_count": 426,
+    "validated_tree_sha256": "50b767a5c50e45e48a0344b813fe7e5854137c3f4934764c097ed47d06813cc8",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null
@@ -119,20 +66,20 @@
   "release": "0.7.4",
   "schema_version": "1.6",
   "status": "PARTIAL",
-  "validation_scope": "composite",
+  "validation_scope": "preflight",
   "verified_inventory": {
     "capability_records": 341,
     "domain_packs": 7,
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 19,
     "schemas": 20,
-    "test_modules": 43,
+    "test_modules": 44,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },
   "workflow": {
     "attempt": null,
-    "name": "Composite baseline plus focused current-change regression",
+    "name": "Local preflight and generated-artifact audit",
     "run_id": null,
     "source_commit_context": null
   }

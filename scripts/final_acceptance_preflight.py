@@ -137,9 +137,7 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
     unicode_report = root / "reports" / "UNICODE_INTEGRITY_REPORT.json"
     if unicode_report.is_file() and not unicode_report.is_symlink():
         try:
-            unicode_payload = json.loads(
-                unicode_report.read_text(encoding="utf-8", errors="strict")
-            )
+            unicode_payload = json.loads(unicode_report.read_text(encoding="utf-8", errors="strict"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             _issue(issues, "unicode_report_invalid", str(unicode_report), str(exc))
         else:
