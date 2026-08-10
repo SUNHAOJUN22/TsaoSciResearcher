@@ -38,6 +38,7 @@ plot = ["matplotlib>=3.7,<4", "numpy>=1.24,<3"]
 test = ["pytest>=9.0.3,<10", "hypothesis>=6.100,<7", "coverage>=7.15,<8", "pytest-cov>=7,<8"]
 quality = [
   "defusedxml>=0.7.1,<0.8",
+  "types-defusedxml>=0.7.0.20260504,<0.8",
   "ruff>=0.9,<1",
   "mypy>=1.10,<2",
   "bandit>=1.7,<2",
