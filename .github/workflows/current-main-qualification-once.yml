@@ -1,5 +1,5 @@
 name: Current main qualification once
-# Re-run after Unicode audit, example cleanup, and root import normalization.
+# Re-run after Unicode audit; pinned Ruff owns the remaining root import normalization.
 
 on:
   push:
@@ -49,7 +49,13 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Rebuild stale generated evidence on controller-free tree
+      - name: Apply pinned Ruff import fix only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m ruff check --fix install.py
+          python -m ruff check install.py
+      - name: Rebuild generated evidence on controller-free tree
         shell: bash
         run: |
           set -euo pipefail
@@ -78,6 +84,7 @@ jobs:
               'docs/research-quality-dashboard.svg',
               'docs/test-dashboard.html',
               'docs/test-dashboard.svg',
+              'install.py',
           }
           paths = set(subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines())
           unexpected = sorted(paths - allowed)
@@ -85,10 +92,10 @@ jobs:
               raise SystemExit(f'unexpected generated changes: {unexpected}')
           if '.github/workflows/current-main-qualification-once.yml' not in paths:
               raise SystemExit('one-time controller deletion is not staged')
-          if 'docs/test-dashboard.html' not in paths:
-              raise SystemExit('expected stale test dashboard was not regenerated')
+          if 'install.py' not in paths:
+              raise SystemExit('pinned Ruff did not produce the expected import-block fix')
           PY
-      - name: Run complete qualification on regenerated exact tree
+      - name: Run complete qualification on exact candidate tree
         shell: bash
         run: |
           set -euo pipefail
@@ -115,7 +122,7 @@ jobs:
           test "$remote_sha" = "$parent"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore(ci): bind dashboards to final clean tree'
+          git commit -m 'chore(ci): bind final clean Researcher tree'
           qualified="$(git rev-parse HEAD)"
           test "$(git rev-parse HEAD^)" = "$parent"
           git push origin HEAD:main
@@ -128,4 +135,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict unicode_api=git-strict+non-git-pure-test dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation ruff=repository-wide controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict unicode_api=git-strict+non-git-pure-test dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation ruff=pinned-auto-fix+repository-wide controller=self-removed"
