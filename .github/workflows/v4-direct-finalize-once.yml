@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: v4-direct-finalize-once
@@ -81,3 +82,12 @@ jobs:
           remote_sha="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "$remote_sha" = "$GITHUB_SHA"
           git push origin HEAD:main
+
+      - name: Publish machine result
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ job.status }}
+        shell: bash
+        run: |
+          gh issue comment 213 --body "V4_RESEARCHER_DIRECT_FINALIZER outcome=${OUTCOME} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} source=${GITHUB_SHA} finalizer=self-delete"
