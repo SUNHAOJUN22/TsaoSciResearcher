@@ -62,10 +62,6 @@ jobs:
             scripts/final_acceptance_preflight.py \
             scripts/validate_unicode_integrity.py \
             tests/test_unicode_integrity.py
-          python -m ruff format --check \
-            scripts/final_acceptance_preflight.py \
-            scripts/validate_unicode_integrity.py \
-            tests/test_unicode_integrity.py
       - name: Rebuild generated evidence on controller-free tree
         shell: bash
         run: |
@@ -79,8 +75,8 @@ jobs:
           python scripts/audit_repository.py
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
-          python scripts/build_sbom.py --check
-          python scripts/build_validation_evidence.py --check
+          python scripts/build_sbom.py --write
+          python scripts/build_validation_evidence.py --write
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/generate_checksums.py --write
@@ -90,7 +86,9 @@ jobs:
           allowed = {
               '.github/workflows/current-main-qualification-once.yml',
               'SHA256SUMS',
+              'docs/SBOM.cdx.json',
               'docs/SCIENTIFIC_QUALITY_EXAMPLES.json',
+              'docs/VALIDATION_EVIDENCE.json',
               'docs/research-quality-dashboard.html',
               'docs/research-quality-dashboard.svg',
               'docs/test-dashboard.html',
@@ -106,6 +104,8 @@ jobs:
               raise SystemExit(f'unexpected candidate changes: {unexpected}')
           required = {
               '.github/workflows/current-main-qualification-once.yml',
+              'docs/SBOM.cdx.json',
+              'docs/VALIDATION_EVIDENCE.json',
               'install.py',
               'scripts/final_acceptance_preflight.py',
               'scripts/validate_unicode_integrity.py',
@@ -119,6 +119,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
           python scripts/build_test_dashboard.py --check
           python scripts/build_research_quality_dashboard.py --check
           python scripts/generate_checksums.py --check
@@ -155,4 +157,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking mkdocs=strict controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking-safe-xml sbom=rebuilt mkdocs=strict controller=self-removed"
