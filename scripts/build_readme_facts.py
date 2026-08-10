@@ -6,9 +6,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
+
+from defusedxml import ElementTree as ET
 
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -219,14 +220,14 @@ def main() -> None:
         print(f"wrote {FACTS_PATH.relative_to(ROOT)}")
         return
 
-    if not FACTS_PATH.is_file() or FACTS_PATH.is_symlink():
-        raise SystemExit("docs/README_FACTS.json is missing or unsafe")
-    actual = FACTS_PATH.read_text(encoding="utf-8", errors="strict")
-    if actual != rendered:
+    if not FACTS_PATH.is_file():
+        raise SystemExit(f"README facts missing: {FACTS_PATH}")
+    current = _load_json(FACTS_PATH)
+    if current != expected:
         raise SystemExit("README facts are stale; run scripts/build_readme_facts.py --write")
     errors = _readme_errors(expected)
     if errors:
-        raise SystemExit("README consistency check failed:\n- " + "\n- ".join(errors))
+        raise SystemExit("README fact validation failed: " + "; ".join(errors))
     print("README facts and bilingual documentation PASS")
 
 
