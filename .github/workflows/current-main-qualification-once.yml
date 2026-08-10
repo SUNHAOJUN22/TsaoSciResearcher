@@ -1,5 +1,4 @@
 name: Current main qualification once
-# Re-run after Unicode audit; pinned Ruff owns the remaining root import normalization.
 
 on:
   push:
@@ -49,12 +48,24 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
-      - name: Apply pinned Ruff import fix only
+      - name: Apply pinned Ruff fixes and formatting
         shell: bash
         run: |
           set -euo pipefail
           python -m ruff check --fix install.py
-          python -m ruff check install.py
+          python -m ruff format \
+            scripts/final_acceptance_preflight.py \
+            scripts/validate_unicode_integrity.py \
+            tests/test_unicode_integrity.py
+          python -m ruff check \
+            install.py \
+            scripts/final_acceptance_preflight.py \
+            scripts/validate_unicode_integrity.py \
+            tests/test_unicode_integrity.py
+          python -m ruff format --check \
+            scripts/final_acceptance_preflight.py \
+            scripts/validate_unicode_integrity.py \
+            tests/test_unicode_integrity.py
       - name: Rebuild generated evidence on controller-free tree
         shell: bash
         run: |
@@ -85,15 +96,24 @@ jobs:
               'docs/test-dashboard.html',
               'docs/test-dashboard.svg',
               'install.py',
+              'scripts/final_acceptance_preflight.py',
+              'scripts/validate_unicode_integrity.py',
+              'tests/test_unicode_integrity.py',
           }
           paths = set(subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines())
           unexpected = sorted(paths - allowed)
           if unexpected:
-              raise SystemExit(f'unexpected generated changes: {unexpected}')
-          if '.github/workflows/current-main-qualification-once.yml' not in paths:
-              raise SystemExit('one-time controller deletion is not staged')
-          if 'install.py' not in paths:
-              raise SystemExit('pinned Ruff did not produce the expected import-block fix')
+              raise SystemExit(f'unexpected candidate changes: {unexpected}')
+          required = {
+              '.github/workflows/current-main-qualification-once.yml',
+              'install.py',
+              'scripts/final_acceptance_preflight.py',
+              'scripts/validate_unicode_integrity.py',
+              'tests/test_unicode_integrity.py',
+          }
+          missing = sorted(required - paths)
+          if missing:
+              raise SystemExit(f'expected candidate changes are missing: {missing}')
           PY
       - name: Run complete qualification on exact candidate tree
         shell: bash
@@ -135,4 +155,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict unicode_api=git-strict+non-git-pure-test dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation ruff=pinned-auto-fix+repository-wide controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking mkdocs=strict controller=self-removed"
