@@ -139,7 +139,20 @@ jobs:
       - name: Ruff format
         run: python -m ruff format --check .
       - name: Strict mypy
-        run: python -m mypy tsao_researcher scripts
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m mypy tsao_researcher scripts 2>&1 | tee /tmp/researcher-mypy.log
+      - name: Report mypy diagnostic
+        if: failure()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tail -n 80 /tmp/researcher-mypy.log > /tmp/researcher-mypy-tail.log
+          body=$(printf 'MYPY_DIAGNOSTIC run=%s\n```text\n%s\n```' "$GITHUB_RUN_ID" "$(cat /tmp/researcher-mypy-tail.log)")
+          gh issue comment 213 --body "$body"
       - name: Blocking Bandit
         run: python -m bandit -q -r tsao_researcher scripts -x tests -ll
       - name: Strict MkDocs
