@@ -56,13 +56,17 @@ jobs:
           python -m ruff format \
             scripts/final_acceptance_preflight.py \
             scripts/validate_unicode_integrity.py \
-            tests/test_unicode_integrity.py
+            tests/test_unicode_integrity.py \
+            scripts/build_readme_facts.py \
+            scripts/check_quality_baseline.py
           python -m ruff check \
             install.py \
             scripts/final_acceptance_preflight.py \
             scripts/validate_unicode_integrity.py \
-            tests/test_unicode_integrity.py
-      - name: Rebuild generated evidence on controller-free tree
+            tests/test_unicode_integrity.py \
+            scripts/build_readme_facts.py \
+            scripts/check_quality_baseline.py
+      - name: Rebuild generated evidence in dependency order
         shell: bash
         run: |
           set -euo pipefail
@@ -76,9 +80,9 @@ jobs:
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
           python scripts/build_sbom.py --write
-          python scripts/build_validation_evidence.py --write
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
+          python scripts/build_validation_evidence.py --write
           python scripts/generate_checksums.py --write
           git add -u
           python - <<'PY'
@@ -94,6 +98,8 @@ jobs:
               'docs/test-dashboard.html',
               'docs/test-dashboard.svg',
               'install.py',
+              'scripts/build_readme_facts.py',
+              'scripts/check_quality_baseline.py',
               'scripts/final_acceptance_preflight.py',
               'scripts/validate_unicode_integrity.py',
               'tests/test_unicode_integrity.py',
@@ -107,6 +113,8 @@ jobs:
               'docs/SBOM.cdx.json',
               'docs/VALIDATION_EVIDENCE.json',
               'install.py',
+              'scripts/build_readme_facts.py',
+              'scripts/check_quality_baseline.py',
               'scripts/final_acceptance_preflight.py',
               'scripts/validate_unicode_integrity.py',
               'tests/test_unicode_integrity.py',
@@ -115,17 +123,21 @@ jobs:
           if missing:
               raise SystemExit(f'expected candidate changes are missing: {missing}')
           PY
-      - name: Run complete qualification on exact candidate tree
+      - name: Verify generated evidence is fixed point
         shell: bash
         run: |
           set -euo pipefail
           python scripts/build_sbom.py --check
-          python scripts/build_validation_evidence.py --check
           python scripts/build_test_dashboard.py --check
           python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_validation_evidence.py --check
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/final_acceptance_preflight.py --root . --json
+      - name: Run complete quality and security qualification
+        shell: bash
+        run: |
+          set -euo pipefail
           python -m pytest -q -p hypothesis.extra.pytestplugin
           python -m ruff check .
           python -m ruff format --check .
@@ -157,4 +169,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking-safe-xml sbom=rebuilt mkdocs=strict controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} evidence=topologically-rebuilt unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking-safe-xml mkdocs=strict controller=self-removed"
