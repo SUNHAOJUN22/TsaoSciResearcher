@@ -14,7 +14,6 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event.head_commit.message == 'ci: publish normalized nonworkflow candidate once'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -23,7 +22,18 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: true
+      - name: Decide whether this is the one-time publisher trigger
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$(git log -1 --format=%s)" = 'ci: run nonworkflow normalizer from git-state gate' ]; then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'run=false' >> "$GITHUB_OUTPUT"
+          fi
       - name: Normalize tracked text and remove non-workflow migration scaffolding
+        if: steps.gate.outputs.run == 'true'
         id: publish
         shell: bash
         run: |
@@ -45,6 +55,7 @@ jobs:
           git commit -m 'chore(unicode): normalize tracked text and reports'
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Exact-parent publish non-workflow changes
+        if: steps.gate.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -52,7 +63,7 @@ jobs:
           test "$remote_sha" = "$GITHUB_SHA"
           git push origin HEAD:main
       - name: Publish machine result
-        if: always()
+        if: always() && steps.gate.outputs.run == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           OUTCOME: ${{ job.status }}
