@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 from scripts.validate_unicode_integrity import (
@@ -65,3 +66,19 @@ def test_mechanical_normalization_is_idempotent(tmp_path: Path) -> None:
     assert path.stat().st_mode & 0o777 == 0o754
     assert audit_repository(tmp_path)["verdict"] == "PASS"
     assert normalize_file(path) is False
+
+
+def test_git_worktree_keeps_tracked_file_inventory_strict(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    tracked = tmp_path / "tracked.md"
+    tracked.write_text("安全 tracked text\n", encoding="utf-8", newline="\n")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "tracked.md"], check=True)
+
+    (tmp_path / "untracked.md").write_text(
+        f"bad {chr(0xFFFD)} text\n", encoding="utf-8", newline="\n"
+    )
+
+    report = audit_repository(tmp_path)
+
+    assert report["verdict"] == "PASS"
+    assert report["scanned_text_files"] == 1
