@@ -10,6 +10,11 @@ permissions:
   contents: write
   issues: write
 
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
 concurrency:
   group: researcher-current-main-qualification-once
   cancel-in-progress: false
@@ -122,4 +127,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict dashboards=regenerated-exact-tree controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} unicode=whole-tree-strict dashboards=regenerated-exact-tree pytest=permanent-plugin-isolation controller=self-removed"
