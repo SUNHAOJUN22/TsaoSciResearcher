@@ -113,8 +113,6 @@ jobs:
               'docs/SBOM.cdx.json',
               'docs/VALIDATION_EVIDENCE.json',
               'install.py',
-              'scripts/build_readme_facts.py',
-              'scripts/check_quality_baseline.py',
               'scripts/final_acceptance_preflight.py',
               'scripts/validate_unicode_integrity.py',
               'tests/test_unicode_integrity.py',
