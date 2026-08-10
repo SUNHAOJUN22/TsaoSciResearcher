@@ -121,7 +121,7 @@ jobs:
           if missing:
               raise SystemExit(f'expected candidate changes are missing: {missing}')
           PY
-      - name: Verify generated evidence is fixed point
+      - name: Verify generated evidence fixed point
         shell: bash
         run: |
           set -euo pipefail
@@ -132,16 +132,22 @@ jobs:
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/final_acceptance_preflight.py --root . --json
-      - name: Run complete quality and security qualification
+      - name: Full pytest
+        run: python -m pytest -q -p hypothesis.extra.pytestplugin
+      - name: Ruff lint
+        run: python -m ruff check .
+      - name: Ruff format
+        run: python -m ruff format --check .
+      - name: Strict mypy
+        run: python -m mypy tsao_researcher scripts
+      - name: Blocking Bandit
+        run: python -m bandit -q -r tsao_researcher scripts -x tests -ll
+      - name: Strict MkDocs
+        run: python -m mkdocs build --strict --clean --site-dir "$RUNNER_TEMP/tsao-researcher-site"
+      - name: Candidate tree remains clean after qualification
         shell: bash
         run: |
           set -euo pipefail
-          python -m pytest -q -p hypothesis.extra.pytestplugin
-          python -m ruff check .
-          python -m ruff format --check .
-          python -m mypy tsao_researcher scripts
-          python -m bandit -q -r tsao_researcher scripts -x tests -ll
-          python -m mkdocs build --strict --clean --site-dir "$RUNNER_TEMP/tsao-researcher-site"
           git diff --exit-code
           git diff --check --cached
       - name: Publish exact qualified clean tree
