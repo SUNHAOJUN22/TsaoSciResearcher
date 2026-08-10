@@ -66,7 +66,7 @@ jobs:
             tests/test_unicode_integrity.py \
             scripts/build_readme_facts.py \
             scripts/check_quality_baseline.py
-      - name: Rebuild generated evidence in dependency order
+      - name: Rebuild generated evidence in actual dependency order
         shell: bash
         run: |
           set -euo pipefail
@@ -80,9 +80,9 @@ jobs:
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
           python scripts/build_sbom.py --write
-          python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
           python scripts/generate_checksums.py --write
           git add -u
           python - <<'PY'
@@ -126,9 +126,9 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/build_sbom.py --check
-          python scripts/build_test_dashboard.py --check
           python scripts/build_research_quality_dashboard.py --check
           python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
           python scripts/generate_checksums.py --check
           python scripts/build_capability_index.py --check
           python scripts/final_acceptance_preflight.py --root . --json
@@ -167,4 +167,4 @@ jobs:
           QUALIFIED: ${{ steps.publish.outputs.qualified }}
         shell: bash
         run: |
-          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} evidence=topologically-rebuilt unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking-safe-xml mkdocs=strict controller=self-removed"
+          gh issue comment 213 --body "CURRENT_MAIN_EXACT_QUALIFICATION outcome=${OUTCOME} tested_parent=${GITHUB_SHA} qualified=${QUALIFIED:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} evidence=dependency-ordered unicode=whole-tree-strict pytest=full ruff=lint+format mypy=strict bandit=blocking-safe-xml mkdocs=strict controller=self-removed"
