@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
   issues: write
 
 concurrency:
@@ -21,8 +21,9 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
       - name: Bind gates, normalize tracked text, remove migration scaffolding
+        id: candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -74,20 +75,51 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'fix(unicode): enforce whole-tree integrity on permanent CI'
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Exact-parent publish
+      - name: Prove exact parent and package candidate
+        id: bundle
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$GITHUB_SHA"
           remote_sha="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "$remote_sha" = "$GITHUB_SHA"
-          git push origin HEAD:main
+          bundle="$RUNNER_TEMP/researcher-v4-direct-candidate"
+          rm -rf "$bundle"
+          mkdir -p "$bundle"
+          : > "$bundle/DELETE_PATHS.txt"
+          while IFS=$'\t' read -r status path; do
+            case "$status" in
+              A|M)
+                mkdir -p "$bundle/$(dirname "$path")"
+                cp "$path" "$bundle/$path"
+                ;;
+              D)
+                printf '%s\n' "$path" >> "$bundle/DELETE_PATHS.txt"
+                ;;
+              *) exit 2 ;;
+            esac
+          done < <(git diff-tree --no-commit-id --name-status -r HEAD)
+          git rev-parse HEAD^ > "$bundle/PARENT_SHA.txt"
+          git rev-parse HEAD > "$bundle/CANDIDATE_SHA.txt"
+          git diff-tree --no-commit-id --name-status -r HEAD > "$bundle/CHANGES.tsv"
+          echo "path=$bundle" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: researcher-v4-direct-${{ steps.candidate.outputs.sha }}
+          path: ${{ steps.bundle.outputs.path }}
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 30
 
       - name: Publish machine result
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           OUTCOME: ${{ job.status }}
+          CANDIDATE: ${{ steps.candidate.outputs.sha }}
         shell: bash
         run: |
-          gh issue comment 213 --body "V4_RESEARCHER_DIRECT_FINALIZER outcome=${OUTCOME} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} source=${GITHUB_SHA} finalizer=self-delete"
+          gh issue comment 213 --body "V4_RESEARCHER_DIRECT_EXPORT outcome=${OUTCOME} candidate=${CANDIDATE:-UNPUBLISHED} run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} source=${GITHUB_SHA} bundle=uploaded finalizer=self-delete"
