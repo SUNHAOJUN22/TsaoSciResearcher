@@ -16,21 +16,59 @@ from typing import Any
 SCHEMA = "tsao.unicode-integrity/v1"
 TEXT_EXTENSIONS = frozenset(
     {
-        ".cfg", ".cjs", ".css", ".csv", ".html", ".ini", ".js", ".jsx",
-        ".json", ".jsonl", ".md", ".mdx", ".mjs", ".ps1", ".py", ".pyi",
-        ".scss", ".sh", ".sql", ".svg", ".toml", ".ts", ".tsx", ".tsv",
-        ".txt", ".xml", ".yaml", ".yml",
+        ".cfg",
+        ".cjs",
+        ".css",
+        ".csv",
+        ".html",
+        ".ini",
+        ".js",
+        ".jsx",
+        ".json",
+        ".jsonl",
+        ".md",
+        ".mdx",
+        ".mjs",
+        ".ps1",
+        ".py",
+        ".pyi",
+        ".scss",
+        ".sh",
+        ".sql",
+        ".svg",
+        ".toml",
+        ".ts",
+        ".tsx",
+        ".tsv",
+        ".txt",
+        ".xml",
+        ".yaml",
+        ".yml",
     }
 )
 EXCLUDED_PARTS = frozenset(
     {
-        ".git", ".hypothesis", ".mypy_cache", ".pytest_cache", ".ruff_cache",
-        ".tsao-research", "__pycache__", "artifacts", "build", "dist", "site",
+        ".git",
+        ".hypothesis",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".tsao-research",
+        "__pycache__",
+        "artifacts",
+        "build",
+        "dist",
+        "site",
     }
 )
 CATEGORY_KEYS = (
-    "unsafe_paths", "invalid_utf8", "replacement_characters", "bom_files",
-    "line_ending_failures", "nfc_failures", "control_character_failures",
+    "unsafe_paths",
+    "invalid_utf8",
+    "replacement_characters",
+    "bom_files",
+    "line_ending_failures",
+    "nfc_failures",
+    "control_character_failures",
     "mojibake_failures",
 )
 
@@ -53,25 +91,61 @@ def mojibake_markers() -> tuple[tuple[str, str], ...]:
     )
 
 
-def tracked_text_files(root: Path, output: Path | None = None) -> list[Path]:
+def _selected_text_path(root: Path, path: Path, excluded_output: Path | None) -> bool:
+    relative = path.relative_to(root)
+    if any(part in EXCLUDED_PARTS or part.endswith(".egg-info") for part in relative.parts):
+        return False
+    if path.suffix.casefold() not in TEXT_EXTENSIONS:
+        return False
+    return excluded_output is None or path.resolve() != excluded_output
+
+
+def _filesystem_text_files(root: Path, output: Path | None = None) -> list[Path]:
+    """Enumerate a non-Git test tree deterministically without changing CLI semantics."""
+
+    excluded_output = output.resolve() if output else None
+    selected = [
+        path
+        for path in root.rglob("*")
+        if _selected_text_path(root, path, excluded_output)
+    ]
+    return sorted(selected, key=lambda item: item.relative_to(root).as_posix())
+
+
+def tracked_text_files(
+    root: Path,
+    output: Path | None = None,
+    *,
+    require_git: bool = False,
+) -> list[Path]:
+    """Return tracked text files, with a deterministic non-Git fallback for pure tests."""
+
     result = subprocess.run(
         ["git", "-C", str(root), "ls-files", "-z"],
-        check=True,
+        check=False,
         capture_output=True,
         timeout=60,
     )
+    if result.returncode != 0:
+        stderr = result.stderr.decode("utf-8", errors="replace").casefold()
+        is_non_git_tree = result.returncode == 128 and "not a git repository" in stderr
+        if require_git or not is_non_git_tree:
+            raise subprocess.CalledProcessError(
+                result.returncode,
+                result.args,
+                output=result.stdout,
+                stderr=result.stderr,
+            )
+        return _filesystem_text_files(root, output)
+
     excluded_output = output.resolve() if output else None
     selected: list[Path] = []
     for raw in result.stdout.split(b"\0"):
         if not raw:
             continue
         relative = Path(raw.decode("utf-8", errors="strict"))
-        if any(part in EXCLUDED_PARTS or part.endswith(".egg-info") for part in relative.parts):
-            continue
         path = root / relative
-        if path.suffix.casefold() not in TEXT_EXTENSIONS:
-            continue
-        if excluded_output is not None and path.resolve() == excluded_output:
+        if not _selected_text_path(root, path, excluded_output):
             continue
         selected.append(path)
     return sorted(selected, key=lambda item: item.relative_to(root).as_posix())
@@ -103,10 +177,15 @@ def normalize_file(path: Path) -> bool:
     return True
 
 
-def audit_repository(root: Path, output: Path | None = None) -> dict[str, Any]:
+def audit_repository(
+    root: Path,
+    output: Path | None = None,
+    *,
+    require_git: bool = False,
+) -> dict[str, Any]:
     root = root.resolve()
     categories: dict[str, list[dict[str, str]]] = {key: [] for key in CATEGORY_KEYS}
-    paths = tracked_text_files(root, output)
+    paths = tracked_text_files(root, output, require_git=require_git)
 
     def add(key: str, path: str, detail: str) -> None:
         categories[key].append({"path": path, "detail": detail})
@@ -165,13 +244,16 @@ def audit_repository(root: Path, output: Path | None = None) -> dict[str, Any]:
 
 
 def render_report(report: dict[str, Any]) -> str:
-    return json.dumps(
-        report,
-        ensure_ascii=False,
-        indent=2,
-        sort_keys=True,
-        allow_nan=False,
-    ) + "\n"
+    return (
+        json.dumps(
+            report,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -189,9 +271,9 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--normalize requires --write")
     normalized = 0
     if args.normalize:
-        for path in tracked_text_files(root, output):
+        for path in tracked_text_files(root, output, require_git=True):
             normalized += int(normalize_file(path))
-    report = audit_repository(root, output)
+    report = audit_repository(root, output, require_git=True)
     rendered = render_report(report)
     if args.write:
         _atomic_write(output, rendered.encode("utf-8"), 0o644)
