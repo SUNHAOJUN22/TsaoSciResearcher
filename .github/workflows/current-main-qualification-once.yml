@@ -1,5 +1,5 @@
 name: Current main qualification once
-# Re-run after Unicode audit and repository-wide Ruff blockers are corrected.
+# Re-run after Unicode audit, example cleanup, and root import normalization.
 
 on:
   push:
