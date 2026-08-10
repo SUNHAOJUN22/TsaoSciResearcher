@@ -37,13 +37,26 @@ def _coverage(path: Path) -> tuple[float, float]:
 
 def _junit(path: Path) -> dict[str, int | float]:
     root = ET.parse(path).getroot()
+    if root is None:
+        raise ValueError("JUnit XML has no root element")
     suites = root.findall("testsuite") if root.tag == "testsuites" else [root]
+    tests = 0
+    failures = 0
+    errors = 0
+    skipped = 0
+    seconds = 0.0
+    for suite in suites:
+        tests += int(float(suite.attrib.get("tests", 0)))
+        failures += int(float(suite.attrib.get("failures", 0)))
+        errors += int(float(suite.attrib.get("errors", 0)))
+        skipped += int(float(suite.attrib.get("skipped", 0)))
+        seconds += float(suite.attrib.get("time", 0.0))
     return {
-        "tests": sum(int(float(suite.attrib.get("tests", 0))) for suite in suites),
-        "failures": sum(int(float(suite.attrib.get("failures", 0))) for suite in suites),
-        "errors": sum(int(float(suite.attrib.get("errors", 0))) for suite in suites),
-        "skipped": sum(int(float(suite.attrib.get("skipped", 0))) for suite in suites),
-        "seconds": round(sum(float(suite.attrib.get("time", 0.0)) for suite in suites), 6),
+        "tests": tests,
+        "failures": failures,
+        "errors": errors,
+        "skipped": skipped,
+        "seconds": round(seconds, 6),
     }
 
 
