@@ -1,4 +1,5 @@
 name: Current main qualification once
+# Exact rerun after pinning types-defusedxml for strict mypy.
 
 on:
   push:
