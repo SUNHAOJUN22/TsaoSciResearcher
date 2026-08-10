@@ -1,5 +1,5 @@
 name: Current main qualification once
-# Exact rerun after pinning types-defusedxml for strict mypy.
+# Exact rerun after making defusedxml JUnit parsing explicit under strict mypy.
 
 on:
   push:
