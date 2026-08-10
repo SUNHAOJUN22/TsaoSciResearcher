@@ -30,6 +30,8 @@ REQUIRED_PATHS = (
     ".github/workflows/ci.yml",
     "scripts/audit_repository.py",
     "scripts/validate_mathematical_contracts.py",
+    "scripts/validate_unicode_integrity.py",
+    "reports/UNICODE_INTEGRITY_REPORT.json",
     "tsao_researcher/mathematical_contracts.py",
     "README_ACCEPTANCE.md",
     "docs/assets/acceptance/final-acceptance-map.svg",
@@ -131,6 +133,47 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
             continue
         identities[relative] = _sha256(path)
 
+    unicode_verdict = "MISSING"
+    unicode_report = root / "reports" / "UNICODE_INTEGRITY_REPORT.json"
+    if unicode_report.is_file() and not unicode_report.is_symlink():
+        try:
+            unicode_payload = json.loads(
+                unicode_report.read_text(encoding="utf-8", errors="strict")
+            )
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            _issue(issues, "unicode_report_invalid", str(unicode_report), str(exc))
+        else:
+            if not isinstance(unicode_payload, dict):
+                _issue(
+                    issues,
+                    "unicode_report_invalid",
+                    str(unicode_report),
+                    "root must be an object",
+                )
+            else:
+                unicode_verdict = str(unicode_payload.get("verdict", "MISSING"))
+                if unicode_verdict != "PASS":
+                    _issue(
+                        issues,
+                        "unicode_integrity_failed",
+                        str(unicode_report),
+                        unicode_verdict,
+                    )
+                if int(unicode_payload.get("scanned_text_files", 0)) <= 0:
+                    _issue(
+                        issues,
+                        "unicode_scan_empty",
+                        str(unicode_report),
+                        "no tracked text files audited",
+                    )
+                if unicode_payload.get("failures"):
+                    _issue(
+                        issues,
+                        "unicode_failures_present",
+                        str(unicode_report),
+                        "report contains failures",
+                    )
+
     textual_paths = [
         root / "pyproject.toml",
         root / ".github" / "workflows" / "ci.yml",
@@ -179,6 +222,7 @@ def build_report(root: Path, *, platform_name: str | None = None) -> dict[str, A
         "observed_platform": family,
         "python": platform.python_version(),
         "external_boundary_marker": EXTERNAL_BOUNDARY_MARKER,
+        "unicode_integrity_verdict": unicode_verdict,
         "solver_or_experiment_executed": False,
         "automatic_scientific_approval": False,
         "critical_file_sha256": dict(sorted(identities.items())),
