@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tsao Scientific Researcher"
+  short_description: "Bilingual claims, evidence, traceability, and research acceptance"
+  default_prompt: "Use $tsao-sci-researcher to audit the claim, evidence relation, quantity semantics, state replay, and approval boundary."
+policy:
+  allow_implicit_invocation: true
