@@ -3,24 +3,29 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / ".agents/skills/tsao-sci-researcher"
 
 
-def load(path: Path):
-    def pairs(items):
-        result = {}
+def load(path: Path) -> dict[str, Any]:
+    def pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
         for key, value in items:
             if key in result:
                 raise ValueError(f"duplicate key: {key}")
             result[key] = value
         return result
 
-    def constant(value):
+    def constant(value: str) -> Any:
         raise ValueError(f"non-finite JSON constant: {value}")
 
-    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=pairs, parse_constant=constant)
+    return json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=pairs,
+        parse_constant=constant,
+    )
 
 
 def test_interoperability_contract_is_fail_closed() -> None:
@@ -42,7 +47,11 @@ def test_static_routing_cases_are_complete_but_not_model_runs() -> None:
     assert len({case["id"] for case in cases}) == 6
     assert {case["language"] for case in cases} == {"en", "zh"}
     assert {case["split"] for case in cases} == {"train", "validation"}
-    assert {case["category"] for case in cases} == {"workflow", "boundary", "negative"}
+    assert {case["category"] for case in cases} == {
+        "workflow",
+        "boundary",
+        "negative",
+    }
     assert status["status"] == "NOT_RUN"
     assert capture["status"] == "NOT_RUN"
     assert all(item["selected_skills"] is None for item in capture["decisions"])
@@ -50,5 +59,9 @@ def test_static_routing_cases_are_complete_but_not_model_runs() -> None:
 
 def test_nonfinite_or_boolean_quantities_are_invalid() -> None:
     for value in (True, False, float("nan"), float("inf"), -float("inf")):
-        valid = not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(float(value))
+        valid = (
+            not isinstance(value, bool)
+            and isinstance(value, int | float)
+            and math.isfinite(float(value))
+        )
         assert valid is False
