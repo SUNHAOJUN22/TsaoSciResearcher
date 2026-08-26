@@ -10,6 +10,7 @@ build/
 Thumbs.db
 .tsao-research/
 *.zip
+.coverage
 coverage.xml
 htmlcov/
 
