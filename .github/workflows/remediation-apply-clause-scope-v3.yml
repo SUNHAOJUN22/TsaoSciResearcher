@@ -112,7 +112,7 @@ jobs:
             tsao_researcher/scientific_quality.py \
             tsao_researcher/semantic_scope.py
 
-      - name: Regenerate deterministic repository evidence in dependency order
+      - name: Regenerate deterministic repository evidence to a fixed point
         shell: bash
         run: |
           set -euo pipefail
@@ -120,6 +120,7 @@ jobs:
           python scripts/build_readme_facts.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
+          python scripts/build_test_dashboard.py --write
           git add -A
           python scripts/validate_unicode_integrity.py --write
           python scripts/build_sbom.py --write
