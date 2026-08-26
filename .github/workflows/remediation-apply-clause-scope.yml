@@ -53,14 +53,33 @@ jobs:
             '2785292ec193e15781e4ea7b1e59ca22fd535c36d691754e39ad5e4757db2103' \
             /tmp/researcher-source.patch | sha256sum --check
           git apply --index /tmp/researcher-source.patch
-          rm -rf .github/remediation/researcher-source-patch
-          rm .github/workflows/remediation-apply-clause-scope.yml
+          git rm -r .github/remediation/researcher-source-patch
+          git rm .github/workflows/remediation-apply-clause-scope.yml
 
       - name: Format source and regenerate deterministic artifacts
         shell: bash
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          for relative in (
+              "scripts/build_test_dashboard.py",
+              "scripts/build_research_quality_dashboard.py",
+          ):
+              path = Path(relative)
+              text = path.read_text(encoding="utf-8")
+              marker = '</script></body></html>"""'
+              replacement = marker + ' + "\n"'
+              if replacement not in text:
+                  if marker not in text:
+                      raise SystemExit(f"HTML return marker missing in {relative}")
+                  text = text.replace(marker, replacement, 1)
+                  path.write_text(text, encoding="utf-8")
+          PY
           python -m ruff format \
+            scripts/build_test_dashboard.py \
+            scripts/build_research_quality_dashboard.py \
             tsao_researcher/contracts_v17.py \
             tsao_researcher/scientific_contracts_v16.py \
             tsao_researcher/router.py \
@@ -70,12 +89,12 @@ jobs:
             tests/test_scientific_quality.py \
             tests/test_runtime_v2.py
           python scripts/sync_runtime_data.py --write
-          python scripts/build_readme_facts.py --write
           python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
-          python scripts/validate_unicode_integrity.py --write
           python scripts/build_sbom.py --write
+          python scripts/build_readme_facts.py --write
+          python scripts/validate_unicode_integrity.py --write
           python scripts/build_validation_evidence.py --write
           python scripts/generate_checksums.py --write
 
@@ -121,6 +140,8 @@ jobs:
               '.github/workflows/remediation-apply-clause-scope.yml',
               '.github/workflows/v19-skill-contract.yml',
               'routing/router-rules-v2.json',
+              'scripts/build_research_quality_dashboard.py',
+              'scripts/build_test_dashboard.py',
               'tests/test_contracts_v17.py',
               'tests/test_runtime_v2.py',
               'tests/test_scientific_contracts_v16.py',
