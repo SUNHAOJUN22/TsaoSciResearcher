@@ -70,7 +70,7 @@ jobs:
               path = Path(relative)
               text = path.read_text(encoding="utf-8")
               marker = '</script></body></html>"""'
-              replacement = marker + ' + "\n"'
+              replacement = marker + r' + "\n"'
               if replacement not in text:
                   if marker not in text:
                       raise SystemExit(f"HTML return marker missing in {relative}")
