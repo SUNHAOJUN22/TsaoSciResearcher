@@ -112,19 +112,19 @@ jobs:
             tsao_researcher/scientific_quality.py \
             tsao_researcher/semantic_scope.py
 
-      - name: Regenerate deterministic repository evidence
+      - name: Regenerate deterministic repository evidence in dependency order
         shell: bash
         run: |
           set -euo pipefail
           python scripts/sync_runtime_data.py --write
           python scripts/build_readme_facts.py --write
-          python scripts/build_test_dashboard.py --write
           python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           git add -A
           python scripts/validate_unicode_integrity.py --write
           python scripts/build_sbom.py --write
           python scripts/build_validation_evidence.py --write
+          python scripts/build_test_dashboard.py --write
           python scripts/generate_checksums.py --write
 
       - name: Run full deterministic qualification
