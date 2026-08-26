@@ -64,9 +64,5 @@ def test_static_routing_cases_are_complete_but_not_model_runs() -> None:
 
 def test_nonfinite_or_boolean_quantities_are_invalid() -> None:
     for value in (True, False, float("nan"), float("inf"), -float("inf")):
-        valid = (
-            not isinstance(value, bool)
-            and isinstance(value, int | float)
-            and math.isfinite(float(value))
-        )
+        valid = not isinstance(value, bool) and isinstance(value, int | float) and math.isfinite(float(value))
         assert valid is False

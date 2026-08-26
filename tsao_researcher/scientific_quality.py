@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from .errors import ValidationError
+from .scientific_contracts_v16 import causal_clauses
 
 QualityStatus = Literal["PASS", "WARN", "BLOCK"]
 
@@ -260,10 +261,7 @@ def plan_structure_property(spec: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _contains_causal_wording(claim: str) -> bool:
-    folded = claim.casefold()
-    if any(phrase in folded for phrase in _NEGATED_CAUSAL_PHRASES):
-        return False
-    return any(token in folded for token in _CAUSAL_TOKENS)
+    return any(row["polarity"] == "AFFIRMED" for row in causal_clauses(claim))
 
 
 def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
@@ -282,7 +280,8 @@ def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
     mechanism_tested = _flag(spec.get("mechanism_tested"), "mechanism_tested")
     uncertainty_reported = _flag(spec.get("uncertainty_reported"), "uncertainty_reported")
 
-    causal_wording = _contains_causal_wording(claim)
+    claim_causal_clauses = causal_clauses(claim)
+    causal_wording = any(row["polarity"] == "AFFIRMED" for row in claim_causal_clauses)
     mechanism_wording = any(token in claim.casefold() for token in _MECHANISM_TOKENS)
     experimental_design = any(token in design for token in _EXPERIMENTAL_DESIGN_TOKENS)
     support = (
@@ -349,6 +348,7 @@ def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
             "design": design_original,
             "verdict": verdict,
             "causal_wording_detected": causal_wording,
+            "causal_clauses": claim_causal_clauses,
             "temporal_order": temporal_order,
             "confounders_addressed": confounders_addressed,
             "intervention_or_natural_experiment": intervention_or_natural_experiment,

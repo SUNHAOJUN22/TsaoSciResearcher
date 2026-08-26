@@ -19,7 +19,7 @@ endobj
 << /Length 2183 >>
 stream
 BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
-BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | composite evidence | 2026-08-08) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | preflight evidence | 2026-08-26) Tj ET
 q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
 BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
@@ -37,7 +37,7 @@ q 0.980 g 0.750 G 301.0 504.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (20) Tj ET
 BT /F1 9 Tf 1 0 0 1 317.0 521.0 Tm (Schemas) Tj ET
 q 0.980 g 0.750 G 46.0 418.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (43) Tj ET
+BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (47) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 435.0 Tm (Test modules) Tj ET
 q 0.980 g 0.750 G 301.0 418.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 457.0 Tm (7) Tj ET
@@ -55,7 +55,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
 endobj
 8 0 obj
-<< /Length 4143 >>
+<< /Length 5186 >>
 stream
 BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scoped software validation matrix) Tj ET
 BT /F2 14 Tf 1 0 0 1 46.0 760.0 Tm (Recorded cross-platform baseline) Tj ET
@@ -77,66 +77,90 @@ q 0.92 g 330.0 625.0 150.0 10 re f Q
 q 0.30 g 330.0 625.0 150.0 10 re f Q
 BT /F2 9 Tf 1 0 0 1 492.0 632.0 Tm (PASS) Tj ET
 BT /F2 14 Tf 1 0 0 1 46.0 601.0 Tm (Scoped validation gates) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 569.0 Tm (baseline bandit high severity) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 569.0 Tm (bandit high severity) Tj ET
 q 0.92 g 330.0 562.0 150.0 10 re f Q
-q 0.30 g 330.0 562.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 569.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 547.0 Tm (baseline bounded performance) Tj ET
+q 0.55 g 330.0 562.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 569.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 547.0 Tm (bounded performance) Tj ET
 q 0.92 g 330.0 540.0 150.0 10 re f Q
-q 0.30 g 330.0 540.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 547.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 525.0 Tm (baseline byte identical release builds) Tj ET
+q 0.30 g 330.0 540.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 547.0 Tm (LOCAL_PREFLIGHT) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 525.0 Tm (byte identical release builds) Tj ET
 q 0.92 g 330.0 518.0 150.0 10 re f Q
-q 0.30 g 330.0 518.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 525.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 503.0 Tm (baseline complete regression) Tj ET
+q 0.30 g 330.0 518.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 525.0 Tm (LOCAL_PREFLIGHT) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 503.0 Tm (complete regression) Tj ET
 q 0.92 g 330.0 496.0 150.0 10 re f Q
-q 0.30 g 330.0 496.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 503.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 481.0 Tm (baseline critical mutation killed) Tj ET
+q 0.30 g 330.0 496.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 503.0 Tm (PARTIAL) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 481.0 Tm (coverage line and branch) Tj ET
 q 0.92 g 330.0 474.0 150.0 10 re f Q
-q 0.30 g 330.0 474.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 481.0 Tm (24/24) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 459.0 Tm (baseline mypy strict) Tj ET
+q 0.30 g 330.0 474.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 481.0 Tm (LOCAL_PREFLIGHT) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 459.0 Tm (critical mutation killed) Tj ET
 q 0.92 g 330.0 452.0 150.0 10 re f Q
-q 0.30 g 330.0 452.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 459.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 437.0 Tm (baseline repository and contract audit) Tj ET
+q 0.55 g 330.0 452.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 459.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 437.0 Tm (dependency vulnerability audit) Tj ET
 q 0.92 g 330.0 430.0 150.0 10 re f Q
-q 0.30 g 330.0 430.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 437.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 415.0 Tm (baseline reverse order regression) Tj ET
+q 0.55 g 330.0 430.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 437.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 415.0 Tm (deterministic sbom) Tj ET
 q 0.92 g 330.0 408.0 150.0 10 re f Q
 q 0.30 g 330.0 408.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 415.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 393.0 Tm (baseline ruff format and lint) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 393.0 Tm (deterministic visual reports) Tj ET
 q 0.92 g 330.0 386.0 150.0 10 re f Q
 q 0.30 g 330.0 386.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 393.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 371.0 Tm (baseline seeded random order regression) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 371.0 Tm (docs build) Tj ET
 q 0.92 g 330.0 364.0 150.0 10 re f Q
-q 0.30 g 330.0 364.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 371.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 349.0 Tm (current end to end ci) Tj ET
+q 0.55 g 330.0 364.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 371.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 349.0 Tm (execution receipts) Tj ET
 q 0.92 g 330.0 342.0 150.0 10 re f Q
-q 0.55 g 330.0 342.0 82.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (NOT RUN) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (deterministic visual report contract) Tj ET
+q 0.30 g 330.0 342.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (LOCAL_PREFLIGHT) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (json schemas 19) Tj ET
 q 0.92 g 330.0 320.0 150.0 10 re f Q
 q 0.30 g 330.0 320.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 327.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 305.0 Tm (focused current change regression) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 305.0 Tm (mypy strict) Tj ET
 q 0.92 g 330.0 298.0 150.0 10 re f Q
-q 0.30 g 330.0 298.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 305.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 283.0 Tm (readme version and mirror alignment) Tj ET
+q 0.55 g 330.0 298.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 305.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 283.0 Tm (repository and contract audit) Tj ET
 q 0.92 g 330.0 276.0 150.0 10 re f Q
 q 0.30 g 330.0 276.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 283.0 Tm (PASS) Tj ET
-BT /F1 8 Tf 1 0 0 1 56.0 261.0 Tm (scientific quality guard regression) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 261.0 Tm (reproducibility capsule) Tj ET
 q 0.92 g 330.0 254.0 150.0 10 re f Q
-q 0.30 g 330.0 254.0 150.0 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 261.0 Tm (PASS) Tj ET
+q 0.30 g 330.0 254.0 22.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 261.0 Tm (LOCAL_PREFLIGHT) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 239.0 Tm (reverse order regression) Tj ET
+q 0.92 g 330.0 232.0 150.0 10 re f Q
+q 0.55 g 330.0 232.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 239.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 217.0 Tm (ruff format and lint) Tj ET
+q 0.92 g 330.0 210.0 150.0 10 re f Q
+q 0.55 g 330.0 210.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 217.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 195.0 Tm (scientific quality guards) Tj ET
+q 0.92 g 330.0 188.0 150.0 10 re f Q
+q 0.30 g 330.0 188.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 195.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 173.0 Tm (seeded random order regression) Tj ET
+q 0.92 g 330.0 166.0 150.0 10 re f Q
+q 0.55 g 330.0 166.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 173.0 Tm (NOT RUN) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 151.0 Tm (validation tree digest) Tj ET
+q 0.92 g 330.0 144.0 150.0 10 re f Q
+q 0.30 g 330.0 144.0 150.0 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 151.0 Tm (PASS) Tj ET
+BT /F1 8 Tf 1 0 0 1 56.0 129.0 Tm (wheel and sdist install) Tj ET
+q 0.92 g 330.0 122.0 150.0 10 re f Q
+q 0.55 g 330.0 122.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 129.0 Tm (NOT RUN) Tj ET
 BT /F2 9 Tf 1 0 0 1 46.0 68.0 Tm (Scoped status applies only to the evidence levels explicitly recorded above.) Tj ET
 endstream
 endobj
@@ -201,20 +225,21 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 12 0 R >>
 endobj
 12 0 obj
-<< /Length 1555 >>
+<< /Length 1605 >>
 stream
 BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scoped evidence and limitations) Tj ET
 q 0.980 g 0.750 G 46.0 650.0 500.0 92.0 re B Q
 BT /F2 14 Tf 1 0 0 1 64.0 712.0 Tm (Recorded validation scope) Tj ET
-BT /F1 9 Tf 1 0 0 1 64.0 687.0 Tm (Scope: composite) Tj ET
+BT /F1 9 Tf 1 0 0 1 64.0 687.0 Tm (Scope: preflight) Tj ET
 BT /F1 8 Tf 1 0 0 1 64.0 668.0 Tm (Only the explicitly recorded checks may be interpreted as passing.) Tj ET
 q 0.980 g 0.750 G 46.0 525.0 500.0 92.0 re B Q
 BT /F2 14 Tf 1 0 0 1 64.0 587.0 Tm (Current-tree end-to-end CI) Tj ET
-BT /F1 9 Tf 1 0 0 1 64.0 562.0 Tm (Status: NOT_RUN) Tj ET
+BT /F1 9 Tf 1 0 0 1 64.0 562.0 Tm (Status: not recorded) Tj ET
 BT /F1 8 Tf 1 0 0 1 64.0 543.0 Tm (No exact commit attestation is asserted until external CI artifacts record it.) Tj ET
 BT /F2 14 Tf 1 0 0 1 46.0 470.0 Tm (Explicit limitations) Tj ET
-BT /F1 8 Tf 1 0 0 1 60.0 442.0 Tm (1. Current-tree end-to-end CI remains NOT_RUN for this acceptance hardening delta.) Tj ET
-BT /F1 8 Tf 1 0 0 1 60.0 420.0 Tm (2. External scientific execution requires a checksum-verifiable execution receipt.) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 442.0 Tm (1. Checked-in preflight evidence is not a substitute for the external CI) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 430.0 Tm (attestation.) Tj ET
+BT /F1 8 Tf 1 0 0 1 60.0 408.0 Tm (2. External scientific execution requires a checksum-verifiable execution receipt.) Tj ET
 BT /F2 14 Tf 1 0 0 1 46.0 155.0 Tm (Reproduction entry points) Tj ET
 BT /F1 7 Tf 1 0 0 1 60.0 128.0 Tm (python scripts/build_validation_evidence.py --check) Tj ET
 BT /F1 7 Tf 1 0 0 1 60.0 112.0 Tm (python scripts/build_test_dashboard.py --check) Tj ET
@@ -234,12 +259,12 @@ xref
 0000000455 00000 n 
 0000002689 00000 n 
 0000002825 00000 n 
-0000007019 00000 n 
-0000007156 00000 n 
-0000010526 00000 n 
-0000010664 00000 n 
+0000008062 00000 n 
+0000008199 00000 n 
+0000011569 00000 n 
+0000011707 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-12271
+13364
 %%EOF

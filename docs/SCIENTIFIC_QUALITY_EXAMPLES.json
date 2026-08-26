@@ -159,6 +159,21 @@
       },
       "result": {
         "details": {
+          "causal_clauses": [
+            {
+              "clause_id": 0,
+              "markers": [
+                {
+                  "end": 21,
+                  "marker": "causes",
+                  "polarity": "AFFIRMED",
+                  "start": 15
+                }
+              ],
+              "polarity": "AFFIRMED",
+              "text": "The morphology causes the breakdown improvement."
+            }
+          ],
           "causal_wording_detected": true,
           "claim": "The morphology causes the breakdown improvement.",
           "comparison_or_control": true,

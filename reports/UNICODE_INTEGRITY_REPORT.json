@@ -7,7 +7,7 @@
   "mojibake_failures": [],
   "nfc_failures": [],
   "replacement_characters": [],
-  "scanned_text_files": 421,
+  "scanned_text_files": 440,
   "schema_version": "tsao.unicode-integrity/v1",
   "unsafe_paths": [],
   "verdict": "PASS"

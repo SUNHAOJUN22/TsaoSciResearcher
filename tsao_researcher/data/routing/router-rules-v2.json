@@ -226,7 +226,13 @@
       "校准",
       "样品制备",
       "质量控制",
-      "lab automation"
+      "lab automation",
+      "experimental measurement",
+      "experimental measurements",
+      "实验测量",
+      "实验表征",
+      "只要实验测量",
+      "仅需实验测量"
     ],
     "negative": [
       "计算模拟"

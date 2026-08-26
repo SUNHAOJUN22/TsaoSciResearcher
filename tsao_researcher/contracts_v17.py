@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import json
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from hashlib import sha256
-import json
-from typing import Iterable, Mapping
 
 MATURITY = {"UNVERIFIED", "SCREENED", "QUALIFIED"}
 RELATIONS = {"SUPPORTS", "CHALLENGES", "NULL", "BACKGROUND", "UNKNOWN"}
@@ -85,13 +85,17 @@ def replay_state(events: Iterable[ReplayEvent]) -> str:
             human_acceptance = bool(event.payload.get("qualified_approver"))
             state = "ACCEPTED" if independent_review and human_acceptance else "ACCEPTANCE_HOLD"
         elif event.event_type == "EXTERNAL_EXECUTED":
-            state = "EXTERNAL_EXECUTION_VERIFIED" if bool(event.payload.get("signed_receipt")) else "EXTERNAL_EXECUTION_NOT_VERIFIED"
+            state = (
+                "EXTERNAL_EXECUTION_VERIFIED"
+                if bool(event.payload.get("signed_receipt"))
+                else "EXTERNAL_EXECUTION_NOT_VERIFIED"
+            )
         elif event.event_type == "EVIDENCE_ADDED":
             state = "EVIDENCE_AVAILABLE"
         else:
             raise ValueError(f"unknown event type: {event.event_type}")
         previous_hash = event.event_hash
-        expected_sequence += 1
+        expected_sequence += 1  # noqa: SIM113
     return state
 
 

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import unittest
+from dataclasses import replace
 
-from tsao_researcher.contracts.contracts_v17 import (
+from tsao_researcher.contracts_v17 import (
     EvidenceAssessment,
     make_event,
     replay_state,

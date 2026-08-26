@@ -96,6 +96,27 @@ def test_router_rejects_unbounded_input() -> None:
         route("x" * (MAX_ROUTE_CHARS + 1))
 
 
+def test_router_applies_negation_only_to_the_local_english_clause() -> None:
+    measurement = route("Do not use DFT; I only need experimental measurements.")
+    assert measurement["primary_workflow"] == "laboratory"
+    assert all(row["workflow"] != "computation-handoff" for row in measurement["matched"])
+
+    mixed = route("Do not use DFT, but run LAMMPS for 10 ns.")
+    assert mixed["primary_workflow"] == "computation-handoff"
+    computation = next(row for row in mixed["matched"] if row["workflow"] == "computation-handoff")
+    assert "lammps" in computation["positive"]
+    assert "dft" in computation["negated_positive"]
+
+
+def test_router_applies_negation_only_to_the_local_chinese_clause() -> None:
+    measurement = route("不要使用 DFT，只要实验测量。")  # noqa: RUF001
+    assert measurement["primary_workflow"] == "laboratory"
+    assert all(row["workflow"] != "computation-handoff" for row in measurement["matched"])
+
+    mixed = route("不要使用 DFT，但运行 LAMMPS 完成分子动力学。")  # noqa: RUF001
+    assert mixed["primary_workflow"] == "computation-handoff"
+
+
 def test_project_full_lifecycle_and_hash_chain(tmp_path: Path) -> None:
     root = initialize("study", "what mechanism is tested?", tmp_path)
     for state in ("planned", "running", "completed", "checked", "validated"):
