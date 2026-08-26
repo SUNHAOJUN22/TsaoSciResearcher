@@ -21,7 +21,7 @@
 <text x="622" y="232" class="muted small">explicitly disclosed</text>
 <rect x="865" y="125" width="235" height="128" rx="18" class="panel"/>
 <text x="887" y="160" class="muted small">Test modules</text>
-<text x="887" y="207" class="value">47</text>
+<text x="887" y="207" class="value">48</text>
 <text x="887" y="232" class="muted small">repository modules</text>
 <text x="70" y="302" class="label">Recorded platform baseline</text>
 <rect x="70" y="322" width="235" height="46" rx="13" fill="#eaf8ef" stroke="#247a48"/>
