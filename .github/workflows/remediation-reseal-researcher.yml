@@ -104,7 +104,8 @@ jobs:
             tests/test_contracts_v17.py \
             tests/test_runtime_v2.py \
             tests/test_scientific_contracts_v16.py \
-            tests/test_scientific_quality.py
+            tests/test_scientific_quality.py \
+            tests/test_semantic_fixed_point_v20.py
           python -m coverage report \
             --include='tsao_researcher/router.py,tsao_researcher/scientific_contracts_v16.py,tsao_researcher/semantic_scope.py,tsao_researcher/contracts_v17.py' \
             --fail-under=90
@@ -141,6 +142,7 @@ jobs:
               'tests/test_runtime_v2.py',
               'tests/test_scientific_contracts_v16.py',
               'tests/test_scientific_quality.py',
+              'tests/test_semantic_fixed_point_v20.py',
               'tsao_researcher/contracts_v17.py',
               'tsao_researcher/data/routing/router-rules-v2.json',
               'tsao_researcher/router.py',
