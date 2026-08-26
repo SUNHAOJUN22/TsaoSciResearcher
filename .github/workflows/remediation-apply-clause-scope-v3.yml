@@ -168,9 +168,33 @@ jobs:
           python - <<'PY'
           import subprocess
 
-          actual = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD'], text=True).splitlines())
-          forbidden = {path for path in actual if path.startswith('.github/remediation/')}
-          forbidden |= {path for path in actual if 'remediation-apply-clause-scope' in path and not path.endswith('v3.yml')}
+          rows = subprocess.check_output(
+              ['git', 'diff', '--name-status', 'HEAD'], text=True
+          ).splitlines()
+          statuses: dict[str, str] = {}
+          for row in rows:
+              status, *paths = row.split('\t')
+              for path in paths:
+                  statuses[path] = status
+          actual = set(statuses)
+          transport = {
+              '.github/remediation/researcher.patch.b64.00',
+              '.github/remediation/researcher.patch.b64.01',
+              '.github/remediation/researcher.patch.b64.02',
+              '.github/remediation/researcher.patch.b64.03',
+          }
+          unexpected_transport = {
+              path for path in actual if path.startswith('.github/remediation/') and path not in transport
+          }
+          transport_not_deleted = {
+              path: statuses.get(path) for path in transport if statuses.get(path) != 'D'
+          }
+          forbidden_workflows = {
+              path
+              for path in actual
+              if 'remediation-apply-clause-scope' in path
+              and path != '.github/workflows/remediation-apply-clause-scope-v3.yml'
+          }
           required = {
               '.github/workflows/contracts-v17.yml',
               '.github/workflows/exact-tree-export.yml',
@@ -184,8 +208,26 @@ jobs:
               'tests/test_skill_interoperability_v19.py',
           }
           missing = required - actual
-          if forbidden or missing:
-              raise SystemExit(f'bounded diff failed: forbidden={sorted(forbidden)!r} missing={sorted(missing)!r}')
+          required_deletions = {
+              '.github/workflows/contracts-v17.yml',
+              '.github/workflows/exact-tree-export.yml',
+              '.github/workflows/remediation-apply-clause-scope-v3.yml',
+              '.github/workflows/v19-skill-contract.yml',
+          }
+          not_deleted = {
+              path: statuses.get(path)
+              for path in required_deletions
+              if statuses.get(path) != 'D'
+          }
+          if unexpected_transport or transport_not_deleted or forbidden_workflows or missing or not_deleted:
+              raise SystemExit(
+                  'bounded diff failed: '
+                  f'unexpected_transport={sorted(unexpected_transport)!r} '
+                  f'transport_not_deleted={transport_not_deleted!r} '
+                  f'forbidden_workflows={sorted(forbidden_workflows)!r} '
+                  f'missing={sorted(missing)!r} '
+                  f'not_deleted={not_deleted!r}'
+              )
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
