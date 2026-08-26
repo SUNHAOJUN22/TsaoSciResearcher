@@ -94,6 +94,7 @@ jobs:
             tests/test_runtime_v2.py \
             tests/test_scientific_contracts_v16.py \
             tests/test_scientific_quality.py \
+            tests/test_skill_interoperability_v19.py \
             tsao_researcher/contracts_v17.py \
             tsao_researcher/router.py \
             tsao_researcher/scientific_contracts_v16.py \
@@ -106,6 +107,7 @@ jobs:
             tests/test_runtime_v2.py \
             tests/test_scientific_contracts_v16.py \
             tests/test_scientific_quality.py \
+            tests/test_skill_interoperability_v19.py \
             tsao_researcher/contracts_v17.py \
             tsao_researcher/router.py \
             tsao_researcher/scientific_contracts_v16.py \
@@ -179,6 +181,7 @@ jobs:
               'tsao_researcher/scientific_quality.py',
               'tests/test_runtime_v2.py',
               'tests/test_scientific_quality.py',
+              'tests/test_skill_interoperability_v19.py',
           }
           missing = required - actual
           if forbidden or missing:
