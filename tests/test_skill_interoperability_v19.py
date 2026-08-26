@@ -38,6 +38,11 @@ def test_interoperability_contract_is_fail_closed() -> None:
     assert order.index("FAIL") < order.index("HOLD") < order.index("PASS")
 
 
+def test_interoperability_contract_stays_in_full_ci_without_a_status_workflow() -> None:
+    assert (ROOT / ".github/workflows/ci.yml").is_file()
+    assert not (ROOT / ".github/workflows/v19-skill-contract.yml").exists()
+
+
 def test_static_routing_cases_are_complete_but_not_model_runs() -> None:
     evals = load(SKILL / "evals/evals.json")
     status = load(SKILL / "evals/MODEL_EVAL_STATUS.json")
