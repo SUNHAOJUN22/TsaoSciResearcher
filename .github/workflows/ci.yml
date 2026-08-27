@@ -41,7 +41,7 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Remove one-shot workflows and restore permanent definitions
+      - name: Restore permanent workflows and remove one-shot transport
         shell: bash
         run: |
           set -euo pipefail
@@ -58,11 +58,12 @@ jobs:
           set -euo pipefail
           python scripts/sync_runtime_data.py --write
           python scripts/build_readme_facts.py --write
-          python scripts/build_research_quality_dashboard.py --write
+          git add -A
           python scripts/validate_unicode_integrity.py --write
           python scripts/build_sbom.py --write
           python scripts/build_validation_evidence.py --write
           python scripts/build_test_dashboard.py --write
+          python scripts/build_research_quality_dashboard.py --write
           python scripts/build_engineering_report.py --write
           python scripts/generate_checksums.py --write
 
@@ -114,10 +115,11 @@ jobs:
           test -z "$(find .github/workflows -maxdepth 1 -type f -name 'remediation-*.yml' -print -quit)"
           git diff --check
 
-      - name: Commit clean evidence tree
+      - name: Commit tested non-workflow evidence tree
         shell: bash
         run: |
           set -euo pipefail
+          git restore --source=HEAD --staged --worktree .github/workflows
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
