@@ -120,7 +120,7 @@ def test_causal_quantity_and_event_contract_error_branches() -> None:
         causal_clauses(None)  # type: ignore[arg-type]
 
     assert causal_clauses("Because A changes.") == []
-    assert causal_clauses("No causal marker appears here.")[0]["polarity"] == "AFFIRMED"
+    assert causal_clauses("C causes D.")[0]["polarity"] == "AFFIRMED"
     assert causal_clauses("This cannot establish causality.")[0]["polarity"] == "NEGATED"
 
     assert claim_readiness([]) == "HOLD_NO_SUPPORTING_EVIDENCE"
