@@ -125,9 +125,7 @@ def test_causal_quantity_and_event_contract_error_branches() -> None:
 
     assert claim_readiness([]) == "HOLD_NO_SUPPORTING_EVIDENCE"
     assert (
-        claim_readiness(
-            [{"verification_status": "VERIFIED", "relation_to_claim": "SUPPORTS"}]
-        )
+        claim_readiness([{"verification_status": "VERIFIED", "relation_to_claim": "SUPPORTS"}])
         == "READY_FOR_REVIEW"
     )
 

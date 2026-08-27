@@ -1,14 +1,13 @@
 name: Manual full repository audit
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: researcher-evidence-reseal-${{ github.ref }}
+  group: manual-audit-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -17,65 +16,27 @@ env:
   PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
 
 jobs:
-  reseal:
-    if: github.actor != 'github-actions[bot]' && github.event.pull_request.head.ref == 'remediation/clause-scope-contracts-ci-v2'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 90
+  audit:
+    name: idempotent-full-audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
-      - name: Check out exact Draft branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
-          ref: remediation/clause-scope-contracts-ci-v2
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
-        with:
-          python-version: '3.12'
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-ci.lock
-
-      - name: Install exact CI stack
+      - name: Install exact toolchain
         run: |
           python -m pip install --disable-pip-version-check -r requirements-ci.lock
           python -m pip install --disable-pip-version-check -e . --no-deps
-          python -m pip check
-
-      - name: Remove one-shot workflows and restore permanent audit definition
-        shell: bash
+      - name: Generate external-only audit artifacts
         run: |
-          set -euo pipefail
-          find .github/workflows -maxdepth 1 -type f -name 'remediation-*.yml' -delete
-          git show origin/main:.github/workflows/audit.yml > .github/workflows/audit.yml
-          python -m ruff format scripts tsao_researcher tests
-          python -m ruff check --fix scripts tsao_researcher tests
-          python -m ruff format scripts tsao_researcher tests
-          git add -A
-
-      - name: Regenerate deterministic repository evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/sync_runtime_data.py --write
-          python scripts/build_readme_facts.py --write
-          python scripts/build_test_dashboard.py --write
-          python scripts/build_research_quality_dashboard.py --write
-          python scripts/build_engineering_report.py --write
-          git add -A
-          python scripts/validate_unicode_integrity.py --write
-          python scripts/build_sbom.py --write
-          python scripts/build_validation_evidence.py --write
-          python scripts/generate_checksums.py --write
-
-      - name: Run full deterministic qualification
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/validate_unicode_integrity.py --check
+          mkdir -p artifacts
           python scripts/sync_version.py --check
           python scripts/sync_runtime_data.py --check
           python scripts/validate_schemas.py
-          python scripts/validate_mathematical_contracts.py --check
           python scripts/audit_repository.py
           python scripts/validate_structure.py
           python scripts/build_readme_facts.py --check
@@ -85,42 +46,36 @@ jobs:
           python scripts/build_research_quality_dashboard.py --check
           python scripts/build_engineering_report.py --check
           python scripts/generate_checksums.py --check
-          python scripts/build_capability_index.py --check
-          python scripts/route_task.py --self-test
-          python scripts/final_acceptance_preflight.py --root . --json
-          python -m compileall -q scripts tsao_researcher tests
-          python -m unittest tests.test_contracts_v17 -v
-          python -m pytest -q -p hypothesis.extra.pytestplugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
           python -m ruff format --check scripts tsao_researcher tests
           python -m ruff check scripts tsao_researcher tests
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
-
-      - name: Enforce semantic coverage fixed point
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m coverage erase
-          python -m coverage run --branch -m pytest -q -p hypothesis.extra.pytestplugin \
-            tests/test_contracts_v17.py \
-            tests/test_runtime_v2.py \
-            tests/test_scientific_contracts_v16.py \
-            tests/test_scientific_quality.py \
-            tests/test_semantic_fixed_point_v20.py
-          python -m coverage report \
-            --include='tsao_researcher/router.py,tsao_researcher/scientific_contracts_v16.py,tsao_researcher/semantic_scope.py,tsao_researcher/contracts_v17.py' \
-            --fail-under=90
-          rm -f .coverage
-          test ! -e .coverage
-          test -z "$(find .github/workflows -maxdepth 1 -type f -name 'remediation-*.yml' -print -quit)"
-          git diff --check
-
-      - name: Commit clean evidence tree
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'chore(evidence): reseal clean Researcher qualification tree'
-          git push origin HEAD:remediation/clause-scope-contracts-ci-v2
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          mkdocs build --strict
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+          python scripts/build_publication_attestation.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: manual-audit-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            artifacts
+            artifacts/QUALITY_HISTORY.json
+            dist-a
+            dist-python
+            site
+          if-no-files-found: error
+          retention-days: 30
