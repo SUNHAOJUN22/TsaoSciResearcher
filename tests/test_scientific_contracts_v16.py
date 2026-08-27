@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from tsao_researcher.contracts.scientific_contracts_v16 import (
+from tsao_researcher.scientific_contracts_v16 import (
     causal_clauses,
     claim_readiness,
     compare_quantities,
@@ -18,10 +18,13 @@ def test_clause_scope_keeps_second_affirmed_cause() -> None:
     assert [item["polarity"] for item in clauses] == ["NEGATED", "AFFIRMED"]
 
 
+def test_chinese_clause_scope_keeps_second_affirmed_cause() -> None:
+    clauses = causal_clauses("A 不导致 B，但 C 导致 D")  # noqa: RUF001
+    assert [item["polarity"] for item in clauses] == ["NEGATED", "AFFIRMED"]
+
+
 def test_challenging_evidence_never_supports_positive_claim() -> None:
-    readiness = claim_readiness(
-        [{"verification_status": "VERIFIED", "relation_to_claim": "CHALLENGES"}]
-    )
+    readiness = claim_readiness([{"verification_status": "VERIFIED", "relation_to_claim": "CHALLENGES"}])
     assert readiness == "REVIEW_CONFLICTING_EVIDENCE"
 
 

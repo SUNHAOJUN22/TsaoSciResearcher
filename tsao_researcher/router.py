@@ -1,4 +1,4 @@
-"""Fast deterministic task routing with explicit negative semantics."""
+"""Fast deterministic task routing with explicit clause-local negative semantics."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from typing import Any
 
 from .errors import ValidationError
 from .io import load_json
+from .semantic_scope import Clause, split_clauses, trigger_is_negated
 
 PACKAGE_DATA = Path(__file__).resolve().parent / "data" / "routing"
 DEFAULT_RULES_PATH = PACKAGE_DATA / "router-rules-v2.json"
@@ -24,12 +25,23 @@ class Trigger:
     normalized: str
     pattern: Pattern[str] | None
 
-    def matches(self, text: str) -> bool:
+    def spans(self, text: str) -> tuple[tuple[int, int], ...]:
         if self.normalized not in text:
-            return False
+            return ()
         if self.pattern is not None:
-            return self.pattern.search(text) is not None
-        return True
+            return tuple((match.start(), match.end()) for match in self.pattern.finditer(text))
+        spans: list[tuple[int, int]] = []
+        offset = 0
+        while True:
+            start = text.find(self.normalized, offset)
+            if start < 0:
+                return tuple(spans)
+            end = start + len(self.normalized)
+            spans.append((start, end))
+            offset = end
+
+    def matches(self, text: str) -> bool:
+        return bool(self.spans(text))
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,6 +51,16 @@ class Rule:
     priority: int
     positive: tuple[Trigger, ...]
     negative: tuple[Trigger, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ClauseMatch:
+    clause_id: int
+    text: str
+    positive: tuple[str, ...]
+    negative: tuple[str, ...]
+    negated_positive: tuple[str, ...]
+    score: int
 
 
 def normalize(text: str) -> str:
@@ -142,23 +164,47 @@ def _high_risk_markers() -> tuple[Trigger, ...]:
     )
 
 
+def _match_rule_clause(rule: Rule, clause: Clause) -> ClauseMatch:
+    positive: list[str] = []
+    negated_positive: list[str] = []
+    for trigger in rule.positive:
+        spans = trigger.spans(clause.normalized)
+        if not spans:
+            continue
+        if any(not trigger_is_negated(clause.normalized, start) for start, _ in spans):
+            positive.append(trigger.normalized)
+        if any(trigger_is_negated(clause.normalized, start) for start, _ in spans):
+            negated_positive.append(trigger.normalized)
+    negative = [trigger.normalized for trigger in rule.negative if trigger.matches(clause.normalized)]
+    score = max(
+        0,
+        len(positive) * rule.weight - (len(negative) + len(negated_positive)) * rule.weight * 2,
+    )
+    return ClauseMatch(
+        clause_id=clause.clause_id,
+        text=clause.text,
+        positive=tuple(positive),
+        negative=tuple(negative),
+        negated_positive=tuple(negated_positive),
+        score=score,
+    )
+
+
 def route(text: str, *, rules_path: str | Path = DEFAULT_RULES_PATH) -> dict[str, Any]:
     normalized = normalize(text)
-    results: list[tuple[Rule, int, tuple[str, ...], tuple[str, ...]]] = []
+    clauses = split_clauses(text)
+    results: list[tuple[Rule, int, tuple[ClauseMatch, ...]]] = []
     for rule in load_rules(rules_path):
-        positives = tuple(trigger.normalized for trigger in rule.positive if trigger.matches(normalized))
-        if not positives:
-            continue
-        negatives = tuple(trigger.normalized for trigger in rule.negative if trigger.matches(normalized))
-        score = max(0, len(positives) * rule.weight - len(negatives) * rule.weight * 2)
+        clause_matches = tuple(_match_rule_clause(rule, clause) for clause in clauses)
+        score = sum(match.score for match in clause_matches)
         if score:
-            results.append((rule, score, positives, negatives))
+            results.append((rule, score, clause_matches))
     results.sort(key=lambda row: (-row[1], -row[0].priority, row[0].workflow))
     primary = results[0][0].workflow if results else "unknown"
     secondary = [row[0].workflow for row in results[1:] if row[1] >= 3][:4]
     total = sum(row[1] for row in results)
     return {
-        "schema_version": "2.0",
+        "schema_version": "2.1",
         "primary_workflow": primary,
         "workflow": primary,
         "secondary_workflows": secondary,
@@ -166,14 +212,33 @@ def route(text: str, *, rules_path: str | Path = DEFAULT_RULES_PATH) -> dict[str
         "clarification_required": primary == "unknown"
         or (len(results) > 1 and results[0][1] == results[1][1]),
         "human_approval_required": any(marker.matches(normalized) for marker in _high_risk_markers()),
+        "clauses": [
+            {"clause_id": clause.clause_id, "text": clause.text, "normalized": clause.normalized}
+            for clause in clauses
+        ],
         "matched": [
             {
                 "workflow": rule.workflow,
                 "score": score,
-                "positive": list(positive),
-                "negative": list(negative),
+                "positive": sorted({value for match in clause_matches for value in match.positive}),
+                "negative": sorted({value for match in clause_matches for value in match.negative}),
+                "negated_positive": sorted(
+                    {value for match in clause_matches for value in match.negated_positive}
+                ),
+                "clause_matches": [
+                    {
+                        "clause_id": match.clause_id,
+                        "text": match.text,
+                        "score": match.score,
+                        "positive": list(match.positive),
+                        "negative": list(match.negative),
+                        "negated_positive": list(match.negated_positive),
+                    }
+                    for match in clause_matches
+                    if match.positive or match.negative or match.negated_positive
+                ],
             }
-            for rule, score, positive, negative in results[:5]
+            for rule, score, clause_matches in results[:5]
         ],
         "load_plan": {
             "workflow_files": []

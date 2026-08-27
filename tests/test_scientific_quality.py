@@ -123,6 +123,48 @@ def test_causality_guard_blocks_chinese_causal_overclaim() -> None:
     assert result["details"]["causal_wording_detected"] is True
 
 
+def test_causality_guard_does_not_let_one_negated_clause_hide_an_affirmed_clause() -> None:
+    result = guard_causal_claim(
+        {
+            "claim": "A does not cause B, but C causes D.",
+            "design": "cross-sectional observational comparison",
+            "temporal_order": True,
+            "confounders_addressed": False,
+            "intervention_or_natural_experiment": False,
+            "comparison_or_control": True,
+            "replication": True,
+            "mechanism_tested": False,
+            "uncertainty_reported": True,
+        }
+    )
+    assert result["status"] == "BLOCK"
+    assert [row["polarity"] for row in result["details"]["causal_clauses"]] == [
+        "NEGATED",
+        "AFFIRMED",
+    ]
+
+
+def test_causality_guard_preserves_chinese_mixed_clause_polarity() -> None:
+    result = guard_causal_claim(
+        {
+            "claim": "A 不导致 B，但 C 导致 D。",  # noqa: RUF001
+            "design": "横截面对比观察",
+            "temporal_order": True,
+            "confounders_addressed": False,
+            "intervention_or_natural_experiment": False,
+            "comparison_or_control": True,
+            "replication": True,
+            "mechanism_tested": False,
+            "uncertainty_reported": True,
+        }
+    )
+    assert result["status"] == "BLOCK"
+    assert [row["polarity"] for row in result["details"]["causal_clauses"]] == [
+        "NEGATED",
+        "AFFIRMED",
+    ]
+
+
 def test_causality_guard_accepts_bounded_randomized_design() -> None:
     result = guard_causal_claim(
         {
