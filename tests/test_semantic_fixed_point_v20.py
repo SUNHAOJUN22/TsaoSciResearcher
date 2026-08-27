@@ -102,7 +102,7 @@ def test_semantic_scope_guards_types_boundaries_and_local_negation() -> None:
     with pytest.raises(TypeError, match="string"):
         split_clauses(None)  # type: ignore[arg-type]
 
-    assert split_clauses(" ; ， 但 \n ") == ()
+    assert split_clauses(" ; \N{FULLWIDTH COMMA} 但 \n ") == ()
 
     with pytest.raises(ValueError, match="outside"):
         trigger_is_negated("dft", -1)
