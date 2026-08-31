@@ -1,6 +1,6 @@
 # TsaoSciResearcher — English documentation alias
 
-> **Release 0.7.4**
+> **Release 0.7.4 · acceptance-hardened main**
 
 The maintained English README is [`README.md`](README.md).
 
