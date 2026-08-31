@@ -42,14 +42,15 @@ jobs:
           python -m pip install --disable-pip-version-check -e . --no-deps
           python -m pip check
 
-      - name: Remove one-shot workflow from the qualified tree
+      - name: Apply the governed alias contract and remove one-shot transport
         shell: bash
         run: |
           set -euo pipefail
+          python .github/closure/researcher_readme_alias.py
           rm .github/workflows/closure-reseal-readme-alias.yml
-          python -m ruff format tests/test_readme_alias_contract.py
-          python -m ruff check --fix tests/test_readme_alias_contract.py
-          python -m ruff format tests/test_readme_alias_contract.py
+          python -m ruff format scripts/build_readme_facts.py tests/test_readme_alias_contract.py
+          python -m ruff check --fix scripts/build_readme_facts.py tests/test_readme_alias_contract.py
+          python -m ruff format scripts/build_readme_facts.py tests/test_readme_alias_contract.py
 
       - name: Regenerate deterministic evidence in dependency order
         shell: bash
@@ -94,6 +95,7 @@ jobs:
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
           test -z "$(find .github/workflows -maxdepth 1 -type f -name 'closure-reseal-readme-alias.yml' -print -quit)"
+          test ! -e .github/closure/researcher_readme_alias.py
           git diff --check
 
       - name: Commit tested evidence without modifying workflow files
