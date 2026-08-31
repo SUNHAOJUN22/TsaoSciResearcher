@@ -1,5 +1,7 @@
 # TsaoSciResearcher — English documentation alias
 
+> **Release 0.7.4**
+
 The maintained English README is [`README.md`](README.md).
 
 This compatibility file is intentionally short so legacy links continue to work without maintaining a second, byte-duplicated copy of the project documentation.
