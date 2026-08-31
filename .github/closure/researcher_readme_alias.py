@@ -13,7 +13,7 @@ OLD = '''    if english != english_mirror:
 NEW = '''    alias_bytes = len(english_mirror.encode("utf-8"))
     alias_tokens = (
         "[`README.md`](README.md)",
-        f"> **Release {facts['version']}**",
+        f"> **Release {facts['version']} · acceptance-hardened main**",
         "software `PASS`",
         "external calculation",
     )
