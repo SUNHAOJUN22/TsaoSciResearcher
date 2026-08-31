@@ -113,8 +113,20 @@ def _readme_errors(facts: dict[str, Any], root: Path = ROOT) -> list[str]:
     english_mirror = (root / "README_EN.md").read_text(encoding="utf-8", errors="strict")
     chinese = (root / "README.zh-CN.md").read_text(encoding="utf-8", errors="strict")
 
-    if english != english_mirror:
-        errors.append("README_EN.md is not an exact mirror of README.md")
+    alias_bytes = len(english_mirror.encode("utf-8"))
+    alias_tokens = (
+        "[`README.md`](README.md)",
+        f"> **Release {facts['version']} · acceptance-hardened main**",
+        "software `PASS`",
+        "external calculation",
+    )
+    if english == english_mirror:
+        errors.append("README_EN.md must be a thin alias, not a duplicated README body")
+    if alias_bytes >= 2_000:
+        errors.append(f"README_EN.md alias is too large: {alias_bytes} bytes")
+    for token in alias_tokens:
+        if token not in english_mirror:
+            errors.append(f"README_EN.md missing governed alias token: {token}")
 
     required_tokens = [
         facts["version"],
