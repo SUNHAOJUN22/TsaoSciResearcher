@@ -12,6 +12,10 @@
 - legacy CLI 可以作为兼容适配层存在，但最终状态、有限数判断、数量种类和形状必须服从规范 parser contract，不能维护第二套相互漂移的验收语义。
 - Python 字节码、覆盖率数据库、临时构建目录和一次性修复工作流不得进入版本库。
 
+文件身份计算复用 `engine_scan_core.sha256_file`，规范 parser 保留同名薄适配入口。`chunk_size` 必须是非 Boolean 的正整数；实际单次读取最多 1 MiB。非法大小在打开工件前拒绝，避免非空文件因零缓冲被误标成空内容摘要。有效缓冲大小不改变文件摘要；此项是内存上界与正确性保证，不是未经测量的速度提升声明。
+
+*The parser delegates artifact hashing to the shared scan core. Positive, non-Boolean chunk sizes preserve the exact digest, with each read capped at 1 MiB; invalid sizes are rejected before opening the source. No measured throughput gain or external DFT qualification is implied.*
+
 ## 资格与科学边界
 
 仓库 CI、parser contract、覆盖率和 legacy-smoke 通过，只能证明软件合同在被测提交上成立。它不等于 Gaussian、VASP、Quantum ESPRESSO 或 CP2K 已在真实许可/算力环境执行，也不等于计算结果获得独立科学验收。

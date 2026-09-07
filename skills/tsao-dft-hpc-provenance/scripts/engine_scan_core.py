@@ -30,6 +30,23 @@ class MarkerHit:
     position: int
 
 
+def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    """Hash exact file bytes with a positive read size capped at one MiB.
+
+    Reject invalid sizes before opening the source: read(0) must never return
+    the empty-file digest for a non-empty artifact, and read(-1) is unbounded.
+    """
+
+    if isinstance(chunk_size, bool) or not isinstance(chunk_size, int) or chunk_size <= 0:
+        raise ValueError("chunk_size must be a positive integer")
+    read_size = min(chunk_size, 1024 * 1024)
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(read_size), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 @contextmanager
 def mapped_artifact(path: Path) -> Iterator[ArtifactView | None]:
     """Map a non-empty regular file and close every resource deterministically."""

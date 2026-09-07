@@ -48,15 +48,9 @@ CP2K_GRADIENT_RE = re.compile(rb"Max\. gradient\s*=\s*(" + FLOAT + rb")")
 
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
-    """Compatibility helper retaining the public streaming hash API."""
+    """Compatibility entry point for the shared bounded artifact hasher."""
 
-    import hashlib
-
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(chunk_size):
-            digest.update(chunk)
-    return digest.hexdigest()
+    return _SCAN.sha256_file(path, chunk_size=chunk_size)
 
 
 def base_result(engine: str, path: Path) -> dict[str, Any]:
