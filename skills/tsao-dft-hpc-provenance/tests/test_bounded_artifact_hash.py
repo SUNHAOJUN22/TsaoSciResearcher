@@ -53,9 +53,9 @@ class BoundedArtifactHashTests(unittest.TestCase):
         class ReadSpy(io.BytesIO):
             def __init__(self, data: bytes) -> None:
                 super().__init__(data)
-                self.sizes: list[int] = []
+                self.sizes: list[int | None] = []
 
-            def read(self, size: int = -1) -> bytes:
+            def read(self, size: int | None = -1) -> bytes:
                 self.sizes.append(size)
                 return super().read(size)
 
@@ -68,7 +68,7 @@ class BoundedArtifactHashTests(unittest.TestCase):
             )
         self.assertTrue(stream.closed)
         self.assertGreater(len(stream.sizes), 1)
-        self.assertTrue(all(0 < size <= 1024 * 1024 for size in stream.sizes))
+        self.assertTrue(all(size is not None and 0 < size <= 1024 * 1024 for size in stream.sizes))
 
     def test_parser_delegates_to_shared_scan_core(self) -> None:
         with patch.object(self.parser._SCAN, "sha256_file", return_value="delegated") as shared:
