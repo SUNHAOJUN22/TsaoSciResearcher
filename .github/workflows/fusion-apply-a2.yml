@@ -16,20 +16,18 @@ jobs:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: '3.12'
-      - name: Verify patch content and apply only to the authorized integration branch
+      - name: Verify content and apply source files only
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           python - <<'PYTHON'
-          import base64,hashlib,json,lzma,os,pathlib,subprocess,urllib.request
-          if os.environ['GITHUB_REPOSITORY']!='SUNHAOJUN22/TsaoSciResearcher' or os.environ['GITHUB_REF_NAME']!='fusion/astra-pro-2':
-              raise RuntimeError('unexpected target')
+          import base64,hashlib,json,lzma,os,subprocess,urllib.request
+          if os.environ['GITHUB_REPOSITORY']!='SUNHAOJUN22/TsaoSciResearcher' or os.environ['GITHUB_REF_NAME']!='fusion/astra-pro-2': raise RuntimeError('unexpected target')
           blobs=['cb217ba67d5a53a6e3ea6f45b63ec5265788a058','7bea0b3cfd9d6de8d944eaec561b74f68954de2a','a808260e1776dce218367e81bfc5f82de89c484d','526564ea9856a1852e0bc6c6574486a15e63fcf5','b51773047712fa23851c3e0f7ff1282a8f21c21e']
           parts=[]
           for sha in blobs:
               request=urllib.request.Request(f'https://api.github.com/repos/SUNHAOJUN22/TsaoSciResearcher/git/blobs/{sha}',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-              with urllib.request.urlopen(request,timeout=30) as response:
-                  data=json.load(response)
+              with urllib.request.urlopen(request,timeout=30) as response: data=json.load(response)
               part=base64.b64decode(data['content'])
               if hashlib.sha1(f'blob {len(part)}\0'.encode()+part).hexdigest()!=sha: raise RuntimeError('blob mismatch')
               parts.append(part)
@@ -37,19 +35,18 @@ jobs:
           if hashlib.sha256(compressed).hexdigest()!='5deddb27a045efd71d2aeec8ddc72d3e604f29a448afeceba593e578bc484bc7': raise RuntimeError('transport mismatch')
           patch=lzma.decompress(compressed)
           if hashlib.sha256(patch).hexdigest()!='61e747009d83ef260b2b5228f21b5d784615f1a28e27afab642252a3f119f68c': raise RuntimeError('patch mismatch')
-          subprocess.run(['git','apply','--check','-'],input=patch,check=True)
-          subprocess.run(['git','apply','-'],input=patch,check=True)
-          for name in ('fusion-inspect.yml','fusion-apply-a2.yml'):
-              pathlib.Path('.github/workflows',name).unlink()
+          subprocess.run(['git','apply','--exclude=.github/workflows/ci.yml','--check','-'],input=patch,check=True)
+          subprocess.run(['git','apply','--exclude=.github/workflows/ci.yml','-'],input=patch,check=True)
+          # Workflow changes require the separately authorized connector; never broaden GITHUB_TOKEN.
           PYTHON
       - run: python -m pip install -e '.[test]' psutil
       - run: python tools/verify_workspace.py
       - run: python -m pytest tests/test_unified_contracts.py -q
-      - name: Commit the verified workspace without temporary transport
+      - name: Commit verified source within contents permission
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
-          git commit -m 'feat: unify source catalogs, task contracts, evidence verification and real workbench integration (astra-pro-2)' -m 'Share existing hashing and strict parsing implementations; bind run/2 task inputs, provenance and ledger events. Preserve all 3295 source mappings and controlled classification. Extend source regressions and aggregate only completed CI jobs. No real solver or scientific approval is claimed.'
+          git commit -m 'feat: unify source catalogs, task contracts, evidence verification and workbench integration (astra-pro-2)' -m 'Preserve all 3295 source mappings and controlled classification. Root workflow publication and temporary transport cleanup are separate operations. No real solver execution or scientific approval is claimed.'
           git push origin HEAD:refs/heads/fusion/astra-pro-2
