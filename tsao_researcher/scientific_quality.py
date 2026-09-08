@@ -267,14 +267,27 @@ def _contains_causal_wording(claim: str) -> bool:
 
 def _affirmed_experimental_design(design: str) -> bool:
     """Classify legacy design text without promoting negated design terms."""
+    design = re.sub("[\u2010-\u2015\u2212]", "-", design).casefold()
     for token in _EXPERIMENTAL_DESIGN_TOKENS:
         pattern = re.escape(token)
         if token.isascii():
             pattern = r"(?<![a-z])" + pattern + r"(?![a-z])"
         for match in re.finditer(pattern, design, re.IGNORECASE):
             prefix = design[max(0, match.start() - 80) : match.start()]
-            suffix = design[match.end() : match.end() + 24]
+            suffix = design[match.end() : match.end() + 80]
             if token == "随机" and re.match(r"(?:抽样|采样|取样)", suffix):
+                continue
+            if token in {"randomized", "randomised"} and re.match(
+                r"[\s-]+(?:sampling|sample|selection)\b", suffix
+            ):
+                continue
+            if re.match(
+                r"\s+(?:(?:was|were|is|are|has been|have been)\s+)?"
+                r"(?:not\s+(?:performed|used|implemented|conducted|assigned|applied)"
+                r"|absent|unavailable|not present)\b"
+                r"|(?:未|没有)(?:进行|采用|实施|设置)",
+                suffix,
+            ):
                 continue
             if re.search(
                 r"(?:non[\s_-]*|(?:not|without|no)\s+(?:(?:a|an|any|the)\s+)?"
