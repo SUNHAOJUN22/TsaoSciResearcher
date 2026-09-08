@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/calibration-plan.schema.json",
+  "title": "EPDM V2 calibration plan",
+  "type": "object",
+  "required": [
+    "calibration_plan_id",
+    "stages",
+    "parameter_bindings",
+    "allow_grade_specific_parameters",
+    "allow_reactor_specific_parameters"
+  ],
+  "properties": {
+    "calibration_plan_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "stage_id",
+          "stage_kind",
+          "target_ids",
+          "varied_parameter_ids",
+          "fixed_parameter_ids",
+          "prerequisite_gate_ids"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "stage_kind": {
+            "enum": [
+              "THERMO_RESIDENCE",
+              "SINGLE_SITE_GLOBAL",
+              "MOLECULAR_WEIGHT",
+              "GPC_DECONVOLUTION",
+              "MULTISITE_GLOBAL",
+              "INDEPENDENT_VALIDATION"
+            ]
+          },
+          "target_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          },
+          "varied_parameter_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          },
+          "fixed_parameter_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          },
+          "prerequisite_gate_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "parameter_bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "parameter_id",
+          "scope",
+          "transform"
+        ],
+        "properties": {
+          "parameter_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "scope": {
+            "enum": [
+              "GLOBAL",
+              "SITE",
+              "GRADE_CORRECTION",
+              "REACTOR_CORRECTION"
+            ]
+          },
+          "transform": {
+            "enum": [
+              "LINEAR",
+              "LOG",
+              "LOGIT"
+            ]
+          },
+          "regularization_strength": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "allow_grade_specific_parameters": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_reactor_specific_parameters": {
+      "type": "boolean",
+      "default": false
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

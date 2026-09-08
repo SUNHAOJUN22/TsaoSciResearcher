@@ -1,0 +1,8 @@
+schema_version: "1.0"
+expression_id: ADS001
+quantity: adsorption_energy
+formula: E_combined - E_clean - E_adsorbate
+terms:
+  - {id: combined, method_fingerprint: METHOD001, coefficient: 1}
+  - {id: clean, method_fingerprint: METHOD001, coefficient: -1}
+  - {id: adsorbate, method_fingerprint: METHOD001, coefficient: -1}

@@ -1,0 +1,13 @@
+schema_version: "1.0"
+lineage_id: RL001
+engine: gaussian
+parent_run_id: RUN001
+child_run_id: RUN002
+parent_checkpoint:
+  path: parent.chk
+  sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+parent_method_fingerprint: MF001
+child_method_fingerprint: MF001
+restart_mode: exact_restart
+changes: []
+status: reviewed

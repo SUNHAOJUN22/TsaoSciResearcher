@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">TsaoSciComputation final acceptance architecture</title>
+  <desc id="desc">AI-assisted conceptual map of calculation contracts, resource admission, external solvers, validation and evidence. Not scientific data.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#040B1A"/><stop offset="0.52" stop-color="#111B3C"/><stop offset="1" stop-color="#182A55"/></linearGradient>
+    <linearGradient id="spectrum" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#38BDF8"/><stop offset="0.35" stop-color="#818CF8"/><stop offset="0.68" stop-color="#C084FC"/><stop offset="1" stop-color="#34D399"/></linearGradient>
+    <radialGradient id="halo"><stop offset="0" stop-color="#60A5FA" stop-opacity="0.30"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#94A3B8"/></marker>
+    <style>
+      .title{font:700 52px Arial,'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#F8FAFC}
+      .sub{font:400 24px Arial,'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#C7D2FE}
+      .stage{font:700 22px Arial,sans-serif;fill:#F8FAFC;letter-spacing:1px}
+      .zh{font:700 25px 'Noto Sans CJK SC','Microsoft YaHei',Arial,sans-serif;fill:#E2E8F0}
+      .detail{font:400 17px Consolas,'DejaVu Sans Mono',monospace;fill:#A5B4FC}
+      .formula{font:italic 31px Georgia,'Times New Roman',serif;fill:#E0F2FE}
+      .small{font:400 17px Arial,'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#94A3B8}
+      .tag{font:700 17px Arial,sans-serif;fill:#07111F}
+      .arrow{stroke:#94A3B8;stroke-width:3.5;fill:none}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1360" cy="120" r="300" fill="url(#halo)"/>
+  <path d="M70 184 H1530" stroke="url(#spectrum)" stroke-width="5" opacity="0.9" filter="url(#glow)"/>
+  <text x="70" y="105" class="title">TsaoSciComputation</text>
+  <text x="70" y="148" class="sub">Evidence-governed multiscale computation / 证据治理的多尺度科学计算</text>
+  <rect x="70" y="210" width="1460" height="78" rx="20" fill="#0B1634" stroke="#334155"/>
+  <text x="800" y="260" text-anchor="middle" class="formula">Identity → CPU correctness → GPU/MPI equivalence → performance</text>
+
+  <path d="M305 430 H345" class="arrow" marker-end="url(#arrow)"/><path d="M600 430 H640" class="arrow" marker-end="url(#arrow)"/><path d="M895 430 H935" class="arrow" marker-end="url(#arrow)"/><path d="M1190 430 H1230" class="arrow" marker-end="url(#arrow)"/>
+  <g transform="translate(70 350)"><rect width="225" height="160" rx="24" fill="#101D3B" stroke="#38BDF8" stroke-width="3"/><circle cx="32" cy="32" r="14" fill="#38BDF8"/><text x="55" y="39" class="stage">CONTRACT</text><text x="24" y="82" class="zh">计算合同</text><text x="24" y="117" class="detail">Q · M · D · V · U</text><text x="24" y="143" class="detail">schema + units</text></g>
+  <g transform="translate(365 350)"><rect width="225" height="160" rx="24" fill="#101D3B" stroke="#818CF8" stroke-width="3"/><circle cx="32" cy="32" r="14" fill="#818CF8"/><text x="55" y="39" class="stage">ADMISSION</text><text x="24" y="82" class="zh">资源准入</text><text x="24" y="117" class="detail">CPU · GPU · license</text><text x="24" y="143" class="detail">fail closed</text></g>
+  <g transform="translate(660 350)"><rect width="225" height="160" rx="24" fill="#101D3B" stroke="#C084FC" stroke-width="3"/><circle cx="32" cy="32" r="14" fill="#C084FC"/><text x="55" y="39" class="stage">EXECUTION</text><text x="24" y="82" class="zh">外部执行</text><text x="24" y="117" class="detail">hash-bound argv</text><text x="24" y="143" class="detail">solver identity</text></g>
+  <g transform="translate(955 350)"><rect width="225" height="160" rx="24" fill="#101D3B" stroke="#F59E0B" stroke-width="3"/><circle cx="32" cy="32" r="14" fill="#F59E0B"/><text x="55" y="39" class="stage">VALIDATION</text><text x="24" y="82" class="zh">数值与物理验证</text><text x="24" y="117" class="detail">finite · residual</text><text x="24" y="143" class="detail">convergence · UQ</text></g>
+  <g transform="translate(1250 350)"><rect width="225" height="160" rx="24" fill="#101D3B" stroke="#34D399" stroke-width="3"/><circle cx="32" cy="32" r="14" fill="#34D399"/><text x="55" y="39" class="stage">EVIDENCE</text><text x="24" y="82" class="zh">证据与验收</text><text x="24" y="117" class="detail">ACCEPT / REJECT</text><text x="24" y="143" class="detail">EXTERNAL_HOLD</text></g>
+
+  <g transform="translate(70 605)"><rect width="1460" height="148" rx="24" fill="#0B1634" stroke="#334155"/><text x="32" y="43" class="stage">QUALIFICATION INVARIANT / 资格不变量</text><text x="32" y="84" class="sub">completed ≠ parsed ≠ converged ≠ validated ≠ accepted</text><text x="32" y="120" class="sub">Detected accelerator or solver build ≠ qualified scientific execution</text></g>
+  <g transform="translate(70 792)"><rect width="212" height="42" rx="21" fill="url(#spectrum)"/><text x="106" y="28" text-anchor="middle" class="tag">WINDOWS + LINUX</text><text x="240" y="28" class="small">AI-ASSISTED CONCEPTUAL DIAGRAM · NOT SCIENTIFIC DATA · TsaoSciComputation</text></g>
+</svg>

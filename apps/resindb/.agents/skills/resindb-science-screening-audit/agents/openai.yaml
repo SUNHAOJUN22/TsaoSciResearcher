@@ -1,0 +1,6 @@
+interface:
+  display_name: "ResinDB Science Screening Audit"
+  short_description: "Audit quantities, formulas, rankings, provenance, and release claims"
+  default_prompt: "Use $resindb-science-screening-audit to validate the ResinDB change and preserve the screening-only authority boundary."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,58 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Coupled multiphysics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Monolithic coupling strategy within the Coupled multiphysics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "coupling instability",
+    "inconsistent interface",
+    "time-scale mismatch"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-096",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "coupled_equations",
+    "coupling_strategy",
+    "material_models",
+    "interface_conditions",
+    "time_scale_map"
+  ],
+  "maturity": "A4",
+  "name_cn": "整体耦合",
+  "name_en": "Monolithic coupling strategy",
+  "outputs": [
+    "coupled_fields",
+    "coupling_residuals",
+    "energy_balance",
+    "coupling_convergence"
+  ],
+  "recommended_adapters": [
+    "moose",
+    "kratos"
+  ],
+  "required_evidence": [
+    "coupling graph",
+    "interface data",
+    "residual history",
+    "balance report"
+  ],
+  "risk_level": "medium",
+  "slug": "monolithic-coupling",
+  "triggers": [
+    "coupled",
+    "coupling",
+    "electro",
+    "mechanical",
+    "monolithic",
+    "multiphysics",
+    "thermo"
+  ],
+  "validators": [
+    "interface-continuity",
+    "coupling-convergence",
+    "energy-balance",
+    "partition-error"
+  ],
+  "workflow": "multiphysics"
+}

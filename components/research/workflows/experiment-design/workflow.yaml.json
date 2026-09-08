@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "experiment-design",
+  "purpose": "建立实验单位、DOE、随机化、功效和测量计划",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "区分实验单位和观察单位",
+    "定义因子、水平、响应、协变量和批次",
+    "选择空白/参考/阴性/基准对照",
+    "设计随机化、盲法、重复和功效",
+    "冻结排除、停止与分析规则"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

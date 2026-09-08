@@ -1,0 +1,159 @@
+id,slug,name_en,workflow,risk_level,human_approval_required,tsao_sci_computation_handoff
+S0001,research-intent-router,Research Intent Router,research-design,low,False,none
+S0002,research-question-formulator,Research Question Formulator,research-question,low,False,none
+S0003,hypothesis-generator,Hypothesis Generator,research-question,low,False,none
+S0004,research-gap-finder,Research Gap Finder,research-question,low,False,none
+S0005,novelty-evaluator,Novelty Evaluator,research-question,low,False,none
+S0006,feasibility-assessor,Feasibility Assessor,research-question,low,False,none
+S0007,research-objective-designer,Research Objective Designer,research-question,low,False,none
+S0008,research-route-planner,Research Route Planner,research-design,low,False,none
+S0009,milestone-designer,Milestone Designer,project-management,low,False,none
+S0010,research-risk-register,Research Risk Register,project-management,low,False,none
+S0011,multi-agent-orchestrator,Multi Agent Orchestrator,project-management,low,False,none
+S0012,skill-selector,Skill Selector,project-management,low,False,none
+S0013,human-approval-gate,Human Approval Gate,project-management,high,True,none
+S0014,scientific-validation-gate,Scientific Validation Gate,research-design,low,False,none
+S0015,long-task-state-manager,Long Task State Manager,project-management,low,False,none
+S0016,research-artifact-manager,Research Artifact Manager,project-management,low,False,none
+S0017,audit-log-manager,Audit Log Manager,project-management,low,False,none
+S0018,closed-loop-research,Closed Loop Research,research-design,low,False,none
+S0019,literature-search-strategist,Literature Search Strategist,deep-research,low,False,none
+S0020,systematic-review-builder,Systematic Review Builder,systematic-review,low,False,none
+S0021,paper-relevance-screener,Paper Relevance Screener,deep-research,low,False,none
+S0022,paper-quality-assessor,Paper Quality Assessor,systematic-review,low,False,none
+S0023,paper-structure-parser,Paper Structure Parser,deep-research,low,False,none
+S0024,scientific-pdf-reader,Scientific PDF Reader,deep-research,low,False,none
+S0025,citation-network-analyzer,Citation Network Analyzer,deep-research,low,False,none
+S0026,frontier-trend-detector,Frontier Trend Detector,deep-research,low,False,none
+S0027,contradiction-finder,Contradiction Finder,deep-research,low,False,none
+S0028,method-extractor,Method Extractor,deep-research,low,False,none
+S0029,parameter-extractor,Parameter Extractor,deep-research,low,False,none
+S0030,claim-evidence-linker,Claim Evidence Linker,systematic-review,low,False,none
+S0031,reference-integrity-checker,Reference Integrity Checker,systematic-review,high,True,none
+S0032,literature-deduplicator,Literature Deduplicator,systematic-review,low,False,none
+S0033,research-knowledge-graph,Research Knowledge Graph,deep-research,low,False,none
+S0034,semantic-indexer,Semantic Indexer,deep-research,low,False,none
+S0035,knowledge-conflict-resolver,Knowledge Conflict Resolver,deep-research,low,False,none
+S0036,weekly-literature-briefing,Weekly Literature Briefing,deep-research,low,False,none
+S0037,scientific-outline-builder,Scientific Outline Builder,scientific-writing,low,False,none
+S0038,abstract-writer,Abstract Writer,scientific-writing,low,False,none
+S0039,introduction-writer,Introduction Writer,scientific-writing,low,False,none
+S0040,methodology-writer,Methodology Writer,scientific-writing,low,False,none
+S0041,results-writer,Results Writer,scientific-writing,low,False,none
+S0042,discussion-writer,Discussion Writer,scientific-writing,low,False,none
+S0043,conclusion-writer,Conclusion Writer,scientific-writing,low,False,none
+S0044,scientific-language-polisher,Scientific Language Polisher,scientific-writing,low,False,none
+S0045,scientific-translator,Scientific Translator,scientific-writing,low,False,none
+S0046,figure-caption-writer,Figure Caption Writer,scientific-writing,low,False,none
+S0047,table-caption-writer,Table Caption Writer,scientific-writing,low,False,none
+S0048,equation-formatter,Equation Formatter,scientific-writing,low,False,none
+S0049,reference-formatter,Reference Formatter,scientific-writing,low,False,none
+S0050,journal-matcher,Journal Matcher,scientific-writing,low,False,none
+S0051,journal-style-adapter,Journal Style Adapter,peer-review,low,False,none
+S0052,reviewer-simulator,Reviewer Simulator,peer-review,low,False,none
+S0053,response-to-reviewers,Response To Reviewers,peer-review,low,False,none
+S0054,project-proposal-writer,Project Proposal Writer,technical-report,low,False,none
+S0055,technical-report-writer,Technical Report Writer,technical-report,low,False,none
+S0056,leadership-briefing,Leadership Briefing,technical-report,low,False,none
+S0057,scientific-data-profiler,Scientific Data Profiler,data-analysis,low,False,none
+S0058,data-cleaning,Data Cleaning,data-analysis,low,False,none
+S0059,unit-normalizer,Unit Normalizer,data-analysis,low,False,none
+S0060,physical-bounds-validator,Physical Bounds Validator,data-analysis,low,False,none
+S0061,mass-balance-checker,Mass Balance Checker,data-analysis,low,False,none
+S0062,energy-balance-checker,Energy Balance Checker,data-analysis,low,False,none
+S0063,outlier-diagnoser,Outlier Diagnoser,data-analysis,low,False,none
+S0064,batch-effect-analyzer,Batch Effect Analyzer,data-analysis,low,False,none
+S0065,calibration-validator,Calibration Validator,experiment-design,low,False,none
+S0066,descriptive-statistics,Descriptive Statistics,data-analysis,low,False,none
+S0067,hypothesis-testing,Hypothesis Testing,data-analysis,low,False,none
+S0068,anova-analyzer,Anova Analyzer,data-analysis,low,False,none
+S0069,regression-diagnostics,Regression Diagnostics,data-analysis,low,False,none
+S0070,bayesian-inference,Bayesian Inference,data-analysis,low,False,none
+S0071,uncertainty-quantification,Uncertainty Quantification,data-analysis,low,False,none
+S0072,sensitivity-analysis,Sensitivity Analysis,data-analysis,low,False,none
+S0073,power-analysis,Power Analysis,experiment-design,low,False,none
+S0074,causal-inference,Causal Inference,data-analysis,high,True,none
+S0075,publication-quality-plot,Publication Quality Plot,scientific-figure,low,False,none
+S0076,scientific-dashboard,Scientific Dashboard,scientific-figure,low,False,none
+S0077,scientific-feature-engineering,Scientific Feature Engineering,data-analysis,medium,False,none
+S0078,scientific-model-selector,Scientific Model Selector,data-analysis,medium,False,none
+S0079,small-data-learning,Small Data Learning,data-analysis,medium,False,none
+S0080,multi-fidelity-learning,Multi Fidelity Learning,data-analysis,medium,False,optional
+S0081,physics-informed-ml,Physics Informed ML,data-analysis,medium,False,optional
+S0082,graph-neural-network,Graph Neural Network,data-analysis,medium,False,optional
+S0083,surrogate-model-builder,Surrogate Model Builder,data-analysis,medium,False,optional
+S0084,model-calibration,Model Calibration,data-analysis,medium,False,none
+S0085,applicability-domain,Applicability Domain,data-analysis,medium,False,none
+S0086,data-leakage-detector,Data Leakage Detector,data-analysis,medium,False,none
+S0087,cross-validation-designer,Cross Validation Designer,data-analysis,medium,False,none
+S0088,explainable-ai-science,Explainable AI Science,data-analysis,medium,False,none
+S0089,ml-uncertainty-estimator,ML Uncertainty Estimator,data-analysis,medium,False,none
+S0090,active-learning-loop,Active Learning Loop,research-design,medium,False,optional
+S0091,bayesian-optimization,Bayesian Optimization,research-design,medium,False,optional
+S0092,multi-objective-optimizer,Multi Objective Optimizer,research-design,medium,False,none
+S0093,generative-molecule-designer,Generative Molecule Designer,research-design,medium,False,required
+S0094,generative-material-designer,Generative Material Designer,research-design,medium,False,required
+S0095,inverse-design-engine,Inverse Design Engine,research-design,medium,False,required
+S0096,autoresearch-loop,Autoresearch Loop,data-analysis,medium,False,none
+S0097,sequence-analysis,Sequence Analysis,data-analysis,medium,False,none
+S0098,variant-annotation,Variant Annotation,data-analysis,medium,False,none
+S0099,rna-seq-pipeline,RNA Seq Pipeline,data-analysis,medium,False,none
+S0100,single-cell-analysis,Single Cell Analysis,data-analysis,medium,False,none
+S0101,rna-velocity,RNA Velocity,data-analysis,medium,False,none
+S0102,multi-omics-integration,Multi Omics Integration,data-analysis,medium,False,none
+S0103,pathway-enrichment,Pathway Enrichment,data-analysis,medium,False,none
+S0104,protein-structure-analysis,Protein Structure Analysis,computation-handoff,medium,False,optional
+S0105,protein-design,Protein Design,computation-handoff,medium,False,required
+S0106,aptamer-analysis,Aptamer Analysis,data-analysis,medium,False,none
+S0107,protein-nucleic-acid-docking,Protein Nucleic Acid Docking,computation-handoff,medium,False,required
+S0108,drug-target-analysis,Drug Target Analysis,data-analysis,medium,False,none
+S0109,virtual-screening,Virtual Screening,computation-handoff,medium,False,required
+S0110,admet-prediction,ADMET Prediction,data-analysis,medium,False,none
+S0111,clinical-trial-search,Clinical Trial Search,deep-research,high,True,none
+S0112,biomedical-evidence-grading,Biomedical Evidence Grading,deep-research,high,True,none
+S0113,medical-image-analysis,Medical Image Analysis,data-analysis,high,True,none
+S0114,regulatory-compliance-medical,Regulatory Compliance Medical,deep-research,high,True,none
+S0259,experiment-sop-generator,Experiment SOP Generator,laboratory,low,False,none
+S0260,lab-safety-checker,Lab Safety Checker,laboratory,high,True,none
+S0261,reagent-calculator,Reagent Calculator,laboratory,low,False,none
+S0262,sample-naming-manager,Sample Naming Manager,laboratory,low,False,none
+S0263,electronic-lab-notebook,Electronic Lab Notebook,laboratory,low,False,none
+S0264,instrument-data-importer,Instrument Data Importer,laboratory,low,False,none
+S0265,baseline-correction,Baseline Correction,data-analysis,low,False,none
+S0266,peak-detection-fitting,Peak Detection Fitting,data-analysis,low,False,none
+S0267,chromatography-analysis,Chromatography Analysis,data-analysis,low,False,none
+S0268,nmr-analysis,NMR Analysis,data-analysis,low,False,none
+S0269,ftir-raman-analysis,FTIR Raman Analysis,data-analysis,low,False,none
+S0270,xrd-analysis,XRD Analysis,data-analysis,low,False,none
+S0271,xps-analysis,XPS Analysis,data-analysis,low,False,none
+S0272,dsc-tga-analysis,DSC TGA Analysis,data-analysis,low,False,none
+S0273,sem-tem-analysis,Sem Tem Analysis,data-analysis,low,False,none
+S0274,rheology-analysis,Rheology Analysis,data-analysis,low,False,none
+S0275,mechanical-test-analysis,Mechanical Test Analysis,data-analysis,low,False,none
+S0276,robotic-lab-planner,Robotic Lab Planner,laboratory,low,False,none
+S0277,lims-integration,LIMS Integration,laboratory,low,False,none
+S0278,experiment-result-validator,Experiment Result Validator,experiment-design,low,False,none
+S0299,work-breakdown-structure,Work Breakdown Structure,project-management,medium,False,none
+S0300,research-schedule-builder,Research Schedule Builder,project-management,medium,False,none
+S0301,resource-allocation,Resource Allocation,project-management,medium,False,none
+S0302,progress-tracker,Progress Tracker,project-management,medium,False,none
+S0303,milestone-acceptance,Milestone Acceptance,project-management,medium,False,none
+S0304,research-kpi-designer,Research KPI Designer,project-management,medium,False,none
+S0305,project-health-score,Project Health Score,project-management,medium,False,none
+S0306,meeting-minutes-to-tasks,Meeting Minutes To Tasks,project-management,medium,False,none
+S0307,deliverable-compliance,Deliverable Compliance,project-management,medium,False,none
+S0308,patent-search-strategist,Patent Search Strategist,patent-and-transfer,high,True,none
+S0309,patent-landscape,Patent Landscape,patent-and-transfer,high,True,none
+S0310,patent-claim-parser,Patent Claim Parser,patent-and-transfer,high,True,none
+S0311,prior-art-finder,Prior Art Finder,patent-and-transfer,medium,True,none
+S0312,freedom-to-operate,Freedom To Operate,patent-and-transfer,high,True,none
+S0313,invention-disclosure,Invention Disclosure,patent-and-transfer,medium,True,none
+S0314,technology-readiness,Technology Readiness,patent-and-transfer,medium,True,none
+S0315,research-integrity-checker,Research Integrity Checker,research-integrity,high,True,none
+S0316,image-manipulation-detector,Image Manipulation Detector,research-integrity,medium,True,none
+S0317,p-hacking-checker,P Hacking Checker,research-integrity,medium,True,none
+S0318,data-fabrication-anomaly,Data Fabrication Anomaly,research-integrity,high,True,none
+S0319,citation-misrepresentation,Citation Misrepresentation,research-integrity,medium,True,none
+S0320,evidence-level-labeler,Evidence Level Labeler,research-integrity,medium,True,none
+S0321,hallucination-guard,Hallucination Guard,research-integrity,medium,True,none
+S0322,model-governance,Model Governance,research-integrity,medium,True,none

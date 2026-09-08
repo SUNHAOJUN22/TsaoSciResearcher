@@ -1,0 +1,61 @@
+{
+  "schema": "TSAO-EPDM-V1-GOLDEN-OUTPUTS-1",
+  "model_generation": "V1_LUMPED_REFERENCE",
+  "tolerance": {
+    "relative": 1e-12,
+    "absolute": 1e-14
+  },
+  "reference_input": {
+    "state": [
+      1.2,
+      1.0,
+      0.04,
+      0.001,
+      1e-06
+    ],
+    "parameters": [
+      2.0,
+      1.6,
+      0.5,
+      0.08,
+      0.02,
+      10.0
+    ]
+  },
+  "insertion_rates": {
+    "ethylene": 0.0024,
+    "propylene": 0.0016,
+    "diene": 2e-05,
+    "transfer": 8e-05,
+    "deactivation": 2.001e-05
+  },
+  "insertion_fractions": {
+    "ethylene": 0.5970149253731343,
+    "propylene": 0.39800995024875624,
+    "diene": 0.004975124378109453
+  },
+  "architecture": {
+    "ethylene_mole_fraction": 0.5970149253731343,
+    "propylene_mole_fraction": 0.39800995024875624,
+    "diene_mole_fraction": 0.004975124378109453,
+    "number_average_degree_of_polymerization": 40.1959804019598,
+    "retained_unsaturation_fraction": 0.00472636815920398,
+    "branch_index": 0.004999500049995,
+    "gel_risk_index": 0.004999500049995,
+    "average_ethylene_run_length": 2.481481481481481,
+    "average_propylene_run_length": 1.6611570247933882
+  },
+  "semibatch_reference": {
+    "polymer_increment_mol": 12.2913,
+    "molar_closure_residual": 0.0,
+    "inventory": {
+      "volume_L": 100.3,
+      "ethylene_mol": 115.05600000000001,
+      "propylene_mol": 96.9136,
+      "diene_mol": 3.9990999999999994,
+      "polymer_repeat_mol": 12.2913,
+      "temperature_K": 324.0775116666666,
+      "heat_capacity_kJ_K": 900.0
+    }
+  }
+}

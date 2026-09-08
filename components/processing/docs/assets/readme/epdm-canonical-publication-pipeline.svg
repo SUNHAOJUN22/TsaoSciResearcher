@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" focusable="false" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="optimizeLegibility" data-design-system="scientific-midnight-bento" data-design-version="2">
+<title id="title">EPDM canonical publication pipeline</title>
+<desc id="desc">Transactional strict JSON to immutable registry publication.</desc>
+<rect width="1200" height="720" fill="#07111F"/>
+<style>text{font-family:Inter,"Segoe UI",Arial,sans-serif}.mono{font-family:"JetBrains Mono",Consolas,monospace}</style>
+<text x="52" y="72" font-size="30" font-weight="850" fill="#F8FAFC" text-anchor="start">EPDM CANONICAL PUBLICATION</text>
+<text x="52" y="108" font-size="15" font-weight="600" fill="#A8B5C7" text-anchor="start">No partial typed state is published before every contract closes</text>
+<rect x="52" y="200" width="192" height="150" rx="18" fill="#101E33" stroke="#4F7CFF" stroke-width="2"/>
+<text class="mono" x="74" y="234" font-size="15" font-weight="800" fill="#4F7CFF" text-anchor="start">STRICT JSON</text>
+<text x="74" y="266" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">duplicate keys rejected</text>
+<text x="74" y="289" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">finite values only</text>
+<rect x="278" y="200" width="192" height="150" rx="18" fill="#101E33" stroke="#A78BFA" stroke-width="2"/>
+<text class="mono" x="300" y="234" font-size="15" font-weight="800" fill="#A78BFA" text-anchor="start">VERSION</text>
+<text x="300" y="266" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">explicit migration</text>
+<text x="300" y="289" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">2.0.0 -&gt; 2.0.0</text>
+<rect x="504" y="200" width="192" height="150" rx="18" fill="#101E33" stroke="#22D3EE" stroke-width="2"/>
+<text class="mono" x="526" y="234" font-size="15" font-weight="800" fill="#22D3EE" text-anchor="start">SCHEMA</text>
+<text x="526" y="266" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">Draft 2020-12</text>
+<text x="526" y="289" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">unknown fields closed</text>
+<rect x="730" y="200" width="192" height="150" rx="18" fill="#101E33" stroke="#FBBF24" stroke-width="2"/>
+<text class="mono" x="752" y="234" font-size="15" font-weight="800" fill="#FBBF24" text-anchor="start">DATACLASSES</text>
+<text x="752" y="266" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">frozen objects</text>
+<text x="752" y="289" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">typed IDs and units</text>
+<rect x="956" y="200" width="192" height="150" rx="18" fill="#101E33" stroke="#34D399" stroke-width="2"/>
+<text class="mono" x="978" y="234" font-size="15" font-weight="800" fill="#34D399" text-anchor="start">REGISTRY</text>
+<text x="978" y="266" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">cross-reference closure</text>
+<text x="978" y="289" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">stable SHA256</text>
+<path d="M244 275 H272" stroke="#A8B5C7" stroke-width="3"/>
+<path d="M470 275 H498" stroke="#A8B5C7" stroke-width="3"/>
+<path d="M696 275 H724" stroke="#A8B5C7" stroke-width="3"/>
+<path d="M922 275 H950" stroke="#A8B5C7" stroke-width="3"/>
+<rect x="255" y="430" width="690" height="130" rx="18" fill="#101E33" stroke="#34D399" stroke-width="2"/>
+<text class="mono" x="277" y="464" font-size="15" font-weight="800" fill="#34D399" text-anchor="start">IMMUTABLE PUBLICATION</text>
+<text x="277" y="496" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">source_sha256 / registry_content_sha256 / publication_sha256</text>
+<text x="277" y="519" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">failure at any stage exposes no partial registry</text>
+<rect x="52" y="650" width="1096" height="42" rx="12" fill="#101E33" stroke="#263A55"/>
+<text class="mono" x="76" y="677" font-size="12" font-weight="700" fill="#FBBF24" text-anchor="start">STRUCTURAL PASS DOES NOT OVERRIDE SCIENTIFIC OR HSE APPROVAL</text>
+</svg>

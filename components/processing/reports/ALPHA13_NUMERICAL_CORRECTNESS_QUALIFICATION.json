@@ -1,0 +1,40 @@
+{
+  "schema": "TSAO-ALPHA13-NUMERICAL-CORRECTNESS-QUALIFICATION-1",
+  "version": "0.1.0-alpha.13",
+  "status": "PASS",
+  "closed_findings": [
+    "EPDM heterogeneous-site chain moments used unweighted rates",
+    "POE hot-start balance subtracted total rather than incremental polymer",
+    "zero chain-loss returned an artificial finite chain length",
+    "large factorial DoE materialized the complete Cartesian product before truncation"
+  ],
+  "targeted_regression_tests": "PASS",
+  "tests_added": [
+    "independent weighted-rate hand calculation",
+    "zero-chain-loss HOLD contract",
+    "POE zero-duration hot start",
+    "segmented versus continuous trajectory parity",
+    "40-factor bounded-memory design sampling"
+  ],
+  "github_ci": "PASS",
+  "qualification_boundary": "SOFTWARE_REFERENCE_NUMERICS_ONLY",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "hse_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED",
+  "golden_result_updates": {
+    "status": "JUSTIFIED_NUMERICAL_REBASE",
+    "workloads": [
+      "epdm_three_level_512_site_families",
+      "epdm_three_level_64_site_families"
+    ],
+    "reason": "The prior digests encoded the unweighted detailed-site chain-moment defect. Corrected weighted-rate digests are frozen while alpha.10 timing and memory measurements remain unchanged."
+  },
+  "qualification_run_id": 30715515305,
+  "full_software_qualification": "PASS",
+  "wheel_content": "PASS",
+  "isolated_runtime": "PASS",
+  "wheel_filename": "tsao_processing_skill-0.1.0a13-py3-none-any.whl",
+  "wheel_sha256": "083a9e7c999019885a198e4fbf9457ff56976db1a8f6c008de272ab9f6f9f7ae"
+}

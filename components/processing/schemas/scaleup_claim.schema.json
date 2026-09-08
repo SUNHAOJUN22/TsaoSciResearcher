@@ -1,0 +1,20 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://tsao.dev/schemas/scaleup_claim.schema.json",
+  "title":"TSAO scale-up claim",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["claim_id","source_scale","target_scale","preserved_physics","broken_similarity","compensating_evidence_ids","uncertainty","applicability_domain","status","reviewer"],
+  "properties":{
+    "claim_id":{"type":"string","minLength":1},
+    "source_scale":{"type":"string","minLength":1},
+    "target_scale":{"type":"string","minLength":1},
+    "preserved_physics":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},
+    "broken_similarity":{"type":"array","items":{"type":"string"}},
+    "compensating_evidence_ids":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},
+    "uncertainty":{"type":"string","minLength":1},
+    "applicability_domain":{"type":"string","minLength":1},
+    "status":{"enum":["NOT_EVALUATED","HOLD","CONDITIONAL","PASS","FAIL"]},
+    "reviewer":{"type":["string","null"]}
+  }
+}

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+<title id="title">Applicability Domain and Extrapolation Guard</title><desc id="desc">A conceptual diagram showing a calibrated model domain, an extrapolation boundary, transfer evidence and a guarded industrial decision region.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061522"/><stop offset="0.55" stop-color="#102b43"/><stop offset="1" stop-color="#202248"/></linearGradient>
+  <radialGradient id="domain"><stop offset="0" stop-color="#63f0d2" stop-opacity="0.45"/><stop offset="1" stop-color="#1fd5ff" stop-opacity="0.05"/></radialGradient>
+  <linearGradient id="risk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#ff6f91"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#69e7ff"/></marker>
+</defs>
+<rect width="1400" height="760" rx="28" fill="url(#bg)"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif">
+  <text x="70" y="70" font-size="36" font-weight="700" fill="#f5fbff">Applicability Domain &amp; Extrapolation Guard</text>
+  <text x="70" y="106" font-size="18" fill="#bbcbd8">Accuracy inside a calibration envelope is not evidence of transfer beyond it.</text>
+
+  <rect x="70" y="155" width="820" height="475" rx="24" fill="#0a2033" stroke="#2ddcff" stroke-width="2"/>
+  <text x="105" y="198" font-size="19" fill="#d9f7ff">Declared operating space</text>
+  <line x1="155" y1="550" x2="825" y2="550" stroke="#84a7bb" stroke-width="2"/>
+  <line x1="155" y1="550" x2="155" y2="235" stroke="#84a7bb" stroke-width="2"/>
+  <text x="734" y="585" font-size="15" fill="#a9bfce">temperature / field / composition</text>
+  <text x="98" y="255" font-size="15" fill="#a9bfce" transform="rotate(-90 98 255)">response and uncertainty</text>
+
+  <ellipse cx="430" cy="410" rx="205" ry="120" fill="url(#domain)" stroke="#61f0d2" stroke-width="3"/>
+  <text x="327" y="402" font-size="24" font-weight="700" fill="#e9fffa">CALIBRATED</text>
+  <text x="306" y="436" font-size="16" fill="#bdf8e8">validated samples &amp; conditions</text>
+  <circle cx="330" cy="455" r="7" fill="#7ff8db"/><circle cx="410" cy="350" r="7" fill="#7ff8db"/><circle cx="498" cy="448" r="7" fill="#7ff8db"/><circle cx="545" cy="380" r="7" fill="#7ff8db"/>
+
+  <path d="M635 302 C740 328 780 410 760 510" fill="none" stroke="#ffd166" stroke-width="3" stroke-dasharray="12 9"/>
+  <text x="660" y="290" font-size="16" fill="#ffd166">declared boundary</text>
+  <path d="M590 430 C700 400 772 365 840 315" fill="none" stroke="#69e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="650" y="414" font-size="16" fill="#9cecff">requested extrapolation</text>
+  <circle cx="842" cy="314" r="15" fill="#ff6f91"/>
+
+  <rect x="945" y="155" width="385" height="150" rx="22" fill="#102b45" stroke="#ffd166" stroke-width="2"/>
+  <text x="975" y="197" font-size="21" font-weight="700" fill="#f5fbff">Transfer evidence</text>
+  <text x="975" y="232" font-size="15" fill="#c6d7e2">• external samples / operators</text>
+  <text x="975" y="258" font-size="15" fill="#c6d7e2">• prospective operating conditions</text>
+  <text x="975" y="284" font-size="15" fill="#c6d7e2">• uncertainty inflation</text>
+
+  <rect x="945" y="340" width="385" height="130" rx="22" fill="#13233f" stroke="#a98cff" stroke-width="2"/>
+  <text x="975" y="382" font-size="21" font-weight="700" fill="#f5fbff">Scale bridge</text>
+  <text x="975" y="416" font-size="15" fill="#c6d7e2">micro → meso → device → plant</text>
+  <text x="975" y="444" font-size="15" fill="#c6d7e2">each transfer must be measurable</text>
+
+  <rect x="945" y="505" width="385" height="125" rx="22" fill="#2a1727" stroke="#ff6f91" stroke-width="2"/>
+  <text x="975" y="547" font-size="21" font-weight="700" fill="#f5fbff">Decision gate</text>
+  <text x="975" y="580" font-size="16" fill="#ffced8">No transfer evidence → BLOCK</text>
+  <text x="975" y="607" font-size="16" fill="#ffe3a5">Evidence declared → HUMAN REVIEW</text>
+
+  <path d="M1137 305 L1137 330" stroke="#69e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M1137 470 L1137 495" stroke="#69e7ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="70" y="680" width="1260" height="44" rx="14" fill="#091d31" stroke="url(#risk)"/>
+  <text x="100" y="709" font-size="16" fill="#d8e9f5">Machine-readable outcome: in-domain PASS · declared transfer REVIEW · unvalidated extrapolation BLOCK</text>
+</g></svg>

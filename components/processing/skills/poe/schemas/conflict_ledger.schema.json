@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/skills/poe/schemas/conflict_ledger.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ledger_version",
+    "conflicts",
+    "approval"
+  ],
+  "properties": {
+    "ledger_version": {
+      "type": "string"
+    },
+    "approval": {
+      "const": "NOT_EVALUATED"
+    },
+    "conflicts": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflict_id",
+          "source_locator",
+          "conflict",
+          "technical_impact",
+          "applicable_case",
+          "decision",
+          "status",
+          "blocking_gates",
+          "approver"
+        ],
+        "properties": {
+          "conflict_id": {
+            "type": "string",
+            "pattern": "^POE-CONFLICT-[0-9]{3}$"
+          },
+          "source_locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "conflict": {
+            "type": "string",
+            "minLength": 1
+          },
+          "technical_impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicable_case": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "MITIGATED",
+              "RESOLVED",
+              "REJECTED"
+            ]
+          },
+          "blocking_gates": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^G([0-9]|1[0-8])$"
+            }
+          },
+          "approver": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

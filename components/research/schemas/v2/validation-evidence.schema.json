@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/tsao-sci-researcher/schemas/v2/validation-evidence.schema.json",
+  "title": "TsaoSciResearcher repository validation evidence 1.6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "validation_scope",
+    "release",
+    "status",
+    "evidence_date",
+    "compatibility",
+    "compatibility_scope",
+    "gates",
+    "verified_inventory",
+    "provenance",
+    "workflow",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.6"},
+    "validation_scope": {"enum": ["preflight", "current-tree", "composite"]},
+    "release": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "FAIL", "PARTIAL"]},
+    "evidence_date": {"type": "string", "format": "date"},
+    "compatibility": {"type": "object", "additionalProperties": {"type": "string"}},
+    "compatibility_scope": {"type": "string", "minLength": 1},
+    "gates": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean"]}},
+    "verified_inventory": {"type": "object"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest_algorithm",
+        "digest_exclusions",
+        "evidence_generated_from_commit",
+        "publication_parent_commit",
+        "validated_file_count",
+        "validated_tree_sha256",
+        "dependency_lock_sha256",
+        "workflow_run_id",
+        "workflow_run_attempt",
+        "external_attestation",
+        "commit_resolution"
+      ],
+      "properties": {
+        "digest_algorithm": {"type": "string", "minLength": 1},
+        "digest_exclusions": {"type": "array", "items": {"type": "string"}},
+        "evidence_generated_from_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "publication_parent_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "validated_file_count": {"type": "integer", "minimum": 1},
+        "validated_tree_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "dependency_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "workflow_run_id": {"type": ["integer", "null"], "minimum": 1},
+        "workflow_run_attempt": {"type": ["integer", "null"], "minimum": 1},
+        "workflow_job_id": {"type": ["integer", "null"], "minimum": 1},
+        "external_attestation": {"type": "string", "minLength": 1},
+        "commit_resolution": {"enum": ["pending-external-attestation", "external-attestation"]}
+      }
+    },
+    "workflow": {"type": "object"},
+    "interpretation": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "baseline_full_repository_run": {"type": "object"},
+    "focused_current_change_regression": {"type": "object"}
+  }
+}

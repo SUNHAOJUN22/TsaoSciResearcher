@@ -1,0 +1,45 @@
+schema_version: 2
+project_id: PROJECT_ID
+name: PROJECT_NAME
+status: planned
+research_question: unknown
+objective: unknown
+observable: unknown
+allowed_conclusions:
+  - supported within the stated model and method
+  - not supported within the stated model and method
+  - unresolved within the numerical or model uncertainty
+model_system:
+  identity: unknown
+  structure_source: unknown
+  charge: unknown
+  multiplicity: unknown
+  electronic_state: unknown
+  phase_or_solvent: unknown
+  conformer_scope: unknown
+method_fingerprint:
+  code: Gaussian 16
+  code_version: unknown
+  functional_or_method: unknown
+  basis_or_ecp: unknown
+  dispersion: unknown
+  solvent_model: unknown
+  integration_grid: unknown
+  temperature_K: 298.15
+  standard_state: unknown
+  low_frequency_treatment: unknown
+reference_states: []
+success_criteria: []
+non_goals: []
+execution:
+  target: unknown
+  scheduler: unknown
+  dry_run_default: true
+  task_count_estimate: unknown
+  cpu_assumption: unknown
+  memory_assumption: unknown
+  disk_assumption: unknown
+  wall_time_estimate: unknown
+  approval_required: true
+claims: []
+created_at: CREATED_AT

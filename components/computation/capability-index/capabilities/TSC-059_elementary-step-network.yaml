@@ -1,0 +1,54 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Catalysis and microkinetics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Elementary-step network construction within the Catalysis and microkinetics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "missing pathway",
+    "inconsistent reference state",
+    "nonidentifiable kinetics"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-059",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "active_site_model",
+    "elementary_steps",
+    "energetics",
+    "coverage_conditions",
+    "kinetic_assumptions"
+  ],
+  "maturity": "A4",
+  "name_cn": "基元步骤网络",
+  "name_en": "Elementary-step network construction",
+  "outputs": [
+    "reaction_network",
+    "coverage_profile",
+    "rate_control",
+    "turnover_estimate"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "site model",
+    "energy table",
+    "kinetic equations",
+    "sensitivity results"
+  ],
+  "risk_level": "medium",
+  "slug": "elementary-step-network",
+  "triggers": [
+    "adsorption",
+    "catalysis",
+    "elementary",
+    "microkinetic",
+    "step",
+    "turnover"
+  ],
+  "validators": [
+    "site-balance",
+    "thermodynamic-consistency",
+    "kinetic-consistency",
+    "coverage-bounds"
+  ],
+  "workflow": "catalysis"
+}

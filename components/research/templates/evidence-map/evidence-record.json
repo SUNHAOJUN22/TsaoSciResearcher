@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "EV-0001",
+  "evidence_type": "sourced_fact",
+  "title": "",
+  "source": {
+    "kind": "paper",
+    "locator": "",
+    "accessed_at": "YYYY-MM-DD"
+  },
+  "supports_claims": [],
+  "limitations": []
+}

@@ -1,0 +1,89 @@
+{
+  "$id": "https://example.org/tsao/handoff.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "applicability": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "conditions": {
+      "minProperties": 1,
+      "type": "object"
+    },
+    "model_uncertainty": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "minProperties": 1,
+          "type": "object"
+        }
+      ]
+    },
+    "quantity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "reference_state": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_model": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "statistical_uncertainty": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "minProperties": 1,
+          "type": "object"
+        }
+      ]
+    },
+    "target_model": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "transformation": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "unit": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "validation_status": {
+      "enum": [
+        "unvalidated",
+        "checked",
+        "validated",
+        "rejected"
+      ]
+    },
+    "value": {
+      "not": {
+        "type": "null"
+      }
+    }
+  },
+  "required": [
+    "source_model",
+    "target_model",
+    "quantity",
+    "value",
+    "unit",
+    "conditions",
+    "reference_state",
+    "statistical_uncertainty",
+    "model_uncertainty",
+    "applicability",
+    "transformation",
+    "validation_status"
+  ],
+  "type": "object"
+}

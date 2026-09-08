@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "research-design",
+  "purpose": "建立方法矩阵、技术路线DAG和阶段门",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "选择研究范式",
+    "建立理论/实验/计算/数据方法矩阵",
+    "设计基准、对照和三角验证",
+    "建立依赖DAG与阶段门",
+    "定义资源、风险、转向和终止条件"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

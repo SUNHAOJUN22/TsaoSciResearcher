@@ -1,0 +1,572 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-25",
+  "dataKind": "resin-seed-products",
+  "sourceType": "curated-demo",
+  "recordStatus": "demo",
+  "data": [
+    {
+      "id": "prod-001",
+      "gradeName": "HDPE 5000S",
+      "manufacturerId": "m-30",
+      "manufacturer": "Sinopec Shanghai (上海石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pe",
+        "sub_hdpe",
+        "sub_hdpe_inj"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "管材及日用品注塑 (Caps & General Injection)"
+        },
+        "密度": {
+          "value": 0.95,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "淤浆法 (Slurry Process)"
+        },
+        "催化剂类型": {
+          "value": "Z-N催化剂 (Ziegler-Natta)"
+        },
+        "熔体质量流动速率": {
+          "value": 0.9,
+          "unit": "g/10min",
+          "temperature": "190°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 23.5,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 600.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 1050.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 6.5,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        }
+      }
+    },
+    {
+      "id": "prod-002",
+      "gradeName": "LDPE 2426H",
+      "manufacturerId": "m-33",
+      "manufacturer": "Sinopec Yanshan (燕山石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pe",
+        "sub_ldpe",
+        "sub_ldpe_film"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "重包装农业及商品收缩薄膜 (Agriculture & Heavy Packaging Film)"
+        },
+        "密度": {
+          "value": 0.92,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "高压管式法 (High Pressure Tubular)"
+        },
+        "催化剂类型": {
+          "value": "自由基引发剂 (Free Radical)"
+        },
+        "熔体质量流动速率": {
+          "value": 1.95,
+          "unit": "g/10min",
+          "temperature": "190°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸断裂应力": {
+          "value": 11.5,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 550.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 260.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        }
+      }
+    },
+    {
+      "id": "prod-003",
+      "gradeName": "LLDPE 7042",
+      "manufacturerId": "m-cnpc-1",
+      "manufacturer": "PetroChina Daqing (大庆石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pe",
+        "sub_lldpe"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "缠绕膜及拉伸膜基材 (Stretch & Cling Film Base)"
+        },
+        "密度": {
+          "value": 0.92,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "气相法 (Gas Phase Process)"
+        },
+        "催化剂类型": {
+          "value": "Z-N催化剂 (Ziegler-Natta)"
+        },
+        "熔体质量流动速率": {
+          "value": 2.0,
+          "unit": "g/10min",
+          "temperature": "190°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 11.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 700.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 310.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        }
+      }
+    },
+    {
+      "id": "prod-004",
+      "gradeName": "PP T30S",
+      "manufacturerId": "m-33",
+      "manufacturer": "Sinopec Yanshan (燕山石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pp",
+        "sub_pp_homo"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "扁丝塑编袋、地毯基布 (Woven Sacks & Tape Yarns)"
+        },
+        "密度": {
+          "value": 0.9,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "本体法 (Bulk Loop Process)"
+        },
+        "催化剂类型": {
+          "value": "Z-N催化剂 (Ziegler-Natta)"
+        },
+        "熔体质量流动速率": {
+          "value": 3.2,
+          "unit": "g/10min",
+          "temperature": "230°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 34.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 80.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 1450.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 3.5,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        }
+      }
+    },
+    {
+      "id": "prod-005",
+      "gradeName": "PP K8303",
+      "manufacturerId": "m-30",
+      "manufacturer": "Sinopec Shanghai (上海石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pp",
+        "sub_pp_copo"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "汽车仪表板及家电高抗冲部件 (Automotive & High-Impact Appliance Parts)"
+        },
+        "密度": {
+          "value": 0.9,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "气相共聚法 (Gas-Phase Copolymerization)"
+        },
+        "催化剂类型": {
+          "value": "Z-N高效载体催化剂 (Z-N supported)"
+        },
+        "熔体质量流动速率": {
+          "value": 1.8,
+          "unit": "g/10min",
+          "temperature": "230°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 24.5,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 300.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 1100.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 35.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        }
+      }
+    },
+    {
+      "id": "prod-006",
+      "gradeName": "PP R200P",
+      "manufacturerId": "m-32",
+      "manufacturer": "Sinopec Yangzi (扬子石化)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_pp",
+        "sub_pp_rand"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "冷热水PPR管材及家装饮水管道 (PPR Hot & Cold Water Pipes)"
+        },
+        "密度": {
+          "value": 0.9,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "聚合工艺": {
+          "value": "三井Slurry工艺 (Mitsui Slurry)"
+        },
+        "催化剂类型": {
+          "value": "Z-N催化剂 (Ziegler-Natta)"
+        },
+        "熔体质量流动速率": {
+          "value": 0.25,
+          "unit": "g/10min",
+          "temperature": "230°C/2.16kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 28.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 450.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 900.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 18.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        }
+      }
+    },
+    {
+      "id": "prod-007",
+      "gradeName": "ABS 757",
+      "manufacturerId": "m-chimei",
+      "manufacturer": "Chi Mei (奇美)",
+      "categoryIds": [
+        "root_plastic",
+        "cat_abs",
+        "sub_abs_gen"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "打字机外壳、电话机、家用电器外罩 (Business Machine Cabinets & Enclosures)"
+        },
+        "密度": {
+          "value": 1.04,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "熔体质量流动速率": {
+          "value": 19.0,
+          "unit": "g/10min",
+          "temperature": "220°C/10kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 46.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 30.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 2400.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 22.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        }
+      }
+    },
+    {
+      "id": "prod-008",
+      "gradeName": "PA66 Ultramid A3K",
+      "manufacturerId": "m-basf",
+      "manufacturer": "BASF (巴斯夫)",
+      "categoryIds": [
+        "root_eng",
+        "cat_pa",
+        "sub_pa66"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "汽车机舱高负荷部件、电气外壳 (High Thermal Load & Mechanical Parts)"
+        },
+        "密度": {
+          "value": 1.13,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "拉伸屈服应力": {
+          "value": 85.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 50.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 2800.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 5.5,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        },
+        "热变形温度": {
+          "value": 75.0,
+          "unit": "°C",
+          "standard": "ISO 75"
+        }
+      }
+    },
+    {
+      "id": "prod-009",
+      "gradeName": "PC Makrolon 2405",
+      "manufacturerId": "m-covestro",
+      "manufacturer": "Covestro (科思创)",
+      "categoryIds": [
+        "root_eng",
+        "cat_pc",
+        "sub_pc_inj"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "医疗及精密镜片光学部件 (Medical Devices & Optical Components)"
+        },
+        "密度": {
+          "value": 1.2,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "熔体质量流动速率": {
+          "value": 19.5,
+          "unit": "g/10min",
+          "temperature": "300°C/1.2kg",
+          "standard": "ISO 1133"
+        },
+        "拉伸屈服应力": {
+          "value": 66.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 115.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 2400.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 60.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        },
+        "热变形温度": {
+          "value": 128.0,
+          "unit": "°C",
+          "standard": "ISO 75"
+        },
+        "透光率": {
+          "value": 89.0,
+          "unit": "%",
+          "standard": "ISO 13468"
+        },
+        "雾度": {
+          "value": 0.8,
+          "unit": "%",
+          "standard": "ASTM D1003"
+        }
+      }
+    },
+    {
+      "id": "prod-010",
+      "gradeName": "PEEK Victrex 450G",
+      "manufacturerId": "m-basell",
+      "manufacturer": "LyondellBasell (利安德巴塞尔代理)",
+      "categoryIds": [
+        "root_high_perf",
+        "cat_peek_family"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "航空航天、石油勘探特种极端工况机械件 (Specialist Extreme Durability Components)"
+        },
+        "密度": {
+          "value": 1.3,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "拉伸屈服应力": {
+          "value": 100.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "断裂伸长率": {
+          "value": 45.0,
+          "unit": "%",
+          "standard": "ISO 527"
+        },
+        "弯曲模量": {
+          "value": 4100.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "简支梁缺口冲击强度": {
+          "value": 8.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 179"
+        },
+        "热变形温度": {
+          "value": 160.0,
+          "unit": "°C",
+          "standard": "ISO 75"
+        }
+      }
+    },
+    {
+      "id": "prod-011",
+      "gradeName": "EPDM KEP-270",
+      "manufacturerId": "m-kumho",
+      "manufacturer": "Kumho Polychem (锦湖三井)",
+      "categoryIds": [
+        "root_rubber",
+        "cat_epdm"
+      ],
+      "createdAt": "2024-04-17",
+      "updatedAt": "2024-04-17",
+      "properties": {
+        "典型应用": {
+          "value": "汽车挡风玻璃密封条、轨道交通隔震橡胶 (Automotive Sealing Strips & Dampers)"
+        },
+        "密度": {
+          "value": 0.86,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "门尼粘度": {
+          "value": 71.0,
+          "unit": "MU",
+          "temperature": "ML(1+4) 125°C",
+          "standard": "ISO 289"
+        },
+        "邵氏硬度": {
+          "value": 65.0,
+          "unit": "Shore A",
+          "standard": "ISO 7619"
+        }
+      }
+    }
+  ]
+}

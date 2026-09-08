@@ -1,0 +1,22 @@
+{
+  "schema": "TSAO-BRANCH-CONSOLIDATION-PLAN-1",
+  "created_at": "2026-08-02T02:00:00+08:00",
+  "target_branch": "main",
+  "original_branches": ["main", "epdm-v2-scientific-kernel", "feature/epdm-scientific-kernel-v2", "dependabot/github_actions/actions/upload-artifact-7.0.1"],
+  "original_head_shas": {
+    "main": "2ec934bd7a7534fe882c156b6cf60e73c7d2ed7b",
+    "epdm-v2-scientific-kernel": "88ba4486cc1cef9ee5e61507aba687a82f8f4424",
+    "feature/epdm-scientific-kernel-v2": "086aaa3f431f65254fb3336667b7b8def1b425ca",
+    "dependabot/github_actions/actions/upload-artifact-7.0.1": "fc5e1c471e7f9865d09ece2b0a53a2ac3fbd7cbf"
+  },
+  "unique_commits_by_branch": {
+    "epdm-v2-scientific-kernel": [],
+    "feature/epdm-scientific-kernel-v2": ["historical one-time EPDM V2 installation payload commits"],
+    "dependabot/github_actions/actions/upload-artifact-7.0.1": ["fc5e1c471e7f9865d09ece2b0a53a2ac3fbd7cbf"]
+  },
+  "merge_order": ["dependabot/github_actions/actions/upload-artifact-7.0.1", "feature/epdm-scientific-kernel-v2", "epdm-v2-scientific-kernel"],
+  "open_prs": [54],
+  "created_consolidation_prs": [58],
+  "protected_branch_constraints": [],
+  "policy": "preserve every original branch HEAD as an ancestor before deletion"
+}

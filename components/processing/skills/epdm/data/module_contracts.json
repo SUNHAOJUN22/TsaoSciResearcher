@@ -1,0 +1,132 @@
+{
+  "version": "1.0.0",
+  "status": "EXECUTABLE_CONTRACT_ALPHA",
+  "modules": [
+    {
+      "module_id": "01_application_cqa",
+      "title": "Application, CQA and customer QFD",
+      "gate": "G1",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "02_catalyst_active_sites",
+      "title": "Catalyst platform, active sites and poisons",
+      "gate": "G3",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "03_terpolymerization_kinetics",
+      "title": "E/P/diene insertion, transfer and deactivation",
+      "gate": "G5",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "04_architecture_mwd_ccd_sequence",
+      "title": "MWD, CCD, sequence and molecular architecture",
+      "gate": "G6",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "05_diene_branching_gel",
+      "title": "Retained unsaturation, second insertion, branching and gel",
+      "gate": "G7",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "06_thermodynamics_rheology_transport",
+      "title": "Phase stability, rheology and transport",
+      "gate": "G8",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "07_reactor_mixing_heat_removal",
+      "title": "Reactor, mixing, calorimetry and heat removal",
+      "gate": "G9",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "08_quench_deashing_devolatilization",
+      "title": "Quench, deashing and non-equilibrium devolatilization",
+      "gate": "G10",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "09_recycle_impurity_purge",
+      "title": "Recycle impurities, guard beds and purge",
+      "gate": "G11",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "10_mooney_compounding_cure",
+      "title": "Mooney, compounding, cure and processing",
+      "gate": "G12",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "11_dynamics_grade_transition",
+      "title": "Control, grade transition and off-spec accounting",
+      "gate": "G13",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "12_durability_customer_qualification",
+      "title": "Part durability and customer-line qualification",
+      "gate": "G15",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "13_scaleup_hse_reliability",
+      "title": "Scale-up, HSE, relief and reliability",
+      "gate": "G16",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    },
+    {
+      "module_id": "14_process_package_acceptance",
+      "title": "Process package, acceptance and technology transfer",
+      "gate": "G18",
+      "required_inputs": ["evidence_ids", "units", "applicability_domain", "uncertainty"],
+      "required_outputs": ["status", "errors", "holds", "approver", "external_execution"],
+      "fail_closed": true,
+      "scientific_approval": "NOT_EVALUATED"
+    }
+  ]
+}

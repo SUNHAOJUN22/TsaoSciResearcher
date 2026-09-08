@@ -1,0 +1,63 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Molecular dynamics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Polymer-chain statistics within the Molecular dynamics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "unstable integration",
+    "insufficient equilibration",
+    "force-field mismatch"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-044",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "topology",
+    "coordinates",
+    "force_field",
+    "ensemble",
+    "thermostat_barostat",
+    "time_step",
+    "sampling_plan"
+  ],
+  "maturity": "A4",
+  "name_cn": "聚合物链统计",
+  "name_en": "Polymer-chain statistics",
+  "outputs": [
+    "trajectory",
+    "thermodynamic_series",
+    "structural_observables",
+    "sampling_convergence"
+  ],
+  "recommended_adapters": [
+    "gromacs",
+    "openmm",
+    "lammps"
+  ],
+  "required_evidence": [
+    "topology files",
+    "run parameters",
+    "trajectory hashes",
+    "analysis scripts"
+  ],
+  "risk_level": "medium",
+  "slug": "polymer-chain-statistics",
+  "triggers": [
+    "chain",
+    "force field",
+    "gromacs",
+    "lammps",
+    "md",
+    "openmm",
+    "polymer",
+    "trajectory"
+  ],
+  "validators": [
+    "topology",
+    "energy-stability",
+    "equilibration",
+    "replicate-consistency",
+    "finite-size"
+  ],
+  "workflow": "molecular-dynamics"
+}

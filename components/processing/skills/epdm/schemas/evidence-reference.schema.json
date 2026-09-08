@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/evidence-reference.schema.json",
+  "title": "EPDM V2 evidence record",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "status",
+    "source_type",
+    "source_id",
+    "locator"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "status": {
+      "enum": [
+        "REPORTED",
+        "CALCULATED",
+        "QUALIFIED",
+        "HOLD",
+        "SUPERSEDED",
+        "RETRACTED"
+      ]
+    },
+    "source_type": {
+      "enum": [
+        "LITERATURE",
+        "LAB_FIT",
+        "PILOT_FIT",
+        "PLANT_FIT",
+        "ASSUMED",
+        "SYNTHETIC_FIXTURE"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataset_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "applicability_domain_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_type": {
+            "enum": [
+              "LAB_FIT",
+              "PILOT_FIT",
+              "PLANT_FIT"
+            ]
+          }
+        },
+        "required": [
+          "source_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "dataset_id"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

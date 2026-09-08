@@ -1,0 +1,45 @@
+schema_version: "1.0"
+policy_id: TSAODFT-PERFORMANCE-QUALIFICATION-V2
+minimum_successful_repeats: 3
+require_independent_review: true
+require_real_engine_source: true
+require_verified_artifacts: true
+require_performance_improvement: true
+numerical_equivalence:
+  energy_abs_ev: 1.0e-5
+  force_max_abs_ev_per_angstrom: 1.0e-4
+  stress_max_abs_gpa: 1.0e-3
+  property_abs_default: 1.0e-6
+  property_abs:
+    band_gap_ev: 1.0e-4
+performance:
+  minimum_cpu_to_candidate_speedup: 1.0
+  minimum_strong_scaling_efficiency: 0.0
+  outlier_modified_z_threshold: 3.5
+acceleration_l3_required_evidence:
+  - engine
+  - engine_version
+  - build_fingerprint
+  - site
+  - hardware_fingerprint
+  - run_ids
+  - artifact_sha256
+  - cpu_reference
+  - minimum_repeats
+  - numerical_equivalence_pass
+  - parser_acceptance_pass
+  - performance_policy_pass
+  - evidence_bundle_sha256
+  - independent_review_approved
+qualification_statuses:
+  - QUALIFIED_FOR_SCOPED_L3_PERFORMANCE_EVIDENCE
+  - INSUFFICIENT_REPEATS
+  - NUMERICAL_MISMATCH
+  - BUILD_IDENTITY_MISSING
+  - HARDWARE_IDENTITY_MISSING
+  - PARSER_NOT_ACCEPTED
+  - ARTIFACT_HASH_MISMATCH
+  - REFERENCE_MISSING
+  - PERFORMANCE_NOT_IMPROVED
+  - PERFORMANCE_POLICY_FAILED
+  - L2_ONLY

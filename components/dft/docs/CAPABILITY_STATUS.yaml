@@ -1,0 +1,145 @@
+schema_version: '1.0'
+release: 0.4.0-alpha.2
+policy: A capability is implemented only when its scripts and tests are listed. Mentions without adapters remain reference/handoff support.
+capabilities:
+- id: orchestration
+  skill: tsao-dft-suite
+  status: implemented
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - route_dft_task.py
+  - validate_handoff.py
+  - validate_method_fingerprint.py
+  external_requirements: []
+- id: gaussian_molecular_dft
+  skill: tsao-dft-researcher
+  status: implemented_selected_fields
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - preflight_gaussian_input.py
+  - parse_gaussian.py
+  external_requirements:
+  - Gaussian 16 for real execution
+- id: multiwfn_semantic_recipe
+  skill: tsao-dft-researcher
+  status: implemented_validation
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - validate_multiwfn_recipe.py
+  external_requirements:
+  - Multiwfn for real analysis
+- id: vmd_render_generation
+  skill: tsao-dft-researcher
+  status: implemented_generation
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - make_vmd_tcl.py
+  - validate_figure_manifest.py
+  external_requirements:
+  - VMD/Tachyon for real rendering
+- id: structure_prep
+  skill: tsao-structure-prep
+  status: implemented_selected_fields
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - inspect_xyz.py
+  - validate_atom_mapping.py
+  - validate_structure_manifest.py
+  - expand_structure_campaign.py
+  external_requirements:
+  - RDKit/Open Babel/pymatgen/ASE optional
+- id: vasp
+  skill: tsao-periodic-dft-materials
+  status: implemented_selected_fields
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - preflight_vasp.py
+  - parse_vasp.py
+  - validate_periodic_manifest.py
+  external_requirements:
+  - VASP executable and legal POTCAR at site
+- id: quantum_espresso
+  skill: tsao-periodic-dft-materials
+  status: implemented_selected_fields
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - preflight_qe.py
+  - parse_qe.py
+  external_requirements:
+  - Quantum ESPRESSO and pseudopotentials
+- id: cp2k
+  skill: tsao-periodic-dft-materials
+  status: implemented_selected_fields
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - preflight_cp2k.py
+  - parse_cp2k.py
+  external_requirements:
+  - CP2K and basis/potential files
+- id: dft_ml
+  skill: tsao-dft-ml-active-learning
+  status: implemented_baseline
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - validate_dft_dataset.py
+  - train_ridge_baseline.py
+  - validate_model_card.py
+  - select_active_learning_batch.py
+  external_requirements:
+  - DeepChem/RDKit/GNN frameworks optional
+- id: hpc
+  skill: tsao-dft-hpc-provenance
+  status: implemented_generation_validation_and_signed_evidence_qualification
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - shell_contract.py
+  - trust_boundary.py
+  - engine_parser_contract.py
+  - benchmark_bridge.py
+  - generate_job_script.py
+  - generate_job_array.py
+  - validate_hpc_manifest.py
+  - validate_site_profile.py
+  - estimate_resources.py
+  - validate_restart_lineage.py
+  - plan_acceleration.py
+  - materialize_acceleration_campaign.py
+  - validate_benchmark_result.py
+  - import_benchmark_evidence.py
+  - compare_acceleration_results.py
+  - qualify_performance_evidence.py
+  - verify_evidence_bundle.py
+  - collect_optional_metrics.py
+  - performance_evidence.py
+  - build_benchmark_result_from_gaussian.py
+  - build_benchmark_result_from_vasp.py
+  - build_benchmark_result_from_qe.py
+  - build_benchmark_result_from_cp2k.py
+  external_requirements:
+  - real scheduler/site for L3
+  - real accelerator and versioned engine build for measured performance evidence
+  - immutable content-addressed real-engine artifacts
+  - Ed25519-signed independent review bound to policy, plan, candidates and evidence root
+  - explicit public capability registration after scoped evidence qualification
+- id: kinetics
+  skill: tsao-dft-kinetics-multiscale
+  status: implemented_core_handoff
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - eyring_rates.py
+  - validate_reaction_network.py
+  - check_thermodynamic_closure.py
+  - propagate_barrier_uncertainty.py
+  - export_cantera_handoff.py
+  external_requirements:
+  - Cantera/RMG/Pyomo/CatMAP optional
+- id: catalysis_profile
+  skill: tsao-dft-catalysis-profile
+  status: implemented_profile
+  support_level: L2_VALIDATED_ADAPTER
+  scripts:
+  - build_coordination_campaign.py
+  - validate_claim_scope.py
+  - validate_profile.py
+  external_requirements:
+  - profile activation scope must match

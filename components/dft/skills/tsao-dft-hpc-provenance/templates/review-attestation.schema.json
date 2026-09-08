@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TsaoDFT independent performance review attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "attestation_id", "identity", "decision", "scope", "issued_at", "expires_at", "binding", "signature_algorithm", "key_fingerprint", "signature"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "attestation_id": {"type": "string", "minLength": 1},
+    "identity": {"type": "string", "minLength": 1},
+    "decision": {"enum": ["approved", "rejected"]},
+    "scope": {"const": "scoped-performance-evidence"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "benchmark_plan_id", "candidate_ids", "evidence_root_sha256"],
+      "properties": {
+        "policy_id": {"type": "string", "minLength": 1},
+        "benchmark_plan_id": {"type": "string", "minLength": 1},
+        "candidate_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "evidence_root_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "signature_algorithm": {"const": "ed25519"},
+    "key_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "signature": {"type": "string", "minLength": 32}
+  }
+}

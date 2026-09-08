@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "release": "0.7.4",
+  "commit": "882de2cdd409ec994eb39cc22d2b80efb3b0f3bc",
+  "workflow_run_id": 31089852037,
+  "evidence_date": "2026-08-06",
+  "compatibility": {
+    "ubuntu_python_3_10": "PASS",
+    "ubuntu_python_3_13": "PASS",
+    "windows_python_3_12": "PASS",
+    "macos_python_3_12": "PASS"
+  },
+  "tests": {
+    "complete_regression": 314,
+    "failures": 0
+  },
+  "coverage": {
+    "line_percent": 95.827,
+    "branch_percent": 93.438,
+    "mathematical_contracts_percent": 100.0
+  },
+  "mutation": {
+    "killed": 24,
+    "total": 24
+  },
+  "validation_tree_sha256": "d2db96ff752e85a0680c32b9808219d5b875a9b9a03df151f91ee424aac3b58a",
+  "validated_file_count": 403,
+  "repository_tree_sha256": "9514c4e54ae0179fc80a322a9d30adc82f836d961b6c9b3890c35a893b13bda8",
+  "repository_tree_file_count": 408,
+  "scientific_boundary": "software control layer only; no external DFT, quantum chemistry, MD, FEM, CFD, process, HPC, instrument, or laboratory execution is implied"
+}

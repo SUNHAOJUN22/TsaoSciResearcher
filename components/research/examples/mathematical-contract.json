@@ -1,0 +1,34 @@
+{
+  "advisory_only": true,
+  "automatic_approval": false,
+  "contracts": [
+    {
+      "contract_id": "decision-readiness",
+      "decision_use": {
+        "en": "The weakest mandatory contract controls readiness: BLOCK precedes REVIEW, and REVIEW precedes PASS.",
+        "zh-CN": "最弱的强制合同决定整体就绪度: 阻断优先于复核, 复核优先于通过。"
+      },
+      "equation": "G=min(g_quantity,g_applicability,g_evidence,g_identifiability,g_bridge)",
+      "implementation_relation": {
+        "en": "Matches the repository's conservative blocker/review aggregation and fixed automatic_approval=false boundary.",
+        "zh-CN": "对应仓库的保守阻断/复核聚合逻辑, 以及 automatic_approval=false 的固定边界。"
+      },
+      "symbols": {
+        "G": {"en": "overall readiness gate", "zh-CN": "总体就绪度门"},
+        "g_applicability": {"en": "applicability gate", "zh-CN": "适用域门"},
+        "g_bridge": {"en": "scale-bridge gate", "zh-CN": "尺度桥门"},
+        "g_evidence": {"en": "evidence-conflict gate", "zh-CN": "证据冲突门"},
+        "g_identifiability": {"en": "identifiability gate", "zh-CN": "可辨识性门"},
+        "g_quantity": {"en": "quantity and dimension gate", "zh-CN": "数量与量纲门"}
+      },
+      "title": {
+        "en": "Conservative decision-readiness aggregation",
+        "zh-CN": "保守决策就绪度聚合"
+      }
+    }
+  ],
+  "language": "both",
+  "schema_id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json",
+  "schema_version": "1.0",
+  "solver_executed": false
+}

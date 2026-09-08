@@ -1,0 +1,13 @@
+schema_version: "1.0"
+topic: ""
+decision_context: ""
+research_type: mechanistic
+object: ""
+variables: []
+boundary_conditions: []
+outcome: ""
+comparison: ""
+falsification_criterion: ""
+evidence_routes: []
+assumptions: []
+open_questions: []

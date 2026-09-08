@@ -1,0 +1,21 @@
+schema_version: 2
+project_id: PROJECT_ID
+created_at: CREATED_AT
+software:
+  gaussian: {version: unknown, executable: unknown, license_confirmed: false}
+  formchk: {version: unknown, executable: unknown}
+  multiwfn: {version: unknown, executable: unknown}
+  vmd: {version: unknown, executable: unknown}
+  tachyon: {version: unknown, executable: unknown}
+  python: {version: unknown, environment: unknown}
+site:
+  host: unknown
+  scheduler: unknown
+  module_or_environment: unknown
+structures: []
+calculations: []
+analyses: []
+figures: []
+claims: []
+approvals: []
+limitations: []

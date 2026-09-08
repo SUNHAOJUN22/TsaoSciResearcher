@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "patent-and-transfer",
+  "purpose": "支持特征拆解、检索、专利地图、FTO风险和技术交底",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "拆解技术特征和候选权利要求",
+    "组合关键词与IPC/CPC",
+    "聚合同族、优先权和法律状态",
+    "评价相关性与覆盖",
+    "生成风险信号、律师复核点和TRL"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

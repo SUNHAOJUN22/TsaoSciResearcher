@@ -1,0 +1,6 @@
+interface:
+  display_name: "TSAO Processing Skill"
+  short_description: "Component-wise process contracts and controlled distribution"
+  default_prompt: "Use $tsao-processing-skill to audit process balances, status propagation, numerical stability, and the controlled-data distribution boundary."
+policy:
+  allow_implicit_invocation: true

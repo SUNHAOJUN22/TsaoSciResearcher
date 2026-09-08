@@ -1,0 +1,6 @@
+interface:
+  display_name: Tsao Dft Hpc Provenance
+  short_description: 'Prepare and audit local, Slurm, PBS and cloud/HPC computational-chemistry
+    execution: environment inspection, dependency '
+  default_prompt: Use $tsao-dft-hpc-provenance to plan and validate this task before
+    any expensive execution.

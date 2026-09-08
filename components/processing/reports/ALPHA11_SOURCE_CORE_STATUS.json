@@ -1,0 +1,39 @@
+{
+  "version": "0.1.0-alpha.11",
+  "status": "QUALIFIED_ALPHA",
+  "source_core_manifest": "reports/SOURCE_CORE_MANIFEST.tsv",
+  "universal_process_package": "IMPLEMENTED_ALPHA",
+  "process_general_modules": "14_OF_14",
+  "process_general_workflows": "6_OF_6",
+  "epdm": "EXECUTABLE_FLAGSHIP_ALPHA_P1_REFERENCE",
+  "epdm_module_contracts": "14_OF_14",
+  "epdm_requirement_registry": "20_OF_20",
+  "epdm_batch_screening": "NUMPY_BROADCAST_REFERENCE",
+  "epdm_semibatch_trajectory": "ONCE_VALIDATED_FULL_HISTORY",
+  "poe": "EXECUTABLE_SPECIALIST_ALPHA_P1_REFERENCE",
+  "poe_terminal_execution": "NO_HISTORY_ALLOCATION_OPTION",
+  "polymer_general_scripts": "6_OF_6",
+  "readme_assets": "18_OF_18",
+  "performance_baseline": "reports/PERFORMANCE_BASELINE_ALPHA10_EXTENDED.json",
+  "performance_optimized": "reports/PERFORMANCE_OPTIMIZED_ALPHA11.json",
+  "performance_comparison": "reports/PERFORMANCE_COMPARISON_ALPHA11.json",
+  "performance_gate": "EXACT_TOLERANCE_SEMANTIC_SPEED_MEMORY_AND_SCALE",
+  "performance_workloads": 20,
+  "python_versions": [
+    "3.11",
+    "3.12",
+    "3.13",
+    "3.14"
+  ],
+  "wheel_install_modes": [
+    "PIP_TARGET",
+    "STANDARD_VENV"
+  ],
+  "standard_venv_isolation": "NO_SYSTEM_SITE_PACKAGES",
+  "installed_import_origin": "VERIFIED_INSIDE_INSTALL_ROOT",
+  "artifact_software_qualification": "PASS",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

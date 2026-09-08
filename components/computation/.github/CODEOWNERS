@@ -1,0 +1,21 @@
+# Canonical ownership for the single-main upstream repository.
+* @SUNHAOJUN22
+/.github/ @SUNHAOJUN22
+/SECURITY.md @SUNHAOJUN22
+/CONTRIBUTING.md @SUNHAOJUN22
+/CODE_OF_CONDUCT.md @SUNHAOJUN22
+/SUPPORT.md @SUNHAOJUN22
+/scripts/ @SUNHAOJUN22
+/schemas/ @SUNHAOJUN22
+/registry/accelerators.json @SUNHAOJUN22
+/references/accelerated-computing.md @SUNHAOJUN22
+/native/ @SUNHAOJUN22
+/tsao_computation/accelerators/ @SUNHAOJUN22
+/tsao_computation/execution/ @SUNHAOJUN22
+/tsao_computation/contracts/ @SUNHAOJUN22
+/tsao_computation/security/ @SUNHAOJUN22
+/tsao_computation/state/ @SUNHAOJUN22
+/tsao_computation/validation/ @SUNHAOJUN22
+/adapters/ @SUNHAOJUN22
+/capability-index/ @SUNHAOJUN22
+/docs/releases/ @SUNHAOJUN22

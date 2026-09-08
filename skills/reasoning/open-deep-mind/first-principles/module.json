@@ -1,0 +1,36 @@
+{
+  "id": "first-principles",
+  "version": "1.2.0",
+  "canonical_entry": "METHOD.md",
+  "activation": "core-or-explicit",
+  "protocol": {
+    "name": "P9",
+    "stages": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
+  },
+  "inputs": [
+    "question",
+    "outcome",
+    "boundary",
+    "scale",
+    "time_horizon",
+    "observations",
+    "constraints",
+    "values",
+    "optional_foundation_charter"
+  ],
+  "outputs": [
+    "requirement_verdict",
+    "proposition_ledger",
+    "decomposition",
+    "model_contract",
+    "alternatives",
+    "derivation_trace",
+    "stress_test",
+    "decision_record"
+  ],
+  "handoff_to": ["first-philosophy-repair", "triz-explicit-only"],
+  "forbidden_auto_load": ["triz"],
+  "schemas": ["model-contract.schema.json", "decision-record.schema.json"],
+  "examples": ["example-model-contract.json", "example-decision-record.json"],
+  "validator": "scripts/validate_module.py"
+}

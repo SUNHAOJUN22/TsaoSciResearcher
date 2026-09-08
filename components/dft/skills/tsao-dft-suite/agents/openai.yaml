@@ -1,0 +1,4 @@
+interface:
+  display_name: "TsaoDFT Suite"
+  short_description: "Route auditable DFT projects across TsaoDFT Skills"
+  default_prompt: "Use $tsao-dft-suite to turn my scientific question into a DFT-first task graph, validate every handoff, estimate resources, and stop at approval gates before expensive execution."

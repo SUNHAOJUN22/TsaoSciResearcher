@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/compute-qualification-campaign.schema.json",
+  "$comment": "AUTHORITATIVE CONTRACT: compute qualification policy v1.1. This configuration contract is independent of benchmark-result evidence v1.1.",
+  "title": "TsaoDFT canonical compute qualification campaign",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "benchmark_plan_id",
+    "engine",
+    "participants",
+    "minimum_repeats",
+    "minimum_reference_over_candidate_ratio",
+    "numerical_tolerances"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.1"},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "benchmark_plan_id": {"type": "string", "minLength": 1},
+    "engine": {
+      "enum": ["gaussian", "vasp", "quantum-espresso", "cp2k", "generic", "ml-surrogate"]
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/participant"},
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": ["role"],
+            "properties": {"role": {"const": "scientific-reference"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["role"],
+            "properties": {"role": {"const": "acceleration-candidate"}}
+          },
+          "minContains": 1
+        }
+      ]
+    },
+    "minimum_repeats": {"type": "integer", "minimum": 3},
+    "minimum_reference_over_candidate_ratio": {"type": "number", "exclusiveMinimum": 1},
+    "numerical_tolerances": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {"^.+$": {"$ref": "#/$defs/tolerance"}},
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "role"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "role": {"enum": ["scientific-reference", "acceleration-candidate"]}
+      }
+    },
+    "tolerance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["absolute", "relative"],
+      "properties": {
+        "absolute": {"type": "number", "minimum": 0},
+        "relative": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}

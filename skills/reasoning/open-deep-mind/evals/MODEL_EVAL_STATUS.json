@@ -1,0 +1,11 @@
+{
+  "schema_version": "agent-skill-model-routing-status/v19",
+  "skill_name": "open-deep-mind",
+  "status": "NOT_RUN",
+  "reason": "The 60 authored cases have no authenticated complete model-run and independent-grading evidence.",
+  "static_case_count": 60,
+  "train_cases": 36,
+  "validation_cases": 12,
+  "holdout_cases": 12,
+  "published_score": null
+}

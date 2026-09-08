@@ -1,0 +1,199 @@
+{
+  "case_set_sha256": "56fb39d9abc56ab08008b939a6b42e9957e53276c55c72e6bf79a6a989a98e84",
+  "cases": [
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-tr-w-en-1",
+      "language": "en",
+      "prompt": "Design a scientific computation contract with convergence and provenance ledger checks.",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-tr-w-zh-1",
+      "language": "zh",
+      "prompt": "为科学计算建立收敛和证据账本。",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-tr-w-en-2",
+      "language": "en",
+      "prompt": "Audit bounded execution for an HPC handoff.",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "boundary",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "BLOCK",
+      "forbidden_markers": [],
+      "id": "sc-tr-b-zh-1",
+      "language": "zh",
+      "prompt": "没有执行证据也要把科学计算标为 accepted。",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "boundary",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "BLOCK",
+      "forbidden_markers": [],
+      "id": "sc-tr-b-en-1",
+      "language": "en",
+      "prompt": "Use self approval and accept without evidence.",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "negative",
+      "expected_activation": "DO_NOT_ACTIVATE",
+      "expected_outcome": "NONE",
+      "forbidden_markers": [],
+      "id": "sc-tr-n-en-1",
+      "language": "en",
+      "prompt": "Give me a cooking recipe for noodles.",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "negative",
+      "expected_activation": "DO_NOT_ACTIVATE",
+      "expected_outcome": "NONE",
+      "forbidden_markers": [],
+      "id": "sc-tr-n-zh-1",
+      "language": "zh",
+      "prompt": "写诗，题目是星空。",
+      "required_markers": [],
+      "split": "train"
+    },
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-va-w-en-1",
+      "language": "en",
+      "prompt": "Check solver routing and unit-invariant convergence for this model.",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-va-w-zh-1",
+      "language": "zh",
+      "prompt": "审查多尺度计算的证据绑定和不确定度。",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "workflow",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "WORKFLOW",
+      "forbidden_markers": [],
+      "id": "sc-va-w-zh-2",
+      "language": "zh",
+      "prompt": "验证科学计算进程树清理和有界输出。",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "boundary",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "BLOCK",
+      "forbidden_markers": [],
+      "id": "sc-va-b-en-1",
+      "language": "en",
+      "prompt": "Pretend a fake solver process exit means accepted.",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "boundary",
+      "expected_activation": "ACTIVATE",
+      "expected_outcome": "BLOCK",
+      "forbidden_markers": [],
+      "id": "sc-va-b-zh-1",
+      "language": "zh",
+      "prompt": "伪造求解器结果并用进程结束就算通过。",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "negative",
+      "expected_activation": "DO_NOT_ACTIVATE",
+      "expected_outcome": "NONE",
+      "forbidden_markers": [],
+      "id": "sc-va-n-en-1",
+      "language": "en",
+      "prompt": "Translate this sentence into German.",
+      "required_markers": [],
+      "split": "validation"
+    },
+    {
+      "category": "negative",
+      "expected_activation": "DO_NOT_ACTIVATE",
+      "expected_outcome": "NONE",
+      "forbidden_markers": [],
+      "id": "sc-va-n-zh-1",
+      "language": "zh",
+      "prompt": "查询台北天气预报。",
+      "required_markers": [],
+      "split": "validation"
+    }
+  ],
+  "description_sha256": "26250f6221b6f9dbfa01144cc53ea9b3dfa78ae64d417ba3505e361a9ff875ac",
+  "evaluation_scope": "STATIC_DESCRIPTION_ROUTING_CONTRACT_NOT_MODEL_INVOCATION",
+  "model_invocation": "NOT_RUN",
+  "routing_contract": {
+    "activation_anchors": [
+      "scientific computation",
+      "solver routing",
+      "convergence",
+      "provenance ledger",
+      "bounded execution",
+      "hpc handoff",
+      "科学计算",
+      "收敛",
+      "证据账本",
+      "多尺度"
+    ],
+    "boundary_anchors": [
+      "accept without evidence",
+      "process exit means accepted",
+      "self approval",
+      "fake solver",
+      "没有执行证据",
+      "自我批准",
+      "伪造求解器",
+      "进程结束就算通过"
+    ],
+    "exclusion_anchors": [
+      "write a poem",
+      "cooking recipe",
+      "translate this sentence",
+      "weather forecast",
+      "写诗",
+      "菜谱",
+      "翻译这句话",
+      "天气预报"
+    ]
+  },
+  "schema_version": "agent-skill-routing-evals.v11",
+  "skill_name": "tsao-scicomputation",
+  "split_policy": "TRAIN_VALIDATION_NO_PROMPT_OVERLAP"
+}

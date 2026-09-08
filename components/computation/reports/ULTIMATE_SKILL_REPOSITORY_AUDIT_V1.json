@@ -1,0 +1,600 @@
+{
+  "artifacts": {
+    "RELEASE_MANIFEST.json": {
+      "bytes": 1335,
+      "sha256": "73a42d21f77d149b28a81d7ddce93b28be33ee0da0761c4b3be05d9d4c6b7f21"
+    },
+    "SHA256SUMS": {
+      "bytes": 684,
+      "sha256": "83c0577577c818e224303709fc7611b78b8cc58fb02536d9973b37e8d9f00af3"
+    },
+    "SOURCE_BUILD_REPORT.json": {
+      "bytes": 434,
+      "sha256": "d6111a58ee406b9510ecbcaebe2aad9dea89359e20bc37ac8fb91ff485400dcb"
+    },
+    "TsaoSciComputation-3.0.2.cdx.json": {
+      "bytes": 8618,
+      "sha256": "66f647e1d96b2165c93242dac942dbdaa58fc301cef80dce7e2badad6e102e7f"
+    },
+    "TsaoSciComputation-3.0.2.spdx.json": {
+      "bytes": 11703,
+      "sha256": "0ea26561f5fdf3ff2f7eca22503bd05c67e84349b6681b484c3343727d4d6d66"
+    },
+    "TsaoSciComputation-3.0.2.tar.gz": {
+      "bytes": 351056,
+      "sha256": "7f8cdd872e88390e3ba11847e1650d447aee05ba6a0264c96d3fc599ee248e74"
+    },
+    "TsaoSciComputation-3.0.2.zip": {
+      "bytes": 764989,
+      "sha256": "56fff3e3852d56f9cb12b3fd82fb9644b07084433a4b6cccaed3bdaed28aa305"
+    },
+    "WHEEL_VERIFICATION.json": {
+      "bytes": 410,
+      "sha256": "a727790dd7af23cc4cbfec0776cd6eccf56a1bc06d44932d8aea9ae27c29e436"
+    },
+    "tsao_scicomputation-3.0.2-py3-none-any.whl": {
+      "bytes": 61038,
+      "sha256": "f7c1056c8d3afa8d0e95f8298368ef7341d007c538e351ccf061b08a8e57e558"
+    }
+  },
+  "audit_id": "TSAOSCICOMPUTATION_ULTIMATE_SKILL_AND_REPOSITORY_AUDIT_V1",
+  "claim_boundary": "Repository code, Agent Skills, orchestration, contracts, routing, parsing, schemas, fixtures, deterministic scientific benchmarks, packaging, security, supply-chain evidence, and CI compatibility only. No external scientific solver or production HPC execution is claimed.",
+  "commands": [
+    "python -m pytest --collect-only -q",
+    "python scripts/validate_skill_spec.py",
+    "skills-ref validate <root and 20 workflow Skills>",
+    "python scripts/verify_all.py --profile all",
+    "python scripts/verify_all.py --profile benchmark",
+    "python scripts/run_large_parser_regression.py",
+    "python scripts/run_scientific_benchmarks.py",
+    "python scripts/run_mutation_gate.py",
+    "python -m pip_audit --local --skip-editable --progress-spinner=off",
+    "python -m build",
+    "python scripts/build_manifest.py --check"
+  ],
+  "counts": {
+    "adapters": 27,
+    "agent_skills": 21,
+    "capabilities": 164,
+    "visual_assets": 42,
+    "workflows": 20
+  },
+  "coverage": {
+    "covered_branches": 322,
+    "covered_lines": 1144,
+    "excluded_lines": 0,
+    "missing_branches": 22,
+    "missing_lines": 30,
+    "num_branches": 344,
+    "num_partial_branches": 22,
+    "num_statements": 1174,
+    "percent_branches_covered": 93.6046511627907,
+    "percent_branches_covered_display": "94",
+    "percent_covered": 96.57444005270092,
+    "percent_covered_display": "97",
+    "percent_statements_covered": 97.44463373083475,
+    "percent_statements_covered_display": "97"
+  },
+  "created_branch": false,
+  "created_pull_request": false,
+  "dependency_audit": {
+    "dependencies": [
+      {
+        "name": "ast-serialize",
+        "version": "0.6.0",
+        "vulns": []
+      },
+      {
+        "name": "attrs",
+        "version": "26.1.0",
+        "vulns": []
+      },
+      {
+        "name": "bandit",
+        "version": "1.9.4",
+        "vulns": []
+      },
+      {
+        "name": "boolean-py",
+        "version": "5.0",
+        "vulns": []
+      },
+      {
+        "name": "build",
+        "version": "1.5.0",
+        "vulns": []
+      },
+      {
+        "name": "cachecontrol",
+        "version": "0.14.4",
+        "vulns": []
+      },
+      {
+        "name": "certifi",
+        "version": "2026.7.22",
+        "vulns": []
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.4.9",
+        "vulns": []
+      },
+      {
+        "name": "coverage",
+        "version": "7.15.2",
+        "vulns": []
+      },
+      {
+        "name": "cyclonedx-python-lib",
+        "version": "11.11.0",
+        "vulns": []
+      },
+      {
+        "name": "defusedxml",
+        "version": "0.7.1",
+        "vulns": []
+      },
+      {
+        "name": "filelock",
+        "version": "3.32.0",
+        "vulns": []
+      },
+      {
+        "name": "idna",
+        "version": "3.18",
+        "vulns": []
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.0",
+        "vulns": []
+      },
+      {
+        "name": "jsonschema",
+        "version": "4.26.0",
+        "vulns": []
+      },
+      {
+        "name": "jsonschema-specifications",
+        "version": "2025.9.1",
+        "vulns": []
+      },
+      {
+        "name": "librt",
+        "version": "0.13.0",
+        "vulns": []
+      },
+      {
+        "name": "license-expression",
+        "version": "30.4.4",
+        "vulns": []
+      },
+      {
+        "name": "markdown-it-py",
+        "version": "4.2.0",
+        "vulns": []
+      },
+      {
+        "name": "mdurl",
+        "version": "0.1.2",
+        "vulns": []
+      },
+      {
+        "name": "msgpack",
+        "version": "1.2.1",
+        "vulns": []
+      },
+      {
+        "name": "mypy",
+        "version": "2.3.0",
+        "vulns": []
+      },
+      {
+        "name": "mypy-extensions",
+        "version": "1.1.0",
+        "vulns": []
+      },
+      {
+        "name": "packageurl-python",
+        "version": "0.17.6",
+        "vulns": []
+      },
+      {
+        "name": "packaging",
+        "version": "26.2",
+        "vulns": []
+      },
+      {
+        "name": "pathspec",
+        "version": "1.1.1",
+        "vulns": []
+      },
+      {
+        "name": "pip",
+        "version": "26.1.2",
+        "vulns": []
+      },
+      {
+        "name": "pip-api",
+        "version": "0.0.34",
+        "vulns": []
+      },
+      {
+        "name": "pip-audit",
+        "version": "2.10.0",
+        "vulns": []
+      },
+      {
+        "name": "pip-requirements-parser",
+        "version": "32.0.1",
+        "vulns": []
+      },
+      {
+        "name": "platformdirs",
+        "version": "4.11.0",
+        "vulns": []
+      },
+      {
+        "name": "pluggy",
+        "version": "1.6.0",
+        "vulns": []
+      },
+      {
+        "name": "py-serializable",
+        "version": "2.1.0",
+        "vulns": []
+      },
+      {
+        "name": "pygments",
+        "version": "2.20.0",
+        "vulns": []
+      },
+      {
+        "name": "pyparsing",
+        "version": "3.3.2",
+        "vulns": []
+      },
+      {
+        "name": "pyproject-hooks",
+        "version": "1.2.0",
+        "vulns": []
+      },
+      {
+        "name": "pytest",
+        "version": "9.1.1",
+        "vulns": []
+      },
+      {
+        "name": "pyyaml",
+        "version": "6.0.3",
+        "vulns": []
+      },
+      {
+        "name": "referencing",
+        "version": "0.37.0",
+        "vulns": []
+      },
+      {
+        "name": "requests",
+        "version": "2.34.2",
+        "vulns": []
+      },
+      {
+        "name": "rich",
+        "version": "15.0.0",
+        "vulns": []
+      },
+      {
+        "name": "rpds-py",
+        "version": "2026.6.3",
+        "vulns": []
+      },
+      {
+        "name": "ruff",
+        "version": "0.16.0",
+        "vulns": []
+      },
+      {
+        "name": "setuptools",
+        "version": "83.0.0",
+        "vulns": []
+      },
+      {
+        "name": "sortedcontainers",
+        "version": "2.4.0",
+        "vulns": []
+      },
+      {
+        "name": "stevedore",
+        "version": "5.9.0",
+        "vulns": []
+      },
+      {
+        "name": "tomli",
+        "version": "2.4.1",
+        "vulns": []
+      },
+      {
+        "name": "tomli-w",
+        "version": "1.2.0",
+        "vulns": []
+      },
+      {
+        "name": "tsao-scicomputation",
+        "skip_reason": "distribution marked as editable"
+      },
+      {
+        "name": "types-jsonschema",
+        "version": "4.26.0.20260518",
+        "vulns": []
+      },
+      {
+        "name": "types-pyyaml",
+        "version": "6.0.12.20260724",
+        "vulns": []
+      },
+      {
+        "name": "typing-extensions",
+        "version": "4.16.0",
+        "vulns": []
+      },
+      {
+        "name": "urllib3",
+        "version": "2.7.0",
+        "vulns": []
+      },
+      {
+        "name": "wheel",
+        "version": "0.47.0",
+        "vulns": []
+      }
+    ],
+    "fixes": []
+  },
+  "evidence_parent_sha": "1d29fc422841d535a0a83f0c8b9e0997cd25ae8e",
+  "execution_baseline_sha": "05525a859481237b9fb443a664e1d8b5849efb83",
+  "final_tree_cleanup": [
+    "Removed one-shot workflows and trigger files.",
+    "Removed superseded V3-V12 audit summaries and V8 performance snapshots.",
+    "Removed stale release, remote-finalization, diagnostic, and root status artifacts.",
+    "Rebuilt and checked manifest.json."
+  ],
+  "force_push": false,
+  "gates": {
+    "benchmark": "PASS",
+    "controlled_mutation": "64/64",
+    "core": "PASS",
+    "cross_platform_core": {
+      "os": [
+        "ubuntu-latest",
+        "windows-latest",
+        "macos-latest"
+      ],
+      "python": [
+        "3.10",
+        "3.13"
+      ],
+      "source_sha": "6681c08677d30231c321e898c9cb9ed34496b128",
+      "status": "PASS"
+    },
+    "dependency_audit": "PASS",
+    "local_skill_specification": "PASS",
+    "manifest": "PASS",
+    "official_agent_skills": "PASS",
+    "package": "PASS",
+    "pep517_build": "PASS",
+    "performance_measurement": "PASS",
+    "quality": "PASS",
+    "repository_security_scan": {
+      "files_scanned": 520,
+      "findings": 0,
+      "status": "PASS"
+    },
+    "scientific_reference_benchmarks": "8/8"
+  },
+  "generated_at": "2026-07-28T07:06:08.113127+00:00",
+  "issues": [
+    {
+      "id": "AUD-001",
+      "location": "SKILL.md:frontmatter",
+      "problem": "Root Skill name was not portable under the Agent Skills identifier grammar.",
+      "resolution": "Changed the registered identifier to tsao-scicomputation and preserved legacy installation compatibility.",
+      "severity": "P1",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-002",
+      "location": ".github/workflows/release.yml",
+      "problem": "A workflow-dispatch tag value was interpolated directly into shell source and release generation could rewrite tracked inputs.",
+      "resolution": "Passed the tag through a quoted environment variable, bound checkout/tag/artifacts to github.sha, and changed generators to check mode.",
+      "severity": "P1",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-003",
+      "location": "SKILL.md",
+      "problem": "The root Skill lacked explicit compatibility, metadata, activation, input/output, success/failure, example, and semantic-safety contracts.",
+      "resolution": "Added complete fail-closed contracts while retaining the existing scientific state and documentation boundaries.",
+      "severity": "P2",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-004",
+      "location": ".github/workflows",
+      "problem": "No repository-local OpenSSF Scorecard workflow was present.",
+      "resolution": "Added the official pinned Scorecard workflow with least-privilege permissions and SARIF upload.",
+      "severity": "P2",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-005",
+      "location": "reports/ and root status files",
+      "problem": "Superseded audit snapshots and transport status files remained in the release tree.",
+      "resolution": "Removed superseded reports and status artifacts and rebuilt the repository manifest.",
+      "severity": "P2",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-006",
+      "location": "scripts/quality_check.py",
+      "problem": "Agent Skill conformance was not part of the canonical quality gate.",
+      "resolution": "Integrated fail-closed Skill validation and added regression tests.",
+      "severity": "P3",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-007",
+      "location": "pyproject.toml",
+      "problem": "The strict Mypy quality environment lacked PyYAML type stubs.",
+      "resolution": "Added types-PyYAML to the quality-only dependency group; runtime dependencies remain zero.",
+      "severity": "P3",
+      "status": "FIXED"
+    },
+    {
+      "id": "AUD-008",
+      "location": "performance methodology",
+      "problem": "The frozen execution-time main was contaminated by interrupted audit transport and failed its own Manifest gate.",
+      "resolution": "Preserved that failure as evidence and used the last clean product commit for executable same-host A/B comparison.",
+      "severity": "P3",
+      "status": "RESOLVED_WITH_METHOD_BOUNDARY"
+    }
+  ],
+  "microbenchmark": {
+    "adapter_lookup_cached_median_us": 0.1073,
+    "adapter_registry_cold_median_ms": 0.206,
+    "capability_registry_cached_median_ms": 0.00047,
+    "capability_registry_cold_median_ms": 1.831,
+    "claim_boundary": "Local orchestration microbenchmarks; no solver execution measured.",
+    "cli_import_median_ms": 38.257,
+    "methodology": {
+      "claim_boundary": "Same-host local orchestration microbenchmarks; no solver execution measured.",
+      "clock": "time.perf_counter",
+      "statistic": "median",
+      "warmups": 2
+    },
+    "parser_5mib_throughput_mib_s": 336.33,
+    "python": "3.13.14 (main, Jun 11 2026, 03:02:07) [GCC 13.3.0]",
+    "repository_walk_median_ms": 8.139,
+    "route_decision_cold_median_ms": 0.355,
+    "route_decision_median_ms": 0.00013,
+    "schema_version": "1.1",
+    "workflow_registry_cold_median_ms": 0.154
+  },
+  "pep517_artifacts": {
+    "tsao_scicomputation-3.0.2-py3-none-any.whl": {
+      "bytes": 61038,
+      "sha256": "3a1e35ff965772e4de06f9e382377ee3adc95d41a67764fefde58219e671efdb"
+    },
+    "tsao_scicomputation-3.0.2.tar.gz": {
+      "bytes": 220275,
+      "sha256": "48809061d1414a69b2a6cea08abb36911abf122b7dc63f9e8d03d744b2d20896"
+    }
+  },
+  "performance": {
+    "acceptance": {
+      "cli_no_material_regression": true,
+      "parser_no_material_regression": true,
+      "parser_semantics_preserved": true,
+      "peak_memory_within_15_percent": true,
+      "route_no_material_regression": true,
+      "verify_all_no_material_regression": true
+    },
+    "candidate_source_sha": "6681c08677d30231c321e898c9cb9ed34496b128",
+    "claim_boundary": "Same-host repository orchestration, parsing and verification only; no external solver or production-HPC speedup is claimed.",
+    "cli_import_speedup": 0.9948104715715583,
+    "execution_baseline_limitation": "The execution-time main contained interrupted audit transport/state files and failed its own repository Manifest gate, so it was recorded but not used as the executable A/B product baseline.",
+    "execution_baseline_profile_process_status": "PASS",
+    "execution_baseline_sha": "05525a859481237b9fb443a664e1d8b5849efb83",
+    "execution_baseline_status": "NON_EXECUTABLE_MANIFEST_FAIL",
+    "execution_baseline_usable_for_ab": false,
+    "measurement_status": "PASS",
+    "parser_cases": {
+      "1kib_crlf": 0.991409170128329,
+      "1kib_failure": 0.9933136463651614,
+      "1kib_mixed_case": 0.9970652848519441,
+      "1kib_nonconverged": 1.0079601396290159,
+      "1kib_none": 0.9939149201843025,
+      "1kib_success_end": 0.9951495834759022,
+      "1kib_success_middle": 0.9985864922048354,
+      "1kib_success_start": 1.0405679492395574,
+      "1mib_crlf": 1.022568572821766,
+      "1mib_failure": 0.9145093263275875,
+      "1mib_mixed_case": 1.0129678155008777,
+      "1mib_nonconverged": 0.9652081195537701,
+      "1mib_none": 1.0096914251486853,
+      "1mib_success_end": 0.9854662824552044,
+      "1mib_success_middle": 0.999688397279533,
+      "1mib_success_start": 0.9964943575167142,
+      "50mib_crlf": 0.9940566443430482,
+      "50mib_failure": 1.0244992720184776,
+      "50mib_mixed_case": 1.0001703121498398,
+      "50mib_nonconverged": 1.0023981174209797,
+      "50mib_none": 1.0054581698760319,
+      "50mib_success_end": 0.9909064442241485,
+      "50mib_success_middle": 0.9978224550615766,
+      "50mib_success_start": 1.0000471326631168,
+      "5mib_crlf": 0.9809123258898801,
+      "5mib_failure": 0.9983589743422512,
+      "5mib_mixed_case": 1.0012948345348551,
+      "5mib_nonconverged": 0.9877489266603795,
+      "5mib_none": 1.0014048601277779,
+      "5mib_success_end": 1.000657062428102,
+      "5mib_success_middle": 0.9950195237184218,
+      "5mib_success_start": 1.0051957291450457
+    },
+    "parser_semantics_equal": true,
+    "parser_worst_speedup": 0.9145093263275875,
+    "peak_memory_ratio": 1.0202890494719288,
+    "product_baseline_sha": "ec194f37ccdea2bf1e3e170e180ae8763da5f0c0",
+    "repeats": 2,
+    "route_hot_speedup": 1.013551856109823,
+    "same_host": true,
+    "verify_all_wall_speedup": 0.9898815326928108
+  },
+  "product_performance_baseline_sha": "ec194f37ccdea2bf1e3e170e180ae8763da5f0c0",
+  "python_support": [
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13"
+  ],
+  "quality_report": {
+    "agent_skills": {
+      "count": 21,
+      "status": "PASS"
+    },
+    "passed": true,
+    "problems": [],
+    "python_files": 120,
+    "schema_version": "1.1"
+  },
+  "remaining_non_code_admin_actions": [
+    "Confirm or enable private vulnerability reporting in repository settings.",
+    "Confirm or enable the desired main-branch repository ruleset in repository settings.",
+    "Review the newest CodeQL and OpenSSF Scorecard remote run conclusions after this evidence commit.",
+    "A pre-existing remote branch refresh-readme-visuals-uiux-pro-max remains. It was not created or modified by this audit because the user prohibited operations on non-main branches."
+  ],
+  "remote_branch_governance": {
+    "branches": [
+      "main",
+      "refresh-readme-visuals-uiux-pro-max"
+    ],
+    "created_by_this_audit": false,
+    "status": "PRE_EXISTING_NON_MAIN_BRANCH_REPORTED_NOT_MODIFIED"
+  },
+  "remote_branches": [
+    "main",
+    "refresh-readme-visuals-uiux-pro-max"
+  ],
+  "runtime_dependencies": 0,
+  "schema_version": "1.0",
+  "status": "VALIDATED",
+  "tests": {
+    "collected": 606,
+    "errors": 0,
+    "failures": 0,
+    "passed": 606
+  },
+  "validated_source_sha": "6681c08677d30231c321e898c9cb9ed34496b128",
+  "version": "3.0.2"
+}

@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/tsao-sci-researcher/schemas/v2/reproducibility-capsule.schema.json",
+  "title": "TsaoSciResearcher reproducibility capsule manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capsule_id",
+    "schema_version",
+    "project_id",
+    "project_status",
+    "mode",
+    "project_created_at",
+    "project_updated_at",
+    "software",
+    "state_verification",
+    "receipt_verification",
+    "file_count",
+    "total_bytes",
+    "tree_sha256",
+    "files",
+    "truth_boundary"
+  ],
+  "properties": {
+    "capsule_id": {
+      "type": "string",
+      "pattern": "^CAP-[0-9a-f]{24}$"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "metadata",
+        "full"
+      ]
+    },
+    "project_created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "software": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "python",
+        "platform"
+      ],
+      "properties": {
+        "name": {
+          "const": "TsaoSciResearcher"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "python": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "state_verification": {
+      "type": "object",
+      "required": [
+        "valid",
+        "events",
+        "head",
+        "status",
+        "registries",
+        "execution_receipts"
+      ],
+      "properties": {
+        "valid": {
+          "const": true
+        },
+        "events": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "head": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "status": {
+          "type": "string"
+        },
+        "registries": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "execution_receipts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "receipt_verification": {
+      "type": "object",
+      "required": [
+        "valid",
+        "receipts",
+        "verified_outputs",
+        "successful",
+        "failed"
+      ],
+      "properties": {
+        "valid": {
+          "const": true
+        },
+        "receipts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "verified_outputs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "successful": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tree_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "role",
+          "size_bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "uniqueItems": true
+    },
+    "truth_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

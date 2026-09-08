@@ -1,0 +1,100 @@
+{
+  "schema": "TSAO-EPDM-PHASE-A4-QUALIFICATION-1",
+  "phase": "EPDM_PHASE_A4_NUMERICAL_INTEGRATION",
+  "version": "0.1.0-alpha.15",
+  "status": "PASS",
+  "final_commit": "SELF",
+  "final_commit_binding": "CONTAINING_GIT_COMMIT_RESOLVED_BY_POST_COMMIT_REVERSE_AUDIT",
+  "qualified_candidate_commit": "11b4cf8707143ad1c38c4e8f559e85716efc8a48",
+  "qualified_candidate_tree": "560ed88624660af7cc6f2bb7ea35ce8e9a49dbd7",
+  "qualification_run_id": 30761004448,
+  "test_count": 355,
+  "branch_coverage": {
+    "full_repository_percent": 77,
+    "alpha15_numerical_integration_percent": 91,
+    "alpha15_target_percent": 90
+  },
+  "targeted_regressions": {
+    "status": "PASS",
+    "test_count": 147,
+    "scope": [
+      "EPDM_PHASE_A0_TO_A4",
+      "ALPHA12_ZERO_FALSE_PASS",
+      "ALPHA13_NUMERICAL_CORRECTNESS",
+      "ALPHA14_WHEEL_AND_A3_RHS",
+      "ALPHA15_WHEEL_AND_INTEGRATION",
+      "PROCESS_PACKAGE_FAIL_CLOSED_RUNTIME",
+      "PERFORMANCE_GOVERNANCE",
+      "REPOSITORY_AND_WHEEL_CONTRACTS"
+    ]
+  },
+  "full_software_qualification": "PASS",
+  "numerical_integrator": "ADAPTIVE_DORMAND_PRINCE_54",
+  "reference_integrator": "ALPHA14_REFERENCE_EULER_RETAINED",
+  "convergence_gate": "PASS",
+  "restart_parity": "PASS",
+  "nonnegative_state_gate": "PASS",
+  "finite_value_gate": "PASS_FAIL_CLOSED_DERIVED_SCALAR_AND_SEMIBATCH",
+  "time_monotonicity_gate": "PASS",
+  "dimension_consistency_gate": "PASS",
+  "conservation_gate": "PASS",
+  "external_flow_ledger_gate": "PASS",
+  "schema_gate": "PASS",
+  "source_snapshot_overlay_gate": "PASS",
+  "wheel_content": "PASS",
+  "isolated_runtime": {
+    "pip_target": "PASS",
+    "standard_venv_no_system_site_packages": "PASS"
+  },
+  "windows_qualification": {
+    "status": "PASS",
+    "python_3_11": "PASS",
+    "python_3_12": "PASS",
+    "python_3_13": "PASS",
+    "python_3_14": "PASS"
+  },
+  "linux_qualification": {
+    "status": "PASS",
+    "python_3_11": "PASS",
+    "python_3_14_extended": "PASS"
+  },
+  "performance_regression_gate": "PASS_ALPHA14_SAME_RUN_SAME_PYTHON",
+  "process_package_performance_hardening": "PASS",
+  "process_package_semantic_digest_policy": "PROCESS_PACKAGE_FAIL_CLOSED_SEMANTICS_V1",
+  "optimized_path_parent_benefit_gate": "PASS",
+  "qualification_boundary": "SOFTWARE_ADAPTIVE_INTEGRATION_ONLY",
+  "parameter_calibration": "NOT_EVALUATED",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "hse_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED",
+  "next_phase": "BETA1_SOFTWARE_ENTRY_REVIEW",
+  "numerical_integration_qualification_run_id": 30755394393,
+  "issue_57_numerical_hardening": {
+    "status": "PASS",
+    "issue_number": 57,
+    "patch_sha256": "d0b447922166230a957d91b8bf4e87c9b3b9c5d5983c22ec7e6d43dca6ad789c",
+    "qualification_run_id": 30761004448,
+    "focused_regression_test_count": 74,
+    "arrhenius_final_product_finite_gate": "PASS",
+    "rate_moment_architecture_finite_gate": "PASS",
+    "semibatch_derived_value_finite_gate": "PASS",
+    "small_exposure_expm1_scalar_batch_parity": "PASS",
+    "reference_result_digest_parity": "PASS",
+    "cross_platform": {
+      "windows_python_3_11": "PASS",
+      "windows_python_3_12": "PASS",
+      "windows_python_3_13": "PASS",
+      "windows_python_3_14": "PASS",
+      "linux_python_3_11": "PASS",
+      "linux_python_3_14_extended": "PASS"
+    },
+    "performance_regression_gate": "PASS_ALPHA15_SAME_RUN_SAME_PYTHON",
+    "qualified_candidate_source_snapshot_sha256": "58c33422a58226f01de9aec3efa333926e238165df7085b452c90e8c753c3867",
+    "qualified_candidate_wheel_sha256": "5b3cbb0566225e8179304d754b7d4d27cfcaeb728ee45e2d49b71a4d7d161efb",
+    "qualification_run_binding": "CODE_AND_PERFORMANCE_QUALIFICATION_BEFORE_METADATA_CLOSURE"
+  },
+  "metadata_closed_qualification_run": "SELF",
+  "metadata_closed_run_binding": "WORKFLOW_RUN_CONTAINING_THIS_EXACT_TREE_RESOLVED_BY_POST_RUN_REVERSE_AUDIT"
+}

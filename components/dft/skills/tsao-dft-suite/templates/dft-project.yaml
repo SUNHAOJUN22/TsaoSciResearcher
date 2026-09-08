@@ -1,0 +1,13 @@
+schema_version: "1.0"
+project_id: DFT-PROJECT
+scientific_question: unknown
+observable: unknown
+primary_domain: molecular
+skills:
+  - tsao-dft-suite
+  - tsao-structure-prep
+  - tsao-dft-researcher
+method_fingerprint: templates/method-fingerprint.yaml
+tasks: []
+approval_policy: explicit_before_production
+status: planning

@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0",
+  "release_version": "0.4.0-alpha.2",
+  "pep440_version": "0.4.0a2",
+  "release_date": "2026-07-31",
+  "source_branch": "main",
+  "pre_freeze_qualification": {
+    "commit": "3cb0925acd8605a897163e9a48f33c0a689c6454",
+    "ci_run": 30595469898,
+    "result": "PASS"
+  },
+  "release_snapshot": {
+    "commit": "d02abc442f017f839311f3d52e172eb1d015a259",
+    "ci_run": 30597772162,
+    "result": "PASS",
+    "description": "First complete alpha.2 source and release-document snapshot after mechanical version-assertion closure."
+  },
+  "evidence_freeze": {
+    "commit": null,
+    "commit_resolution": "Resolve to the Git commit that contains this evidence index.",
+    "ci_run": null,
+    "ci_run_resolution": "Resolve to the successful .github/workflows/ci.yml run whose head_sha equals the Git commit that contains this evidence index.",
+    "reason_for_resolution_fields": "A tracked file cannot contain its own future commit SHA or the future CI run created by that commit without creating a false or endlessly self-referential identifier."
+  },
+  "python_matrix": {
+    "3.10": "PASS",
+    "3.12": "PASS",
+    "3.13": "PASS"
+  },
+  "tests": {
+    "total": 325,
+    "suite_count": 9,
+    "failed_suites": 0,
+    "suites": {
+      "root": 99,
+      "tsao-dft-suite": 4,
+      "tsao-dft-researcher": 32,
+      "tsao-structure-prep": 5,
+      "tsao-periodic-dft-materials": 11,
+      "tsao-dft-ml-active-learning": 16,
+      "tsao-dft-hpc-provenance": 148,
+      "tsao-dft-kinetics-multiscale": 5,
+      "tsao-dft-catalysis-profile": 5
+    }
+  },
+  "coverage": {
+    "whole_repository": {
+      "statement_percent": 92.48,
+      "branch_percent": 80.18
+    },
+    "required_thresholds": {
+      "statement_percent": 90.0,
+      "branch_percent": 80.0,
+      "core_statement_percent": 100.0,
+      "core_branch_percent": 95.0
+    },
+    "measured_file_count": 133,
+    "failures": [],
+    "core_modules": {
+      "skills/tsao-dft-hpc-provenance/scripts/shell_contract.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 100.0,
+        "statements": 149,
+        "missing_statements": 0,
+        "branches": 62,
+        "missing_branches": 0
+      },
+      "skills/tsao-dft-hpc-provenance/scripts/trust_boundary.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 100.0,
+        "statements": 177,
+        "missing_statements": 0,
+        "branches": 72,
+        "missing_branches": 0
+      },
+      "skills/tsao-dft-hpc-provenance/scripts/engine_parser_contract.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 100.0,
+        "statements": 198,
+        "missing_statements": 0,
+        "branches": 70,
+        "missing_branches": 0
+      },
+      "skills/tsao-dft-hpc-provenance/scripts/benchmark_bridge.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 100.0,
+        "statements": 137,
+        "missing_statements": 0,
+        "branches": 50,
+        "missing_branches": 0
+      },
+      "skills/tsao-dft-hpc-provenance/scripts/generate_job_script.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 98.53,
+        "statements": 150,
+        "missing_statements": 0,
+        "branches": 68,
+        "missing_branches": 1
+      },
+      "skills/tsao-dft-hpc-provenance/scripts/validate_hpc_manifest.py": {
+        "statement_percent": 100.0,
+        "branch_percent": 98.57,
+        "statements": 235,
+        "missing_statements": 0,
+        "branches": 140,
+        "missing_branches": 2
+      }
+    }
+  },
+  "quality_gates": {
+    "ruff_lint": "PASS",
+    "ruff_format": "PASS",
+    "ordinary_mypy_18_targets": "PASS",
+    "trust_boundary_strict_mypy_4_targets": "PASS",
+    "statement_coverage": "PASS",
+    "branch_coverage": "PASS",
+    "bandit": "PASS",
+    "strict_repository_audit": "PASS",
+    "codeql_python_security_extended": "PASS",
+    "runtime_dependency_pip_audit": "PASS",
+    "development_dependency_pip_audit": "PASS",
+    "locked_environment_pip_audit": "PASS",
+    "cyclonedx_sbom": "PASS"
+  },
+  "workflow_artifacts": {
+    "coverage_python_3.10": {
+      "artifact_id": 8780799895,
+      "artifact_digest": "sha256:45bf986c68ae74145b33c22ad5b6cae2b4f6b56f8bcb68d4dec237f06df434a0"
+    },
+    "coverage_python_3.12": {
+      "artifact_id": 8780802268,
+      "artifact_digest": "sha256:88c0a160801b2b591d5f1dd881d3edf90e2ccf4af607860a036bcb53a834d09a",
+      "coverage_report_json_sha256": "d771ff5356f59c4d14ca272b365fa44a452680c284a06a05669dc1dd7eab6321"
+    },
+    "coverage_python_3.13": {
+      "artifact_id": 8780802881,
+      "artifact_digest": "sha256:88c0a160801b2b591d5f1dd881d3edf90e2ccf4af607860a036bcb53a834d09a"
+    },
+    "supply_chain": {
+      "artifact_id": 8780794965,
+      "artifact_digest": "sha256:99ae229e2cbf152b1fc3c0eec89d02f52e0219cc9493e5d8bcb5a141c5c76ecf"
+    }
+  },
+  "permanent_workflows": [
+    ".github/workflows/ci.yml"
+  ],
+  "public_capability_level": "L2_VALIDATED_ADAPTER",
+  "scoped_l3_boundary": "QUALIFIED_FOR_SCOPED_L3_PERFORMANCE_EVIDENCE is evidence-package eligibility only. It never changes the public capability registry automatically and is not equivalent to L3_EXECUTION_TESTED.",
+  "external_evidence_required_for_l3": [
+    "legal real-engine and target-site execution",
+    "exact engine version, executable and build fingerprint",
+    "scheduler, CPU/GPU, driver, runtime, compiler and MPI identity",
+    "content-addressed real inputs and outputs",
+    "accepted FP64 CPU reference and repeated candidate runs",
+    "numerical equivalence for declared observables before speedup",
+    "measured performance and resource-use records",
+    "verified artifact, bundle and evidence-root SHA-256",
+    "Ed25519-signed independent review bound to policy, plan, candidates and evidence root",
+    "separate explicit public capability registration"
+  ],
+  "repository_state_at_release_snapshot": {
+    "branch_count": 1,
+    "branches": [
+      "main"
+    ],
+    "open_pull_request_count": 0,
+    "tag_v0.4.0-alpha.2_exists": false
+  },
+  "external_engine_execution": false,
+  "tag_created": false,
+  "github_release_created": false,
+  "repository_internal_blocker_count": 0,
+  "version_consistency": {
+    "canonical_version": "0.4.0-alpha.2",
+    "canonical_pep440_version": "0.4.0a2",
+    "readme_current_version_field": "NOT_PRESENT",
+    "readme_en_current_version_field": "NOT_PRESENT",
+    "historical_changelog_versions_preserved": true,
+    "schema_policy_and_external_software_versions_preserved": true,
+    "files": [
+      {"path": "VERSION", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "pyproject.toml", "value": "0.4.0a2", "status": "PASS"},
+      {"path": ".codex-plugin/plugin.json", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "CITATION.cff", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "assets/ai/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "docs/CAPABILITY_STATUS.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "docs/SCIENTIFIC_CLAIM_POLICY.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "docs/dft_skill_catalog_index.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-suite/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-suite/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-suite/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-researcher/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-researcher/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-researcher/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-structure-prep/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-structure-prep/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-structure-prep/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-periodic-dft-materials/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-periodic-dft-materials/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-periodic-dft-materials/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-ml-active-learning/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-ml-active-learning/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-ml-active-learning/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-hpc-provenance/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-hpc-provenance/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-hpc-provenance/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-kinetics-multiscale/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-kinetics-multiscale/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-kinetics-multiscale/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-catalysis-profile/SKILL.md", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-catalysis-profile/catalog.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "skills/tsao-dft-catalysis-profile/manifest.yaml", "value": "0.4.0-alpha.2", "status": "PASS"},
+      {"path": "tests/test_ai_assets.py", "value": "0.4.0-alpha.2", "status": "PASS", "change_type": "mechanical exact-version assertion"},
+      {"path": "tests/test_repository.py", "value": "0.4.0-alpha.2", "status": "PASS", "change_type": "mechanical exact-version assertion"}
+    ]
+  },
+  "release_documents": {
+    "changelog": "CHANGELOG.md",
+    "release_notes": "docs/RELEASE_NOTES_0.4.0-alpha.2.md",
+    "test_report": "docs/TEST_REPORT.md",
+    "code_quality_audit": "docs/CODE_QUALITY_AUDIT.md",
+    "repository_full_audit": "docs/REPOSITORY_FULL_AUDIT.md",
+    "sha256_manifest": "docs/RELEASE_SHA256_0.4.0-alpha.2.txt"
+  }
+}

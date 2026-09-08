@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/skills/poe/schemas/kinetics_case.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id","unit_contract","initial_state","parameters","duration_s","step_s","parameter_sources","applicability_domain","approval"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "unit_contract": {"const": "concentration=mol/L; time=s; molar_mass=g/mol"},
+    "initial_state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["monomer_a","monomer_b","dormant_sites"],
+      "properties": {
+        "monomer_a": {"type": "number", "minimum": 0},
+        "monomer_b": {"type": "number", "minimum": 0},
+        "dormant_sites": {"type": "number", "minimum": 0},
+        "live_chains": {"type": "number", "minimum": 0},
+        "live_a_units": {"type": "number", "minimum": 0},
+        "live_b_units": {"type": "number", "minimum": 0},
+        "live_second_moment": {"type": "number", "minimum": 0},
+        "dead_chains": {"type": "number", "minimum": 0},
+        "dead_a_units": {"type": "number", "minimum": 0},
+        "dead_b_units": {"type": "number", "minimum": 0},
+        "dead_second_moment": {"type": "number", "minimum": 0}
+      }
+    },
+    "parameters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["k_init","k_prop_a","k_prop_b","k_transfer","k_deactivation"],
+      "properties": {
+        "k_init": {"type": "number", "minimum": 0},
+        "k_prop_a": {"type": "number", "minimum": 0},
+        "k_prop_b": {"type": "number", "minimum": 0},
+        "k_transfer": {"type": "number", "minimum": 0},
+        "k_deactivation": {"type": "number", "minimum": 0},
+        "molar_mass_a": {"type": "number", "exclusiveMinimum": 0},
+        "molar_mass_b": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "duration_s": {"type": "number", "minimum": 0},
+    "step_s": {"type": "number", "exclusiveMinimum": 0},
+    "parameter_sources": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "applicability_domain": {"type": "string", "minLength": 1},
+    "approval": {"const": "NOT_EVALUATED"}
+  }
+}

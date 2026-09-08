@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenDeepMind Eval Set",
+  "type": "object",
+  "required": ["skill_name", "benchmark_version", "evals"],
+  "properties": {
+    "skill_name": {"const": "open-deep-mind"},
+    "benchmark_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "evals": {
+      "type": "array",
+      "minItems": 60,
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "split", "prompt", "expected_output", "expected_route", "triz_allowed", "assertions", "red_blockers"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[RFPDTN][0-9]{2}$"},
+          "category": {"enum": ["routing", "first-philosophy", "first-principles", "dual-engine", "triz-positive", "triz-negative"]},
+          "split": {"enum": ["train", "validation", "holdout"]},
+          "prompt": {"type": "string", "minLength": 20},
+          "expected_output": {"type": "string", "minLength": 20},
+          "expected_route": {"enum": ["phi", "p", "phi-p", "triz"]},
+          "triz_allowed": {"type": "boolean"},
+          "assertions": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 8}},
+          "red_blockers": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 8}},
+          "tags": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,106 @@
+{
+  "analysis_id": "architecture-001",
+  "question": "Should a three-person team split a modular monolith into microservices now?",
+  "domain": "software-engineering",
+  "scale": "single-product system",
+  "purpose": "architecture decision",
+  "claims": [
+    {
+      "id": "D1",
+      "type": "D",
+      "claim": "Independent deployment means one component can be released without coordinating the release of unrelated components.",
+      "status": "verified",
+      "scope": "This architecture decision",
+      "source": "Working operational definition",
+      "dependencies": [],
+      "confidence": 1.0,
+      "falsifier": "A release still requires coordinated changes across unrelated components.",
+      "owner": "architecture-owner",
+      "review_date": "2027-01-01"
+    },
+    {
+      "id": "O1",
+      "type": "O",
+      "claim": "The delivery team has three developers.",
+      "status": "verified",
+      "scope": "Current staffing",
+      "source": "Team roster",
+      "dependencies": [],
+      "confidence": 0.99,
+      "falsifier": "The active delivery team materially increases.",
+      "owner": "engineering-manager",
+      "review_date": "2027-01-01"
+    },
+    {
+      "id": "C1",
+      "type": "C",
+      "claim": "Core transactions require strong consistency.",
+      "status": "supported",
+      "scope": "Order and payment boundary",
+      "source": "Product integrity requirement",
+      "dependencies": [],
+      "confidence": 0.9,
+      "falsifier": "Product owners accept explicitly bounded eventual consistency.",
+      "owner": "product-owner",
+      "review_date": "2027-01-01"
+    },
+    {
+      "id": "A1",
+      "type": "A",
+      "claim": "Microservices would improve delivery speed for the current team.",
+      "status": "contested",
+      "scope": "Current staffing and deployment frequency",
+      "source": "Architecture hypothesis",
+      "dependencies": [
+        "O1"
+      ],
+      "confidence": 0.35,
+      "falsifier": "A pilot shows coordination and operational overhead exceeds independent-release benefit.",
+      "owner": "architecture-owner",
+      "review_date": "2027-01-01"
+    },
+    {
+      "id": "V1",
+      "type": "V",
+      "claim": "Minimize operational burden while preserving future extraction options.",
+      "status": "verified",
+      "scope": "Architecture objective",
+      "source": "Stakeholder decision",
+      "dependencies": [],
+      "confidence": 1.0,
+      "falsifier": "Stakeholders formally change the objective.",
+      "owner": "engineering-manager",
+      "review_date": "2027-01-01"
+    }
+  ],
+  "inferences": [
+    {
+      "id": "I1",
+      "premises": [
+        "O1",
+        "C1",
+        "A1",
+        "V1"
+      ],
+      "rule": "abduction",
+      "conclusion": "A modular monolith is currently more consistent with the team-size, consistency, and operability foundations than a microservice split.",
+      "confidence": 0.78,
+      "defeaters": [
+        "Regulatory isolation is required",
+        "A component has sharply divergent scale or release cadence"
+      ]
+    }
+  ],
+  "decision": {
+    "recommendation": "Retain a modular monolith, strengthen module boundaries, and define quantitative extraction triggers.",
+    "foundation_trace": [
+      "O1",
+      "C1",
+      "A1",
+      "V1",
+      "I1"
+    ],
+    "uncertainty": "Future team growth and component scaling divergence may change the decision.",
+    "review_trigger": "Review when the team exceeds eight contributors or independent release contention becomes a measured bottleneck."
+  }
+}

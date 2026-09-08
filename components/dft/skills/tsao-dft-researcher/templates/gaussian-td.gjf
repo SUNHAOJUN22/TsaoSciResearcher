@@ -1,0 +1,10 @@
+%chk={{JOB_NAME}}.chk
+%mem={{MEMORY}}
+%nprocshared={{NPROC}}
+#p {{METHOD}}/{{BASIS}} TD=(NStates={{NSTATES}},Root={{ROOT}}) {{JOB_TYPE}} {{EXTRA_KEYWORDS}}
+
+{{TITLE}} — track state character, not root number alone
+
+{{CHARGE}} {{MULTIPLICITY}}
+{{COORDINATES}}
+

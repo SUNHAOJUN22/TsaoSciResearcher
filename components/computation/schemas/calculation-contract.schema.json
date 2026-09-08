@@ -1,0 +1,89 @@
+{
+  "$id": "https://example.org/tsao/calculation-contract.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Backward-compatible calculation contract. Fields listed in x-preflight-required must be populated before solver preflight.",
+  "properties": {
+    "acceptance_criteria": {"type": "object"},
+    "assumptions": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "boundary_conditions": {"type": "object"},
+    "compute_resources": {
+      "additionalProperties": true,
+      "description": "Backward-compatible resource envelope. Structured acceleration fields are recommended when hardware-aware planning is requested.",
+      "properties": {
+        "accelerator_count": {"minimum": 1, "type": ["integer", "null"]},
+        "accelerator_policy": {"enum": ["disabled", "preferred", "required"]},
+        "allow_fallback": {"type": "boolean"},
+        "cpu_cores": {"minimum": 1, "type": ["integer", "null"]},
+        "deterministic": {"type": "boolean"},
+        "maximum_energy_kwh": {"exclusiveMinimum": 0, "type": ["number", "null"]},
+        "maximum_wall_seconds": {"exclusiveMinimum": 0, "type": ["number", "null"]},
+        "memory_gib": {"exclusiveMinimum": 0, "type": ["number", "null"]},
+        "minimum_vram_gib": {"exclusiveMinimum": 0, "type": ["number", "null"]},
+        "mpi_ranks": {"minimum": 1, "type": ["integer", "null"]},
+        "placement": {"enum": ["edge", "local", "workstation", "hpc", "cloud"]},
+        "power_limit_watts": {"exclusiveMinimum": 0, "type": ["number", "null"]},
+        "precision": {"enum": ["fp64", "fp32", "mixed", "bf16", "fp16"]},
+        "preferred_backends": {
+          "items": {
+            "enum": [
+              "cpu",
+              "openmp",
+              "mpi",
+              "task-parallel",
+              "remote",
+              "cuda",
+              "hip",
+              "sycl",
+              "opencl",
+              "kokkos"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "threads_per_rank": {"minimum": 1, "type": ["integer", "null"]}
+      },
+      "type": "object"
+    },
+    "conditions": {"type": "object"},
+    "convergence_plan": {"type": "object"},
+    "expected_artifacts": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "human_approval_nodes": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "initial_conditions": {"type": "object"},
+    "methods": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "model_object": {"type": "object"},
+    "parameter_sources": {"items": {"type": "object"}, "type": "array"},
+    "question": {"minLength": 1, "type": "string"},
+    "scales": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "schema_version": {"type": "string"},
+    "system": {"minProperties": 1, "type": "object"},
+    "target_observables": {
+      "items": {"minLength": 1, "type": "string"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "uncertainty_sources": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "validation_plan": {"type": "object"},
+    "workflow": {"type": ["string", "null"]}
+  },
+  "required": ["question", "system", "conditions", "target_observables"],
+  "type": "object",
+  "x-preflight-required": [
+    "model_object",
+    "scales",
+    "methods",
+    "assumptions",
+    "boundary_conditions",
+    "initial_conditions",
+    "parameter_sources",
+    "convergence_plan",
+    "validation_plan",
+    "uncertainty_sources",
+    "compute_resources",
+    "expected_artifacts",
+    "human_approval_nodes",
+    "acceptance_criteria"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Computational fluid dynamics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Species-transport model within the Computational fluid dynamics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "false convergence",
+    "poor mesh",
+    "inappropriate turbulence or phase model"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-105",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "flow_domain",
+    "fluid_properties",
+    "boundary_conditions",
+    "mesh",
+    "physical_models",
+    "numerical_schemes"
+  ],
+  "maturity": "A4",
+  "name_cn": "组分传递",
+  "name_en": "Species-transport model",
+  "outputs": [
+    "flow_fields",
+    "integral_quantities",
+    "residual_history",
+    "mass_energy_balance"
+  ],
+  "recommended_adapters": [
+    "openfoam",
+    "su2"
+  ],
+  "required_evidence": [
+    "mesh statistics",
+    "case files",
+    "solver logs",
+    "monitor histories"
+  ],
+  "risk_level": "medium",
+  "slug": "species-transport",
+  "triggers": [
+    "cfd",
+    "flow",
+    "multiphase",
+    "openfoam",
+    "species",
+    "su2",
+    "transport",
+    "turbulence"
+  ],
+  "validators": [
+    "mesh-quality",
+    "mass-balance",
+    "residual-and-monitor",
+    "mesh-convergence",
+    "model-applicability"
+  ],
+  "workflow": "cfd"
+}

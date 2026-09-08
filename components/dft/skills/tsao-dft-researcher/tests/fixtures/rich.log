@@ -1,0 +1,46 @@
+ Entering Gaussian System, Link 0=g16
+ Gaussian 16, Revision C.01
+ %chk=rich.chk
+ #p UB3LYP/6-31G(d) Opt Freq Stable=Opt SCRF=(SMD,Solvent=Water) EmpiricalDispersion=GD3BJ Int=UltraFine TD(NStates=2)
+
+ Rich synthetic fixture
+
+ Charge = 0 Multiplicity = 2
+ SCF Done:  E(UB3LYP) =  -75.123456789     A.U. after   10 cycles
+ Optimization completed.
+         Item               Value     Threshold  Converged?
+ Maximum Force            0.000010     0.000450     YES
+ RMS     Force            0.000005     0.000300     YES
+ Maximum Displacement     0.000100     0.001800     YES
+ RMS     Displacement     0.000050     0.001200     YES
+ Standard orientation:
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          6           0        0.000000    0.000000    0.000000
+      2          8           0        1.200000    0.000000    0.000000
+      3          1           0       -0.500000    0.900000    0.000000
+ ---------------------------------------------------------------------
+ Frequencies --     35.0000   120.0000   500.0000
+ Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
+ Zero-point correction=                           0.010000
+ Thermal correction to Energy=                    0.011000
+ Thermal correction to Enthalpy=                  0.011944
+ Thermal correction to Gibbs Free Energy=         0.005000
+ Sum of electronic and thermal Free Energies=   -75.118456789
+ S**2 before annihilation     0.7600, after     0.7510
+ The wavefunction is stable under the perturbations considered.
+ Alpha  occ. eigenvalues --  -20.00000  -1.00000  -0.25000
+ Alpha virt. eigenvalues --    0.05000   0.12000
+ Beta  occ. eigenvalues --   -19.90000  -0.90000
+ Beta virt. eigenvalues --     0.04000   0.13000
+ Dipole moment (field-independent basis, Debye):
+     X=     0.1000    Y=    -0.2000    Z=     0.3000  Tot=     0.3742
+    1  C    Isotropic =    120.5000   Anisotropy =     10.0000
+    2  O    Isotropic =    250.0000   Anisotropy =     20.0000
+ Excited State   1:      Doublet-A      3.0000 eV  413.28 nm  f=0.1000
+      3A -> 4A        0.70000
+ Excited State   2:      Doublet-A      4.0000 eV  309.96 nm  f=0.0200
+      2B -> 4B        0.50000
+ Normal termination of Gaussian 16

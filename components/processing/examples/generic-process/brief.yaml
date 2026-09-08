@@ -1,0 +1,25 @@
+project_id: TSAO-DEMO-001
+title: Generic catalytic process development
+summary: >
+  Develop a continuous catalytic conversion process from laboratory evidence
+  through pilot design and an auditable industrial technology-package basis.
+product_requirements:
+  purity: TBD
+  capacity: TBD
+  operating_factor: TBD
+constraints:
+  - no inherited parameter may be used as a production setpoint without validation
+  - all real technical approvals start as NOT_EVALUATED
+known_hazards:
+  - exothermic reaction
+  - pressure
+  - flammable inventory
+required_outputs:
+  - evidence ledger
+  - route comparison
+  - kinetic and thermodynamic basis
+  - laboratory and pilot protocols
+  - industrial flowsheet basis
+  - control and safety handoff
+  - TEA LCA and IP handoff
+  - acceptance matrix

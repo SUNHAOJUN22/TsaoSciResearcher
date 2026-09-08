@@ -1,0 +1,19 @@
+schema_version: "1.0"
+project_id: PDT001
+engine: quantum-espresso
+engine_version: unknown
+task_type: relax
+structure_id: CRYS001
+method_fingerprint:
+  xc: unknown
+  dispersion: none
+  pseudopotential_family: unknown
+  cutoff_policy: unknown
+  kpoint_policy: unknown
+  smearing: unknown
+  spin_policy: unknown
+  hubbard_u: {}
+convergence:
+  electronic: unknown
+  ionic_force: unknown
+status: planned

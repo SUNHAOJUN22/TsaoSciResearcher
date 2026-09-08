@@ -1,0 +1,47 @@
+{
+  "adapter_certification_scheme": "A0-A5",
+  "adapter_certifications": {
+    "A2": 1,
+    "A3": 12,
+    "A4": 14
+  },
+  "benchmark": "PASS",
+  "branch": "main",
+  "branch_coverage_percent": 93.47826086956522,
+  "compatibility_policy": "VALIDATED",
+  "confidence_schema_validated": true,
+  "controlled_mutants": "64/64",
+  "critical_coverage_policy": "PASS",
+  "cyclonedx_sbom": true,
+  "dependency_audit": "PASS",
+  "dependency_vulnerabilities": 0,
+  "engineering_decision_level": "C5_EXPLICIT_ONLY",
+  "live_solver_adapters": 0,
+  "platform_settings_gaps": [
+    "private_vulnerability_reporting_requires_repository_admin_enablement"
+  ],
+  "private_vulnerability_reporting": false,
+  "python_310_core": "PASS",
+  "python_313_all": "PASS",
+  "release_manifest_and_checksums": true,
+  "remote_branches": [
+    "main"
+  ],
+  "repository_ruleset_desired_state_documented": true,
+  "schema_version": "1.0",
+  "scientific_confidence_model": "C0-C5_FAIL_CLOSED",
+  "scientific_reference_benchmarks": "8/8",
+  "security_findings": 0,
+  "sigstore_release_attestation_required": true,
+  "skill_install_validate_uninstall": true,
+  "source_archives_reproducible": true,
+  "spdx_sbom": true,
+  "statement_coverage_percent": 97.270245677889,
+  "status": "VALIDATED",
+  "temporary_branch_created": false,
+  "tests_failed": 0,
+  "tests_passed": 553,
+  "verified_at_utc": "2026-07-24T17:56:08.576493+00:00",
+  "version": "3.0.2",
+  "wheel_reproducible_and_isolated_install": true
+}

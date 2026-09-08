@@ -1,0 +1,22 @@
+handoff_version: "1.0"
+project_id: DEMO
+handoff_id: H001
+source_skill: tsao-structure-prep
+target_skill: tsao-dft-researcher
+source_task_id: T001
+target_task_id: T002
+scientific_objective: Optimize a validated molecular candidate
+observable: solution Gibbs free energy
+model_identity: mol-A-conformer-01
+structure_artifacts:
+  - {id: structure-1, sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, status: accepted}
+accepted_parent_artifacts:
+  - {id: review-1, sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, status: accepted}
+method_fingerprint_id: MF001
+support_level: L2_VALIDATED_ADAPTER
+open_assumptions: []
+blocking_unknowns: []
+requested_outputs: [optimized_geometry, frequency_log, fchk]
+success_criteria: [normal termination, zero imaginary frequencies, retained molecular identity]
+resource_estimate: {jobs: 1, cpu_hours: 24, gpu_hours: 0, storage_gb: 4}
+approval_status: approved

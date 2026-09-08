@@ -1,0 +1,58 @@
+{
+  "schema_version": "2.0",
+  "slug": "computation-handoff",
+  "purpose": "从可观测量、守恒律、量子/统计物理、热力学、连续介质和尺度分析形成计算策略，并在批准后生成外部计算合同与结果审查框架",
+  "entry_criteria": [
+    "scientific question and decision-critical observable recorded",
+    "system conditions, constraints and available evidence classified"
+  ],
+  "inputs": [
+    "scientific question, observables and acceptance tolerance",
+    "system identity, composition, geometry and operating conditions",
+    "available evidence and competing mechanisms",
+    "resource, licence, privacy and time constraints"
+  ],
+  "artifacts": [
+    "validated first-principles computation strategy",
+    "ranked minimum-sufficient-to-escalation method ladder",
+    "convergence, falsification, uncertainty and physical-validation plan",
+    "optional checksum-bound external handoff",
+    "external result-review record"
+  ],
+  "phases": [
+    "define observable and decision context",
+    "identify degrees of freedom, state variables, conserved quantities and symmetries",
+    "select thermodynamic potential, statistical ensemble and equilibrium regime",
+    "analyse length, time and energy scales plus dimensionless groups",
+    "derive the lowest-sufficient method and justified escalation ladder",
+    "specify convergence, validation, falsification and uncertainty propagation",
+    "obtain qualified review before external execution",
+    "separate returned receipts from checked, validated and accepted conclusions"
+  ],
+  "decisions": [
+    "first-principles reasoning does not imply DFT for every problem",
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "observable undefined",
+    "scale or ensemble ambiguity",
+    "method chosen without governing-physics rationale",
+    "validation, falsification or uncertainty absent",
+    "advisory plan represented as completed execution"
+  ],
+  "recovery": [
+    "request missing observable, conditions and evidence",
+    "return to the lowest sufficient model",
+    "compare competing mechanisms and add discriminating evidence",
+    "preserve partial artifacts and resume from the last valid state"
+  ],
+  "validators": [
+    "schema",
+    "physics-frame",
+    "execution-boundary",
+    "evidence",
+    "artifact"
+  ]
+}

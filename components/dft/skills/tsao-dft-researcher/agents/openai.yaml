@@ -1,0 +1,4 @@
+interface:
+  display_name: "TsaoDFT Researcher"
+  short_description: "Auditable DFT research, wavefunction analysis, and publication figures"
+  default_prompt: "Use $tsao-dft-researcher to turn my scientific question and molecular files into an auditable Gaussian/Multiwfn/VMD workflow. Preserve provenance, validate every state, and do not execute expensive jobs without explicit approval."

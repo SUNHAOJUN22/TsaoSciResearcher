@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">CUDA-X library decision map for TsaoDFT</title>
+  <desc id="desc">Synthetic decision map relating measured workload classes to CUDA-X libraries and invalid interpretations. Not scientific data.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07130d"/><stop offset="1" stop-color="#10251a"/></linearGradient>
+    <linearGradient id="nv" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#76b900"/><stop offset="1" stop-color="#b8f34a"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#000" flood-opacity=".35"/></filter>
+  </defs>
+  <rect width="1120" height="520" rx="28" fill="url(#bg)"/>
+  <circle cx="1000" cy="70" r="120" fill="#76b900" opacity=".08"/>
+  <text x="54" y="62" fill="#f8fafc" font-size="28" font-family="Inter,Segoe UI,sans-serif" font-weight="700">CUDA-X decision map</text>
+  <text x="54" y="90" fill="#a7f3d0" font-size="15" font-family="Inter,Segoe UI,sans-serif">Choose a library only after the workload hotspot and data path are measured.</text>
+
+  <g font-family="Inter,Segoe UI,sans-serif" filter="url(#shadow)">
+    <rect x="54" y="126" width="1012" height="52" rx="14" fill="#122d1d" stroke="#76b900"/>
+    <text x="84" y="158" fill="#ecfccb" font-size="15" font-weight="700">Measured workload</text>
+    <text x="360" y="158" fill="#ecfccb" font-size="15" font-weight="700">Candidate library</text>
+    <text x="648" y="158" fill="#ecfccb" font-size="15" font-weight="700">Valid boundary</text>
+    <text x="930" y="158" fill="#fecaca" font-size="15" font-weight="700">Never infer</text>
+
+    <g>
+      <rect x="54" y="190" width="1012" height="54" rx="12" fill="#0d2217" stroke="#254c33"/>
+      <text x="84" y="222" fill="#d1fae5" font-size="14">dense BLAS / eigensolve</text>
+      <text x="360" y="222" fill="#bef264" font-size="14" font-weight="700">cuBLAS · cuSOLVER</text>
+      <text x="648" y="213" fill="#bbf7d0" font-size="13">large repeated matrices</text>
+      <text x="648" y="230" fill="#86efac" font-size="12">including transfer overhead</text>
+      <text x="930" y="222" fill="#fca5a5" font-size="12">“Python is slow”</text>
+    </g>
+    <g>
+      <rect x="54" y="252" width="1012" height="54" rx="12" fill="#10291c" stroke="#254c33"/>
+      <text x="84" y="284" fill="#d1fae5" font-size="14">plane-wave FFT</text>
+      <text x="360" y="284" fill="#bef264" font-size="14" font-weight="700">cuFFT · cuFFTMp</text>
+      <text x="648" y="275" fill="#bbf7d0" font-size="13">engine-supported build</text>
+      <text x="648" y="292" fill="#86efac" font-size="12">or explicit custom FFT kernel</text>
+      <text x="930" y="284" fill="#fca5a5" font-size="12">wrapper-level speedup</text>
+    </g>
+    <g>
+      <rect x="54" y="314" width="1012" height="54" rx="12" fill="#0d2217" stroke="#254c33"/>
+      <text x="84" y="346" fill="#d1fae5" font-size="14">sparse linear algebra</text>
+      <text x="360" y="346" fill="#bef264" font-size="14" font-weight="700">cuSPARSE</text>
+      <text x="648" y="337" fill="#bbf7d0" font-size="13">profiled sparse matrices</text>
+      <text x="648" y="354" fill="#86efac" font-size="12">stable sparsity and format</text>
+      <text x="930" y="346" fill="#fca5a5" font-size="12">small dense CSV benefit</text>
+    </g>
+    <g>
+      <rect x="54" y="376" width="1012" height="54" rx="12" fill="#10291c" stroke="#254c33"/>
+      <text x="84" y="408" fill="#d1fae5" font-size="14">high-order contractions</text>
+      <text x="360" y="408" fill="#bef264" font-size="14" font-weight="700">cuTENSOR</text>
+      <text x="648" y="399" fill="#bbf7d0" font-size="13">explicit tensor hotspot</text>
+      <text x="648" y="416" fill="#86efac" font-size="12">known layout and precision</text>
+      <text x="930" y="408" fill="#fca5a5" font-size="12">drop-in DFT switch</text>
+    </g>
+    <g>
+      <rect x="54" y="438" width="1012" height="54" rx="12" fill="#0d2217" stroke="#254c33"/>
+      <text x="84" y="470" fill="#d1fae5" font-size="14">equivariant atomistic ML</text>
+      <text x="360" y="470" fill="#bef264" font-size="14" font-weight="700">cuEquivariance</text>
+      <text x="648" y="461" fill="#bbf7d0" font-size="13">MACE · NequIP · e3nn</text>
+      <text x="648" y="478" fill="#86efac" font-size="12">validated model + OOD gate</text>
+      <text x="930" y="470" fill="#fca5a5" font-size="12">Kohn–Sham accelerator</text>
+    </g>
+  </g>
+  <rect x="870" y="28" width="196" height="42" rx="20" fill="url(#nv)"/>
+  <text x="968" y="55" text-anchor="middle" fill="#10210a" font-size="15" font-family="Inter,Segoe UI,sans-serif" font-weight="800">PROFILE → PROVE → ADOPT</text>
+  <text x="1090" y="508" text-anchor="end" fill="#fbbf24" font-size="11" font-family="Inter,Segoe UI,sans-serif">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+</svg>

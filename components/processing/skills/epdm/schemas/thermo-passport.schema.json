@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/thermo-passport.schema.json",
+  "title": "EPDM V2 thermodynamic passport",
+  "type": "object",
+  "required": [
+    "thermo_passport_id",
+    "method_id",
+    "method_family",
+    "parameter_set_id",
+    "fitted_components",
+    "temperature_range_K",
+    "pressure_range_Pa",
+    "evidence_ids",
+    "validation_dataset_ids",
+    "backend_type"
+  ],
+  "properties": {
+    "thermo_passport_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "method_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "method_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameter_set_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "fitted_components": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "temperature_range_K": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "pressure_range_Pa": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "validation_dataset_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      }
+    },
+    "backend_type": {
+      "enum": [
+        "REFERENCE_IDEAL",
+        "TABULATED",
+        "EXTERNAL_SIMULATOR"
+      ]
+    },
+    "simulator_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "backend_type": {
+            "const": "EXTERNAL_SIMULATOR"
+          }
+        },
+        "required": [
+          "backend_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "simulator_version"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

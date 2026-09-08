@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-24",
+  "dataKind": "resin-references",
+  "sourceType": "standards-directory",
+  "recordStatus": "reference",
+  "data": [
+    {
+      "id": "ref-iso-1133",
+      "name": "ISO 1133: Determination of the melt mass-flow rate (MFR)",
+      "author": "ISO",
+      "year": "2011"
+    },
+    {
+      "id": "ref-iso-1183",
+      "name": "ISO 1183: Methods for determining the density of non-cellular plastics",
+      "author": "ISO",
+      "year": "2019"
+    },
+    {
+      "id": "ref-iso-527",
+      "name": "ISO 527: Determination of tensile properties",
+      "author": "ISO",
+      "year": "2012"
+    },
+    {
+      "id": "ref-iso-178",
+      "name": "ISO 178: Determination of flexural properties",
+      "author": "ISO",
+      "year": "2019"
+    },
+    {
+      "id": "ref-iso-179",
+      "name": "ISO 179: Determination of Charpy impact properties",
+      "author": "ISO",
+      "year": "2010"
+    },
+    {
+      "id": "ref-iso-180",
+      "name": "ISO 180: Determination of Izod impact strength",
+      "author": "ISO",
+      "year": "2019"
+    },
+    {
+      "id": "ref-iso-75",
+      "name": "ISO 75: Determination of temperature of deflection under load",
+      "author": "ISO",
+      "year": "2013"
+    },
+    {
+      "id": "ref-iso-306",
+      "name": "ISO 306: Thermoplastic materials — Vicat softening temperature",
+      "author": "ISO",
+      "year": "2013"
+    },
+    {
+      "id": "ref-astm-d1238",
+      "name": "ASTM D1238: Melt Flow Rates of Thermoplastics",
+      "author": "ASTM",
+      "year": "2023"
+    },
+    {
+      "id": "ref-astm-d792",
+      "name": "ASTM D792: Specific Gravity and Density of Plastics",
+      "author": "ASTM",
+      "year": "2020"
+    }
+  ]
+}

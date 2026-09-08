@@ -1,0 +1,170 @@
+{
+  "category_counts": {
+    "external-solver-dispatch": 2,
+    "filesystem-scan": 2
+  },
+  "claim_boundary": "Static source evidence only. A candidate does not establish that code is a material hotspot, that an accelerator is available, or that performance, numerical equivalence, convergence, physical validity, applicability, energy use, or deployment safety will improve.",
+  "file_scope_counts": {
+    "benchmark": 9,
+    "production": 67,
+    "test": 74,
+    "tooling": 39
+  },
+  "language_files": {
+    "c": 1,
+    "cpp": 2,
+    "python": 186
+  },
+  "language_lines": {
+    "c": 70,
+    "cpp": 197,
+    "python": 25042
+  },
+  "opportunities": [
+    {
+      "backend_candidates": [
+        "cpu",
+        "openmp",
+        "mpi",
+        "cuda",
+        "hip",
+        "sycl"
+      ],
+      "blockers": [
+        "license or scheduler limits",
+        "oversubscription",
+        "unsupported solver backend"
+      ],
+      "candidate_id": "24702217705bf05936a531c20798e02acc39133152fcd0aa1325799e273733e9",
+      "category": "external-solver-dispatch",
+      "claim_boundary": "Static source evidence only. A candidate does not establish that code is a material hotspot, that an accelerator is available, or that performance, numerical equivalence, convergence, physical validity, applicability, energy use, or deployment safety will improve.",
+      "confidence": "high",
+      "current_pattern": "external command or solver dispatch",
+      "decision": "profile",
+      "evidence_requirements": [
+        "solver build features",
+        "command provenance",
+        "same-input end-to-end timing"
+      ],
+      "file_scope": "production",
+      "first_action": "batch independent cases and prefer the solver's native MPI/GPU backend before custom kernels",
+      "library_candidates": [
+        "mpi",
+        "nccl"
+      ],
+      "line": 83,
+      "path": "tsao_computation/provenance/manifest.py",
+      "runtime_status": "unprofiled",
+      "score": 68,
+      "source_sha256": "84dc93ba433ac5fbcee07a1a810d2873375d7d7d71b131de6505ceac8f3aecd4",
+      "symbol": "iter_tracked_entries"
+    },
+    {
+      "backend_candidates": [
+        "cpu",
+        "openmp",
+        "mpi",
+        "cuda",
+        "hip",
+        "sycl"
+      ],
+      "blockers": [
+        "license or scheduler limits",
+        "oversubscription",
+        "unsupported solver backend"
+      ],
+      "candidate_id": "fb464600a79bb0c2e65440717aa20f1465a15c142f8974a89f3f6aedccc83436",
+      "category": "external-solver-dispatch",
+      "claim_boundary": "Static source evidence only. A candidate does not establish that code is a material hotspot, that an accelerator is available, or that performance, numerical equivalence, convergence, physical validity, applicability, energy use, or deployment safety will improve.",
+      "confidence": "high",
+      "current_pattern": "external command or solver dispatch",
+      "decision": "profile",
+      "evidence_requirements": [
+        "solver build features",
+        "command provenance",
+        "same-input end-to-end timing"
+      ],
+      "file_scope": "production",
+      "first_action": "batch independent cases and prefer the solver's native MPI/GPU backend before custom kernels",
+      "library_candidates": [
+        "mpi",
+        "nccl"
+      ],
+      "line": 163,
+      "path": "tsao_computation/security/process.py",
+      "runtime_status": "unprofiled",
+      "score": 68,
+      "source_sha256": "b03d2796105f25355c88d056888639e54e98baeab8481b9588a90587ff844ecc",
+      "symbol": "_run_prepared"
+    },
+    {
+      "backend_candidates": [
+        "cpu"
+      ],
+      "blockers": [
+        "cold-cache variability",
+        "network filesystem",
+        "stale cache"
+      ],
+      "candidate_id": "044297b50313a3221c148b977483eda3bd25780168d57ed74c1f12fe2d4dc6fa",
+      "category": "filesystem-scan",
+      "claim_boundary": "Static source evidence only. A candidate does not establish that code is a material hotspot, that an accelerator is available, or that performance, numerical equivalence, convergence, physical validity, applicability, energy use, or deployment safety will improve.",
+      "confidence": "medium",
+      "current_pattern": "repository or dataset filesystem walk",
+      "decision": "profile",
+      "evidence_requirements": [
+        "I/O trace",
+        "filesystem-pass count",
+        "same-host latency and peak-memory baseline"
+      ],
+      "file_scope": "production",
+      "first_action": "reduce repeated passes, cache stable metadata, and stream results; GPU migration is usually unsuitable",
+      "library_candidates": [],
+      "line": 451,
+      "path": "tsao_computation/accelerators/audit.py",
+      "runtime_status": "unprofiled",
+      "score": 47,
+      "source_sha256": "f736d90fcb6fd9df44a1ee0adb4e08c8584939bc29138fcb60a27d6b1b69ef40",
+      "symbol": "audit_repository_acceleration"
+    },
+    {
+      "backend_candidates": [
+        "cpu"
+      ],
+      "blockers": [
+        "cold-cache variability",
+        "network filesystem",
+        "stale cache"
+      ],
+      "candidate_id": "0249bad00d7f1b2c0e2e068532b795e1b7220f192823c761a674be9cdbf9324c",
+      "category": "filesystem-scan",
+      "claim_boundary": "Static source evidence only. A candidate does not establish that code is a material hotspot, that an accelerator is available, or that performance, numerical equivalence, convergence, physical validity, applicability, energy use, or deployment safety will improve.",
+      "confidence": "medium",
+      "current_pattern": "repository or dataset filesystem walk",
+      "decision": "profile",
+      "evidence_requirements": [
+        "I/O trace",
+        "filesystem-pass count",
+        "same-host latency and peak-memory baseline"
+      ],
+      "file_scope": "production",
+      "first_action": "reduce repeated passes, cache stable metadata, and stream results; GPU migration is usually unsuitable",
+      "library_candidates": [],
+      "line": 301,
+      "path": "tsao_computation/repository_audit.py",
+      "runtime_status": "unprofiled",
+      "score": 47,
+      "source_sha256": "86079947348ede467a4cca7a431eeedfc9b8f730bf0592d6a8dcccbdd9c2208c",
+      "symbol": "audit_repository"
+    }
+  ],
+  "opportunity_count": 4,
+  "parse_failures": [],
+  "python_files_analyzed": 65,
+  "python_files_excluded": 121,
+  "root": ".",
+  "scope": "production",
+  "source_files": 189,
+  "source_lines": 25309,
+  "source_tree_sha256": "c327de13842f015c30d9bd7377894c2986235294deafa9aea454bc0ca158e3ed"
+}

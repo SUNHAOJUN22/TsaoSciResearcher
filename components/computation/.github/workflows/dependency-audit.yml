@@ -1,0 +1,45 @@
+name: Dependency audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 4 * * 2'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-audit-main
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.13'
+          cache: pip
+      - name: Install the declared audit environment
+        run: python -m pip install -e '.[validation,quality,security]'
+      - name: Record the resolved environment
+        run: |
+          mkdir -p reports
+          python -m pip freeze --all > reports/DEPENDENCY_SNAPSHOT.txt
+      - name: Audit known Python-package vulnerabilities
+        run: >-
+          python -m pip_audit --local --skip-editable --progress-spinner=off
+          --format=json --output reports/DEPENDENCY_AUDIT.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: ${{ always() }}
+        with:
+          name: dependency-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/DEPENDENCY_AUDIT.json
+            reports/DEPENDENCY_SNAPSHOT.txt
+          if-no-files-found: warn
+          retention-days: 30

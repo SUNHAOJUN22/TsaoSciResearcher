@@ -1,0 +1,12 @@
+%chk=water.chk
+%mem=4GB
+%nprocshared=4
+#p B3LYP/6-31G(d) Opt Freq Int=UltraFine
+
+water
+
+0 1
+O 0.000000 0.000000 0.000000
+H 0.758602 0.000000 0.504284
+H -0.758602 0.000000 0.504284
+

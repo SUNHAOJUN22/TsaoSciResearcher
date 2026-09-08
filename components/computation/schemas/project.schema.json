@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "required": [
+    "schema_version",
+    "name",
+    "question",
+    "state"
+  ],
+  "type": "object"
+}

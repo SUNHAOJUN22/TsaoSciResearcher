@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/skills/poe/schemas/property_method.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "method",
+    "selection_basis",
+    "components",
+    "parameter_sources",
+    "temperature_K",
+    "pressure_Pa",
+    "composition_domain",
+    "polymer_mass_fraction",
+    "benchmarks",
+    "error_metrics",
+    "unit_system",
+    "extrapolation_status"
+  ],
+  "properties": {
+    "method": {
+      "enum": [
+        "PC-SAFT",
+        "SRK",
+        "REFPROP",
+        "STEAMNBS",
+        "CUSTOM"
+      ]
+    },
+    "selection_basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "parameter_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "temperature_K": {
+      "$ref": "#/$defs/range"
+    },
+    "pressure_Pa": {
+      "$ref": "#/$defs/range"
+    },
+    "composition_domain": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/range"
+      }
+    },
+    "polymer_mass_fraction": {
+      "$ref": "#/$defs/range"
+    },
+    "benchmarks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "property",
+          "source",
+          "points"
+        ],
+        "properties": {
+          "property": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "points": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "error_metrics": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "unit_system": {
+      "const": "SI"
+    },
+    "extrapolation_status": {
+      "enum": [
+        "NONE",
+        "DECLARED_HOLD"
+      ]
+    },
+    "custom_equations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "range": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}

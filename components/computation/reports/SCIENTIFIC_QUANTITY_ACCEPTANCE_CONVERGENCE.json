@@ -1,0 +1,9 @@
+{
+  "bare_boolean_acceptance": "REJECTED",
+  "dimensioned_quantity_required": true,
+  "external_execution": "NOT_VERIFIED",
+  "external_signature_verifier": "REQUIRED",
+  "package": "tsao_computation",
+  "patched_contracts": [],
+  "schema_version": "1.0"
+}

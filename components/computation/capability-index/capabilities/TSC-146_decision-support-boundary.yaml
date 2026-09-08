@@ -1,0 +1,55 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Digital twins and estimation",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Decision-support safety boundary within the Digital twins and estimation workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "data drift",
+    "feedback leakage",
+    "out-of-domain use"
+  ],
+  "human_approval_required": true,
+  "id": "TSC-146",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "twin_scope",
+    "measurement_map",
+    "estimator",
+    "update_policy",
+    "applicability_domain"
+  ],
+  "maturity": "A4",
+  "name_cn": "决策支持边界",
+  "name_en": "Decision-support safety boundary",
+  "outputs": [
+    "estimated_state",
+    "soft_sensor",
+    "drift_signal",
+    "decision_boundary"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "data manifest",
+    "model version",
+    "validation set",
+    "drift history"
+  ],
+  "risk_level": "high",
+  "slug": "decision-support-boundary",
+  "triggers": [
+    "decision",
+    "digital twin",
+    "estimation",
+    "online",
+    "soft sensor",
+    "support"
+  ],
+  "validators": [
+    "data-lineage",
+    "holdout-validation",
+    "drift",
+    "applicability-domain",
+    "human-approval"
+  ],
+  "workflow": "digital-twin"
+}

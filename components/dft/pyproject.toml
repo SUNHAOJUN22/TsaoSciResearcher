@@ -1,0 +1,47 @@
+[project]
+name = "tsao-dft-skill"
+version = "0.4.0a2"
+description = "Auditable molecular and periodic DFT, scientific visualization, ML, HPC and multiscale Agent Skills"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0,<7",
+  "cryptography>=50,<51",
+  "defusedxml>=0.7.1,<0.8",
+  "jsonschema[format]>=4.26,<5",
+  "matplotlib>=3.8,<4",
+  "numpy>=1.24,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "bandit==1.9.4",
+  "coverage==7.15.2",
+  "hypothesis==6.160.0",
+  "mypy==2.3.0",
+  "pip-audit==2.10.1",
+  "pytest==9.0.3",
+  "ruff==0.15.22",
+  "types-PyYAML==6.0.12.20260518",
+  "tomli>=2,<3; python_version < '3.11'",
+]
+
+[tool.tsao-dft]
+packaging-model = "repository-skill-suite"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+extend-exclude = [
+  ".git",
+  ".venv",
+  "build",
+  "dist",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+"skills/*/tests/**/*.py" = ["S101"]

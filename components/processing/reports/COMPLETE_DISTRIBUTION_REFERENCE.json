@@ -1,0 +1,10 @@
+{
+  "format": "TSAO-COMPLETE-DISTRIBUTION-REFERENCE-2",
+  "version": "0.1.0-alpha.15",
+  "qualification": "NOT_EVALUATED",
+  "reason": "The controlled complete distribution has not been rebuilt and independently qualified for alpha.15. The public source core and open Wheel are verified separately.",
+  "historical_reference": "reports/history/COMPLETE_DISTRIBUTION_REFERENCE_ALPHA6.json",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

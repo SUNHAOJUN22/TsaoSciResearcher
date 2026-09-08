@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Multiscale Bridge Error Budget</title>
+  <desc id="desc">Conceptual diagram of source-scale, mapping, closure and target-scale validation uncertainties in a guarded multiscale handoff.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbff"/><stop offset="1" stop-color="#edf3fa"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1f4f7a"/><stop offset="1" stop-color="#4f7ca6"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0b2239" flood-opacity="0.14"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#315e86"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="80" y="90" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="46" font-weight="700" fill="#163a5b">Multiscale Bridge Error Budget</text>
+  <text x="80" y="132" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" fill="#536b82">No direct micro-to-industry jump without measurable bridge variables and acceptance tests</text>
+  <rect x="185" y="190" width="1230" height="120" rx="28" fill="#ffffff" stroke="#c7d7e7" stroke-width="2" filter="url(#shadow)"/>
+  <text x="800" y="245" text-anchor="middle" font-family="Cambria Math,STIX Two Math,serif" font-size="34" fill="#183f61">U_bridge² = U_source² + U_mapping² + U_closure² + U_target²</text>
+  <text x="800" y="288" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" fill="#536b82">Each term must be declared, bounded, or assigned to a validation action</text>
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,Arial,sans-serif">
+    <rect x="80" y="405" width="300" height="205" rx="28" fill="#ffffff" stroke="#7ca0bf" stroke-width="3"/><text x="230" y="458" text-anchor="middle" font-size="27" font-weight="700" fill="#214d73">Source Scale</text><text x="115" y="510" font-size="20" fill="#536b82">• electronic / molecular</text><text x="115" y="548" font-size="20" fill="#536b82">• convergence / sampling</text><text x="115" y="586" font-size="20" fill="#536b82">• U_source</text>
+    <rect x="455" y="405" width="300" height="205" rx="28" fill="#ffffff" stroke="#7ca0bf" stroke-width="3"/><text x="605" y="458" text-anchor="middle" font-size="27" font-weight="700" fill="#214d73">Mapping</text><text x="490" y="510" font-size="20" fill="#536b82">• coarse graining</text><text x="490" y="548" font-size="20" fill="#536b82">• bridge observable</text><text x="490" y="586" font-size="20" fill="#536b82">• U_mapping</text>
+    <rect x="830" y="405" width="300" height="205" rx="28" fill="#ffffff" stroke="#7ca0bf" stroke-width="3"/><text x="980" y="458" text-anchor="middle" font-size="27" font-weight="700" fill="#214d73">Closure</text><text x="865" y="510" font-size="20" fill="#536b82">• constitutive model</text><text x="865" y="548" font-size="20" fill="#536b82">• reduced dynamics</text><text x="865" y="586" font-size="20" fill="#536b82">• U_closure</text>
+    <rect x="1205" y="405" width="300" height="205" rx="28" fill="#ffffff" stroke="#7ca0bf" stroke-width="3"/><text x="1355" y="458" text-anchor="middle" font-size="27" font-weight="700" fill="#214d73">Target Scale</text><text x="1240" y="510" font-size="20" fill="#536b82">• process / device</text><text x="1240" y="548" font-size="20" fill="#536b82">• independent validation</text><text x="1240" y="586" font-size="20" fill="#536b82">• U_target</text>
+  </g>
+  <g stroke="#315e86" stroke-width="5" marker-end="url(#arrow)"><line x1="390" y1="507" x2="442" y2="507"/><line x1="765" y1="507" x2="817" y2="507"/><line x1="1140" y1="507" x2="1192" y2="507"/></g>
+  <rect x="445" y="690" width="710" height="100" rx="28" fill="url(#accent)" filter="url(#shadow)"/>
+  <text x="800" y="730" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28" font-weight="700" fill="#ffffff">Guarded bridge: measurable variable + uncertainty + acceptance test</text><text x="800" y="765" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20" fill="#e8f3fc">TsaoSciResearcher records the contract; external tools execute the models</text>
+  <text x="80" y="858" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20" fill="#61758a">AI-generated conceptual illustration for documentation only · 非实验或仿真结果</text>
+</svg>

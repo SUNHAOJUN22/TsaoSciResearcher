@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "truth_boundary": "Quality metrics measure software test strength and engineering reproducibility; they do not establish scientific truth.",
+  "entries": [
+    {
+      "release": "0.5.3",
+      "evidence_scope": "current-tree",
+      "evidence_date": "2026-07-24",
+      "source_commit": "9b5b22194f0ae283d22966ade25168d7a0eedb3f",
+      "workflow_run_id": 30029705214,
+      "workflow_attempt": 1,
+      "status": "PASS_WITHOUT_COVERAGE_BASELINE",
+      "coverage": null,
+      "mutation": {
+        "killed": 15,
+        "total": 15,
+        "survivors": 0
+      },
+      "tests": null,
+      "performance": {
+        "status": "PASS"
+      }
+    },
+    {
+      "release": "0.6.0",
+      "evidence_scope": "local-preflight",
+      "evidence_date": "2026-07-24",
+      "source_commit": null,
+      "workflow_run_id": null,
+      "workflow_attempt": null,
+      "status": "PARTIAL",
+      "coverage": {
+        "line_percent": 83.789,
+        "branch_percent": 70.714
+      },
+      "mutation": {
+        "status": "NOT_RUN"
+      },
+      "tests": {
+        "tests": 148,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "performance": {
+        "status": "PASS"
+      }
+    }
+  ]
+}

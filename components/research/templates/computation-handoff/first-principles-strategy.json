@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "strategy_id": "FPS-8f260ee03b20d2aa",
+  "status": "advisory-only",
+  "question": "How do trap states and morphology control space charge, conductivity, and electrical breakdown?",
+  "observables": [
+    "space charge",
+    "conductivity",
+    "breakdown strength"
+  ],
+  "conditions": [
+    "applied electric field",
+    "elevated temperature"
+  ],
+  "constraints": [
+    "advisory plan only; no solver execution"
+  ],
+  "available_evidence": [
+    "thermally stimulated current",
+    "PEA charge profile",
+    "breakdown Weibull data"
+  ],
+  "classification": {
+    "primary_regime": "charge-transport-dielectric",
+    "primary_name_zh": "电荷输运、介电响应与击穿",
+    "primary_name_en": "Charge transport, dielectric response, and breakdown",
+    "selected_regimes": [
+      "charge-transport-dielectric"
+    ],
+    "scores": {
+      "charge-transport-dielectric": 23
+    },
+    "clarification_required": false,
+    "clarification_questions": []
+  },
+  "first_principles_frame": {
+    "degrees_of_freedom": [
+      "electronic/trap states",
+      "carrier populations",
+      "polarisation",
+      "electric and thermal fields"
+    ],
+    "governing_principles": [
+      "charge conservation",
+      "Poisson equation",
+      "detailed balance for hopping",
+      "electrothermal energy balance"
+    ],
+    "conserved_quantities": [
+      "total charge including electrodes/reservoirs",
+      "energy in coupled electrothermal models"
+    ],
+    "symmetries_and_constraints": [
+      "electrode geometry",
+      "electrostatic boundary conditions",
+      "charge neutrality or injection law"
+    ],
+    "state_variables": [
+      "carrier density",
+      "trap occupancy",
+      "potential",
+      "polarisation",
+      "temperature",
+      "microstructure descriptors"
+    ],
+    "thermodynamic_potential": [
+      "electrochemical potential",
+      "free-energy landscape for carriers and polarisation"
+    ],
+    "statistical_ensemble": [
+      "open carrier reservoirs with driven non-equilibrium transport"
+    ],
+    "equilibrium_status": "non-equilibrium under applied field; local equilibrium assumptions require justification",
+    "length_scales": [
+      "electronic localisation",
+      "trap spacing and morphology",
+      "insulation thickness"
+    ],
+    "time_scales": [
+      "electronic transition",
+      "hopping/trapping",
+      "polarisation relaxation",
+      "space-charge and thermal evolution"
+    ],
+    "dimensionless_or_scale_tests": [
+      "localisation length versus trap spacing",
+      "carrier transit versus trapping time",
+      "electrical versus thermal runaway time"
+    ],
+    "reduction_assumptions": [
+      "selected trap/transport states form an adequate coarse-grained network",
+      "field and temperature coupling is represented"
+    ]
+  },
+  "method_ladder": [
+    {
+      "rank": 1,
+      "role": "minimum-sufficient",
+      "family": "electronic and electrostatic state analysis",
+      "representative_methods": [
+        "electronic-structure defect/interface analysis",
+        "electrostatic barrier and image-force analysis"
+      ],
+      "target_observables": [
+        "trap energetics",
+        "injection barriers",
+        "localisation",
+        "dielectric response origins"
+      ],
+      "rationale": "Start from states and electrochemical driving forces when microscopic trapping or injection controls the observable.",
+      "assumptions": [
+        "representative chemistry and morphology are available"
+      ],
+      "required_inputs": [
+        "local structures/interfaces",
+        "charge states",
+        "electrode model",
+        "dielectric environment"
+      ],
+      "validation": [
+        "spectroscopy",
+        "thermally stimulated measurements",
+        "functional/supercell sensitivity"
+      ],
+      "falsification": [
+        "calculated state hierarchy cannot explain temperature/field trends"
+      ],
+      "uncertainty": [
+        "structural ensemble",
+        "electronic method",
+        "interface model"
+      ],
+      "escalate_if": [
+        "mesoscopic carrier statistics and field redistribution dominate"
+      ]
+    },
+    {
+      "rank": 2,
+      "role": "escalation",
+      "family": "mesoscopic carrier transport",
+      "representative_methods": [
+        "master-equation or hopping model",
+        "kinetic Monte Carlo",
+        "multiple-trapping model",
+        "drift-diffusion-Poisson"
+      ],
+      "target_observables": [
+        "mobility",
+        "space charge",
+        "current",
+        "trap occupancy",
+        "transients"
+      ],
+      "rationale": "Propagate microscopic states into observable transport while enforcing charge conservation and field self-consistency.",
+      "assumptions": [
+        "transport states and transition rates are sufficient",
+        "injection and recombination laws are specified"
+      ],
+      "required_inputs": [
+        "state distribution",
+        "rate model",
+        "electrode conditions",
+        "geometry",
+        "temperature and field history"
+      ],
+      "validation": [
+        "current-voltage-temperature trends",
+        "transient charge profiles",
+        "limiting laws",
+        "independent mobility data"
+      ],
+      "falsification": [
+        "one parameter set cannot reproduce both steady and transient observables"
+      ],
+      "uncertainty": [
+        "state density",
+        "rates",
+        "injection",
+        "morphology",
+        "finite size"
+      ],
+      "escalate_if": [
+        "collective polarisation, morphology evolution, or thermal feedback becomes controlling"
+      ]
+    },
+    {
+      "rank": 3,
+      "role": "escalation",
+      "family": "coupled electrothermal and failure strategy",
+      "representative_methods": [
+        "electrothermal drift-diffusion",
+        "phase-field/electrical-tree model",
+        "stochastic weakest-link or defect-network model"
+      ],
+      "target_observables": [
+        "runaway",
+        "field localisation",
+        "breakdown probability and path"
+      ],
+      "rationale": "Add failure physics only after charge, heat, and defect couplings are independently constrained.",
+      "assumptions": [
+        "failure criterion and defect statistics are evidence-based"
+      ],
+      "required_inputs": [
+        "thermal/electrical properties",
+        "defect statistics",
+        "boundary conditions",
+        "failure observations"
+      ],
+      "validation": [
+        "energy and charge balance",
+        "thickness/temperature scaling",
+        "hold-out breakdown data"
+      ],
+      "falsification": [
+        "model fits only through unconstrained defect or threshold parameters"
+      ],
+      "uncertainty": [
+        "defect population",
+        "failure criterion",
+        "electrothermal coupling"
+      ],
+      "escalate_if": [
+        "failure remains dominated by unknown manufacturing defects requiring new measurement"
+      ]
+    }
+  ],
+  "cross_scale_plan": {
+    "required": false,
+    "secondary_regimes": [],
+    "bridge_variables": [],
+    "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist."
+  },
+  "validation_plan": [
+    "test conservation laws, symmetries, units, and limiting cases",
+    "demonstrate numerical and model convergence appropriate to the method",
+    "validate against independent experiment, benchmark, or higher/lower-fidelity model",
+    "compare at least one plausible competing mechanism",
+    "spectroscopy",
+    "thermally stimulated measurements",
+    "current-voltage-temperature trends",
+    "transient charge profiles"
+  ],
+  "uncertainty_plan": [
+    "separate parameter, numerical, sampling, boundary-condition, and model-form uncertainty",
+    "propagate uncertainty to the declared observable and decision threshold",
+    "report extrapolation beyond the calibration and validation domain",
+    "structural ensemble",
+    "electronic method",
+    "state density",
+    "rates"
+  ],
+  "decision_rules": [
+    "start with the lowest-fidelity method that can predict the declared observable and be falsified",
+    "escalate resolution only when a failed validation identifies a missing degree of freedom or scale",
+    "do not treat agreement with one dataset as mechanism proof",
+    "retain negative, null, and contradictory results in the evidence record",
+    "do not convert a planned strategy into a completed, checked, validated, or accepted result without execution evidence"
+  ],
+  "human_review": [
+    "qualified domain review of governing physics, assumptions, and method hierarchy before external execution",
+    "approval of computational cost, data egress, software licence, safety, and acceptance criteria where applicable"
+  ],
+  "execution_boundary": {
+    "solver_executed": false,
+    "external_execution_required": true,
+    "statement": "TsaoSciResearcher generated an advisory strategy only; no DFT, MD, FEM, CFD, process simulation, or other solver was run.",
+    "next_step": "Convert an approved strategy into a checksum-bound external handoff, then review returned receipts and results separately."
+  }
+}

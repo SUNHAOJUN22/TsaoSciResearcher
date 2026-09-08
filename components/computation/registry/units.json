@@ -1,0 +1,76 @@
+{
+  "amount": {
+    "accepted": [
+      "mol",
+      "mmol",
+      "kmol"
+    ],
+    "canonical": "mol"
+  },
+  "dimensionless": {
+    "accepted": [
+      "1",
+      "fraction",
+      "percent"
+    ],
+    "canonical": "1"
+  },
+  "energy": {
+    "accepted": [
+      "J/mol",
+      "kJ/mol",
+      "eV",
+      "hartree"
+    ],
+    "canonical": "J/mol"
+  },
+  "length": {
+    "accepted": [
+      "m",
+      "cm",
+      "mm",
+      "um",
+      "nm",
+      "angstrom"
+    ],
+    "canonical": "m"
+  },
+  "mass": {
+    "accepted": [
+      "kg",
+      "g",
+      "mg"
+    ],
+    "canonical": "kg"
+  },
+  "pressure": {
+    "accepted": [
+      "Pa",
+      "kPa",
+      "MPa",
+      "bar",
+      "atm"
+    ],
+    "canonical": "Pa"
+  },
+  "temperature": {
+    "accepted": [
+      "K",
+      "degC"
+    ],
+    "canonical": "K"
+  },
+  "time": {
+    "accepted": [
+      "s",
+      "ms",
+      "us",
+      "ns",
+      "ps",
+      "fs",
+      "min",
+      "h"
+    ],
+    "canonical": "s"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/process-package.schema.json",
+  "title": "Universal TSAO process package",
+  "type": "object",
+  "required": [
+    "package_id",
+    "process_family",
+    "design_basis",
+    "streams",
+    "equipment",
+    "evidence_ledger",
+    "acceptance",
+    "approvals"
+  ],
+  "properties": {
+    "package_id": {"type": "string", "minLength": 1},
+    "process_family": {"type": "string", "minLength": 1},
+    "status": {"enum": ["NOT_EVALUATED", "HOLD", "CONDITIONAL", "PASS", "FAIL"]},
+    "design_basis": {
+      "type": "object",
+      "required": ["basis_version", "capacity_kg_h", "operating_hours_h_y", "components"],
+      "properties": {
+        "basis_version": {"type": "string", "minLength": 1},
+        "capacity_kg_h": {"type": "number", "exclusiveMinimum": 0},
+        "operating_hours_h_y": {"type": "number", "exclusiveMinimum": 0},
+        "components": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": true
+    },
+    "streams": {"type": "array", "items": {"type": "object", "required": ["stream_id", "source", "destination", "total_mass_kg_h", "enthalpy_kW", "composition"], "additionalProperties": true}},
+    "equipment": {"type": "array", "items": {"type": "object", "required": ["equipment_id", "inlet_stream_ids", "outlet_stream_ids"], "additionalProperties": true}},
+    "utilities": {"type": "array", "items": {"type": "object"}},
+    "controls": {"type": "array", "items": {"type": "object"}},
+    "hse": {"type": "array", "items": {"type": "object"}},
+    "evidence_ledger": {"type": "array", "items": {"type": "object"}},
+    "acceptance": {"type": "array", "items": {"type": "object"}},
+    "approvals": {"type": "object"}
+  },
+  "additionalProperties": true
+}

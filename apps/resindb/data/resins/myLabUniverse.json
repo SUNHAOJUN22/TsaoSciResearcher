@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-25",
+  "dataKind": "laboratory-material-records",
+  "sourceType": "laboratory-demo",
+  "recordStatus": "demo",
+  "data": [
+    {
+      "id": "LAB-HDPE-5000S-EXP1",
+      "source": "my_lab",
+      "batchNo": "BATCH-20260520-X1",
+      "category": "HDPE",
+      "grade": "5000S-改性自测样料1号",
+      "manufacturer": "高端材料自测实验室",
+      "description": "实验二组改性自测样品，添加了2%纳米成核剂，在190℃下测试弯曲和熔体状态偏差。",
+      "properties": {
+        "density": {
+          "value": 0.958,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 1.15,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "190℃",
+          "load": "2.16kg"
+        },
+        "tensileYield": {
+          "value": 26.5,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 1350.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 6.8,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    },
+    {
+      "id": "LAB-PP-7042-EXP2",
+      "source": "my_lab",
+      "batchNo": "BATCH-20260520-Y2",
+      "category": "PP",
+      "grade": "PP-抗冲改性自测试样",
+      "manufacturer": "高分子物性研发中心",
+      "description": "通过弹性体改性提高简支梁高冲击抗性研究样，在230℃下熔融参数测定。",
+      "properties": {
+        "density": {
+          "value": 0.902,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 8.4,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "230℃",
+          "load": "2.16kg"
+        },
+        "tensileYield": {
+          "value": 21.3,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 1100.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 24.5,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    }
+  ]
+}

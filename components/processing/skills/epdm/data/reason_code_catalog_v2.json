@@ -1,0 +1,95 @@
+{
+  "schema": "TSAO-EPDM-V2-REASON-CODES-1",
+  "items": [
+    {
+      "code": "NONE",
+      "phase": "A1",
+      "description": "No blocking reason; normally used with PASS."
+    },
+    {
+      "code": "MISSING_EVIDENCE",
+      "phase": "A1",
+      "description": "Required evidence is absent or unresolved."
+    },
+    {
+      "code": "INVALID_UNIT_BASIS",
+      "phase": "A1",
+      "description": "A value uses an unsupported or dimensionally incompatible unit."
+    },
+    {
+      "code": "BLOCKED_BY_THERMODYNAMICS",
+      "phase": "A1",
+      "description": "Thermodynamic prerequisites are incomplete."
+    },
+    {
+      "code": "EXTRAPOLATION",
+      "phase": "A1",
+      "description": "The case is outside the declared applicability domain."
+    },
+    {
+      "code": "NONIDENTIFIABLE",
+      "phase": "A1",
+      "description": "Parameters are not identifiable."
+    },
+    {
+      "code": "NONCONVERGED",
+      "phase": "A1",
+      "description": "A declared numerical or network solve did not converge."
+    },
+    {
+      "code": "NUMERICAL_CONSERVATION",
+      "phase": "A1",
+      "description": "A conservation or positivity invariant failed."
+    },
+    {
+      "code": "UNSUPPORTED_TOPOLOGY",
+      "phase": "A1",
+      "description": "A diene, segment, or reaction topology is unsupported."
+    },
+    {
+      "code": "DATA_LEAKAGE",
+      "phase": "A1",
+      "description": "Calibration and validation records overlap."
+    },
+    {
+      "code": "APPROVAL_MISSING",
+      "phase": "A1",
+      "description": "A required approval record is absent."
+    },
+    {
+      "code": "OUT_OF_TRAINING_DOMAIN",
+      "phase": "A1",
+      "description": "A hybrid model input is outside its training domain."
+    },
+    {
+      "code": "SEMANTIC_REFERENCE_UNRESOLVED",
+      "phase": "A1",
+      "description": "A cross-object ID cannot be resolved."
+    },
+    {
+      "code": "SOLVER_CAPABILITY_MISMATCH",
+      "phase": "A1",
+      "description": "Requested solver capability is unavailable."
+    },
+    {
+      "code": "EVENT_LOCALIZATION_UNSUPPORTED",
+      "phase": "A1",
+      "description": "Integrator cannot localize required events."
+    },
+    {
+      "code": "MODEL_SELECTION_INCONCLUSIVE",
+      "phase": "A1",
+      "description": "No effective model order meets the criterion."
+    },
+    {
+      "code": "ILLEGAL_PARAMETER_BINDING",
+      "phase": "A1",
+      "description": "A local parameter binding is not enabled."
+    },
+    {
+      "code": "MIXED_STATE_BASIS",
+      "phase": "A1",
+      "description": "One case mixes incompatible state bases."
+    }
+  ]
+}

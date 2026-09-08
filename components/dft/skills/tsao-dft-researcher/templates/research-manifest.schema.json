@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/schemas/research-manifest.schema.json",
+  "title": "TsaoDFT Research Manifest",
+  "type": "object",
+  "required": ["schema_version", "project_id", "research_question", "calculations", "artifacts", "claims"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "project_id": {"type": "string", "minLength": 1},
+    "research_question": {"type": "string", "minLength": 1},
+    "model_scope": {"type": "string"},
+    "calculations": {"type": "array", "items": {"type": "object"}},
+    "artifacts": {"type": "array", "items": {"type": "object"}},
+    "claims": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}

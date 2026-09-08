@@ -1,0 +1,15 @@
+# Canonical repository text is always checked out with LF so byte-level
+# manifests and reproducible source archives remain identical on every OS.
+* text=auto eol=lf
+
+# Binary artifacts must never undergo text normalization.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.whl binary

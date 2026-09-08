@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciResearcher/schemas/capability.schema.json",
+  "title": "TsaoSciResearcher capability record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id","slug","name_zh","name_en","category_zh","description_zh","workflow","triggers","inputs","outputs","recommended_tools","risk_level","human_approval_required","tsao_sci_computation_handoff","references"],
+  "properties": {
+    "id": {"type":"string","pattern":"^S[0-9]{4}$"},
+    "slug": {"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "name_zh": {"type":"string","minLength":1},
+    "name_en": {"type":"string","minLength":1},
+    "category_zh": {"type":"string","minLength":1},
+    "description_zh": {"type":"string","minLength":1},
+    "workflow": {"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "triggers": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string"}},
+    "inputs": {"type":"array","uniqueItems":true,"items":{"type":"string"}},
+    "outputs": {"type":"array","uniqueItems":true,"items":{"type":"string"}},
+    "recommended_tools": {"type":"array","uniqueItems":true,"items":{"type":"string"}},
+    "risk_level": {"enum":["low","medium","high","critical"]},
+    "human_approval_required": {"type":"boolean"},
+    "tsao_sci_computation_handoff": {"enum":["none","optional","required"]},
+    "references": {"type":"array","uniqueItems":true,"items":{"type":"string"}}
+  }
+}

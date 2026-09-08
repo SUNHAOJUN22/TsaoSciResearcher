@@ -1,0 +1,14 @@
+schema_version: "1.0"
+dataset_id: DEMO-DFT
+path: dataset.csv
+columns:
+  sample_id: sample_id
+  parent_id: parent_id
+  target: target
+  method_fingerprint: method_fingerprint
+  fidelity: fidelity
+  split: split
+independent_sample_unit: parent_structure
+mixed_method_policy: null
+mixed_fidelity_policy: null
+status: reviewed

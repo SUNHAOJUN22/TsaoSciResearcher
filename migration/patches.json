@@ -1,0 +1,85 @@
+{
+  "schema_version": "tsao.patches/1",
+  "changes": [
+    {
+      "target_path": "components/research/tsao_researcher/scientific_quality.py",
+      "source_sha256": "877f25e5ac623dd497560035f67f03d627447c831e02d2362d3e39c87a5d9fd2",
+      "target_sha256": "26a659fd5ab54e66b8f811e4408bed81c79c89d75933a3e738831590bde93ce3"
+    },
+    {
+      "target_path": "components/computation/tsao_computation/execution_boundary.py",
+      "source_sha256": "d9ccae63c3723afc7cafebf8e0d556656b5f0fd15cfba9c4cc1db2d1759865fa",
+      "target_sha256": "03f976ca6a94207bc171d7ab79501227dd7fb5cca9d5dd167338422e95a7e698"
+    },
+    {
+      "target_path": "components/aspen/src/aspenops_nexus/convergence.py",
+      "source_sha256": "a3f8536c85193a5e33bada55fc8dad6cd611aeebcfdc5162b6e0ccc9151e6fd0",
+      "target_sha256": "5e104b9d3e8810dd6d64e423425cdec776db51d84d1c8ef7c12356b442202af5"
+    },
+    {
+      "target_path": "components/dft/docs/RELEASE_ACCEPTANCE.md",
+      "source_sha256": "c5dd9b8f959387ef8bf0682f928c91281569b94244e24a494a2fb97e301b9bc2",
+      "target_sha256": "6af48f40850a3525b6583388923b46b94ca1d81da2dba308b6e856b096d3eefa"
+    },
+    {
+      "target_path": "components/dft/schemas/release-acceptance.schema.json",
+      "source_sha256": "2e4e85a047e0e4de1c86075e69af48b91bd0afa7eb793a2a53ac612a99dba2d0",
+      "target_sha256": "644505c9837c536f548156bcfaeeedf1fc78d59b367e653575285234213bcaa0"
+    },
+    {
+      "target_path": "components/dft/scripts/build_release_acceptance.py",
+      "source_sha256": "50b79a08c8339673f2abdcb0fa8301515143eb3244c7853cb7068e8481b240c5",
+      "target_sha256": "d67cb983fa609fc600b0a19528b6d82dca4a3b86a0c733dc220b4b16b3082ba4"
+    },
+    {
+      "target_path": "components/dft/scripts/quality_gate.py",
+      "source_sha256": "35fb1ac7fbd78eb36340be4b4ad9c2866563fdb3061613d4ede52bd508657916",
+      "target_sha256": "cec491ecfe9ec1a28964f3b3c668c0034abeeb43dbae84e4688d827011cbbcc2"
+    },
+    {
+      "target_path": "components/dft/skills/tsao-dft-hpc-provenance/scripts/engine_parser_contract.py",
+      "source_sha256": "640e6a40e1da4960316c86e9779ea278b0e7673d4815fb1359ce2e91af50d5b7",
+      "target_sha256": "67c18c35a9e14d90f6efb17256eb25ce6e78224c40222e7cab031af7cfaa15ea"
+    },
+    {
+      "target_path": "components/dft/skills/tsao-structure-prep/scripts/neighbor_list.py",
+      "source_sha256": "523f76dc9bc02187dbd09f9619c81d0a51e1607df320ab56a7f1005ecd0dd195",
+      "target_sha256": "383e5ec26b3eef5025b8847ebb6dbb459ba8f60949053608a326db7776d7bdad"
+    },
+    {
+      "target_path": "components/processing/skills/poe/estimation.py",
+      "source_sha256": "3b57a7e177abe0fb9f853598455d98a8b00f1b1e5f0c1419386e57b962a28115",
+      "target_sha256": "95b0b72a73ea2527705d8cdcbb40a88ef78171ca6b7a831f5fdd791698b11dd2"
+    },
+    {
+      "target_path": "apps/resindb/package.json",
+      "source_sha256": "76851924e2e7def5d480223f625f43b47edc8106a2620d8d1350edba4448e7de",
+      "target_sha256": "e5bb5132ff9878bdef02346f2afb417ac73e6eb5a4a8c133be87c6aa8b8a017e"
+    },
+    {
+      "target_path": "apps/resindb/src/components/App.tsx",
+      "source_sha256": "892673005dd36dfd34da96e4f6c8b22bde0cdd2f676797382c2a10f9712a62e9",
+      "target_sha256": "1e0b90f0f2521ce88122c2ebb271418c4a6f33b8c87fec339aa7bb36c460a6ef"
+    },
+    {
+      "target_path": "apps/resindb/src/services/aiGovernance.ts",
+      "source_sha256": "30f8299a24714d52e8aa778c54d092c2db677ba9b652c2a0157313744ecfa48d",
+      "target_sha256": "93a3c99512bc210e875ec65d73136ca326825f6c3b6a0fdfaa326d6a64d16414"
+    },
+    {
+      "target_path": "apps/resindb/tests/unit/aiGovernance.test.ts",
+      "source_sha256": "fae20223162554abc5ceb1f9a4722112d92a9f6fd11c1c9be9cc60b6ef289b03",
+      "target_sha256": "4da34259a164c507c3643362aa04cd28e8031fdf516085ef1e37f29544a5cd51"
+    },
+    {
+      "target_path": "apps/resindb/vite.config.ts",
+      "source_sha256": "b54f78e14a6f31084429d953cc63e1bc918334a7c5e21b85a6cf6c7191f27b80",
+      "target_sha256": "d5dee39315ccde6e28549802d68fccbb78110335fed26be51c41dc6c7539ef9c"
+    },
+    {
+      "target_path": "skills/reasoning/open-deep-mind/scripts/validate_ledger.py",
+      "source_sha256": "47ffdbf7c12f1944ec74f71f48b771a2e1afd8aaad4e8fc03760dfc31a093078",
+      "target_sha256": "ec3ed757763ee1dd2a96b6cc113dbf964feaad3897a6dabf9d09064a46d70bdf"
+    }
+  ]
+}

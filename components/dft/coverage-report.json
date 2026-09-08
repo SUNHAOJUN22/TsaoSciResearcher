@@ -1,0 +1,8093 @@
+{
+  "ok": true,
+  "runner": "pytest-importlib",
+  "total": {
+    "statement": 92.73,
+    "branch": 82.01
+  },
+  "thresholds": {
+    "total_statement": 90.0,
+    "total_branch": 80.0,
+    "core_statement": 100.0,
+    "core_branch": 95.0
+  },
+  "trust_core": {
+    "skills/tsao-dft-hpc-provenance/scripts/shell_contract.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 149,
+      "missing_statements": 0,
+      "branches": 62,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/trust_boundary.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 177,
+      "missing_statements": 0,
+      "branches": 72,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_parser_contract.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 237,
+      "missing_statements": 0,
+      "branches": 72,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/benchmark_bridge.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 137,
+      "missing_statements": 0,
+      "branches": 50,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/generate_job_script.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 244,
+      "missing_statements": 0,
+      "branches": 104,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/validate_hpc_manifest.py": {
+      "statement": 100.0,
+      "branch": 99.29,
+      "statements": 235,
+      "missing_statements": 0,
+      "branches": 140,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "229": [
+          231
+        ]
+      }
+    }
+  },
+  "per_file": {
+    "scripts/apply_skill_native_v15_fix2.py": {
+      "statement": 0.0,
+      "branch": 0.0,
+      "statements": 18,
+      "missing_statements": 18,
+      "branches": 10,
+      "missing_branches": 10,
+      "missing_lines": [
+        1,
+        3,
+        4,
+        6,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        26,
+        27,
+        28,
+        30
+      ],
+      "missing_branch_arcs": {
+        "8": [
+          9,
+          13
+        ],
+        "10": [
+          8,
+          11
+        ],
+        "13": [
+          14,
+          30
+        ],
+        "15": [
+          16,
+          17
+        ],
+        "26": [
+          27,
+          28
+        ]
+      }
+    },
+    "scripts/apply_v4_ci_hardening.py": {
+      "statement": 0.0,
+      "branch": 0.0,
+      "statements": 34,
+      "missing_statements": 34,
+      "branches": 8,
+      "missing_branches": 8,
+      "missing_lines": [
+        4,
+        6,
+        7,
+        9,
+        12,
+        13,
+        20,
+        21,
+        22,
+        25,
+        26,
+        27,
+        28,
+        40,
+        45,
+        51,
+        65,
+        71,
+        108,
+        114,
+        123,
+        124,
+        125,
+        127,
+        128,
+        129,
+        165,
+        171,
+        202,
+        208,
+        210,
+        211,
+        214,
+        215
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21,
+          22
+        ],
+        "114": [
+          123,
+          125
+        ],
+        "123": [
+          114,
+          124
+        ],
+        "214": [
+          -1,
+          215
+        ]
+      }
+    },
+    "scripts/audit_compute_architecture.py": {
+      "statement": 98.17,
+      "branch": 95.71,
+      "statements": 218,
+      "missing_statements": 4,
+      "branches": 70,
+      "missing_branches": 3,
+      "missing_lines": [
+        153,
+        264,
+        460,
+        461
+      ],
+      "missing_branch_arcs": {
+        "139": [
+          -138
+        ],
+        "263": [
+          264
+        ],
+        "457": [
+          460
+        ]
+      }
+    },
+    "scripts/benchmark_performance.py": {
+      "statement": 93.44,
+      "branch": 70.0,
+      "statements": 122,
+      "missing_statements": 8,
+      "branches": 20,
+      "missing_branches": 6,
+      "missing_lines": [
+        31,
+        66,
+        67,
+        68,
+        82,
+        91,
+        126,
+        250
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          31
+        ],
+        "81": [
+          82
+        ],
+        "90": [
+          91
+        ],
+        "125": [
+          126
+        ],
+        "242": [
+          245
+        ],
+        "249": [
+          250
+        ]
+      }
+    },
+    "scripts/build_release_acceptance.py": {
+      "statement": 85.23,
+      "branch": 80.95,
+      "statements": 237,
+      "missing_statements": 35,
+      "branches": 84,
+      "missing_branches": 16,
+      "missing_lines": [
+        96,
+        130,
+        154,
+        164,
+        165,
+        166,
+        172,
+        173,
+        182,
+        183,
+        184,
+        187,
+        202,
+        204,
+        231,
+        238,
+        239,
+        240,
+        267,
+        268,
+        269,
+        271,
+        275,
+        276,
+        277,
+        280,
+        286,
+        287,
+        302,
+        303,
+        304,
+        385,
+        389,
+        390,
+        395
+      ],
+      "missing_branch_arcs": {
+        "95": [
+          96
+        ],
+        "129": [
+          130
+        ],
+        "153": [
+          154
+        ],
+        "171": [
+          172
+        ],
+        "181": [
+          182
+        ],
+        "186": [
+          187
+        ],
+        "194": [
+          196
+        ],
+        "201": [
+          202
+        ],
+        "203": [
+          204
+        ],
+        "230": [
+          231
+        ],
+        "270": [
+          271
+        ],
+        "279": [
+          280
+        ],
+        "382": [
+          385
+        ],
+        "389": [
+          390,
+          391
+        ],
+        "394": [
+          395
+        ]
+      }
+    },
+    "scripts/capture_compute_contract_evidence.py": {
+      "statement": 95.48,
+      "branch": 95.35,
+      "statements": 155,
+      "missing_statements": 7,
+      "branches": 86,
+      "missing_branches": 4,
+      "missing_lines": [
+        36,
+        64,
+        142,
+        143,
+        147,
+        148,
+        322
+      ],
+      "missing_branch_arcs": {
+        "35": [
+          36
+        ],
+        "63": [
+          64
+        ],
+        "141": [
+          142
+        ],
+        "319": [
+          322
+        ]
+      }
+    },
+    "scripts/compare_gaussian_batch_profiles.py": {
+      "statement": 99.76,
+      "branch": 98.35,
+      "statements": 417,
+      "missing_statements": 1,
+      "branches": 182,
+      "missing_branches": 3,
+      "missing_lines": [
+        797
+      ],
+      "missing_branch_arcs": {
+        "209": [
+          211
+        ],
+        "747": [
+          749
+        ],
+        "796": [
+          797
+        ]
+      }
+    },
+    "scripts/final_acceptance_preflight.py": {
+      "statement": 0.0,
+      "branch": 0.0,
+      "statements": 108,
+      "missing_statements": 108,
+      "branches": 48,
+      "missing_branches": 48,
+      "missing_lines": [
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        37,
+        44,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        63,
+        69,
+        72,
+        75,
+        76,
+        77,
+        78,
+        84,
+        85,
+        86,
+        87,
+        88,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        100,
+        103,
+        104,
+        105,
+        106,
+        107,
+        113,
+        114,
+        121,
+        122,
+        123,
+        124,
+        125,
+        131,
+        132,
+        134,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        151,
+        152,
+        153,
+        154,
+        162,
+        163,
+        170,
+        171,
+        172,
+        174,
+        192,
+        193,
+        194,
+        204,
+        211,
+        212,
+        213,
+        216,
+        217,
+        218,
+        223,
+        224,
+        225,
+        227,
+        228,
+        229,
+        230,
+        231,
+        233,
+        234,
+        235,
+        236,
+        239,
+        240
+      ],
+      "missing_branch_arcs": {
+        "48": [
+          49,
+          50
+        ],
+        "50": [
+          51,
+          52
+        ],
+        "58": [
+          59,
+          60
+        ],
+        "77": [
+          78,
+          85
+        ],
+        "91": [
+          92,
+          93
+        ],
+        "93": [
+          94,
+          95
+        ],
+        "95": [
+          -72,
+          96
+        ],
+        "96": [
+          95,
+          97
+        ],
+        "106": [
+          107,
+          113
+        ],
+        "113": [
+          114,
+          121
+        ],
+        "122": [
+          123,
+          134
+        ],
+        "124": [
+          125,
+          132
+        ],
+        "138": [
+          139,
+          151
+        ],
+        "139": [
+          140,
+          141
+        ],
+        "142": [
+          138,
+          143
+        ],
+        "143": [
+          142,
+          144
+        ],
+        "152": [
+          153,
+          170
+        ],
+        "154": [
+          162,
+          170
+        ],
+        "162": [
+          154,
+          163
+        ],
+        "171": [
+          172,
+          174
+        ],
+        "228": [
+          229,
+          230
+        ],
+        "230": [
+          231,
+          233
+        ],
+        "234": [
+          235,
+          236
+        ],
+        "239": [
+          -1,
+          240
+        ]
+      }
+    },
+    "scripts/generate_checksums.py": {
+      "statement": 94.74,
+      "branch": 85.71,
+      "statements": 38,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        31,
+        54
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          31
+        ],
+        "53": [
+          54
+        ]
+      }
+    },
+    "scripts/generate_readme_demos.py": {
+      "statement": 73.03,
+      "branch": 63.89,
+      "statements": 89,
+      "missing_statements": 24,
+      "branches": 36,
+      "missing_branches": 13,
+      "missing_lines": [
+        50,
+        58,
+        65,
+        66,
+        75,
+        76,
+        77,
+        80,
+        81,
+        82,
+        84,
+        85,
+        89,
+        90,
+        91,
+        93,
+        97,
+        101,
+        103,
+        105,
+        107,
+        111,
+        123,
+        126
+      ],
+      "missing_branch_arcs": {
+        "49": [
+          50
+        ],
+        "55": [
+          58
+        ],
+        "64": [
+          65
+        ],
+        "83": [
+          84
+        ],
+        "92": [
+          93
+        ],
+        "96": [
+          97
+        ],
+        "100": [
+          101
+        ],
+        "102": [
+          103
+        ],
+        "104": [
+          105
+        ],
+        "106": [
+          107
+        ],
+        "110": [
+          111
+        ],
+        "122": [
+          123
+        ],
+        "125": [
+          126
+        ]
+      }
+    },
+    "scripts/install.py": {
+      "statement": 84.67,
+      "branch": 66.96,
+      "statements": 261,
+      "missing_statements": 40,
+      "branches": 112,
+      "missing_branches": 37,
+      "missing_lines": [
+        51,
+        52,
+        58,
+        63,
+        91,
+        134,
+        135,
+        137,
+        160,
+        163,
+        166,
+        170,
+        194,
+        198,
+        211,
+        212,
+        213,
+        214,
+        221,
+        241,
+        250,
+        267,
+        268,
+        269,
+        275,
+        296,
+        299,
+        312,
+        313,
+        314,
+        315,
+        323,
+        331,
+        332,
+        334,
+        335,
+        339,
+        340,
+        341,
+        350
+      ],
+      "missing_branch_arcs": {
+        "51": [
+          52,
+          58
+        ],
+        "90": [
+          91
+        ],
+        "136": [
+          137
+        ],
+        "159": [
+          160
+        ],
+        "162": [
+          163
+        ],
+        "165": [
+          166
+        ],
+        "167": [
+          171
+        ],
+        "169": [
+          170
+        ],
+        "185": [
+          187
+        ],
+        "188": [
+          -183
+        ],
+        "193": [
+          194
+        ],
+        "195": [
+          198
+        ],
+        "212": [
+          213,
+          214
+        ],
+        "220": [
+          221
+        ],
+        "240": [
+          241
+        ],
+        "243": [
+          252
+        ],
+        "249": [
+          250
+        ],
+        "264": [
+          267
+        ],
+        "274": [
+          275
+        ],
+        "295": [
+          296
+        ],
+        "298": [
+          299
+        ],
+        "301": [
+          305
+        ],
+        "302": [
+          304
+        ],
+        "311": [
+          312
+        ],
+        "312": [
+          313,
+          314
+        ],
+        "317": [
+          321
+        ],
+        "322": [
+          323
+        ],
+        "330": [
+          331
+        ],
+        "333": [
+          334
+        ],
+        "338": [
+          339
+        ],
+        "339": [
+          340,
+          341
+        ],
+        "349": [
+          350
+        ],
+        "352": [
+          354
+        ]
+      }
+    },
+    "scripts/profile_gaussian_log.py": {
+      "statement": 97.96,
+      "branch": 86.84,
+      "statements": 147,
+      "missing_statements": 3,
+      "branches": 38,
+      "missing_branches": 5,
+      "missing_lines": [
+        96,
+        114,
+        264
+      ],
+      "missing_branch_arcs": {
+        "95": [
+          96
+        ],
+        "113": [
+          114
+        ],
+        "150": [
+          152
+        ],
+        "248": [
+          250
+        ],
+        "263": [
+          264
+        ]
+      }
+    },
+    "scripts/profile_gaussian_log_batch.py": {
+      "statement": 95.43,
+      "branch": 81.82,
+      "statements": 219,
+      "missing_statements": 10,
+      "branches": 66,
+      "missing_branches": 12,
+      "missing_lines": [
+        124,
+        129,
+        138,
+        157,
+        174,
+        178,
+        182,
+        201,
+        256,
+        475
+      ],
+      "missing_branch_arcs": {
+        "128": [
+          129
+        ],
+        "137": [
+          138
+        ],
+        "156": [
+          157
+        ],
+        "173": [
+          174
+        ],
+        "177": [
+          178
+        ],
+        "181": [
+          182
+        ],
+        "196": [
+          199
+        ],
+        "200": [
+          201
+        ],
+        "255": [
+          256
+        ],
+        "433": [
+          437
+        ],
+        "447": [
+          451
+        ],
+        "474": [
+          475
+        ]
+      }
+    },
+    "scripts/profile_gaussian_parser.py": {
+      "statement": 99.45,
+      "branch": 96.3,
+      "statements": 181,
+      "missing_statements": 1,
+      "branches": 54,
+      "missing_branches": 2,
+      "missing_lines": [
+        337
+      ],
+      "missing_branch_arcs": {
+        "330": [
+          332
+        ],
+        "336": [
+          337
+        ]
+      }
+    },
+    "scripts/quality_gate.py": {
+      "statement": 92.31,
+      "branch": 72.22,
+      "statements": 65,
+      "missing_statements": 5,
+      "branches": 18,
+      "missing_branches": 5,
+      "missing_lines": [
+        134,
+        175,
+        176,
+        178,
+        190
+      ],
+      "missing_branch_arcs": {
+        "133": [
+          134
+        ],
+        "144": [
+          148
+        ],
+        "174": [
+          175
+        ],
+        "177": [
+          178
+        ],
+        "187": [
+          190
+        ]
+      }
+    },
+    "scripts/run_all_tests.py": {
+      "statement": 83.61,
+      "branch": 43.75,
+      "statements": 61,
+      "missing_statements": 10,
+      "branches": 16,
+      "missing_branches": 9,
+      "missing_lines": [
+        29,
+        93,
+        94,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        121
+      ],
+      "missing_branch_arcs": {
+        "25": [
+          29
+        ],
+        "27": [
+          25
+        ],
+        "92": [
+          93
+        ],
+        "100": [
+          110
+        ],
+        "110": [
+          111,
+          115
+        ],
+        "113": [
+          110,
+          114
+        ],
+        "120": [
+          121
+        ]
+      }
+    },
+    "scripts/run_bandit.py": {
+      "statement": 98.86,
+      "branch": 97.06,
+      "statements": 88,
+      "missing_statements": 1,
+      "branches": 34,
+      "missing_branches": 1,
+      "missing_lines": [
+        129
+      ],
+      "missing_branch_arcs": {
+        "128": [
+          129
+        ]
+      }
+    },
+    "scripts/run_coverage.py": {
+      "statement": 99.27,
+      "branch": 97.73,
+      "statements": 137,
+      "missing_statements": 1,
+      "branches": 44,
+      "missing_branches": 1,
+      "missing_lines": [
+        235
+      ],
+      "missing_branch_arcs": {
+        "234": [
+          235
+        ]
+      }
+    },
+    "scripts/run_strict_type_checks.py": {
+      "statement": 93.75,
+      "branch": 83.33,
+      "statements": 16,
+      "missing_statements": 1,
+      "branches": 6,
+      "missing_branches": 1,
+      "missing_lines": [
+        34
+      ],
+      "missing_branch_arcs": {
+        "33": [
+          34
+        ]
+      }
+    },
+    "scripts/run_type_checks.py": {
+      "statement": 78.26,
+      "branch": 42.86,
+      "statements": 46,
+      "missing_statements": 10,
+      "branches": 14,
+      "missing_branches": 8,
+      "missing_lines": [
+        21,
+        71,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        88
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "70": [
+          71
+        ],
+        "74": [
+          77
+        ],
+        "77": [
+          78,
+          83
+        ],
+        "80": [
+          81,
+          82
+        ],
+        "87": [
+          88
+        ]
+      }
+    },
+    "scripts/validate_acceleration_contracts.py": {
+      "statement": 99.31,
+      "branch": 98.33,
+      "statements": 145,
+      "missing_statements": 1,
+      "branches": 60,
+      "missing_branches": 1,
+      "missing_lines": [
+        80
+      ],
+      "missing_branch_arcs": {
+        "79": [
+          80
+        ]
+      }
+    },
+    "scripts/validate_acceleration_registry.py": {
+      "statement": 95.89,
+      "branch": 88.46,
+      "statements": 73,
+      "missing_statements": 3,
+      "branches": 26,
+      "missing_branches": 3,
+      "missing_lines": [
+        34,
+        96,
+        98
+      ],
+      "missing_branch_arcs": {
+        "31": [
+          34
+        ],
+        "95": [
+          96
+        ],
+        "97": [
+          98
+        ]
+      }
+    },
+    "scripts/validate_agent_evals.py": {
+      "statement": 75.0,
+      "branch": 61.54,
+      "statements": 92,
+      "missing_statements": 23,
+      "branches": 52,
+      "missing_branches": 20,
+      "missing_lines": [
+        49,
+        50,
+        52,
+        54,
+        56,
+        61,
+        68,
+        69,
+        72,
+        75,
+        82,
+        86,
+        88,
+        90,
+        92,
+        95,
+        98,
+        100,
+        113,
+        133,
+        134,
+        135,
+        140
+      ],
+      "missing_branch_arcs": {
+        "51": [
+          52
+        ],
+        "53": [
+          54
+        ],
+        "55": [
+          56
+        ],
+        "60": [
+          61
+        ],
+        "67": [
+          68
+        ],
+        "71": [
+          72
+        ],
+        "74": [
+          75
+        ],
+        "81": [
+          82
+        ],
+        "85": [
+          86
+        ],
+        "87": [
+          88
+        ],
+        "89": [
+          90
+        ],
+        "91": [
+          92
+        ],
+        "94": [
+          95
+        ],
+        "97": [
+          98
+        ],
+        "99": [
+          100
+        ],
+        "112": [
+          113
+        ],
+        "130": [
+          133
+        ],
+        "133": [
+          134,
+          135
+        ],
+        "139": [
+          140
+        ]
+      }
+    },
+    "scripts/validate_ai_assets.py": {
+      "statement": 94.39,
+      "branch": 89.29,
+      "statements": 107,
+      "missing_statements": 6,
+      "branches": 56,
+      "missing_branches": 6,
+      "missing_lines": [
+        31,
+        33,
+        35,
+        114,
+        116,
+        118
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          31
+        ],
+        "32": [
+          33
+        ],
+        "34": [
+          35
+        ],
+        "113": [
+          114
+        ],
+        "115": [
+          116
+        ],
+        "117": [
+          118
+        ]
+      }
+    },
+    "scripts/validate_benchmark_contract.py": {
+      "statement": 73.45,
+      "branch": 47.37,
+      "statements": 113,
+      "missing_statements": 30,
+      "branches": 38,
+      "missing_branches": 20,
+      "missing_lines": [
+        32,
+        114,
+        120,
+        123,
+        126,
+        132,
+        134,
+        136,
+        139,
+        142,
+        151,
+        160,
+        166,
+        168,
+        170,
+        172,
+        176,
+        177,
+        178,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        217,
+        218,
+        219,
+        220,
+        224
+      ],
+      "missing_branch_arcs": {
+        "31": [
+          32
+        ],
+        "113": [
+          114
+        ],
+        "119": [
+          120
+        ],
+        "122": [
+          123
+        ],
+        "125": [
+          126
+        ],
+        "131": [
+          132
+        ],
+        "133": [
+          134
+        ],
+        "135": [
+          136
+        ],
+        "138": [
+          139
+        ],
+        "141": [
+          142
+        ],
+        "165": [
+          166
+        ],
+        "167": [
+          168
+        ],
+        "169": [
+          170
+        ],
+        "171": [
+          172
+        ],
+        "175": [
+          176
+        ],
+        "214": [
+          215,
+          217
+        ],
+        "217": [
+          218,
+          219
+        ],
+        "223": [
+          224
+        ]
+      }
+    },
+    "scripts/validate_capability_claims.py": {
+      "statement": 96.64,
+      "branch": 94.44,
+      "statements": 149,
+      "missing_statements": 5,
+      "branches": 90,
+      "missing_branches": 5,
+      "missing_lines": [
+        78,
+        108,
+        146,
+        155,
+        213
+      ],
+      "missing_branch_arcs": {
+        "77": [
+          78
+        ],
+        "107": [
+          108
+        ],
+        "145": [
+          146
+        ],
+        "154": [
+          155
+        ],
+        "212": [
+          213
+        ]
+      }
+    },
+    "scripts/validate_catalog.py": {
+      "statement": 80.0,
+      "branch": 62.5,
+      "statements": 20,
+      "missing_statements": 4,
+      "branches": 8,
+      "missing_branches": 3,
+      "missing_lines": [
+        13,
+        14,
+        19,
+        23
+      ],
+      "missing_branch_arcs": {
+        "12": [
+          13
+        ],
+        "18": [
+          19
+        ],
+        "22": [
+          23
+        ]
+      }
+    },
+    "scripts/validate_compute_qualification.py": {
+      "statement": 75.48,
+      "branch": 67.02,
+      "statements": 155,
+      "missing_statements": 38,
+      "branches": 94,
+      "missing_branches": 31,
+      "missing_lines": [
+        30,
+        87,
+        113,
+        115,
+        117,
+        119,
+        121,
+        125,
+        128,
+        135,
+        137,
+        139,
+        141,
+        143,
+        146,
+        148,
+        155,
+        162,
+        164,
+        166,
+        168,
+        170,
+        172,
+        174,
+        176,
+        178,
+        180,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        224,
+        225,
+        226,
+        227,
+        231
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "86": [
+          87
+        ],
+        "112": [
+          113
+        ],
+        "114": [
+          115
+        ],
+        "116": [
+          117
+        ],
+        "118": [
+          119
+        ],
+        "120": [
+          121
+        ],
+        "124": [
+          125
+        ],
+        "134": [
+          135
+        ],
+        "136": [
+          137
+        ],
+        "138": [
+          139
+        ],
+        "140": [
+          141
+        ],
+        "142": [
+          143
+        ],
+        "145": [
+          146
+        ],
+        "147": [
+          148
+        ],
+        "154": [
+          155
+        ],
+        "161": [
+          162
+        ],
+        "163": [
+          164
+        ],
+        "165": [
+          166
+        ],
+        "167": [
+          168
+        ],
+        "169": [
+          170
+        ],
+        "171": [
+          172
+        ],
+        "173": [
+          174
+        ],
+        "175": [
+          176
+        ],
+        "177": [
+          178
+        ],
+        "179": [
+          180
+        ],
+        "221": [
+          222,
+          224
+        ],
+        "224": [
+          225,
+          226
+        ],
+        "230": [
+          231
+        ]
+      }
+    },
+    "scripts/validate_constraints.py": {
+      "statement": 88.0,
+      "branch": 73.53,
+      "statements": 75,
+      "missing_statements": 9,
+      "branches": 34,
+      "missing_branches": 9,
+      "missing_lines": [
+        30,
+        39,
+        68,
+        71,
+        73,
+        88,
+        89,
+        90,
+        95
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "38": [
+          39
+        ],
+        "67": [
+          68
+        ],
+        "70": [
+          71
+        ],
+        "72": [
+          73
+        ],
+        "85": [
+          88
+        ],
+        "88": [
+          89,
+          90
+        ],
+        "94": [
+          95
+        ]
+      }
+    },
+    "scripts/validate_dependencies.py": {
+      "statement": 77.6,
+      "branch": 59.62,
+      "statements": 125,
+      "missing_statements": 28,
+      "branches": 52,
+      "missing_branches": 21,
+      "missing_lines": [
+        27,
+        40,
+        45,
+        49,
+        54,
+        55,
+        58,
+        59,
+        75,
+        78,
+        79,
+        81,
+        93,
+        95,
+        99,
+        100,
+        104,
+        105,
+        109,
+        118,
+        126,
+        130,
+        137,
+        139,
+        162,
+        163,
+        164,
+        169
+      ],
+      "missing_branch_arcs": {
+        "26": [
+          27
+        ],
+        "39": [
+          40
+        ],
+        "44": [
+          45
+        ],
+        "48": [
+          49
+        ],
+        "53": [
+          54
+        ],
+        "74": [
+          75
+        ],
+        "80": [
+          81
+        ],
+        "92": [
+          93
+        ],
+        "94": [
+          95
+        ],
+        "98": [
+          99
+        ],
+        "103": [
+          104
+        ],
+        "108": [
+          109
+        ],
+        "117": [
+          118
+        ],
+        "125": [
+          126
+        ],
+        "129": [
+          130
+        ],
+        "136": [
+          137
+        ],
+        "138": [
+          139
+        ],
+        "159": [
+          162
+        ],
+        "162": [
+          163,
+          164
+        ],
+        "168": [
+          169
+        ]
+      }
+    },
+    "scripts/validate_engine_capabilities.py": {
+      "statement": 70.93,
+      "branch": 50.0,
+      "statements": 86,
+      "missing_statements": 25,
+      "branches": 24,
+      "missing_branches": 12,
+      "missing_lines": [
+        31,
+        41,
+        49,
+        50,
+        52,
+        68,
+        83,
+        84,
+        97,
+        99,
+        108,
+        109,
+        122,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        142,
+        143,
+        144,
+        145,
+        149
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          31
+        ],
+        "40": [
+          41
+        ],
+        "51": [
+          52
+        ],
+        "67": [
+          68
+        ],
+        "96": [
+          97
+        ],
+        "98": [
+          99
+        ],
+        "121": [
+          122
+        ],
+        "139": [
+          140,
+          142
+        ],
+        "142": [
+          143,
+          144
+        ],
+        "148": [
+          149
+        ]
+      }
+    },
+    "scripts/validate_governance.py": {
+      "statement": 78.64,
+      "branch": 71.88,
+      "statements": 103,
+      "missing_statements": 22,
+      "branches": 64,
+      "missing_branches": 18,
+      "missing_lines": [
+        64,
+        74,
+        75,
+        76,
+        78,
+        79,
+        83,
+        86,
+        92,
+        97,
+        102,
+        103,
+        106,
+        108,
+        116,
+        128,
+        135,
+        139,
+        151,
+        152,
+        153,
+        158
+      ],
+      "missing_branch_arcs": {
+        "63": [
+          64
+        ],
+        "77": [
+          78
+        ],
+        "82": [
+          83
+        ],
+        "85": [
+          86
+        ],
+        "87": [
+          93
+        ],
+        "89": [
+          92
+        ],
+        "96": [
+          97
+        ],
+        "101": [
+          102
+        ],
+        "105": [
+          106
+        ],
+        "107": [
+          108
+        ],
+        "115": [
+          116
+        ],
+        "127": [
+          128
+        ],
+        "134": [
+          135
+        ],
+        "138": [
+          139
+        ],
+        "148": [
+          151
+        ],
+        "151": [
+          152,
+          153
+        ],
+        "157": [
+          158
+        ]
+      }
+    },
+    "scripts/validate_ignore_markers.py": {
+      "statement": 85.71,
+      "branch": 68.75,
+      "statements": 35,
+      "missing_statements": 5,
+      "branches": 16,
+      "missing_branches": 5,
+      "missing_lines": [
+        33,
+        45,
+        46,
+        47,
+        52
+      ],
+      "missing_branch_arcs": {
+        "32": [
+          33
+        ],
+        "42": [
+          45
+        ],
+        "45": [
+          46,
+          47
+        ],
+        "51": [
+          52
+        ]
+      }
+    },
+    "scripts/validate_packaging_model.py": {
+      "statement": 92.5,
+      "branch": 78.57,
+      "statements": 40,
+      "missing_statements": 3,
+      "branches": 14,
+      "missing_branches": 3,
+      "missing_lines": [
+        33,
+        35,
+        54
+      ],
+      "missing_branch_arcs": {
+        "32": [
+          33
+        ],
+        "34": [
+          35
+        ],
+        "53": [
+          54
+        ]
+      }
+    },
+    "scripts/validate_readme_links.py": {
+      "statement": 98.02,
+      "branch": 97.22,
+      "statements": 101,
+      "missing_statements": 2,
+      "branches": 36,
+      "missing_branches": 1,
+      "missing_lines": [
+        82,
+        83
+      ],
+      "missing_branch_arcs": {
+        "81": [
+          82
+        ]
+      }
+    },
+    "scripts/validate_readme_math.py": {
+      "statement": 64.47,
+      "branch": 55.0,
+      "statements": 76,
+      "missing_statements": 27,
+      "branches": 40,
+      "missing_branches": 18,
+      "missing_lines": [
+        65,
+        66,
+        67,
+        77,
+        80,
+        83,
+        87,
+        89,
+        91,
+        93,
+        104,
+        106,
+        108,
+        118,
+        120,
+        122,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        141,
+        142,
+        143,
+        144,
+        148
+      ],
+      "missing_branch_arcs": {
+        "76": [
+          77
+        ],
+        "79": [
+          80
+        ],
+        "82": [
+          83
+        ],
+        "86": [
+          87
+        ],
+        "88": [
+          89
+        ],
+        "90": [
+          91
+        ],
+        "92": [
+          93
+        ],
+        "103": [
+          104
+        ],
+        "105": [
+          106
+        ],
+        "107": [
+          108
+        ],
+        "117": [
+          118
+        ],
+        "119": [
+          120
+        ],
+        "121": [
+          122
+        ],
+        "138": [
+          139,
+          141
+        ],
+        "141": [
+          142,
+          143
+        ],
+        "147": [
+          148
+        ]
+      }
+    },
+    "scripts/validate_readme_visuals.py": {
+      "statement": 73.08,
+      "branch": 64.71,
+      "statements": 130,
+      "missing_statements": 35,
+      "branches": 68,
+      "missing_branches": 24,
+      "missing_lines": [
+        56,
+        67,
+        68,
+        81,
+        82,
+        85,
+        86,
+        90,
+        91,
+        95,
+        96,
+        99,
+        103,
+        104,
+        107,
+        108,
+        112,
+        114,
+        116,
+        117,
+        119,
+        122,
+        129,
+        133,
+        138,
+        140,
+        143,
+        147,
+        153,
+        157,
+        158,
+        162,
+        173,
+        175,
+        177
+      ],
+      "missing_branch_arcs": {
+        "55": [
+          56
+        ],
+        "66": [
+          67
+        ],
+        "80": [
+          81
+        ],
+        "84": [
+          85
+        ],
+        "87": [
+          78
+        ],
+        "98": [
+          99
+        ],
+        "102": [
+          103
+        ],
+        "106": [
+          107
+        ],
+        "111": [
+          112
+        ],
+        "113": [
+          114
+        ],
+        "115": [
+          116
+        ],
+        "118": [
+          119
+        ],
+        "121": [
+          122
+        ],
+        "128": [
+          129
+        ],
+        "132": [
+          133
+        ],
+        "137": [
+          138
+        ],
+        "139": [
+          140
+        ],
+        "142": [
+          143
+        ],
+        "146": [
+          147
+        ],
+        "152": [
+          153
+        ],
+        "161": [
+          162
+        ],
+        "172": [
+          173
+        ],
+        "174": [
+          175
+        ],
+        "176": [
+          177
+        ]
+      }
+    },
+    "scripts/validate_repo.py": {
+      "statement": 76.36,
+      "branch": 70.9,
+      "statements": 220,
+      "missing_statements": 52,
+      "branches": 134,
+      "missing_branches": 39,
+      "missing_lines": [
+        85,
+        100,
+        101,
+        108,
+        112,
+        114,
+        118,
+        119,
+        122,
+        161,
+        168,
+        174,
+        177,
+        181,
+        182,
+        184,
+        193,
+        195,
+        198,
+        199,
+        202,
+        203,
+        212,
+        214,
+        217,
+        218,
+        219,
+        226,
+        229,
+        233,
+        234,
+        242,
+        243,
+        244,
+        253,
+        255,
+        256,
+        261,
+        262,
+        263,
+        266,
+        272,
+        275,
+        285,
+        286,
+        291,
+        300,
+        302,
+        314,
+        316,
+        341,
+        343
+      ],
+      "missing_branch_arcs": {
+        "84": [
+          85
+        ],
+        "99": [
+          100
+        ],
+        "107": [
+          108
+        ],
+        "111": [
+          112
+        ],
+        "113": [
+          114
+        ],
+        "117": [
+          118
+        ],
+        "121": [
+          122
+        ],
+        "160": [
+          161
+        ],
+        "167": [
+          168
+        ],
+        "173": [
+          174
+        ],
+        "176": [
+          177
+        ],
+        "180": [
+          181
+        ],
+        "183": [
+          184
+        ],
+        "192": [
+          193
+        ],
+        "194": [
+          195
+        ],
+        "197": [
+          198
+        ],
+        "201": [
+          202
+        ],
+        "211": [
+          212
+        ],
+        "213": [
+          214
+        ],
+        "216": [
+          217
+        ],
+        "222": [
+          246
+        ],
+        "225": [
+          226
+        ],
+        "228": [
+          229
+        ],
+        "232": [
+          233
+        ],
+        "236": [
+          235
+        ],
+        "238": [
+          235
+        ],
+        "241": [
+          242
+        ],
+        "252": [
+          253
+        ],
+        "254": [
+          255
+        ],
+        "265": [
+          266
+        ],
+        "267": [
+          272
+        ],
+        "274": [
+          275
+        ],
+        "290": [
+          291
+        ],
+        "299": [
+          300
+        ],
+        "301": [
+          302
+        ],
+        "313": [
+          314
+        ],
+        "315": [
+          316
+        ],
+        "340": [
+          341
+        ],
+        "342": [
+          343
+        ]
+      }
+    },
+    "scripts/validate_secrets.py": {
+      "statement": 84.91,
+      "branch": 79.17,
+      "statements": 53,
+      "missing_statements": 8,
+      "branches": 24,
+      "missing_branches": 5,
+      "missing_lines": [
+        59,
+        60,
+        63,
+        64,
+        81,
+        82,
+        83,
+        88
+      ],
+      "missing_branch_arcs": {
+        "58": [
+          59
+        ],
+        "78": [
+          81
+        ],
+        "81": [
+          82,
+          83
+        ],
+        "87": [
+          88
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/scripts/build_coordination_campaign.py": {
+      "statement": 93.15,
+      "branch": 90.91,
+      "statements": 73,
+      "missing_statements": 5,
+      "branches": 22,
+      "missing_branches": 2,
+      "missing_lines": [
+        25,
+        34,
+        100,
+        101,
+        102
+      ],
+      "missing_branch_arcs": {
+        "24": [
+          25
+        ],
+        "33": [
+          34
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/scripts/validate_claim_scope.py": {
+      "statement": 91.23,
+      "branch": 84.62,
+      "statements": 57,
+      "missing_statements": 5,
+      "branches": 26,
+      "missing_branches": 4,
+      "missing_lines": [
+        42,
+        43,
+        55,
+        66,
+        76
+      ],
+      "missing_branch_arcs": {
+        "41": [
+          42
+        ],
+        "54": [
+          55
+        ],
+        "65": [
+          66
+        ],
+        "75": [
+          76
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/scripts/validate_profile.py": {
+      "statement": 98.21,
+      "branch": 96.15,
+      "statements": 56,
+      "missing_statements": 1,
+      "branches": 26,
+      "missing_branches": 1,
+      "missing_lines": [
+        50
+      ],
+      "missing_branch_arcs": {
+        "49": [
+          50
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/tests/test_catalysis_depth.py": {
+      "statement": 95.0,
+      "branch": 50.0,
+      "statements": 20,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        40
+      ],
+      "missing_branch_arcs": {
+        "39": [
+          40
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/tests/test_profile_integrity.py": {
+      "statement": 96.0,
+      "branch": 87.5,
+      "statements": 25,
+      "missing_statements": 1,
+      "branches": 8,
+      "missing_branches": 1,
+      "missing_lines": [
+        37
+      ],
+      "missing_branch_arcs": {
+        "36": [
+          37
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/tests/test_streaming_campaign.py": {
+      "statement": 96.23,
+      "branch": 66.67,
+      "statements": 53,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        19,
+        86
+      ],
+      "missing_branch_arcs": {
+        "18": [
+          19
+        ],
+        "85": [
+          86
+        ]
+      }
+    },
+    "skills/tsao-dft-catalysis-profile/tests/test_validation_fail_closed.py": {
+      "statement": 97.75,
+      "branch": 66.67,
+      "statements": 89,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        108
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "107": [
+          108
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/_load_v18_core.py": {
+      "statement": 94.44,
+      "branch": 75.0,
+      "statements": 18,
+      "missing_statements": 1,
+      "branches": 4,
+      "missing_branches": 1,
+      "missing_lines": [
+        19
+      ],
+      "missing_branch_arcs": {
+        "18": [
+          19
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/acceleration_registry.py": {
+      "statement": 93.83,
+      "branch": 88.24,
+      "statements": 81,
+      "missing_statements": 5,
+      "branches": 34,
+      "missing_branches": 4,
+      "missing_lines": [
+        352,
+        353,
+        363,
+        365,
+        375
+      ],
+      "missing_branch_arcs": {
+        "351": [
+          352
+        ],
+        "362": [
+          363
+        ],
+        "364": [
+          365
+        ],
+        "374": [
+          375
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/benchmark_bridge.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 137,
+      "missing_statements": 0,
+      "branches": 50,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/benchmark_contract.py": {
+      "statement": 91.39,
+      "branch": 80.77,
+      "statements": 267,
+      "missing_statements": 23,
+      "branches": 104,
+      "missing_branches": 20,
+      "missing_lines": [
+        58,
+        64,
+        85,
+        86,
+        115,
+        169,
+        181,
+        186,
+        193,
+        316,
+        317,
+        474,
+        530,
+        532,
+        534,
+        538,
+        539,
+        540,
+        541,
+        542,
+        543,
+        544,
+        545
+      ],
+      "missing_branch_arcs": {
+        "57": [
+          58
+        ],
+        "114": [
+          115
+        ],
+        "167": [
+          169
+        ],
+        "179": [
+          181
+        ],
+        "185": [
+          186
+        ],
+        "192": [
+          193
+        ],
+        "228": [
+          230
+        ],
+        "234": [
+          236
+        ],
+        "236": [
+          238
+        ],
+        "238": [
+          240
+        ],
+        "285": [
+          274
+        ],
+        "315": [
+          316
+        ],
+        "473": [
+          474
+        ],
+        "529": [
+          530
+        ],
+        "531": [
+          532
+        ],
+        "533": [
+          534
+        ],
+        "535": [
+          539
+        ],
+        "537": [
+          538
+        ],
+        "539": [
+          540,
+          546
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/classify_failure.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 11,
+      "missing_statements": 0,
+      "branches": 0,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/collect_provenance.py": {
+      "statement": 93.88,
+      "branch": 100.0,
+      "statements": 49,
+      "missing_statements": 3,
+      "branches": 8,
+      "missing_branches": 0,
+      "missing_lines": [
+        60,
+        61,
+        62
+      ],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/compute_campaign_contract.py": {
+      "statement": 86.79,
+      "branch": 74.69,
+      "statements": 371,
+      "missing_statements": 49,
+      "branches": 162,
+      "missing_branches": 41,
+      "missing_lines": [
+        57,
+        58,
+        128,
+        138,
+        139,
+        163,
+        168,
+        177,
+        181,
+        202,
+        204,
+        211,
+        215,
+        216,
+        222,
+        223,
+        234,
+        235,
+        239,
+        241,
+        245,
+        252,
+        253,
+        262,
+        328,
+        339,
+        355,
+        365,
+        367,
+        369,
+        373,
+        376,
+        378,
+        380,
+        480,
+        496,
+        500,
+        510,
+        530,
+        532,
+        534,
+        537,
+        540,
+        542,
+        545,
+        546,
+        547,
+        548,
+        549
+      ],
+      "missing_branch_arcs": {
+        "161": [
+          163
+        ],
+        "167": [
+          168
+        ],
+        "176": [
+          177
+        ],
+        "180": [
+          181
+        ],
+        "201": [
+          202
+        ],
+        "203": [
+          204
+        ],
+        "210": [
+          211
+        ],
+        "214": [
+          215
+        ],
+        "221": [
+          222
+        ],
+        "232": [
+          234
+        ],
+        "234": [
+          220,
+          235
+        ],
+        "238": [
+          239
+        ],
+        "240": [
+          241
+        ],
+        "244": [
+          245
+        ],
+        "251": [
+          252
+        ],
+        "256": [
+          262
+        ],
+        "326": [
+          328
+        ],
+        "337": [
+          339
+        ],
+        "354": [
+          355
+        ],
+        "364": [
+          365
+        ],
+        "366": [
+          367
+        ],
+        "368": [
+          369
+        ],
+        "372": [
+          373
+        ],
+        "374": [
+          380
+        ],
+        "375": [
+          376
+        ],
+        "377": [
+          378
+        ],
+        "479": [
+          480
+        ],
+        "495": [
+          496
+        ],
+        "497": [
+          500
+        ],
+        "509": [
+          510
+        ],
+        "529": [
+          530
+        ],
+        "531": [
+          532
+        ],
+        "533": [
+          534
+        ],
+        "536": [
+          537
+        ],
+        "539": [
+          540
+        ],
+        "541": [
+          542
+        ],
+        "543": [
+          546
+        ],
+        "544": [
+          545
+        ],
+        "546": [
+          547,
+          550
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/contracts_v17.py": {
+      "statement": 85.0,
+      "branch": 70.0,
+      "statements": 60,
+      "missing_statements": 9,
+      "branches": 30,
+      "missing_branches": 9,
+      "missing_lines": [
+        75,
+        86,
+        93,
+        96,
+        100,
+        101,
+        103,
+        110,
+        113
+      ],
+      "missing_branch_arcs": {
+        "74": [
+          75
+        ],
+        "85": [
+          86
+        ],
+        "92": [
+          93
+        ],
+        "95": [
+          96
+        ],
+        "98": [
+          100
+        ],
+        "100": [
+          101,
+          103
+        ],
+        "109": [
+          110
+        ],
+        "111": [
+          113
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_capability.py": {
+      "statement": 86.15,
+      "branch": 77.38,
+      "statements": 195,
+      "missing_statements": 27,
+      "branches": 84,
+      "missing_branches": 19,
+      "missing_lines": [
+        47,
+        54,
+        57,
+        58,
+        60,
+        66,
+        67,
+        73,
+        74,
+        77,
+        83,
+        84,
+        91,
+        100,
+        106,
+        107,
+        111,
+        120,
+        181,
+        214,
+        221,
+        270,
+        272,
+        274,
+        300,
+        362,
+        363
+      ],
+      "missing_branch_arcs": {
+        "53": [
+          54
+        ],
+        "59": [
+          60
+        ],
+        "65": [
+          66
+        ],
+        "72": [
+          73
+        ],
+        "76": [
+          77
+        ],
+        "82": [
+          83
+        ],
+        "90": [
+          91
+        ],
+        "99": [
+          100
+        ],
+        "105": [
+          106
+        ],
+        "110": [
+          111
+        ],
+        "119": [
+          120
+        ],
+        "180": [
+          181
+        ],
+        "213": [
+          214
+        ],
+        "220": [
+          221
+        ],
+        "269": [
+          270
+        ],
+        "271": [
+          272
+        ],
+        "273": [
+          274
+        ],
+        "299": [
+          300
+        ],
+        "365": [
+          368
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_parser_contract.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 237,
+      "missing_statements": 0,
+      "branches": 72,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_parser_contract_v4.py": {
+      "statement": 79.17,
+      "branch": 25.0,
+      "statements": 24,
+      "missing_statements": 5,
+      "branches": 4,
+      "missing_branches": 3,
+      "missing_lines": [
+        13,
+        29,
+        30,
+        31,
+        32
+      ],
+      "missing_branch_arcs": {
+        "12": [
+          13
+        ],
+        "30": [
+          31,
+          32
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_parser_v4.py": {
+      "statement": 95.45,
+      "branch": 75.0,
+      "statements": 22,
+      "missing_statements": 1,
+      "branches": 4,
+      "missing_branches": 1,
+      "missing_lines": [
+        13
+      ],
+      "missing_branch_arcs": {
+        "12": [
+          13
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/engine_scan_core.py": {
+      "statement": 98.7,
+      "branch": 88.89,
+      "statements": 77,
+      "missing_statements": 1,
+      "branches": 18,
+      "missing_branches": 2,
+      "missing_lines": [
+        152
+      ],
+      "missing_branch_arcs": {
+        "136": [
+          134
+        ],
+        "151": [
+          152
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/estimate_resources.py": {
+      "statement": 91.55,
+      "branch": 76.92,
+      "statements": 71,
+      "missing_statements": 6,
+      "branches": 26,
+      "missing_branches": 6,
+      "missing_lines": [
+        37,
+        43,
+        48,
+        57,
+        62,
+        74
+      ],
+      "missing_branch_arcs": {
+        "36": [
+          37
+        ],
+        "42": [
+          43
+        ],
+        "47": [
+          48
+        ],
+        "56": [
+          57
+        ],
+        "61": [
+          62
+        ],
+        "73": [
+          74
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/execution_evidence_v7.py": {
+      "statement": 94.74,
+      "branch": 50.0,
+      "statements": 19,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/generate_autotuning_candidates.py": {
+      "statement": 95.52,
+      "branch": 91.36,
+      "statements": 357,
+      "missing_statements": 16,
+      "branches": 162,
+      "missing_branches": 14,
+      "missing_lines": [
+        42,
+        88,
+        89,
+        118,
+        119,
+        129,
+        130,
+        145,
+        149,
+        150,
+        160,
+        161,
+        358,
+        382,
+        474,
+        679
+      ],
+      "missing_branch_arcs": {
+        "41": [
+          42
+        ],
+        "87": [
+          88
+        ],
+        "117": [
+          118
+        ],
+        "128": [
+          129
+        ],
+        "144": [
+          145
+        ],
+        "148": [
+          149
+        ],
+        "159": [
+          160
+        ],
+        "227": [
+          233
+        ],
+        "357": [
+          358
+        ],
+        "381": [
+          382
+        ],
+        "415": [
+          417
+        ],
+        "473": [
+          474
+        ],
+        "570": [
+          593
+        ],
+        "678": [
+          679
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/generate_job_array.py": {
+      "statement": 78.62,
+      "branch": 73.44,
+      "statements": 159,
+      "missing_statements": 34,
+      "branches": 64,
+      "missing_branches": 17,
+      "missing_lines": [
+        16,
+        33,
+        39,
+        54,
+        59,
+        60,
+        68,
+        69,
+        73,
+        74,
+        83,
+        99,
+        100,
+        107,
+        111,
+        124,
+        125,
+        126,
+        176,
+        178,
+        189,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        330
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "32": [
+          33
+        ],
+        "38": [
+          39
+        ],
+        "53": [
+          54
+        ],
+        "58": [
+          59
+        ],
+        "67": [
+          68
+        ],
+        "72": [
+          73
+        ],
+        "82": [
+          83
+        ],
+        "98": [
+          99
+        ],
+        "106": [
+          107
+        ],
+        "110": [
+          111
+        ],
+        "116": [
+          120
+        ],
+        "151": [
+          153
+        ],
+        "175": [
+          176
+        ],
+        "177": [
+          178
+        ],
+        "188": [
+          189
+        ],
+        "329": [
+          330
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/generate_job_script.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 244,
+      "missing_statements": 0,
+      "branches": 104,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/hardware_aware_optimizer.py": {
+      "statement": 100.0,
+      "branch": 93.75,
+      "statements": 59,
+      "missing_statements": 0,
+      "branches": 16,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "36": [
+          39
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/hardware_optimization_contract.py": {
+      "statement": 99.52,
+      "branch": 98.96,
+      "statements": 207,
+      "missing_statements": 1,
+      "branches": 96,
+      "missing_branches": 1,
+      "missing_lines": [
+        34
+      ],
+      "missing_branch_arcs": {
+        "33": [
+          34
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/hardware_provider_policy.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 168,
+      "missing_statements": 0,
+      "branches": 86,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/import_benchmark_evidence.py": {
+      "statement": 94.66,
+      "branch": 81.25,
+      "statements": 131,
+      "missing_statements": 7,
+      "branches": 32,
+      "missing_branches": 6,
+      "missing_lines": [
+        18,
+        53,
+        54,
+        55,
+        119,
+        120,
+        243
+      ],
+      "missing_branch_arcs": {
+        "17": [
+          18
+        ],
+        "52": [
+          53
+        ],
+        "53": [
+          54,
+          55
+        ],
+        "235": [
+          238
+        ],
+        "242": [
+          243
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/inspect_execution_environment.py": {
+      "statement": 91.23,
+      "branch": 85.11,
+      "statements": 285,
+      "missing_statements": 25,
+      "branches": 94,
+      "missing_branches": 14,
+      "missing_lines": [
+        75,
+        159,
+        164,
+        165,
+        166,
+        172,
+        186,
+        187,
+        194,
+        200,
+        201,
+        202,
+        208,
+        211,
+        212,
+        219,
+        220,
+        229,
+        230,
+        231,
+        232,
+        234,
+        235,
+        236,
+        531
+      ],
+      "missing_branch_arcs": {
+        "85": [
+          87
+        ],
+        "158": [
+          159
+        ],
+        "161": [
+          166
+        ],
+        "171": [
+          172
+        ],
+        "193": [
+          194
+        ],
+        "196": [
+          202
+        ],
+        "207": [
+          208
+        ],
+        "228": [
+          229
+        ],
+        "230": [
+          228,
+          231
+        ],
+        "231": [
+          228,
+          232
+        ],
+        "233": [
+          234
+        ],
+        "530": [
+          531
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/inspect_execution_environment_parallel.py": {
+      "statement": 97.01,
+      "branch": 83.33,
+      "statements": 67,
+      "missing_statements": 2,
+      "branches": 12,
+      "missing_branches": 2,
+      "missing_lines": [
+        19,
+        175
+      ],
+      "missing_branch_arcs": {
+        "18": [
+          19
+        ],
+        "174": [
+          175
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/kinetics_uncertainty_v5.py": {
+      "statement": 94.44,
+      "branch": 50.0,
+      "statements": 18,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/materialize_acceleration_campaign.py": {
+      "statement": 79.65,
+      "branch": 64.86,
+      "statements": 226,
+      "missing_statements": 46,
+      "branches": 74,
+      "missing_branches": 26,
+      "missing_lines": [
+        22,
+        68,
+        72,
+        78,
+        86,
+        88,
+        93,
+        94,
+        95,
+        96,
+        116,
+        123,
+        125,
+        163,
+        171,
+        182,
+        186,
+        203,
+        237,
+        248,
+        255,
+        260,
+        263,
+        266,
+        331,
+        347,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        388,
+        398,
+        399,
+        400,
+        401,
+        414,
+        418
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "67": [
+          68
+        ],
+        "71": [
+          72
+        ],
+        "77": [
+          78
+        ],
+        "85": [
+          86
+        ],
+        "87": [
+          88
+        ],
+        "94": [
+          95,
+          96
+        ],
+        "115": [
+          116
+        ],
+        "122": [
+          123
+        ],
+        "124": [
+          125
+        ],
+        "162": [
+          163
+        ],
+        "170": [
+          171
+        ],
+        "178": [
+          182
+        ],
+        "197": [
+          199
+        ],
+        "202": [
+          203
+        ],
+        "236": [
+          237
+        ],
+        "247": [
+          248
+        ],
+        "254": [
+          255
+        ],
+        "259": [
+          260
+        ],
+        "262": [
+          263
+        ],
+        "265": [
+          266
+        ],
+        "330": [
+          331
+        ],
+        "346": [
+          347
+        ],
+        "361": [
+          365
+        ],
+        "417": [
+          418
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/ml_provenance_contract.py": {
+      "statement": 94.44,
+      "branch": 50.0,
+      "statements": 18,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/model_acceptance_v5.py": {
+      "statement": 95.24,
+      "branch": 50.0,
+      "statements": 21,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/performance_evidence.py": {
+      "statement": 95.58,
+      "branch": 90.32,
+      "statements": 701,
+      "missing_statements": 31,
+      "branches": 310,
+      "missing_branches": 30,
+      "missing_lines": [
+        22,
+        159,
+        161,
+        222,
+        269,
+        270,
+        289,
+        309,
+        310,
+        312,
+        314,
+        319,
+        331,
+        337,
+        340,
+        352,
+        388,
+        392,
+        394,
+        398,
+        429,
+        430,
+        431,
+        475,
+        483,
+        639,
+        668,
+        845,
+        846,
+        847,
+        1039
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "158": [
+          159
+        ],
+        "160": [
+          161
+        ],
+        "178": [
+          181
+        ],
+        "208": [
+          207
+        ],
+        "220": [
+          222
+        ],
+        "268": [
+          269
+        ],
+        "288": [
+          289
+        ],
+        "308": [
+          309
+        ],
+        "311": [
+          312
+        ],
+        "313": [
+          314
+        ],
+        "318": [
+          319
+        ],
+        "330": [
+          331
+        ],
+        "336": [
+          337
+        ],
+        "339": [
+          340
+        ],
+        "351": [
+          352
+        ],
+        "387": [
+          388
+        ],
+        "391": [
+          392
+        ],
+        "393": [
+          394
+        ],
+        "397": [
+          398
+        ],
+        "474": [
+          475
+        ],
+        "482": [
+          483
+        ],
+        "576": [
+          568
+        ],
+        "622": [
+          628
+        ],
+        "638": [
+          639
+        ],
+        "667": [
+          668
+        ],
+        "844": [
+          845
+        ],
+        "1038": [
+          1039
+        ],
+        "1093": [
+          1092
+        ],
+        "1115": [
+          1113
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/plan_acceleration.py": {
+      "statement": 96.88,
+      "branch": 93.57,
+      "statements": 288,
+      "missing_statements": 9,
+      "branches": 140,
+      "missing_branches": 9,
+      "missing_lines": [
+        30,
+        80,
+        232,
+        236,
+        257,
+        258,
+        259,
+        508,
+        525
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "79": [
+          80
+        ],
+        "230": [
+          232
+        ],
+        "234": [
+          236
+        ],
+        "251": [
+          257
+        ],
+        "257": [
+          258,
+          259
+        ],
+        "507": [
+          508
+        ],
+        "524": [
+          525
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/qualify_compute_campaign.py": {
+      "statement": 92.58,
+      "branch": 83.56,
+      "statements": 431,
+      "missing_statements": 32,
+      "branches": 146,
+      "missing_branches": 24,
+      "missing_lines": [
+        22,
+        97,
+        101,
+        209,
+        215,
+        235,
+        263,
+        270,
+        272,
+        399,
+        414,
+        431,
+        436,
+        442,
+        443,
+        444,
+        452,
+        456,
+        547,
+        556,
+        569,
+        573,
+        600,
+        601,
+        652,
+        653,
+        657,
+        658,
+        683,
+        684,
+        733,
+        734
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "208": [
+          209
+        ],
+        "234": [
+          235
+        ],
+        "261": [
+          263
+        ],
+        "269": [
+          270
+        ],
+        "271": [
+          272
+        ],
+        "398": [
+          399
+        ],
+        "406": [
+          414
+        ],
+        "430": [
+          431
+        ],
+        "435": [
+          436
+        ],
+        "441": [
+          442
+        ],
+        "442": [
+          443,
+          444
+        ],
+        "445": [
+          456
+        ],
+        "451": [
+          452
+        ],
+        "546": [
+          547
+        ],
+        "555": [
+          556
+        ],
+        "568": [
+          569
+        ],
+        "572": [
+          573
+        ],
+        "599": [
+          600
+        ],
+        "651": [
+          652
+        ],
+        "656": [
+          657
+        ],
+        "682": [
+          683
+        ],
+        "732": [
+          733
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/quantity_equivalence_v5.py": {
+      "statement": 93.33,
+      "branch": 50.0,
+      "statements": 15,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/scientific_acceptance_gate_v6.py": {
+      "statement": 92.86,
+      "branch": 50.0,
+      "statements": 14,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/scientific_acceptance_gate_v7.py": {
+      "statement": 92.86,
+      "branch": 50.0,
+      "statements": 14,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/scientific_contracts_core_v18.py": {
+      "statement": 86.34,
+      "branch": 71.02,
+      "statements": 732,
+      "missing_statements": 100,
+      "branches": 314,
+      "missing_branches": 91,
+      "missing_lines": [
+        62,
+        64,
+        70,
+        72,
+        82,
+        88,
+        91,
+        92,
+        94,
+        190,
+        193,
+        200,
+        251,
+        277,
+        279,
+        282,
+        283,
+        284,
+        285,
+        286,
+        288,
+        293,
+        299,
+        321,
+        323,
+        347,
+        348,
+        351,
+        380,
+        381,
+        383,
+        416,
+        423,
+        439,
+        472,
+        478,
+        500,
+        505,
+        508,
+        514,
+        518,
+        523,
+        529,
+        540,
+        542,
+        566,
+        571,
+        574,
+        578,
+        584,
+        586,
+        597,
+        604,
+        605,
+        609,
+        633,
+        653,
+        697,
+        711,
+        713,
+        715,
+        722,
+        724,
+        749,
+        751,
+        754,
+        760,
+        762,
+        764,
+        775,
+        776,
+        794,
+        837,
+        846,
+        855,
+        862,
+        896,
+        904,
+        922,
+        976,
+        988,
+        990,
+        994,
+        1023,
+        1027,
+        1029,
+        1033,
+        1062,
+        1064,
+        1066,
+        1081,
+        1101,
+        1107,
+        1117,
+        1120,
+        1123,
+        1157,
+        1159,
+        1195,
+        1196
+      ],
+      "missing_branch_arcs": {
+        "61": [
+          62
+        ],
+        "63": [
+          64
+        ],
+        "69": [
+          70
+        ],
+        "71": [
+          72
+        ],
+        "81": [
+          82
+        ],
+        "87": [
+          88
+        ],
+        "93": [
+          94
+        ],
+        "189": [
+          190
+        ],
+        "192": [
+          193
+        ],
+        "199": [
+          200
+        ],
+        "250": [
+          251
+        ],
+        "272": [
+          283
+        ],
+        "276": [
+          277
+        ],
+        "278": [
+          279
+        ],
+        "281": [
+          282
+        ],
+        "283": [
+          284,
+          288
+        ],
+        "284": [
+          285,
+          286
+        ],
+        "292": [
+          293
+        ],
+        "296": [
+          299
+        ],
+        "320": [
+          321
+        ],
+        "322": [
+          323
+        ],
+        "350": [
+          351
+        ],
+        "382": [
+          383
+        ],
+        "415": [
+          416
+        ],
+        "418": [
+          423
+        ],
+        "438": [
+          439
+        ],
+        "471": [
+          472
+        ],
+        "477": [
+          478
+        ],
+        "499": [
+          500
+        ],
+        "504": [
+          505
+        ],
+        "507": [
+          508
+        ],
+        "511": [
+          514
+        ],
+        "517": [
+          518
+        ],
+        "522": [
+          523
+        ],
+        "528": [
+          529
+        ],
+        "539": [
+          540
+        ],
+        "541": [
+          542
+        ],
+        "565": [
+          566
+        ],
+        "570": [
+          571
+        ],
+        "573": [
+          574
+        ],
+        "577": [
+          578
+        ],
+        "583": [
+          584
+        ],
+        "585": [
+          586
+        ],
+        "596": [
+          597
+        ],
+        "603": [
+          604
+        ],
+        "604": [
+          -595,
+          605
+        ],
+        "606": [
+          609
+        ],
+        "632": [
+          633
+        ],
+        "652": [
+          653
+        ],
+        "696": [
+          697
+        ],
+        "710": [
+          711
+        ],
+        "712": [
+          713
+        ],
+        "714": [
+          715
+        ],
+        "717": [
+          722
+        ],
+        "723": [
+          724
+        ],
+        "748": [
+          749
+        ],
+        "750": [
+          751
+        ],
+        "753": [
+          754
+        ],
+        "755": [
+          764
+        ],
+        "759": [
+          760
+        ],
+        "761": [
+          762
+        ],
+        "793": [
+          794
+        ],
+        "836": [
+          837
+        ],
+        "845": [
+          846
+        ],
+        "854": [
+          855
+        ],
+        "861": [
+          862
+        ],
+        "895": [
+          896
+        ],
+        "901": [
+          904
+        ],
+        "915": [
+          922
+        ],
+        "975": [
+          976
+        ],
+        "987": [
+          988
+        ],
+        "989": [
+          990
+        ],
+        "993": [
+          994
+        ],
+        "1022": [
+          1023
+        ],
+        "1026": [
+          1027
+        ],
+        "1028": [
+          1029
+        ],
+        "1032": [
+          1033
+        ],
+        "1061": [
+          1062
+        ],
+        "1063": [
+          1064
+        ],
+        "1065": [
+          1066
+        ],
+        "1078": [
+          1081
+        ],
+        "1100": [
+          1101
+        ],
+        "1106": [
+          1107
+        ],
+        "1116": [
+          1117
+        ],
+        "1119": [
+          1120
+        ],
+        "1122": [
+          1123
+        ],
+        "1154": [
+          1157
+        ],
+        "1158": [
+          1159
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/scientific_contracts_v16.py": {
+      "statement": 80.0,
+      "branch": 60.71,
+      "statements": 55,
+      "missing_statements": 11,
+      "branches": 28,
+      "missing_branches": 11,
+      "missing_lines": [
+        30,
+        36,
+        42,
+        45,
+        61,
+        63,
+        69,
+        71,
+        94,
+        102,
+        105
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "35": [
+          36
+        ],
+        "41": [
+          42
+        ],
+        "44": [
+          45
+        ],
+        "60": [
+          61
+        ],
+        "62": [
+          63
+        ],
+        "64": [
+          71
+        ],
+        "68": [
+          69
+        ],
+        "93": [
+          94
+        ],
+        "97": [
+          102
+        ],
+        "103": [
+          105
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/scientific_contracts_v4.py": {
+      "statement": 92.31,
+      "branch": 80.0,
+      "statements": 52,
+      "missing_statements": 4,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        13,
+        66,
+        77,
+        78
+      ],
+      "missing_branch_arcs": {
+        "12": [
+          13
+        ],
+        "65": [
+          66
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/shell_contract.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 149,
+      "missing_statements": 0,
+      "branches": 62,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/strict_numeric.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 43,
+      "missing_statements": 0,
+      "branches": 20,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/trust_boundary.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 177,
+      "missing_statements": 0,
+      "branches": 72,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/tst_standard_state.py": {
+      "statement": 95.0,
+      "branch": 50.0,
+      "statements": 20,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        12
+      ],
+      "missing_branch_arcs": {
+        "11": [
+          12
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/utils.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 52,
+      "missing_statements": 0,
+      "branches": 20,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/validate_hpc_manifest.py": {
+      "statement": 100.0,
+      "branch": 99.29,
+      "statements": 235,
+      "missing_statements": 0,
+      "branches": 140,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "229": [
+          231
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/validate_restart_lineage.py": {
+      "statement": 93.65,
+      "branch": 86.67,
+      "statements": 63,
+      "missing_statements": 4,
+      "branches": 30,
+      "missing_branches": 4,
+      "missing_lines": [
+        38,
+        59,
+        70,
+        72
+      ],
+      "missing_branch_arcs": {
+        "37": [
+          38
+        ],
+        "58": [
+          59
+        ],
+        "69": [
+          70
+        ],
+        "71": [
+          72
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/scripts/validate_site_profile.py": {
+      "statement": 85.0,
+      "branch": 76.79,
+      "statements": 100,
+      "missing_statements": 15,
+      "branches": 56,
+      "missing_branches": 13,
+      "missing_lines": [
+        32,
+        35,
+        62,
+        64,
+        68,
+        69,
+        72,
+        73,
+        79,
+        87,
+        88,
+        91,
+        101,
+        102,
+        105
+      ],
+      "missing_branch_arcs": {
+        "31": [
+          32
+        ],
+        "34": [
+          35
+        ],
+        "61": [
+          62
+        ],
+        "63": [
+          64
+        ],
+        "67": [
+          68
+        ],
+        "71": [
+          72
+        ],
+        "78": [
+          79
+        ],
+        "86": [
+          87
+        ],
+        "90": [
+          91
+        ],
+        "100": [
+          101
+        ],
+        "104": [
+          105
+        ],
+        "106": [
+          108
+        ],
+        "108": [
+          114
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_acceleration_execution.py": {
+      "statement": 98.29,
+      "branch": 66.67,
+      "statements": 117,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        18,
+        205
+      ],
+      "missing_branch_arcs": {
+        "17": [
+          18
+        ],
+        "204": [
+          205
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_acceleration_planner.py": {
+      "statement": 98.77,
+      "branch": 50.0,
+      "statements": 162,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        20,
+        194
+      ],
+      "missing_branch_arcs": {
+        "19": [
+          20
+        ],
+        "193": [
+          194
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_acceleration_planner_numeric_contract.py": {
+      "statement": 96.83,
+      "branch": 85.71,
+      "statements": 63,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        125
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "124": [
+          125
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_autotuning_numeric_contract.py": {
+      "statement": 98.43,
+      "branch": 95.0,
+      "statements": 127,
+      "missing_statements": 2,
+      "branches": 40,
+      "missing_branches": 2,
+      "missing_lines": [
+        17,
+        195
+      ],
+      "missing_branch_arcs": {
+        "16": [
+          17
+        ],
+        "194": [
+          195
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_benchmark_bridge.py": {
+      "statement": 95.56,
+      "branch": 50.0,
+      "statements": 45,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        105
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "104": [
+          105
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_engine_parser_contract.py": {
+      "statement": 97.83,
+      "branch": 75.0,
+      "statements": 92,
+      "missing_statements": 2,
+      "branches": 8,
+      "missing_branches": 2,
+      "missing_lines": [
+        21,
+        132
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "131": [
+          132
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_engine_scan_core.py": {
+      "statement": 97.62,
+      "branch": 80.0,
+      "statements": 84,
+      "missing_statements": 2,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        20,
+        104
+      ],
+      "missing_branch_arcs": {
+        "19": [
+          20
+        ],
+        "103": [
+          104
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_environment_autotuning.py": {
+      "statement": 96.91,
+      "branch": 66.67,
+      "statements": 97,
+      "missing_statements": 3,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        18,
+        25,
+        182
+      ],
+      "missing_branch_arcs": {
+        "17": [
+          18
+        ],
+        "181": [
+          182
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_evidence_trust_boundary.py": {
+      "statement": 98.33,
+      "branch": 50.0,
+      "statements": 120,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        26,
+        250
+      ],
+      "missing_branch_arcs": {
+        "25": [
+          26
+        ],
+        "249": [
+          250
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_hardware_aware_optimizer.py": {
+      "statement": 98.86,
+      "branch": 80.0,
+      "statements": 176,
+      "missing_statements": 2,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        25,
+        256
+      ],
+      "missing_branch_arcs": {
+        "24": [
+          25
+        ],
+        "255": [
+          256
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_hardware_aware_optimizer_edges.py": {
+      "statement": 99.35,
+      "branch": 87.5,
+      "statements": 307,
+      "missing_statements": 2,
+      "branches": 16,
+      "missing_branches": 2,
+      "missing_lines": [
+        37,
+        419
+      ],
+      "missing_branch_arcs": {
+        "36": [
+          37
+        ],
+        "418": [
+          419
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_hardware_aware_optimizer_final_audit.py": {
+      "statement": 97.33,
+      "branch": 80.0,
+      "statements": 75,
+      "missing_statements": 2,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        26,
+        137
+      ],
+      "missing_branch_arcs": {
+        "25": [
+          26
+        ],
+        "136": [
+          137
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_hpc.py": {
+      "statement": 95.24,
+      "branch": 50.0,
+      "statements": 21,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        54
+      ],
+      "missing_branch_arcs": {
+        "53": [
+          54
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_hpc_depth.py": {
+      "statement": 96.55,
+      "branch": 50.0,
+      "statements": 29,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        69
+      ],
+      "missing_branch_arcs": {
+        "68": [
+          69
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_job_arrays_and_threads.py": {
+      "statement": 86.96,
+      "branch": 20.0,
+      "statements": 161,
+      "missing_statements": 21,
+      "branches": 20,
+      "missing_branches": 16,
+      "missing_lines": [
+        21,
+        33,
+        36,
+        37,
+        38,
+        39,
+        40,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        57,
+        58,
+        59,
+        61,
+        62,
+        63,
+        64,
+        275
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "30": [
+          36
+        ],
+        "32": [
+          33
+        ],
+        "38": [
+          39,
+          46
+        ],
+        "46": [
+          47,
+          57
+        ],
+        "48": [
+          49,
+          50
+        ],
+        "57": [
+          58,
+          61
+        ],
+        "58": [
+          57,
+          59
+        ],
+        "62": [
+          63,
+          64
+        ],
+        "274": [
+          275
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_parallel_control_plane.py": {
+      "statement": 98.17,
+      "branch": 75.0,
+      "statements": 164,
+      "missing_statements": 3,
+      "branches": 12,
+      "missing_branches": 3,
+      "missing_lines": [
+        23,
+        40,
+        263
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "39": [
+          40
+        ],
+        "262": [
+          263
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_parallel_control_plane_edges.py": {
+      "statement": 97.58,
+      "branch": 50.0,
+      "statements": 124,
+      "missing_statements": 3,
+      "branches": 6,
+      "missing_branches": 3,
+      "missing_lines": [
+        22,
+        38,
+        306
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "37": [
+          38
+        ],
+        "305": [
+          306
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_performance_evidence.py": {
+      "statement": 99.22,
+      "branch": 85.71,
+      "statements": 255,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        21,
+        469
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "468": [
+          469
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_performance_evidence_numerics.py": {
+      "statement": 98.81,
+      "branch": 66.67,
+      "statements": 168,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        243
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "242": [
+          243
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_powershell_local_job_backend.py": {
+      "statement": 97.86,
+      "branch": 60.0,
+      "statements": 187,
+      "missing_statements": 4,
+      "branches": 10,
+      "missing_branches": 4,
+      "missing_lines": [
+        22,
+        267,
+        329,
+        369
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "266": [
+          267
+        ],
+        "328": [
+          329
+        ],
+        "368": [
+          369
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_acceleration_planner_edges.py": {
+      "statement": 98.68,
+      "branch": 66.67,
+      "statements": 152,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        25,
+        232
+      ],
+      "missing_branch_arcs": {
+        "24": [
+          25
+        ],
+        "231": [
+          232
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_autotuning_edges.py": {
+      "statement": 98.36,
+      "branch": 66.67,
+      "statements": 122,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        261
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "260": [
+          261
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_core_remaining.py": {
+      "statement": 96.46,
+      "branch": 80.0,
+      "statements": 226,
+      "missing_statements": 8,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        30,
+        59,
+        60,
+        63,
+        64,
+        76,
+        79,
+        450
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "449": [
+          450
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_manifest_coverage.py": {
+      "statement": 99.12,
+      "branch": 83.33,
+      "statements": 227,
+      "missing_statements": 2,
+      "branches": 12,
+      "missing_branches": 2,
+      "missing_lines": [
+        27,
+        429
+      ],
+      "missing_branch_arcs": {
+        "26": [
+          27
+        ],
+        "428": [
+          429
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_parser_bridge_coverage.py": {
+      "statement": 98.72,
+      "branch": 85.71,
+      "statements": 156,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        316
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "315": [
+          316
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_performance_evidence_edges.py": {
+      "statement": 98.82,
+      "branch": 50.0,
+      "statements": 170,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        315
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "314": [
+          315
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_shell_trust_coverage.py": {
+      "statement": 99.23,
+      "branch": 88.89,
+      "statements": 260,
+      "missing_statements": 2,
+      "branches": 18,
+      "missing_branches": 2,
+      "missing_lines": [
+        26,
+        450
+      ],
+      "missing_branch_arcs": {
+        "25": [
+          26
+        ],
+        "449": [
+          450
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_release_validator_final.py": {
+      "statement": 96.43,
+      "branch": 50.0,
+      "statements": 56,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        18,
+        78
+      ],
+      "missing_branch_arcs": {
+        "17": [
+          18
+        ],
+        "77": [
+          78
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_shell_trust_boundary.py": {
+      "statement": 97.33,
+      "branch": 80.0,
+      "statements": 75,
+      "missing_statements": 2,
+      "branches": 10,
+      "missing_branches": 2,
+      "missing_lines": [
+        20,
+        99
+      ],
+      "missing_branch_arcs": {
+        "19": [
+          20
+        ],
+        "98": [
+          99
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_streaming_provenance.py": {
+      "statement": 95.83,
+      "branch": 50.0,
+      "statements": 24,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        34
+      ],
+      "missing_branch_arcs": {
+        "33": [
+          34
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_strict_numeric.py": {
+      "statement": 97.26,
+      "branch": 85.71,
+      "statements": 73,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        103
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "102": [
+          103
+        ]
+      }
+    },
+    "skills/tsao-dft-hpc-provenance/tests/test_validation_fail_closed.py": {
+      "statement": 98.21,
+      "branch": 75.0,
+      "statements": 112,
+      "missing_statements": 2,
+      "branches": 8,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        137
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "136": [
+          137
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/check_thermodynamic_closure.py": {
+      "statement": 100.0,
+      "branch": 96.88,
+      "statements": 75,
+      "missing_statements": 0,
+      "branches": 32,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "75": [
+          81
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/export_cantera_handoff.py": {
+      "statement": 100.0,
+      "branch": 83.33,
+      "statements": 24,
+      "missing_statements": 0,
+      "branches": 6,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "79": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/eyring_rates.py": {
+      "statement": 91.89,
+      "branch": 77.27,
+      "statements": 74,
+      "missing_statements": 6,
+      "branches": 22,
+      "missing_branches": 5,
+      "missing_lines": [
+        42,
+        46,
+        53,
+        54,
+        96,
+        98
+      ],
+      "missing_branch_arcs": {
+        "41": [
+          42
+        ],
+        "45": [
+          46
+        ],
+        "95": [
+          96
+        ],
+        "97": [
+          98
+        ],
+        "111": [
+          113
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/propagate_barrier_uncertainty.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 31,
+      "missing_statements": 0,
+      "branches": 8,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/tst_math.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 52,
+      "missing_statements": 0,
+      "branches": 12,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/tst_standard_state_v4.py": {
+      "statement": 70.83,
+      "branch": 33.33,
+      "statements": 24,
+      "missing_statements": 7,
+      "branches": 6,
+      "missing_branches": 4,
+      "missing_lines": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        30
+      ],
+      "missing_branch_arcs": {
+        "12": [
+          13
+        ],
+        "14": [
+          15,
+          16
+        ],
+        "29": [
+          30
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/scripts/validate_reaction_network.py": {
+      "statement": 91.02,
+      "branch": 83.33,
+      "statements": 167,
+      "missing_statements": 15,
+      "branches": 96,
+      "missing_branches": 16,
+      "missing_lines": [
+        34,
+        35,
+        77,
+        104,
+        111,
+        117,
+        125,
+        127,
+        130,
+        160,
+        161,
+        162,
+        196,
+        205,
+        218
+      ],
+      "missing_branch_arcs": {
+        "33": [
+          34
+        ],
+        "37": [
+          32
+        ],
+        "76": [
+          77
+        ],
+        "103": [
+          104
+        ],
+        "110": [
+          111
+        ],
+        "116": [
+          117
+        ],
+        "121": [
+          123
+        ],
+        "124": [
+          125
+        ],
+        "126": [
+          127
+        ],
+        "129": [
+          130
+        ],
+        "159": [
+          160
+        ],
+        "195": [
+          196
+        ],
+        "204": [
+          205
+        ],
+        "206": [
+          208
+        ],
+        "210": [
+          213
+        ],
+        "217": [
+          218
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/tests/test_kinetics.py": {
+      "statement": 95.0,
+      "branch": 50.0,
+      "statements": 20,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        46
+      ],
+      "missing_branch_arcs": {
+        "45": [
+          46
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/tests/test_kinetics_depth.py": {
+      "statement": 97.44,
+      "branch": 50.0,
+      "statements": 78,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        160
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "159": [
+          160
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/tests/test_tst_numerics.py": {
+      "statement": 98.13,
+      "branch": 50.0,
+      "statements": 107,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 3,
+      "missing_lines": [
+        24,
+        178
+      ],
+      "missing_branch_arcs": {
+        "16": [
+          20
+        ],
+        "23": [
+          24
+        ],
+        "177": [
+          178
+        ]
+      }
+    },
+    "skills/tsao-dft-kinetics-multiscale/tests/test_validation_fail_closed.py": {
+      "statement": 97.37,
+      "branch": 50.0,
+      "statements": 76,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        120
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "119": [
+          120
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/group_split.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 83,
+      "missing_statements": 0,
+      "branches": 26,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/select_active_learning_batch.py": {
+      "statement": 98.51,
+      "branch": 93.75,
+      "statements": 67,
+      "missing_statements": 1,
+      "branches": 16,
+      "missing_branches": 1,
+      "missing_lines": [
+        71
+      ],
+      "missing_branch_arcs": {
+        "70": [
+          71
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/train_ridge_baseline.py": {
+      "statement": 89.36,
+      "branch": 81.58,
+      "statements": 141,
+      "missing_statements": 15,
+      "branches": 38,
+      "missing_branches": 7,
+      "missing_lines": [
+        29,
+        48,
+        66,
+        72,
+        130,
+        138,
+        139,
+        140,
+        146,
+        147,
+        150,
+        151,
+        168,
+        169,
+        170
+      ],
+      "missing_branch_arcs": {
+        "28": [
+          29
+        ],
+        "47": [
+          48
+        ],
+        "65": [
+          66
+        ],
+        "71": [
+          72
+        ],
+        "129": [
+          130
+        ],
+        "145": [
+          146
+        ],
+        "149": [
+          150
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/validate_dft_dataset.py": {
+      "statement": 87.27,
+      "branch": 82.93,
+      "statements": 165,
+      "missing_statements": 21,
+      "branches": 82,
+      "missing_branches": 14,
+      "missing_lines": [
+        30,
+        32,
+        51,
+        69,
+        70,
+        80,
+        81,
+        83,
+        84,
+        88,
+        92,
+        93,
+        126,
+        134,
+        144,
+        145,
+        146,
+        157,
+        161,
+        171,
+        184
+      ],
+      "missing_branch_arcs": {
+        "29": [
+          30
+        ],
+        "31": [
+          32
+        ],
+        "50": [
+          51
+        ],
+        "68": [
+          69
+        ],
+        "79": [
+          80
+        ],
+        "82": [
+          83
+        ],
+        "87": [
+          88
+        ],
+        "91": [
+          92
+        ],
+        "125": [
+          126
+        ],
+        "133": [
+          134
+        ],
+        "156": [
+          157
+        ],
+        "160": [
+          161
+        ],
+        "170": [
+          171
+        ],
+        "183": [
+          184
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/validate_ml_manifest.py": {
+      "statement": 90.74,
+      "branch": 82.14,
+      "statements": 54,
+      "missing_statements": 5,
+      "branches": 28,
+      "missing_branches": 5,
+      "missing_lines": [
+        38,
+        51,
+        59,
+        63,
+        69
+      ],
+      "missing_branch_arcs": {
+        "37": [
+          38
+        ],
+        "50": [
+          51
+        ],
+        "58": [
+          59
+        ],
+        "62": [
+          63
+        ],
+        "68": [
+          69
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/scripts/validate_model_card.py": {
+      "statement": 90.41,
+      "branch": 81.82,
+      "statements": 73,
+      "missing_statements": 7,
+      "branches": 44,
+      "missing_branches": 8,
+      "missing_lines": [
+        42,
+        46,
+        57,
+        58,
+        74,
+        78,
+        86
+      ],
+      "missing_branch_arcs": {
+        "41": [
+          42
+        ],
+        "45": [
+          46
+        ],
+        "56": [
+          57
+        ],
+        "73": [
+          74
+        ],
+        "77": [
+          78
+        ],
+        "85": [
+          86
+        ],
+        "87": [
+          89
+        ],
+        "89": [
+          91
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_dataset_hash_efficiency.py": {
+      "statement": 92.68,
+      "branch": 50.0,
+      "statements": 41,
+      "missing_statements": 3,
+      "branches": 8,
+      "missing_branches": 4,
+      "missing_lines": [
+        16,
+        46,
+        57
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "43": [
+          47
+        ],
+        "45": [
+          46
+        ],
+        "56": [
+          57
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_dft_ml_depth.py": {
+      "statement": 97.96,
+      "branch": 50.0,
+      "statements": 49,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        140
+      ],
+      "missing_branch_arcs": {
+        "139": [
+          140
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_ml.py": {
+      "statement": 96.67,
+      "branch": 75.0,
+      "statements": 30,
+      "missing_statements": 1,
+      "branches": 4,
+      "missing_branches": 1,
+      "missing_lines": [
+        69
+      ],
+      "missing_branch_arcs": {
+        "68": [
+          69
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_solver_efficiency.py": {
+      "statement": 97.75,
+      "branch": 66.67,
+      "statements": 89,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        107
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "106": [
+          107
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_streaming_workflows.py": {
+      "statement": 98.02,
+      "branch": 85.0,
+      "statements": 101,
+      "missing_statements": 2,
+      "branches": 20,
+      "missing_branches": 3,
+      "missing_lines": [
+        22,
+        157
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "51": [
+          57
+        ],
+        "156": [
+          157
+        ]
+      }
+    },
+    "skills/tsao-dft-ml-active-learning/tests/test_validation_fail_closed.py": {
+      "statement": 98.33,
+      "branch": 50.0,
+      "statements": 120,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        178
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "177": [
+          178
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/audit_skill.py": {
+      "statement": 72.12,
+      "branch": 64.47,
+      "statements": 165,
+      "missing_statements": 46,
+      "branches": 76,
+      "missing_branches": 27,
+      "missing_lines": [
+        21,
+        24,
+        29,
+        37,
+        52,
+        53,
+        75,
+        78,
+        85,
+        93,
+        94,
+        95,
+        106,
+        108,
+        110,
+        115,
+        116,
+        121,
+        123,
+        124,
+        125,
+        143,
+        144,
+        145,
+        150,
+        151,
+        155,
+        157,
+        161,
+        162,
+        166,
+        167,
+        169,
+        170,
+        175,
+        176,
+        188,
+        193,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "23": [
+          24
+        ],
+        "28": [
+          29
+        ],
+        "36": [
+          37
+        ],
+        "51": [
+          52
+        ],
+        "74": [
+          75
+        ],
+        "77": [
+          78
+        ],
+        "84": [
+          85
+        ],
+        "105": [
+          106
+        ],
+        "107": [
+          108
+        ],
+        "109": [
+          110
+        ],
+        "114": [
+          115
+        ],
+        "120": [
+          121
+        ],
+        "122": [
+          123
+        ],
+        "149": [
+          150
+        ],
+        "154": [
+          155
+        ],
+        "156": [
+          157
+        ],
+        "168": [
+          169
+        ],
+        "187": [
+          188
+        ],
+        "192": [
+          193
+        ],
+        "211": [
+          214
+        ],
+        "216": [
+          217,
+          218
+        ],
+        "218": [
+          219,
+          220
+        ],
+        "220": [
+          221,
+          222
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/build_energy_profile.py": {
+      "statement": 89.26,
+      "branch": 78.57,
+      "statements": 149,
+      "missing_statements": 16,
+      "branches": 56,
+      "missing_branches": 12,
+      "missing_lines": [
+        44,
+        106,
+        107,
+        142,
+        143,
+        144,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        172
+      ],
+      "missing_branch_arcs": {
+        "43": [
+          44
+        ],
+        "127": [
+          -103
+        ],
+        "141": [
+          142
+        ],
+        "148": [
+          149,
+          152
+        ],
+        "150": [
+          148,
+          151
+        ],
+        "152": [
+          153,
+          155
+        ],
+        "153": [
+          152,
+          154
+        ],
+        "171": [
+          172
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/init_project.py": {
+      "statement": 97.83,
+      "branch": 78.57,
+      "statements": 46,
+      "missing_statements": 1,
+      "branches": 14,
+      "missing_branches": 3,
+      "missing_lines": [
+        31
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          31
+        ],
+        "79": [
+          77
+        ],
+        "98": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/make_vmd_tcl.py": {
+      "statement": 98.08,
+      "branch": 95.0,
+      "statements": 104,
+      "missing_statements": 2,
+      "branches": 40,
+      "missing_branches": 2,
+      "missing_lines": [
+        116,
+        137
+      ],
+      "missing_branch_arcs": {
+        "115": [
+          116
+        ],
+        "136": [
+          137
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/parse_gaussian.py": {
+      "statement": 94.55,
+      "branch": 84.0,
+      "statements": 312,
+      "missing_statements": 17,
+      "branches": 150,
+      "missing_branches": 24,
+      "missing_lines": [
+        173,
+        175,
+        319,
+        320,
+        505,
+        507,
+        517,
+        519,
+        525,
+        527,
+        529,
+        535,
+        591,
+        628,
+        629,
+        633,
+        634
+      ],
+      "missing_branch_arcs": {
+        "167": [
+          173
+        ],
+        "168": [
+          170
+        ],
+        "174": [
+          175
+        ],
+        "192": [
+          198
+        ],
+        "234": [
+          240
+        ],
+        "235": [
+          234
+        ],
+        "237": [
+          234
+        ],
+        "260": [
+          264
+        ],
+        "290": [
+          297
+        ],
+        "300": [
+          321
+        ],
+        "322": [
+          324
+        ],
+        "502": [
+          505
+        ],
+        "506": [
+          507
+        ],
+        "516": [
+          517
+        ],
+        "518": [
+          519
+        ],
+        "524": [
+          525
+        ],
+        "526": [
+          527
+        ],
+        "528": [
+          529
+        ],
+        "534": [
+          535
+        ],
+        "590": [
+          591
+        ],
+        "627": [
+          628
+        ],
+        "630": [
+          633
+        ],
+        "633": [
+          634,
+          635
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/preflight_gaussian_input.py": {
+      "statement": 82.8,
+      "branch": 63.46,
+      "statements": 93,
+      "missing_statements": 16,
+      "branches": 52,
+      "missing_branches": 19,
+      "missing_lines": [
+        21,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        81,
+        83,
+        85,
+        90,
+        96,
+        97
+      ],
+      "missing_branch_arcs": {
+        "20": [
+          21
+        ],
+        "22": [
+          26
+        ],
+        "35": [
+          41
+        ],
+        "37": [
+          41
+        ],
+        "62": [
+          63
+        ],
+        "64": [
+          65
+        ],
+        "66": [
+          67
+        ],
+        "68": [
+          69
+        ],
+        "70": [
+          71
+        ],
+        "72": [
+          73
+        ],
+        "74": [
+          75
+        ],
+        "76": [
+          77
+        ],
+        "78": [
+          79
+        ],
+        "80": [
+          81
+        ],
+        "82": [
+          83
+        ],
+        "84": [
+          85
+        ],
+        "89": [
+          90
+        ],
+        "91": [
+          87
+        ],
+        "117": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/preflight_project.py": {
+      "statement": 77.09,
+      "branch": 58.89,
+      "statements": 179,
+      "missing_statements": 41,
+      "branches": 90,
+      "missing_branches": 37,
+      "missing_lines": [
+        54,
+        55,
+        57,
+        61,
+        62,
+        63,
+        72,
+        83,
+        104,
+        106,
+        108,
+        109,
+        131,
+        133,
+        135,
+        169,
+        170,
+        180,
+        182,
+        187,
+        196,
+        197,
+        199,
+        202,
+        205,
+        206,
+        209,
+        210,
+        212,
+        216,
+        219,
+        220,
+        223,
+        225,
+        242,
+        254,
+        255,
+        257,
+        266,
+        267,
+        269
+      ],
+      "missing_branch_arcs": {
+        "53": [
+          54
+        ],
+        "56": [
+          57
+        ],
+        "60": [
+          61
+        ],
+        "62": [
+          60,
+          63
+        ],
+        "71": [
+          72
+        ],
+        "82": [
+          83
+        ],
+        "103": [
+          104
+        ],
+        "105": [
+          106
+        ],
+        "107": [
+          108
+        ],
+        "130": [
+          131
+        ],
+        "132": [
+          133
+        ],
+        "134": [
+          135
+        ],
+        "139": [
+          138
+        ],
+        "168": [
+          169
+        ],
+        "174": [
+          178
+        ],
+        "179": [
+          180
+        ],
+        "181": [
+          182
+        ],
+        "186": [
+          187
+        ],
+        "195": [
+          196
+        ],
+        "198": [
+          199
+        ],
+        "201": [
+          202
+        ],
+        "204": [
+          205
+        ],
+        "208": [
+          209
+        ],
+        "209": [
+          210,
+          212
+        ],
+        "215": [
+          216
+        ],
+        "218": [
+          219
+        ],
+        "219": [
+          218,
+          220
+        ],
+        "222": [
+          223
+        ],
+        "224": [
+          225
+        ],
+        "241": [
+          242
+        ],
+        "248": [
+          257
+        ],
+        "258": [
+          269
+        ],
+        "273": [
+          276
+        ],
+        "290": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/utils.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 29,
+      "missing_statements": 0,
+      "branches": 8,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-dft-researcher/scripts/validate_figure_manifest.py": {
+      "statement": 94.55,
+      "branch": 89.44,
+      "statements": 220,
+      "missing_statements": 12,
+      "branches": 142,
+      "missing_branches": 15,
+      "missing_lines": [
+        54,
+        55,
+        324,
+        325,
+        326,
+        327,
+        356,
+        357,
+        358,
+        359,
+        360,
+        365
+      ],
+      "missing_branch_arcs": {
+        "101": [
+          105
+        ],
+        "134": [
+          138
+        ],
+        "165": [
+          176
+        ],
+        "176": [
+          178
+        ],
+        "201": [
+          126
+        ],
+        "218": [
+          222
+        ],
+        "323": [
+          324
+        ],
+        "325": [
+          326,
+          327
+        ],
+        "353": [
+          356
+        ],
+        "356": [
+          357,
+          358
+        ],
+        "358": [
+          359,
+          360
+        ],
+        "364": [
+          365
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/validate_multiwfn_recipe.py": {
+      "statement": 86.96,
+      "branch": 75.0,
+      "statements": 92,
+      "missing_statements": 12,
+      "branches": 48,
+      "missing_branches": 12,
+      "missing_lines": [
+        54,
+        81,
+        84,
+        87,
+        93,
+        94,
+        97,
+        112,
+        114,
+        116,
+        118,
+        124
+      ],
+      "missing_branch_arcs": {
+        "53": [
+          54
+        ],
+        "80": [
+          81
+        ],
+        "83": [
+          84
+        ],
+        "86": [
+          87
+        ],
+        "92": [
+          93
+        ],
+        "96": [
+          97
+        ],
+        "98": [
+          115
+        ],
+        "111": [
+          112
+        ],
+        "113": [
+          114
+        ],
+        "115": [
+          116
+        ],
+        "117": [
+          118
+        ],
+        "123": [
+          124
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/validate_research_manifest.py": {
+      "statement": 95.06,
+      "branch": 91.57,
+      "statements": 263,
+      "missing_statements": 13,
+      "branches": 178,
+      "missing_branches": 15,
+      "missing_lines": [
+        66,
+        67,
+        245,
+        368,
+        369,
+        370,
+        371,
+        397,
+        398,
+        399,
+        400,
+        401,
+        406
+      ],
+      "missing_branch_arcs": {
+        "117": [
+          121
+        ],
+        "142": [
+          144
+        ],
+        "144": [
+          147
+        ],
+        "189": [
+          191
+        ],
+        "203": [
+          207
+        ],
+        "244": [
+          245
+        ],
+        "367": [
+          368
+        ],
+        "369": [
+          370,
+          371
+        ],
+        "394": [
+          397
+        ],
+        "397": [
+          398,
+          399
+        ],
+        "399": [
+          400,
+          401
+        ],
+        "405": [
+          406
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/scripts/validate_uncertainty_budget.py": {
+      "statement": 94.03,
+      "branch": 91.18,
+      "statements": 67,
+      "missing_statements": 4,
+      "branches": 34,
+      "missing_branches": 3,
+      "missing_lines": [
+        40,
+        44,
+        45,
+        47
+      ],
+      "missing_branch_arcs": {
+        "39": [
+          40
+        ],
+        "43": [
+          44
+        ],
+        "46": [
+          47
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_audit_skill.py": {
+      "statement": 91.3,
+      "branch": 50.0,
+      "statements": 46,
+      "missing_statements": 4,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        19,
+        52,
+        53,
+        58
+      ],
+      "missing_branch_arcs": {
+        "18": [
+          19
+        ],
+        "57": [
+          58
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_build_energy_profile.py": {
+      "statement": 98.41,
+      "branch": 85.71,
+      "statements": 126,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        166
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "165": [
+          166
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_dft_preflight_and_uq.py": {
+      "statement": 96.15,
+      "branch": 50.0,
+      "statements": 26,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        48
+      ],
+      "missing_branch_arcs": {
+        "47": [
+          48
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_figure_manifest.py": {
+      "statement": 96.0,
+      "branch": 50.0,
+      "statements": 25,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        91
+      ],
+      "missing_branch_arcs": {
+        "90": [
+          91
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_gaussian_error_taxonomy.py": {
+      "statement": 96.72,
+      "branch": 83.33,
+      "statements": 61,
+      "missing_statements": 2,
+      "branches": 12,
+      "missing_branches": 2,
+      "missing_lines": [
+        19,
+        127
+      ],
+      "missing_branch_arcs": {
+        "18": [
+          19
+        ],
+        "126": [
+          127
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_make_vmd_tcl.py": {
+      "statement": 95.65,
+      "branch": 50.0,
+      "statements": 23,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        43
+      ],
+      "missing_branch_arcs": {
+        "42": [
+          43
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_parse_gaussian.py": {
+      "statement": 95.0,
+      "branch": 50.0,
+      "statements": 20,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        26
+      ],
+      "missing_branch_arcs": {
+        "25": [
+          26
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_parse_gaussian_rich.py": {
+      "statement": 95.0,
+      "branch": 50.0,
+      "statements": 20,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        25
+      ],
+      "missing_branch_arcs": {
+        "24": [
+          25
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_preflight.py": {
+      "statement": 97.92,
+      "branch": 50.0,
+      "statements": 48,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        62
+      ],
+      "missing_branch_arcs": {
+        "61": [
+          62
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_release_figure_manifest_coverage.py": {
+      "statement": 99.07,
+      "branch": 75.0,
+      "statements": 215,
+      "missing_statements": 2,
+      "branches": 8,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        375
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "374": [
+          375
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_release_research_manifest_coverage.py": {
+      "statement": 99.01,
+      "branch": 83.33,
+      "statements": 202,
+      "missing_statements": 2,
+      "branches": 12,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        382
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "381": [
+          382
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_research_manifest.py": {
+      "statement": 95.83,
+      "branch": 50.0,
+      "statements": 24,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        97
+      ],
+      "missing_branch_arcs": {
+        "96": [
+          97
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_uncertainty_numerics.py": {
+      "statement": 95.83,
+      "branch": 50.0,
+      "statements": 48,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        17,
+        74
+      ],
+      "missing_branch_arcs": {
+        "16": [
+          17
+        ],
+        "73": [
+          74
+        ]
+      }
+    },
+    "skills/tsao-dft-researcher/tests/test_validation_fail_closed.py": {
+      "statement": 97.67,
+      "branch": 66.67,
+      "statements": 86,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        22,
+        116
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "115": [
+          116
+        ]
+      }
+    },
+    "skills/tsao-dft-suite/scripts/route_dft_task.py": {
+      "statement": 93.75,
+      "branch": 71.43,
+      "statements": 32,
+      "missing_statements": 2,
+      "branches": 14,
+      "missing_branches": 4,
+      "missing_lines": [
+        74,
+        76
+      ],
+      "missing_branch_arcs": {
+        "71": [
+          73
+        ],
+        "73": [
+          74
+        ],
+        "75": [
+          76
+        ],
+        "94": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-suite/scripts/validate_handoff.py": {
+      "statement": 80.68,
+      "branch": 67.31,
+      "statements": 88,
+      "missing_statements": 17,
+      "branches": 52,
+      "missing_branches": 17,
+      "missing_lines": [
+        66,
+        68,
+        70,
+        72,
+        74,
+        76,
+        80,
+        89,
+        90,
+        92,
+        94,
+        96,
+        100,
+        111,
+        115,
+        117,
+        120
+      ],
+      "missing_branch_arcs": {
+        "65": [
+          66
+        ],
+        "67": [
+          68
+        ],
+        "69": [
+          70
+        ],
+        "71": [
+          72
+        ],
+        "73": [
+          74
+        ],
+        "75": [
+          76
+        ],
+        "79": [
+          80
+        ],
+        "88": [
+          89
+        ],
+        "91": [
+          92
+        ],
+        "93": [
+          94
+        ],
+        "95": [
+          96
+        ],
+        "99": [
+          100
+        ],
+        "110": [
+          111
+        ],
+        "114": [
+          115
+        ],
+        "116": [
+          117
+        ],
+        "119": [
+          120
+        ],
+        "148": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-dft-suite/scripts/validate_method_fingerprint.py": {
+      "statement": 100.0,
+      "branch": 94.74,
+      "statements": 60,
+      "missing_statements": 0,
+      "branches": 38,
+      "missing_branches": 2,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "55": [
+          54
+        ],
+        "58": [
+          57
+        ]
+      }
+    },
+    "skills/tsao-dft-suite/tests/test_suite.py": {
+      "statement": 98.08,
+      "branch": 75.0,
+      "statements": 52,
+      "missing_statements": 1,
+      "branches": 4,
+      "missing_branches": 1,
+      "missing_lines": [
+        86
+      ],
+      "missing_branch_arcs": {
+        "85": [
+          86
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/analyze_convergence.py": {
+      "statement": 94.29,
+      "branch": 95.45,
+      "statements": 70,
+      "missing_statements": 4,
+      "branches": 22,
+      "missing_branches": 1,
+      "missing_lines": [
+        55,
+        56,
+        98,
+        99
+      ],
+      "missing_branch_arcs": {
+        "54": [
+          55
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/build_convergence_matrix.py": {
+      "statement": 94.74,
+      "branch": 75.0,
+      "statements": 19,
+      "missing_statements": 1,
+      "branches": 4,
+      "missing_branches": 1,
+      "missing_lines": [
+        15
+      ],
+      "missing_branch_arcs": {
+        "14": [
+          15
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/check_energy_compatibility.py": {
+      "statement": 98.18,
+      "branch": 95.45,
+      "statements": 55,
+      "missing_statements": 1,
+      "branches": 22,
+      "missing_branches": 1,
+      "missing_lines": [
+        24
+      ],
+      "missing_branch_arcs": {
+        "23": [
+          24
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/parse_cp2k.py": {
+      "statement": 93.02,
+      "branch": 66.67,
+      "statements": 86,
+      "missing_statements": 6,
+      "branches": 18,
+      "missing_branches": 6,
+      "missing_lines": [
+        59,
+        61,
+        98,
+        113,
+        121,
+        122
+      ],
+      "missing_branch_arcs": {
+        "39": [
+          57
+        ],
+        "58": [
+          59
+        ],
+        "60": [
+          61
+        ],
+        "97": [
+          98
+        ],
+        "109": [
+          113
+        ],
+        "120": [
+          121
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/parse_qe.py": {
+      "statement": 93.62,
+      "branch": 66.67,
+      "statements": 94,
+      "missing_statements": 6,
+      "branches": 18,
+      "missing_branches": 6,
+      "missing_lines": [
+        67,
+        69,
+        108,
+        123,
+        131,
+        132
+      ],
+      "missing_branch_arcs": {
+        "43": [
+          65
+        ],
+        "66": [
+          67
+        ],
+        "68": [
+          69
+        ],
+        "107": [
+          108
+        ],
+        "119": [
+          123
+        ],
+        "130": [
+          131
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/parse_vasp.py": {
+      "statement": 92.62,
+      "branch": 80.95,
+      "statements": 122,
+      "missing_statements": 9,
+      "branches": 42,
+      "missing_branches": 8,
+      "missing_lines": [
+        85,
+        91,
+        99,
+        100,
+        110,
+        138,
+        153,
+        161,
+        162
+      ],
+      "missing_branch_arcs": {
+        "63": [
+          104
+        ],
+        "84": [
+          85
+        ],
+        "90": [
+          91
+        ],
+        "105": [
+          107
+        ],
+        "109": [
+          110
+        ],
+        "137": [
+          138
+        ],
+        "149": [
+          153
+        ],
+        "160": [
+          161
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/preflight_cp2k.py": {
+      "statement": 78.43,
+      "branch": 60.0,
+      "statements": 51,
+      "missing_statements": 11,
+      "branches": 30,
+      "missing_branches": 12,
+      "missing_lines": [
+        50,
+        52,
+        54,
+        56,
+        58,
+        61,
+        63,
+        65,
+        67,
+        69,
+        71
+      ],
+      "missing_branch_arcs": {
+        "49": [
+          50
+        ],
+        "51": [
+          52
+        ],
+        "53": [
+          54
+        ],
+        "55": [
+          56
+        ],
+        "57": [
+          58
+        ],
+        "60": [
+          61
+        ],
+        "62": [
+          63
+        ],
+        "64": [
+          65
+        ],
+        "66": [
+          67
+        ],
+        "68": [
+          69
+        ],
+        "70": [
+          71
+        ],
+        "85": [
+          -1
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/preflight_qe.py": {
+      "statement": 85.6,
+      "branch": 77.14,
+      "statements": 125,
+      "missing_statements": 18,
+      "branches": 70,
+      "missing_branches": 16,
+      "missing_lines": [
+        56,
+        57,
+        60,
+        61,
+        62,
+        80,
+        81,
+        89,
+        91,
+        99,
+        102,
+        107,
+        116,
+        118,
+        124,
+        126,
+        133,
+        135
+      ],
+      "missing_branch_arcs": {
+        "31": [
+          36
+        ],
+        "34": [
+          32
+        ],
+        "55": [
+          56
+        ],
+        "79": [
+          80
+        ],
+        "88": [
+          89
+        ],
+        "90": [
+          91
+        ],
+        "98": [
+          99
+        ],
+        "101": [
+          102
+        ],
+        "106": [
+          107
+        ],
+        "108": [
+          111
+        ],
+        "115": [
+          116
+        ],
+        "117": [
+          118
+        ],
+        "123": [
+          124
+        ],
+        "125": [
+          126
+        ],
+        "132": [
+          133
+        ],
+        "134": [
+          135
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/preflight_vasp.py": {
+      "statement": 97.41,
+      "branch": 94.83,
+      "statements": 116,
+      "missing_statements": 3,
+      "branches": 58,
+      "missing_branches": 3,
+      "missing_lines": [
+        94,
+        95,
+        96
+      ],
+      "missing_branch_arcs": {
+        "30": [
+          28
+        ],
+        "81": [
+          80
+        ],
+        "116": [
+          118
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/scripts/utils.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 29,
+      "missing_statements": 0,
+      "branches": 8,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-periodic-dft-materials/scripts/validate_periodic_manifest.py": {
+      "statement": 100.0,
+      "branch": 96.77,
+      "statements": 88,
+      "missing_statements": 0,
+      "branches": 62,
+      "missing_branches": 2,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "123": [
+          122
+        ],
+        "136": [
+          138
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/tests/test_engine_adapters.py": {
+      "statement": 97.14,
+      "branch": 50.0,
+      "statements": 35,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        48
+      ],
+      "missing_branch_arcs": {
+        "47": [
+          48
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/tests/test_numerical_convergence.py": {
+      "statement": 97.87,
+      "branch": 50.0,
+      "statements": 94,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        20,
+        148
+      ],
+      "missing_branch_arcs": {
+        "19": [
+          20
+        ],
+        "147": [
+          148
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/tests/test_periodic.py": {
+      "statement": 95.65,
+      "branch": 50.0,
+      "statements": 23,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        56
+      ],
+      "missing_branch_arcs": {
+        "55": [
+          56
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/tests/test_streaming_parsers.py": {
+      "statement": 96.77,
+      "branch": 66.67,
+      "statements": 62,
+      "missing_statements": 2,
+      "branches": 6,
+      "missing_branches": 2,
+      "missing_lines": [
+        16,
+        78
+      ],
+      "missing_branch_arcs": {
+        "15": [
+          16
+        ],
+        "77": [
+          78
+        ]
+      }
+    },
+    "skills/tsao-periodic-dft-materials/tests/test_validation_fail_closed.py": {
+      "statement": 97.73,
+      "branch": 50.0,
+      "statements": 88,
+      "missing_statements": 2,
+      "branches": 4,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        123
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "122": [
+          123
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/scripts/expand_structure_campaign.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 68,
+      "missing_statements": 0,
+      "branches": 20,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-structure-prep/scripts/inspect_xyz.py": {
+      "statement": 88.51,
+      "branch": 81.25,
+      "statements": 235,
+      "missing_statements": 27,
+      "branches": 96,
+      "missing_branches": 18,
+      "missing_lines": [
+        62,
+        75,
+        78,
+        79,
+        83,
+        89,
+        92,
+        95,
+        96,
+        127,
+        156,
+        176,
+        177,
+        242,
+        267,
+        283,
+        293,
+        294,
+        295,
+        323,
+        324,
+        363,
+        366,
+        367,
+        368,
+        390,
+        391
+      ],
+      "missing_branch_arcs": {
+        "61": [
+          62
+        ],
+        "74": [
+          75
+        ],
+        "82": [
+          83
+        ],
+        "88": [
+          89
+        ],
+        "91": [
+          92
+        ],
+        "126": [
+          127
+        ],
+        "128": [
+          118
+        ],
+        "155": [
+          156
+        ],
+        "175": [
+          176
+        ],
+        "241": [
+          242
+        ],
+        "245": [
+          237
+        ],
+        "266": [
+          267
+        ],
+        "282": [
+          283
+        ],
+        "362": [
+          363
+        ],
+        "364": [
+          366
+        ],
+        "366": [
+          367,
+          368
+        ],
+        "389": [
+          390
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/scripts/neighbor_list.py": {
+      "statement": 97.2,
+      "branch": 91.53,
+      "statements": 286,
+      "missing_statements": 8,
+      "branches": 118,
+      "missing_branches": 10,
+      "missing_lines": [
+        72,
+        107,
+        111,
+        125,
+        161,
+        409,
+        431,
+        458
+      ],
+      "missing_branch_arcs": {
+        "71": [
+          72
+        ],
+        "106": [
+          107
+        ],
+        "110": [
+          111
+        ],
+        "124": [
+          125
+        ],
+        "152": [
+          151
+        ],
+        "160": [
+          161
+        ],
+        "267": [
+          263
+        ],
+        "408": [
+          409
+        ],
+        "430": [
+          431
+        ],
+        "457": [
+          458
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/scripts/structure_hash.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 29,
+      "missing_statements": 0,
+      "branches": 8,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-structure-prep/scripts/utils.py": {
+      "statement": 100.0,
+      "branch": 100.0,
+      "statements": 52,
+      "missing_statements": 0,
+      "branches": 20,
+      "missing_branches": 0,
+      "missing_lines": [],
+      "missing_branch_arcs": {}
+    },
+    "skills/tsao-structure-prep/scripts/validate_atom_mapping.py": {
+      "statement": 90.82,
+      "branch": 83.33,
+      "statements": 98,
+      "missing_statements": 9,
+      "branches": 42,
+      "missing_branches": 7,
+      "missing_lines": [
+        22,
+        59,
+        60,
+        83,
+        99,
+        105,
+        106,
+        108,
+        109
+      ],
+      "missing_branch_arcs": {
+        "21": [
+          22
+        ],
+        "53": [
+          51
+        ],
+        "58": [
+          59
+        ],
+        "82": [
+          83
+        ],
+        "85": [
+          108
+        ],
+        "98": [
+          99
+        ],
+        "101": [
+          105
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/scripts/validate_structure_manifest.py": {
+      "statement": 100.0,
+      "branch": 98.08,
+      "statements": 81,
+      "missing_statements": 0,
+      "branches": 52,
+      "missing_branches": 1,
+      "missing_lines": [],
+      "missing_branch_arcs": {
+        "71": [
+          75
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_acceleration_backends.py": {
+      "statement": 98.0,
+      "branch": 83.33,
+      "statements": 100,
+      "missing_statements": 2,
+      "branches": 12,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        168
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "167": [
+          168
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_geometry_audit.py": {
+      "statement": 94.74,
+      "branch": 50.0,
+      "statements": 19,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        43
+      ],
+      "missing_branch_arcs": {
+        "42": [
+          43
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_neighbor_list.py": {
+      "statement": 98.59,
+      "branch": 92.86,
+      "statements": 142,
+      "missing_statements": 2,
+      "branches": 28,
+      "missing_branches": 2,
+      "missing_lines": [
+        23,
+        282
+      ],
+      "missing_branch_arcs": {
+        "22": [
+          23
+        ],
+        "281": [
+          282
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_parallel_hashing.py": {
+      "statement": 95.45,
+      "branch": 62.5,
+      "statements": 66,
+      "missing_statements": 3,
+      "branches": 8,
+      "missing_branches": 3,
+      "missing_lines": [
+        20,
+        34,
+        104
+      ],
+      "missing_branch_arcs": {
+        "19": [
+          20
+        ],
+        "33": [
+          34
+        ],
+        "103": [
+          104
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_streaming_hashes.py": {
+      "statement": 95.83,
+      "branch": 50.0,
+      "statements": 24,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        34
+      ],
+      "missing_branch_arcs": {
+        "33": [
+          34
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_structure_prep.py": {
+      "statement": 95.24,
+      "branch": 50.0,
+      "statements": 21,
+      "missing_statements": 1,
+      "branches": 2,
+      "missing_branches": 1,
+      "missing_lines": [
+        41
+      ],
+      "missing_branch_arcs": {
+        "40": [
+          41
+        ]
+      }
+    },
+    "skills/tsao-structure-prep/tests/test_validation_fail_closed.py": {
+      "statement": 97.53,
+      "branch": 62.5,
+      "statements": 81,
+      "missing_statements": 2,
+      "branches": 8,
+      "missing_branches": 3,
+      "missing_lines": [
+        21,
+        113
+      ],
+      "missing_branch_arcs": {
+        "13": [
+          17
+        ],
+        "20": [
+          21
+        ],
+        "112": [
+          113
+        ]
+      }
+    }
+  },
+  "contract_evidence": {
+    "ok": true,
+    "schema_version": "1.5",
+    "state": "EXTERNAL_HOLD",
+    "scope": "repository templates, canonical semantics, closed campaign policy, software acceleration architecture and permanent validators only",
+    "external_engine_invoked": false,
+    "acceleration_registry": {
+      "ok": true,
+      "registry_version": "1.0",
+      "libraries": 27,
+      "runtime_single_source": true
+    },
+    "benchmark_contract": {
+      "ok": true,
+      "canonical_contract": "nested-v1.1",
+      "canonical_schema_sha256": "728dd5467f8423de133049129c56d13cef708a9314a59eed42d088fc11bcf2e8",
+      "root_mirror_synchronized": true,
+      "native_semantic_schema_version": "1.1",
+      "compatibility_view_present": false,
+      "legacy_semantic_bypass": "FAIL_CLOSED",
+      "legacy_contracts": [
+        "nested-v1.0",
+        "flat-v1.0"
+      ],
+      "legacy_flat_qualification_impact": "EXTERNAL_HOLD",
+      "unknown_or_mixed_input": "FAIL_CLOSED"
+    },
+    "campaign_contract": {
+      "ok": true,
+      "canonical_contract": "canonical-compute-campaign-v1.1",
+      "canonical_schema_version": "1.1",
+      "canonical_schema_sha256": "6d388becb98cd830e5b8246eb0b24082fefa75ac5c41d844dcc027557826c2fc",
+      "root_mirror_synchronized": true,
+      "template_source_contract": "canonical-compute-campaign-v1.1",
+      "template_migration": "none",
+      "migration_qualification_impact": "none",
+      "defaults_applied": [],
+      "evidence_fields_added": [],
+      "unknown_or_mixed_input": "FAIL_CLOSED",
+      "immutable_mapping": true,
+      "benchmark_result_boundary": "campaign-policy-independent-from-benchmark-result-evidence"
+    },
+    "engine_capabilities": {
+      "ok": true,
+      "engines": [
+        "cp2k",
+        "quantum-espresso",
+        "vasp"
+      ],
+      "repository_template_state": "EXTERNAL_HOLD",
+      "performance_qualification": "NOT_ESTABLISHED"
+    },
+    "compute_qualification": {
+      "ok": true,
+      "repository_state": "EXTERNAL_HOLD",
+      "performance_evaluated": false,
+      "workers_bounded_by": 8,
+      "benchmark_result_contract": "canonical-nested-v1.1",
+      "input_model": "canonical-nested-v1.1-typed-accessor",
+      "normalization_mandatory": true,
+      "native_semantic_validation": true,
+      "legacy_projection_retained": true,
+      "legacy_projection_consumed": false,
+      "legacy_projection_qualification_impact": "NOT_ELIGIBLE",
+      "identity_invariants": [
+        "campaign role equals canonical role",
+        "global execution.run_id uniqueness",
+        "single campaign site identity",
+        "stable per-candidate build/software/hardware identity",
+        "stable per-candidate multi-GPU UUID set",
+        "single canonical scientific identity",
+        "fully VERIFIED artifacts before ratio evaluation"
+      ]
+    },
+    "implementation_architecture": {
+      "doctrine": "python-control-plane-profile-first",
+      "doctrine_path": "docs/ACCELERATION_ENGINEERING_DOCTRINE.md",
+      "python_control_plane": true,
+      "whole_repo_cpp_rewrite": "NOT_RECOMMENDED",
+      "neighbor_search": {
+        "implemented": true,
+        "backends": [
+          "reference",
+          "numpy",
+          "cell-list"
+        ],
+        "periodicity": [
+          "non-periodic",
+          "orthogonal",
+          "triclinic",
+          "partial-axes"
+        ],
+        "deterministic_pair_order": true,
+        "implicit_gpu_selection": false,
+        "qualification_impact": "NOT_PERFORMANCE_EVIDENCE"
+      },
+      "parser_scan": {
+        "implemented": true,
+        "transport": "read-only-mmap",
+        "engines": [
+          "gaussian",
+          "vasp",
+          "quantum-espresso",
+          "cp2k"
+        ],
+        "mapped_artifact_sha256": true,
+        "nonfinite_numeric_input": "FAIL_CLOSED",
+        "qualification_impact": "NOT_ENGINE_SPEEDUP_EVIDENCE"
+      },
+      "native_sidecar": {
+        "implemented": false,
+        "cmake_path": "native/CMakeLists.txt",
+        "status": "PROFILE_AND_BUILD_GATED"
+      },
+      "cuda_kernels": {
+        "implemented": false,
+        "sources": [],
+        "status": "NOT_ESTABLISHED"
+      },
+      "external_engine_acceleration": "EXTERNAL_HOLD"
+    },
+    "performance_ratio_published": false,
+    "errors": [],
+    "non_claims": [
+      "This evidence captures repository contracts and software architecture, not external engine execution.",
+      "EXTERNAL_HOLD does not establish numerical or performance qualification.",
+      "Campaign v1.0 migration expands role declarations but creates no execution evidence.",
+      "Campaign migration cannot remove benchmark-result provenance gaps or lift EXTERNAL_HOLD.",
+      "Legacy flat benchmark-result v1.0 migration does not recover missing provenance.",
+      "Legacy nested benchmark-result v1.0 is centrally migrated before v1.1 semantics.",
+      "No nested v1.0 semantic downgrade view is used.",
+      "compute_qualification_view remains diagnostic and is not qualification input.",
+      "The neighbor-list and mmap parser cores are software optimizations, not DFT-engine speedup evidence.",
+      "No native sidecar or CUDA kernel is claimed unless it exists and passes its own build/equivalence gates.",
+      "No CPU/GPU performance ratio is published without accepted real-engine results."
+    ]
+  },
+  "failures": []
+}

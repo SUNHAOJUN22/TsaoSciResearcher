@@ -1,0 +1,726 @@
+{
+  "schema": "TSAO-EPDM-V2-REQUIREMENTS-1",
+  "design_spec_version": "1.0.0",
+  "items": [
+    {
+      "requirement_id": "ARCH-001",
+      "priority": "P0",
+      "requirement": "Preserve V1 public API as compatibility/reference layer.",
+      "target_module": "kinetics.py/process.py/batch.py",
+      "gate_or_status": "V1_GOLDEN_REGRESSION",
+      "verification": "Golden fixture regression",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "ARCH-002",
+      "priority": "P0",
+      "requirement": "Label every result with model_generation.",
+      "target_module": "results/contracts",
+      "gate_or_status": "MODEL_GENERATION_DECLARED",
+      "verification": "Schema and unit test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "ARCH-003",
+      "priority": "P0",
+      "requirement": "Separate domain model RHS from numerical integrator.",
+      "target_module": "reactors.py, tsao/modeling/integrators.py",
+      "gate_or_status": "MODEL_SOLVER_SEPARATION",
+      "verification": "Architecture/import test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "ARCH-004",
+      "priority": "P1",
+      "requirement": "Keep optional scientific dependencies out of base import path.",
+      "target_module": "packaging/integrators.py",
+      "gate_or_status": "BASE_IMPORT_CLEAN",
+      "verification": "Clean-environment import test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "CAT-001",
+      "priority": "P0",
+      "requirement": "Represent catalyst family and site model with enums.",
+      "target_module": "contracts.py",
+      "gate_or_status": "CATALYST_ROUTE_DECLARED",
+      "verification": "Schema negative/positive tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "CAT-002",
+      "priority": "P0",
+      "requirement": "Require evidence for maximum active-site capacity.",
+      "target_module": "contracts.py/qualification.py",
+      "gate_or_status": "ACTIVE_SITE_EVIDENCE_COMPLETE",
+      "verification": "Gate test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "CAT-003",
+      "priority": "P0",
+      "requirement": "Default metallocene to single site unless multisite evidence exists.",
+      "target_module": "contracts.py",
+      "gate_or_status": "METALLOCENE_SITE_MODEL_VALID",
+      "verification": "Conditional-schema test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "CAT-004",
+      "priority": "P0",
+      "requirement": "Mark simulator placeholder catalyst components explicitly.",
+      "target_module": "contracts.py/package_audit.py",
+      "gate_or_status": "PLACEHOLDER_COMPONENT_LABELED",
+      "verification": "Audit test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "DIE-001",
+      "priority": "P0",
+      "requirement": "Use separate diene passports for ENB, DCPD, and VNB.",
+      "target_module": "contracts.py",
+      "gate_or_status": "DIENE_PASSPORT_VALID",
+      "verification": "Schema tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "DIE-002",
+      "priority": "P0",
+      "requirement": "Block detailed model when repeat segment is missing.",
+      "target_module": "qualification.py",
+      "gate_or_status": "DIENE_SEGMENT_DEFINED",
+      "verification": "Negative gate test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "DIE-003",
+      "priority": "P0",
+      "requirement": "Block kinetics when thermodynamic diene parameters are missing.",
+      "target_module": "qualification.py/thermodynamics.py",
+      "gate_or_status": "BLOCKED_BY_THERMODYNAMICS",
+      "verification": "Negative gate test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "DIE-004",
+      "priority": "P0",
+      "requirement": "Forbid silent kinetic parameter transfer across diene identities.",
+      "target_module": "contracts.py/package_audit.py",
+      "gate_or_status": "DIENE_PARAMETER_IDENTITY_MATCH",
+      "verification": "Cross-reference test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "PAR-001",
+      "priority": "P0",
+      "requirement": "Every kinetic parameter has value, unit, Tref, bounds, evidence, scope, domain, and maturity.",
+      "target_module": "contracts.py",
+      "gate_or_status": "KIN_PARAMETER_EVIDENCE_COMPLETE",
+      "verification": "Contract/schema tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "PAR-002",
+      "priority": "P0",
+      "requirement": "Declare Arrhenius representation and energy units.",
+      "target_module": "contracts.py/reaction_network.py",
+      "gate_or_status": "ARRHENIUS_BASIS_VALID",
+      "verification": "Unit conversion tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "PAR-003",
+      "priority": "P0",
+      "requirement": "Disable grade/reactor-specific parameters by default.",
+      "target_module": "calibration.py",
+      "gate_or_status": "GLOBAL_BINDING_DEFAULT",
+      "verification": "Calibration-plan tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "PAR-004",
+      "priority": "P0",
+      "requirement": "Do not vary assumed parameters in formal calibration.",
+      "target_module": "calibration.py/qualification.py",
+      "gate_or_status": "NO_ASSUMED_VARIED_PARAMETER",
+      "verification": "Negative plan test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "RXN-001",
+      "priority": "P0",
+      "requirement": "Detailed propagation uses site×terminal×incoming monomer matrix.",
+      "target_module": "reaction_network.py",
+      "gate_or_status": "TERMINAL_MATRIX_COMPLETE",
+      "verification": "Shape and pathway tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "RXN-002",
+      "priority": "P0",
+      "requirement": "Represent activation and initiation separately.",
+      "target_module": "reaction_network.py",
+      "gate_or_status": "ACTIVATION_INITIATION_DECLARED",
+      "verification": "Reaction unit tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "RXN-003",
+      "priority": "P0",
+      "requirement": "Represent transfer to E/P/D/H2/solvent/cocatalyst separately where enabled.",
+      "target_module": "reaction_network.py",
+      "gate_or_status": "TRANSFER_CHANNELS_DECLARED",
+      "verification": "Reaction unit tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "RXN-004",
+      "priority": "P0",
+      "requirement": "Separate hydrogen transfer from reversible inhibition.",
+      "target_module": "reaction_network.py",
+      "gate_or_status": "H2_MECHANISMS_SEPARATE",
+      "verification": "Mechanism test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "RXN-005",
+      "priority": "P0",
+      "requirement": "Represent spontaneous and poison deactivation separately.",
+      "target_module": "reaction_network.py",
+      "gate_or_status": "DEACTIVATION_PATHWAYS_DECLARED",
+      "verification": "Reaction unit tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "RXN-006",
+      "priority": "P1",
+      "requirement": "Represent TDB generation and reincorporation explicitly when claimed.",
+      "target_module": "reaction_network.py/moments.py",
+      "gate_or_status": "TDB_PATHWAYS_COMPLETE",
+      "verification": "Synthetic pathway tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "STATE-001",
+      "priority": "P0",
+      "requirement": "Use a versioned generated state definition rather than hard-coded indices.",
+      "target_module": "contracts.py/reactors.py",
+      "gate_or_status": "STATE_DEFINITION_VALID",
+      "verification": "Roundtrip/index tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "STATE-002",
+      "priority": "P0",
+      "requirement": "Active-site states are dynamic in V2.",
+      "target_module": "reaction_network.py/reactors.py",
+      "gate_or_status": "SITE_BALANCE_VALID",
+      "verification": "Conservation tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "STATE-003",
+      "priority": "P0",
+      "requirement": "Track nonnegative monomer, site, and moment states.",
+      "target_module": "reactors.py/integrators.py",
+      "gate_or_status": "NONNEGATIVE_STATE",
+      "verification": "Property/event tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A2"
+    },
+    {
+      "requirement_id": "MOM-001",
+      "priority": "P1",
+      "requirement": "Level 2 tracks zeroth and first live/dead moments.",
+      "target_module": "moments.py",
+      "gate_or_status": "MOMENT_LEVEL2_COMPLETE",
+      "verification": "Analytical/synthetic tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "MOM-002",
+      "priority": "P1",
+      "requirement": "Level 3 tracks second moments and computes MWw/PDI.",
+      "target_module": "moments.py",
+      "gate_or_status": "MOMENT_LEVEL3_COMPLETE",
+      "verification": "Synthetic distribution tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "MOM-003",
+      "priority": "P1",
+      "requirement": "Detailed PDI is moment-based, not heuristic.",
+      "target_module": "moments.py",
+      "gate_or_status": "PDI_BASIS_DECLARED",
+      "verification": "Regression/contract test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "MOM-004",
+      "priority": "P1",
+      "requirement": "Gel conclusions carry an explicit model level and evidence boundary.",
+      "target_module": "moments.py/qualification.py",
+      "gate_or_status": "GEL_MODEL_LEVEL_DECLARED",
+      "verification": "Gate tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "THR-001",
+      "priority": "P0",
+      "requirement": "Provide ThermodynamicBackend protocol.",
+      "target_module": "thermodynamics.py",
+      "gate_or_status": "THERMO_METHOD_DECLARED",
+      "verification": "Protocol/backend tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "THR-002",
+      "priority": "P0",
+      "requirement": "Provide reference, tabulated, and external-simulator backend categories.",
+      "target_module": "thermodynamics.py",
+      "gate_or_status": "THERMO_BACKEND_VALID",
+      "verification": "Backend contract tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "THR-003",
+      "priority": "P0",
+      "requirement": "Close density, holdup, and residence time before kinetic fitting.",
+      "target_module": "thermodynamics.py/calibration.py",
+      "gate_or_status": "RESIDENCE_TIME_CLOSED",
+      "verification": "Prerequisite-gate test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "THR-004",
+      "priority": "P0",
+      "requirement": "Validate phase stability and monomer partitioning where applicable.",
+      "target_module": "thermodynamics.py",
+      "gate_or_status": "PHASE_AND_PARTITION_VALID",
+      "verification": "Dataset/backend tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "THR-005",
+      "priority": "P0",
+      "requirement": "Block kinetic calibration when applicable thermo gates fail.",
+      "target_module": "qualification.py/calibration.py",
+      "gate_or_status": "BLOCKED_BY_THERMODYNAMICS",
+      "verification": "Negative integration test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "CAL-001",
+      "priority": "P0",
+      "requirement": "Use multi-dataset weighted objective with declared scales.",
+      "target_module": "calibration.py/objectives.py",
+      "gate_or_status": "CAL_OBJECTIVE_DECLARED",
+      "verification": "Synthetic fit tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "CAL-002",
+      "priority": "P0",
+      "requirement": "Enforce staged calibration order A–F.",
+      "target_module": "calibration.py",
+      "gate_or_status": "KIN_STAGE_ORDER_VALID",
+      "verification": "Plan validation tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "CAL-003",
+      "priority": "P0",
+      "requirement": "Share catalyst parameters globally across grades/reactors by default.",
+      "target_module": "calibration.py",
+      "gate_or_status": "KIN_GLOBAL_BINDING_DEFAULT",
+      "verification": "Multi-grade fixture",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "CAL-004",
+      "priority": "P0",
+      "requirement": "Keep calibration and validation observations disjoint.",
+      "target_module": "calibration.py/package_audit.py",
+      "gate_or_status": "VAL_DATA_EXCLUDED_FROM_CALIBRATION",
+      "verification": "Record-ID overlap test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "CAL-005",
+      "priority": "P0",
+      "requirement": "Emit complete calibration provenance and residual report.",
+      "target_module": "calibration.py/results.py",
+      "gate_or_status": "CAL_REPORT_COMPLETE",
+      "verification": "Schema snapshot test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SEN-001",
+      "priority": "P1",
+      "requirement": "Compute normalized local sensitivities.",
+      "target_module": "sensitivity.py",
+      "gate_or_status": "SENSITIVITY_COMPLETE",
+      "verification": "Finite-difference fixture",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SEN-002",
+      "priority": "P1",
+      "requirement": "Report SVD rank and condition number.",
+      "target_module": "sensitivity.py/identifiability.py",
+      "gate_or_status": "IDENTIFIABILITY_EVALUATED",
+      "verification": "Known-rank tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SEN-003",
+      "priority": "P1",
+      "requirement": "Hold nonidentifiable calibrations.",
+      "target_module": "qualification.py/calibration.py",
+      "gate_or_status": "HOLD_NONIDENTIFIABLE",
+      "verification": "Confounded fixture",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "GPC-001",
+      "priority": "P0",
+      "requirement": "Store GPC provenance and preprocessing record.",
+      "target_module": "gpc.py/contracts.py",
+      "gate_or_status": "GPC_DATA_PROVENANCE_COMPLETE",
+      "verification": "Input-contract tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "GPC-002",
+      "priority": "P0",
+      "requirement": "Evaluate 1..nmax effective components and select smallest adequate model.",
+      "target_module": "gpc.py",
+      "gate_or_status": "GPC_MODEL_SELECTION_EXECUTED",
+      "verification": "Synthetic mixture tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "GPC-003",
+      "priority": "P0",
+      "requirement": "Output effective_site_count, never physical_active_site_count.",
+      "target_module": "gpc.py/schemas",
+      "gate_or_status": "GPC_TERMINOLOGY_VALID",
+      "verification": "Schema/string audit",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "GPC-004",
+      "priority": "P0",
+      "requirement": "Report site fractions, site MWn, residuals, AIC/BIC, and uncertainty.",
+      "target_module": "gpc.py",
+      "gate_or_status": "GPC_RESULT_COMPLETE",
+      "verification": "Result-contract test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "GPC-005",
+      "priority": "P0",
+      "requirement": "Label deconvolution-derived multisite parameters as initialization only.",
+      "target_module": "gpc.py/calibration.py",
+      "gate_or_status": "MULTISITE_INITIALIZATION_LABELED",
+      "verification": "Metadata test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SOL-001",
+      "priority": "P1",
+      "requirement": "Provide deterministic RK4 baseline.",
+      "target_module": "integrators.py",
+      "gate_or_status": "INTEGRATOR_BASELINE_AVAILABLE",
+      "verification": "Order/convergence test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SOL-002",
+      "priority": "P1",
+      "requirement": "Provide optional stiff/adaptive solver adapter.",
+      "target_module": "integrators.py",
+      "gate_or_status": "OPTIONAL_SOLVER_AVAILABLE",
+      "verification": "Optional-dependency test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SOL-003",
+      "priority": "P1",
+      "requirement": "Record tolerances, termination, events, and conservation residuals.",
+      "target_module": "integrators.py/results.py",
+      "gate_or_status": "SOLVER_REPORT_COMPLETE",
+      "verification": "Result snapshot test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "SOL-004",
+      "priority": "P1",
+      "requirement": "Do not silently clip reaction consumption with min().",
+      "target_module": "reaction_network.py/reactors.py",
+      "gate_or_status": "NO_SILENT_EXTENT_CLIP",
+      "verification": "Large-step regression test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "EVT-001",
+      "priority": "P1",
+      "requirement": "Implement validity and safety event conditions.",
+      "target_module": "reactors.py/integrators.py",
+      "gate_or_status": "EVENT_POLICY_ENFORCED",
+      "verification": "Event tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "RCT-001",
+      "priority": "P1",
+      "requirement": "Provide common ReactorModel protocol.",
+      "target_module": "reactors.py",
+      "gate_or_status": "REACTOR_PROTOCOL_VALID",
+      "verification": "Protocol tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "RCT-002",
+      "priority": "P1",
+      "requirement": "Support batch, semibatch, CSTR, CSTR series, PFR approximation, solution CSTR, and FBR reference.",
+      "target_module": "reactors.py",
+      "gate_or_status": "REACTOR_MODEL_DECLARED",
+      "verification": "Factory/schema tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "RCT-003",
+      "priority": "P1",
+      "requirement": "Use solids inventory logic for FBR reference where applicable.",
+      "target_module": "reactors.py",
+      "gate_or_status": "FBR_INVENTORY_BASIS_DECLARED",
+      "verification": "Model-contract test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "REC-001",
+      "priority": "P1",
+      "requirement": "Provide generic tear-stream recycle convergence.",
+      "target_module": "recycle.py",
+      "gate_or_status": "RECYCLE_CONVERGED",
+      "verification": "Known-network tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "REC-002",
+      "priority": "P1",
+      "requirement": "Report residual history and balance residuals.",
+      "target_module": "recycle.py",
+      "gate_or_status": "RECYCLE_REPORT_COMPLETE",
+      "verification": "Result-contract test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "REC-003",
+      "priority": "P1",
+      "requirement": "Block design optimization on recycle nonconvergence.",
+      "target_module": "design_spec.py/qualification.py",
+      "gate_or_status": "RECYCLE_NOT_CONVERGED",
+      "verification": "Negative integration test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DSP-001",
+      "priority": "P1",
+      "requirement": "Solve bounded target specifications with explicit tolerances.",
+      "target_module": "design_spec.py",
+      "gate_or_status": "DESIGN_SPEC_TOLERANCE_MET",
+      "verification": "Root-finding tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DSP-002",
+      "priority": "P1",
+      "requirement": "Distinguish infeasible, nonmonotonic, no-bracket, hold, and max-iteration statuses.",
+      "target_module": "design_spec.py",
+      "gate_or_status": "DESIGN_SPEC_STATUS_VALID",
+      "verification": "Status-path tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DSP-003",
+      "priority": "P1",
+      "requirement": "Never pass nearest point outside tolerance.",
+      "target_module": "design_spec.py",
+      "gate_or_status": "NO_FALSE_DESIGN_PASS",
+      "verification": "Negative test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DYN-001",
+      "priority": "P1",
+      "requirement": "Represent grade limits and scheduled operating actions.",
+      "target_module": "dynamics.py/contracts.py",
+      "gate_or_status": "GRADE_TRANSITION_DEFINED",
+      "verification": "Schema tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DYN-002",
+      "priority": "P1",
+      "requirement": "Integrate off-spec polymer mass over time.",
+      "target_module": "dynamics.py",
+      "gate_or_status": "OFFSPEC_MASS_INTEGRATED",
+      "verification": "Synthetic transition test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "DYN-003",
+      "priority": "P1",
+      "requirement": "Report dynamic quality, constraint, and control metrics.",
+      "target_module": "dynamics.py/results.py",
+      "gate_or_status": "DYNAMIC_REPORT_COMPLETE",
+      "verification": "Result snapshot test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "HYB-001",
+      "priority": "P2",
+      "requirement": "Use residual-first constrained hybrid architecture.",
+      "target_module": "hybrid.py",
+      "gate_or_status": "HYBRID_RESIDUAL_MODE",
+      "verification": "Contract test",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "HYB-002",
+      "priority": "P2",
+      "requirement": "Report uncertainty, applicability distance, and training-domain status.",
+      "target_module": "hybrid.py",
+      "gate_or_status": "HYBRID_DOMAIN_EVALUATED",
+      "verification": "OOD tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "HYB-003",
+      "priority": "P2",
+      "requirement": "Enforce physical constraints after learned correction.",
+      "target_module": "hybrid.py/qualification.py",
+      "gate_or_status": "HYBRID_PHYSICAL_CONSTRAINTS_PASS",
+      "verification": "Adversarial output tests",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "QLF-001",
+      "priority": "P0",
+      "requirement": "Split software, thermo, calibration, validation, and engineering-use statuses.",
+      "target_module": "qualification.py",
+      "gate_or_status": "LAYERED_QUALIFICATION",
+      "verification": "Aggregation tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "QLF-002",
+      "priority": "P0",
+      "requirement": "Compute aggregate qualification from gates, not manual entry.",
+      "target_module": "qualification.py",
+      "gate_or_status": "QUALIFICATION_DERIVED",
+      "verification": "Mutation/negative test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "QLF-003",
+      "priority": "P0",
+      "requirement": "Hold out-of-domain cases.",
+      "target_module": "qualification.py",
+      "gate_or_status": "HOLD_EXTRAPOLATION",
+      "verification": "Domain-boundary tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "QLF-004",
+      "priority": "P0",
+      "requirement": "Require approval record for engineering-use PASS.",
+      "target_module": "qualification.py/package_audit.py",
+      "gate_or_status": "ENGINEERING_APPROVAL_PRESENT",
+      "verification": "Negative gate test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "SCH-001",
+      "priority": "P0",
+      "requirement": "Use additionalProperties=false for stable schema subobjects.",
+      "target_module": "schemas",
+      "gate_or_status": "SCHEMA_STRICT_FIELDS",
+      "verification": "Typo rejection tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "SCH-002",
+      "priority": "P0",
+      "requirement": "Condition schemas by catalyst, diene, reactor, and model level.",
+      "target_module": "schemas",
+      "gate_or_status": "SCHEMA_CONDITIONAL_VALID",
+      "verification": "Positive/negative matrix tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "SCH-003",
+      "priority": "P0",
+      "requirement": "Require units and reference-temperature fields where applicable.",
+      "target_module": "schemas",
+      "gate_or_status": "SCHEMA_UNITS_COMPLETE",
+      "verification": "Schema tests",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "TST-001",
+      "priority": "P0",
+      "requirement": "Maintain analytical fixtures as reference calculations only.",
+      "target_module": "tests",
+      "gate_or_status": "REFERENCE_FIXTURE_LABELED",
+      "verification": "Metadata/name audit",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "TST-002",
+      "priority": "P0",
+      "requirement": "Add synthetic parameter-recovery and nonidentifiability tests.",
+      "target_module": "tests",
+      "gate_or_status": "CALIBRATION_SYNTHETIC_PASS",
+      "verification": "Test suite",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "TST-003",
+      "priority": "P1",
+      "requirement": "Add property-based scientific invariants.",
+      "target_module": "tests",
+      "gate_or_status": "PROPERTY_INVARIANTS_PASS",
+      "verification": "Hypothesis suite",
+      "implementation_status": "DESIGN_SPECIFIED_FUTURE_PHASE"
+    },
+    {
+      "requirement_id": "MIG-001",
+      "priority": "P0",
+      "requirement": "Provide explicit V1-to-V2 reference-case migration.",
+      "target_module": "migration/adapters",
+      "gate_or_status": "MIGRATION_TRACEABLE",
+      "verification": "Roundtrip test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "MIG-002",
+      "priority": "P0",
+      "requirement": "Never fabricate missing evidence during migration.",
+      "target_module": "migration/qualification.py",
+      "gate_or_status": "MIGRATION_NO_FABRICATION",
+      "verification": "Negative migration test",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    },
+    {
+      "requirement_id": "MIG-003",
+      "priority": "P0",
+      "requirement": "Keep V1 golden outputs unchanged through Phase A.",
+      "target_module": "tests",
+      "gate_or_status": "ZERO_REGRESSION_PHASE_A",
+      "verification": "Golden regression",
+      "implementation_status": "SOFTWARE_VERIFIED_PHASE_A1"
+    }
+  ]
+}

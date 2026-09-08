@@ -1,0 +1,133 @@
+{
+  "audit_generation": "final-exact-tree-v3",
+  "branch": "main",
+  "canonical_checkout_lf": true,
+  "canonical_ci_evidence": "The accepted final-commit CI run is recorded in the closing comment of GitHub Issue #49.",
+  "canonical_generated_text_lf": true,
+  "canonical_text_parent_commit": "964651df741ac7f6c4b15542825b2a10a09ca920",
+  "claim_boundary": "Validated for repository orchestration, contracts, routing, deterministic fixtures, packaging, documentation and cross-platform CI. No live third-party solver or production HPC execution is claimed.",
+  "controlled_mutants": "64/64",
+  "counts": {
+    "adapters": 27,
+    "capabilities": 164,
+    "visual_assets": 42,
+    "workflows": 20
+  },
+  "coverage": {
+    "branch_percent": 90.98591549295774,
+    "statement_percent": 96.63056558363418
+  },
+  "cross_platform_core": {
+    "evidence": "GitHub Issue #49 closing comment",
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python": [
+      "3.10",
+      "3.13"
+    ],
+    "status": "POST_COMMIT_EVIDENCE"
+  },
+  "cross_platform_manifest_stability": "PASS",
+  "dependency_vulnerabilities": 0,
+  "deterministic_finalization_run_id": 30762511647,
+  "performance_audit": {
+    "acceptance": {
+      "cli_no_material_regression": true,
+      "parser_no_material_regression": true,
+      "parser_semantics_preserved": true,
+      "peak_memory_within_15_percent": true,
+      "route_no_material_regression": true,
+      "verify_all_no_material_regression": true
+    },
+    "candidate_source_sha": "6681c08677d30231c321e898c9cb9ed34496b128",
+    "claim_boundary": "Same-host repository orchestration, parsing and verification only; no external solver or production-HPC speedup is claimed.",
+    "cli_import_speedup": 0.9948104715715583,
+    "execution_baseline_limitation": "The execution-time main contained interrupted audit transport/state files and failed its own repository Manifest gate, so it was recorded but not used as the executable A/B product baseline.",
+    "execution_baseline_profile_process_status": "PASS",
+    "execution_baseline_sha": "05525a859481237b9fb443a664e1d8b5849efb83",
+    "execution_baseline_status": "NON_EXECUTABLE_MANIFEST_FAIL",
+    "execution_baseline_usable_for_ab": false,
+    "measurement_status": "PASS",
+    "parser_cases": {
+      "1kib_crlf": 0.991409170128329,
+      "1kib_failure": 0.9933136463651614,
+      "1kib_mixed_case": 0.9970652848519441,
+      "1kib_nonconverged": 1.0079601396290159,
+      "1kib_none": 0.9939149201843025,
+      "1kib_success_end": 0.9951495834759022,
+      "1kib_success_middle": 0.9985864922048354,
+      "1kib_success_start": 1.0405679492395574,
+      "1mib_crlf": 1.022568572821766,
+      "1mib_failure": 0.9145093263275875,
+      "1mib_mixed_case": 1.0129678155008777,
+      "1mib_nonconverged": 0.9652081195537701,
+      "1mib_none": 1.0096914251486853,
+      "1mib_success_end": 0.9854662824552044,
+      "1mib_success_middle": 0.999688397279533,
+      "1mib_success_start": 0.9964943575167142,
+      "50mib_crlf": 0.9940566443430482,
+      "50mib_failure": 1.0244992720184776,
+      "50mib_mixed_case": 1.0001703121498398,
+      "50mib_nonconverged": 1.0023981174209797,
+      "50mib_none": 1.0054581698760319,
+      "50mib_success_end": 0.9909064442241485,
+      "50mib_success_middle": 0.9978224550615766,
+      "50mib_success_start": 1.0000471326631168,
+      "5mib_crlf": 0.9809123258898801,
+      "5mib_failure": 0.9983589743422512,
+      "5mib_mixed_case": 1.0012948345348551,
+      "5mib_nonconverged": 0.9877489266603795,
+      "5mib_none": 1.0014048601277779,
+      "5mib_success_end": 1.000657062428102,
+      "5mib_success_middle": 0.9950195237184218,
+      "5mib_success_start": 1.0051957291450457
+    },
+    "parser_semantics_equal": true,
+    "parser_worst_speedup": 0.9145093263275875,
+    "peak_memory_ratio": 1.0202890494719288,
+    "product_baseline_sha": "ec194f37ccdea2bf1e3e170e180ae8763da5f0c0",
+    "repeats": 2,
+    "route_hot_speedup": 1.013551856109823,
+    "same_host": true,
+    "verify_all_wall_speedup": 0.9898815326928108
+  },
+  "remote_branch_governance": {
+    "branches": [
+      "main"
+    ],
+    "created_by_this_audit": false,
+    "status": "PASS_MAIN_ONLY"
+  },
+  "remote_branches": [
+    "main"
+  ],
+  "repository_security_findings": 0,
+  "runtime_dependencies": 0,
+  "schema_version": "1.13",
+  "scientific_reference_benchmarks": "8/8",
+  "skill_specification": {
+    "official_validator": "PASS",
+    "skill_count": 21,
+    "status": "PASS"
+  },
+  "source_archives_reproducible": true,
+  "status": "VALIDATED",
+  "supported_platforms": {
+    "linux": "compatible",
+    "macos": "not supported or release-qualified",
+    "windows": "core"
+  },
+  "temporary_branch_created": false,
+  "tests": {
+    "failed": 0,
+    "passed": 774
+  },
+  "ultimate_audit_issue": 49,
+  "validated_source_sha": "964651df741ac7f6c4b15542825b2a10a09ca920",
+  "verified_at_utc": "2026-08-02T19:04:13.872746+00:00",
+  "version": "3.0.4",
+  "visual_atlas_version": 13,
+  "wheel_reproducible_and_isolated_install": true
+}

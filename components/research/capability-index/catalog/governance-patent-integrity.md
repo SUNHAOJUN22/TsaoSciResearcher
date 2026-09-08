@@ -1,0 +1,26 @@
+# 科研管理、专利与诚信
+
+- `work-breakdown-structure` — **工作分解结构**: 把课题拆解为工作包、任务和交付物
+- `research-schedule-builder` — **科研进度计划**: 生成甘特图、依赖和关键路径
+- `resource-allocation` — **资源分配**: 分配人员、设备、样品和计算资源
+- `progress-tracker` — **进度跟踪**: 跟踪任务、风险、成果和偏差
+- `milestone-acceptance` — **里程碑验收**: 按量化标准检查阶段成果
+- `research-kpi-designer` — **科研KPI**: 设计产出、质量、周期和转化指标
+- `project-health-score` — **项目健康度**: 综合进度、质量、成本与风险评分
+- `meeting-minutes-to-tasks` — **会议转任务**: 从会议纪要提取责任人、期限和决策
+- `deliverable-compliance` — **交付物合规**: 检查任务书、合同和验收要求
+- `patent-search-strategist` — **专利检索**: 生成IPC、关键词和申请人检索策略
+- `patent-landscape` — **专利地图**: 分析技术路线、申请人和时间趋势
+- `patent-claim-parser` — **权利要求解析**: 解析独立和从属权利要求
+- `prior-art-finder` — **现有技术检索**: 查找潜在影响新颖性和创造性的文献
+- `freedom-to-operate` — **实施自由初筛**: 识别潜在专利覆盖和侵权风险
+- `invention-disclosure` — **技术交底书**: 整理技术问题、方案、效果和实施例
+- `technology-readiness` — **技术成熟度**: 评价TRL和放大准备度
+- `research-integrity-checker` — **科研诚信检查**: 检查数据、图像、统计和引用风险
+- `image-manipulation-detector` — **科研图像异常**: 检查重复、拼接、缩放和处理痕迹
+- `p-hacking-checker` — **统计操纵检查**: 识别多重检验、选择性报告和事后假设
+- `data-fabrication-anomaly` — **数据造假异常**: 识别不自然分布、重复模式和数字异常
+- `citation-misrepresentation` — **引用误用检查**: 检查文献是否真正支持所述结论
+- `evidence-level-labeler` — **证据等级**: 给科研结论标注证据来源和等级
+- `hallucination-guard` — **科研幻觉防护**: 禁止把未运行计算、未观察实验写成事实
+- `model-governance` — **科研模型治理**: 管理模型版本、适用域、审批和责任

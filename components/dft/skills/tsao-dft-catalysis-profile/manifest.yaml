@@ -1,0 +1,46 @@
+version: 0.4.0-alpha.2
+requires:
+- tsao-dft-researcher
+always_load:
+- references/profile-scope.md
+- references/dft-campaign-and-claim-scope.md
+routes:
+  coordination:
+    triggers:
+    - Ti
+    - TEA
+    - coordination
+    - poisoning
+    - Ziegler-Natta
+    - polyolefin catalyst
+    load:
+    - references/chemistry-guardrails.md
+    - references/profile-workflow.md
+  figures:
+    triggers:
+    - DCS
+    - MCSOMe
+    - DMOS
+    - project figure
+    - 39 structures
+    - orbital atlas
+    - ESP atlas
+    load:
+    - references/project-figure-playbook.md
+  profile_setup:
+    triggers:
+    - profile
+    - project setup
+    - apply catalysis profile
+    load:
+    - references/profile-workflow.md
+    - templates/profile.yaml
+  campaign_claim:
+    triggers:
+    - coordination campaign
+    - binding preference
+    - poisoning hypothesis
+    - claim scope
+    load:
+    - references/dft-campaign-and-claim-scope.md
+    - references/chemistry-guardrails.md

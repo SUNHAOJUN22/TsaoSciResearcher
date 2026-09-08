@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc" shape-rendering="geometricPrecision" text-rendering="optimizeLegibility" data-design-system="uiux-pro-max-scientific-console-v4" data-icon-system="uiux-pro-max-line-v1" data-density="balanced" data-layout="risk" data-family="resource-broker">
+  <title id="title">Scientific resource broker admission barriers</title>
+  <desc id="desc">Binary, license, hardware, input and policy predicates jointly control admission and trigger bounded escalation when any condition fails.</desc>
+  <style>
+    .eyebrow { fill: #22D3EE; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1.4px; }
+    .heading { fill: #F8FAFC; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 38px; font-weight: 700; }
+    .subtitle { fill: #D1D9E6; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 18px; font-weight: 400; }
+    .stage { fill: #F8FAFC; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 21px; font-weight: 650; }
+    .detail { fill: #D1D9E6; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 16px; font-weight: 400; }
+    .mono { fill: #D1D9E6; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 16px; font-weight: 650; }
+    .gate { fill: #D1D9E6; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 16px; font-weight: 650; }
+    .footer { fill: #93A4BB; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; font-size: 16px; font-weight: 400; }
+    .card { fill: #0F1B2D; stroke: #334865; stroke-width: 2; }
+    .raised { fill: #162338; stroke: #334865; stroke-width: 2; }
+    .line { fill: none; stroke: #93A4BB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <rect width="1200" height="620" rx="24" fill="#07111F"/>
+  <rect x="24" y="24" width="1152" height="572" rx="20" fill="none" stroke="#334865" stroke-width="2"/>
+  <text x="56" y="58" class="eyebrow">RESOURCE BROKER · RISK</text>
+  <text x="56" y="108" class="heading">Fail-closed resource admission</text>
+  <text x="56" y="142" class="subtitle">Capacity is allocated only when all independent conditions agree.</text>
+  <rect x="970" y="42" width="174" height="34" rx="17" fill="#162338" stroke="#334865"/>
+  <text x="1057" y="65" text-anchor="middle" class="mono">EVIDENCE BOUND</text>
+
+  <rect x="54" y="190" width="180" height="92" rx="16" class="card"/><text x="144" y="225" text-anchor="middle" class="stage">BINARY</text><text x="144" y="254" text-anchor="middle" class="detail">identity bound</text>
+  <rect x="282" y="190" width="180" height="92" rx="16" class="card"/><text x="372" y="225" text-anchor="middle" class="stage">LICENSE</text><text x="372" y="254" text-anchor="middle" class="detail">token available</text>
+  <rect x="510" y="190" width="180" height="92" rx="16" class="card"/><text x="600" y="225" text-anchor="middle" class="stage">HARDWARE</text><text x="600" y="254" text-anchor="middle" class="detail">claim matches</text>
+  <rect x="738" y="190" width="180" height="92" rx="16" class="card"/><text x="828" y="225" text-anchor="middle" class="stage">INPUTS</text><text x="828" y="254" text-anchor="middle" class="detail">canonical hash</text>
+  <rect x="966" y="190" width="180" height="92" rx="16" class="card"/><text x="1056" y="225" text-anchor="middle" class="stage">POLICY</text><text x="1056" y="254" text-anchor="middle" class="detail">authority valid</text>
+  <path d="M144 282V330H600M372 282V330M600 282V330M828 282V330M1056 282V330H600" class="line"/>
+  <rect x="356" y="330" width="488" height="92" rx="18" fill="#162338" stroke="#4ADE80" stroke-width="2"/>
+  <text x="600" y="366" text-anchor="middle" class="stage">ADMISSION = product of predicates</text><text x="600" y="398" text-anchor="middle" class="detail">one false condition blocks allocation</text>
+  <rect x="356" y="438" width="488" height="42" rx="14" fill="#162338" stroke="#F87171"/><text x="600" y="465" text-anchor="middle" class="mono">BARRIER · LIMIT · ESCALATE</text>
+
+  <circle cx="60" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="78" y="554" class="gate">NUMERICAL</text>
+  <circle cx="244" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="262" y="554" class="gate">CONVERGENCE</text>
+  <circle cx="428" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="446" y="554" class="gate">PHYSICAL</text>
+  <circle cx="612" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="630" y="554" class="gate">UNCERTAINTY</text>
+  <circle cx="796" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="814" y="554" class="gate">APPLICABILITY</text>
+  <circle cx="980" cy="548" r="9" fill="none" stroke="#22D3EE" stroke-width="2"/><text x="998" y="554" class="gate">REVIEW</text>
+  <text x="56" y="590" class="footer">Reject inconsistent visibility, oversubscription and unauthorized execution.</text>
+</svg>

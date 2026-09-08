@@ -1,0 +1,20 @@
+handoff_version: "1.0"
+project_id: PROJECT
+handoff_id: H001
+source_skill: tsao-structure-prep
+target_skill: tsao-dft-researcher
+source_task_id: T001
+target_task_id: T002
+scientific_objective: unknown
+observable: unknown
+model_identity: unknown
+structure_artifacts: []
+accepted_parent_artifacts: []
+method_fingerprint_id: MF001
+support_level: L1_HANDOFF
+open_assumptions: []
+blocking_unknowns: []
+requested_outputs: []
+success_criteria: []
+resource_estimate: {jobs: 0, cpu_hours: 0, gpu_hours: 0, storage_gb: 0}
+approval_status: pending

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/schemas/gate.schema.json",
+  "title": "TSAO Gate record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["gate_id", "status", "owner", "evidence_ids", "approval_status", "approver"],
+  "properties": {
+    "gate_id": {"type": "string", "pattern": "^G([0-9]|1[0-8])$"},
+    "status": {"enum": ["NOT_EVALUATED", "HOLD", "CONDITIONAL", "PASS", "FAIL", "RETIRED"]},
+    "owner": {"type": ["string", "null"], "minLength": 1},
+    "evidence_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "approval_status": {"enum": ["NOT_EVALUATED", "APPROVED", "REJECTED"]},
+    "approver": {"type": ["string", "null"], "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "PASS"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "owner": {"type": "string", "minLength": 1},
+          "evidence_ids": {"minItems": 1},
+          "approval_status": {"const": "APPROVED"},
+          "approver": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "RETIRED"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "owner": {"type": "string", "minLength": 1},
+          "approval_status": {"const": "APPROVED"},
+          "approver": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  ]
+}

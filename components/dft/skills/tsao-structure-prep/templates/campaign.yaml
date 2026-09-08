@@ -1,0 +1,9 @@
+schema_version: "1.0"
+campaign_id: CAMP001
+base_structure_id: MOL001
+axes:
+  conformer: [c01, c02]
+  protonation: [neutral]
+  multiplicity: [1]
+exclusions: []
+max_candidates: 20

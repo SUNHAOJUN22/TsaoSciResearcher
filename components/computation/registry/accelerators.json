@@ -1,0 +1,1165 @@
+[
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "task-parallel"
+    ],
+    "claim_boundary": "Planning metadata only; no Gaussian executable, license, live run, or performance result is bundled or claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "Fortran",
+      "C"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "GPU acceleration is not assumed by this repository; use only versioned vendor-supported capabilities.",
+      "Commercial licensing and host-specific environment setup remain mandatory."
+    ],
+    "parallel_strategies": [
+      "shared-memory",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "g16 --version",
+      "g09 --version"
+    ],
+    "slug": "gaussian",
+    "workflow": "quantum-chemistry"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "mpi",
+      "task-parallel"
+    ],
+    "claim_boundary": "Planning metadata only; executable detection does not prove ORCA method support, convergence, or speedup.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Parallel capabilities are version-, method-, and installation-dependent.",
+      "No GPU backend is promoted without live versioned evidence."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "orca --version",
+      "mpirun --version"
+    ],
+    "slug": "orca",
+    "workflow": "quantum-chemistry"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "task-parallel"
+    ],
+    "claim_boundary": "Planning metadata only; no live Psi4 calculation or accelerator result is claimed.",
+    "edge_suitability": "limited",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++",
+      "Python"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Backend support depends on the installed Psi4 build and selected method.",
+      "Large-memory workloads remain workstation or HPC candidates."
+    ],
+    "parallel_strategies": [
+      "shared-memory",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "psi4 --version"
+    ],
+    "slug": "psi4",
+    "workflow": "quantum-chemistry"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "cuda",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate GPU4PySCF integration only; installed modules and supported methods must be probed.",
+    "edge_suitability": "limited",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C",
+      "C++",
+      "CUDA"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "cupy",
+      "cublas",
+      "cusolver"
+    ],
+    "limitations": [
+      "CUDA requires a compatible GPU4PySCF stack and method-specific support.",
+      "CPU and GPU energies, gradients, precision, and convergence require comparison."
+    ],
+    "parallel_strategies": [
+      "shared-memory",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import pyscf; print(pyscf.__version__)\"",
+      "python -c \"import gpu4pyscf\""
+    ],
+    "slug": "pyscf",
+    "workflow": "quantum-chemistry"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda"
+    ],
+    "claim_boundary": "Candidate backend metadata only; no live Quantum ESPRESSO GPU build or calculation is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "Fortran",
+      "C",
+      "CUDA"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "cublas",
+      "cusolver",
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "GPU support is build- and version-dependent and must be proven from the executable build.",
+      "MPI rank, FFT, k-point, band, and GPU decomposition require workload-specific tuning."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "pw.x --version",
+      "ldd $(command -v pw.x)"
+    ],
+    "slug": "quantum-espresso",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "hip"
+    ],
+    "claim_boundary": "Candidate CP2K accelerator metadata only; no live build capability or speedup is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "Fortran",
+      "C",
+      "C++",
+      "CUDA",
+      "HIP"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "cublas",
+      "cusolver",
+      "cusparse",
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "DBCSR, FFT, grid, and other accelerator paths depend on the exact build.",
+      "CPU/GPU decomposition, memory, precision, and scientific equivalence require live benchmarking."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "cp2k --version",
+      "cp2k.psmp --version"
+    ],
+    "slug": "cp2k",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda"
+    ],
+    "claim_boundary": "Planning metadata only; no VASP executable, license, live run, or GPU performance is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "Fortran",
+      "C",
+      "OpenACC"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "cublas",
+      "cusolver",
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "GPU support requires a licensed, correctly built accelerator-enabled VASP executable.",
+      "Method support, MPI layout, precision, pseudopotentials, and license authorization remain external."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "vasp_std --version"
+    ],
+    "slug": "vasp",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda"
+    ],
+    "claim_boundary": "Candidate ABACUS acceleration metadata only; no installed GPU build or calculation is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++",
+      "CUDA"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "cublas",
+      "cusolver",
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "Accelerator coverage is method- and build-dependent.",
+      "Numerical equivalence, memory, and scaling require a versioned live test."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "ABACUS --version"
+    ],
+    "slug": "abacus",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "mpi",
+      "cuda",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate GPAW GPU metadata only; installed support and scientific equivalence are not assumed.",
+    "edge_suitability": "limited",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C",
+      "C++",
+      "CUDA"
+    ],
+    "interfaces": [
+      "cli",
+      "python-module"
+    ],
+    "library_candidates": [
+      "cupy",
+      "cublas",
+      "cufft"
+    ],
+    "limitations": [
+      "GPU functionality is limited to supported GPAW modes and versions.",
+      "Mode, precision, domain decomposition, and CPU reference comparison are mandatory."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "mpi",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "gpaw info",
+      "python -c \"import gpaw; print(gpaw.__version__)\""
+    ],
+    "slug": "gpaw",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "task-parallel",
+      "remote"
+    ],
+    "claim_boundary": "Orchestration acceleration only; no downstream solver execution or GPU benefit is implied.",
+    "edge_suitability": "suitable",
+    "execution_mode": "orchestration",
+    "implementation_languages": [
+      "Python"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "rapids-cudf"
+    ],
+    "limitations": [
+      "ASE and pymatgen primarily orchestrate and transform data; solver acceleration is delegated.",
+      "GPU dataframe acceleration is useful only for sufficiently large preprocessing workloads."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import ase, pymatgen\""
+    ],
+    "slug": "ase-pymatgen",
+    "workflow": "periodic-dft"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl"
+    ],
+    "claim_boundary": "Candidate GROMACS backend metadata only; detected gmx does not prove accelerator build support or speedup.",
+    "edge_suitability": "limited",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++",
+      "CUDA",
+      "HIP",
+      "SYCL"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "Available GPU backends and offload features depend on the GROMACS build.",
+      "PME, nonbonded, bonded, update, MPI rank, thread, and GPU mapping require system-specific benchmarks."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "multi-gpu",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "sycl",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "gmx --version",
+      "gmx mdrun -h"
+    ],
+    "slug": "gromacs",
+    "workflow": "molecular-dynamics"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "cuda",
+      "hip",
+      "opencl",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate OpenMM platform metadata only; no live dynamics, convergence, or GPU speedup is claimed.",
+    "edge_suitability": "suitable",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "C++",
+      "CUDA",
+      "HIP",
+      "OpenCL"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "cufft",
+      "tensorrt"
+    ],
+    "limitations": [
+      "Platform and precision support depend on the installed OpenMM build and hardware.",
+      "Device selection, determinism, precision, force agreement, and energy drift require validation."
+    ],
+    "parallel_strategies": [
+      "solver-native",
+      "multi-gpu",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "opencl",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import openmm; print(openmm.version.version)\""
+    ],
+    "slug": "openmm",
+    "workflow": "molecular-dynamics"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl"
+    ],
+    "claim_boundary": "Candidate LAMMPS acceleration metadata only; package availability and scientific speedup require live evidence.",
+    "edge_suitability": "limited",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++",
+      "CUDA",
+      "HIP",
+      "SYCL"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "kokkos",
+      "cufft",
+      "nccl"
+    ],
+    "limitations": [
+      "GPU, KOKKOS, OPENMP, INTEL, and other packages are build-dependent.",
+      "Pair styles, precision, neighbor settings, MPI ranks, threads, and GPU mapping must be benchmarked."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "multi-gpu",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "sycl",
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "lmp -h",
+      "lmp_mpi -h"
+    ],
+    "slug": "lammps",
+    "workflow": "molecular-dynamics"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi"
+    ],
+    "claim_boundary": "PLUMED planning metadata only; host-engine GPU support and free-energy convergence are not implied.",
+    "edge_suitability": "limited",
+    "execution_mode": "delegated-plugin",
+    "implementation_languages": [
+      "C++"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Most accelerator execution is delegated to the host MD engine.",
+      "Collective-variable cost and communication overhead must be profiled with the coupled engine."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "plumed info --version"
+    ],
+    "slug": "plumed",
+    "workflow": "enhanced-sampling"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "mpi",
+      "cuda",
+      "hip",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate DeePMD acceleration metadata only; no trained model, GPU execution, or scientific validity is claimed.",
+    "edge_suitability": "suitable",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C++",
+      "CUDA",
+      "HIP"
+    ],
+    "interfaces": [
+      "cli",
+      "python-module"
+    ],
+    "library_candidates": [
+      "cublas",
+      "nccl",
+      "tensorrt"
+    ],
+    "limitations": [
+      "Framework, accelerator, distributed-training, and inference support depend on the installed build.",
+      "Model accuracy, dataset coverage, precision, determinism, and deployment domain require validation."
+    ],
+    "parallel_strategies": [
+      "multi-gpu",
+      "mpi",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "mpi",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "dp --version",
+      "python -c \"import deepmd\""
+    ],
+    "slug": "deepmd",
+    "workflow": "machine-learning-potential"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "cuda",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate MACE/cuEquivariance integration metadata only; no installed kernels, trained model, or speedup is claimed.",
+    "edge_suitability": "suitable",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C++",
+      "CUDA"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "cuequivariance",
+      "cutensor",
+      "cublas",
+      "nccl",
+      "tensorrt"
+    ],
+    "limitations": [
+      "cuEquivariance compatibility depends on model architecture, framework, package, CUDA, and device.",
+      "Training and inference must retain reference accuracy, precision, determinism, and applicability evidence."
+    ],
+    "parallel_strategies": [
+      "multi-gpu",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "cuda",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import mace\"",
+      "python -c \"import cuequivariance\""
+    ],
+    "slug": "mace",
+    "workflow": "machine-learning-potential"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl"
+    ],
+    "claim_boundary": "Candidate DOLFINx/PETSc backend metadata only; installed GPU support and solver suitability are not assumed.",
+    "edge_suitability": "limited",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C++"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "cusparse",
+      "cusolver",
+      "kokkos"
+    ],
+    "limitations": [
+      "GPU support depends on PETSc, matrix/vector types, preconditioners, and the DOLFINx build.",
+      "Assembly, transfer, solver convergence, and CPU/GPU solution equivalence require validation."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import dolfinx\"",
+      "python -c \"import petsc4py\""
+    ],
+    "slug": "dolfinx",
+    "workflow": "finite-element"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate CPU/MPI planning metadata only; no live Elmer execution or performance is claimed.",
+    "edge_suitability": "limited",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "Fortran",
+      "C",
+      "C++"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Parallel behavior is solver- and build-dependent.",
+      "GPU acceleration is not promoted without versioned upstream and live evidence."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "ElmerSolver -v"
+    ],
+    "slug": "elmer",
+    "workflow": "finite-element"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl"
+    ],
+    "claim_boundary": "Candidate MOOSE accelerator metadata only; no live application build or multiphysics result is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++",
+      "Kokkos"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "kokkos",
+      "cusparse",
+      "nccl"
+    ],
+    "limitations": [
+      "Accelerator support depends on the exact MOOSE/libMesh/PETSc/Kokkos build and application.",
+      "Physics kernels, preconditioners, mesh, memory, and scaling require application-specific validation."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "cuda",
+      "hip",
+      "sycl",
+      "openmp",
+      "cpu"
+    ],
+    "probe_hints": [
+      "moose-opt --help"
+    ],
+    "slug": "moose",
+    "workflow": "multiphysics"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "cuda",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate Kratos acceleration metadata only; no installed application or GPU result is claimed.",
+    "edge_suitability": "limited",
+    "execution_mode": "hybrid-library",
+    "implementation_languages": [
+      "Python",
+      "C++",
+      "CUDA"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "cusparse",
+      "cublas"
+    ],
+    "limitations": [
+      "GPU support is application and build dependent.",
+      "Model part, solver, linear algebra, precision, and convergence must be qualified."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "cuda",
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import KratosMultiphysics\""
+    ],
+    "slug": "kratos",
+    "workflow": "multiphysics"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "mpi",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate CPU/MPI and data-path metadata only; no OpenFOAM GPU fork or live CFD result is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "gpudirect-storage",
+      "nvcomp"
+    ],
+    "limitations": [
+      "Mainline GPU support is not assumed; third-party forks or linear-algebra backends require separate qualification.",
+      "Mesh decomposition, communication, solver convergence, I/O, and physical validation dominate acceptance."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "task-parallel",
+      "solver-native"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "simpleFoam -help",
+      "pimpleFoam -help",
+      "mpirun --version"
+    ],
+    "slug": "openfoam",
+    "workflow": "cfd"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "mpi",
+      "task-parallel"
+    ],
+    "claim_boundary": "Candidate CPU/MPI planning metadata only; no SU2 accelerator build or live solution is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "solver-native",
+    "implementation_languages": [
+      "C++"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Accelerator capabilities are not assumed and depend on the exact build and upstream support.",
+      "Mesh, linear solver, turbulence model, convergence, and scaling require live benchmarks."
+    ],
+    "parallel_strategies": [
+      "mpi",
+      "openmp",
+      "task-parallel"
+    ],
+    "preferred_backends": [
+      "mpi",
+      "openmp",
+      "task-parallel",
+      "cpu"
+    ],
+    "probe_hints": [
+      "SU2_CFD --version",
+      "mpirun --version"
+    ],
+    "slug": "su2",
+    "workflow": "cfd"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "task-parallel",
+      "remote"
+    ],
+    "claim_boundary": "Task-level orchestration metadata only; no live DWSIM case or throughput claim is made.",
+    "edge_suitability": "limited",
+    "execution_mode": "ensemble",
+    "implementation_languages": [
+      "C#",
+      ".NET"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Primary acceleration opportunity is concurrent independent cases, not GPU kernel migration.",
+      "Thread safety, license posture, case isolation, convergence, and deterministic outputs require validation."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "DWSIM.CLI --help"
+    ],
+    "slug": "dwsim",
+    "workflow": "process-simulation"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "task-parallel",
+      "mpi",
+      "remote"
+    ],
+    "claim_boundary": "Task-level and preprocessing metadata only; no optimizer availability, convergence, or speedup is claimed.",
+    "edge_suitability": "limited",
+    "execution_mode": "ensemble",
+    "implementation_languages": [
+      "Python",
+      "C++",
+      "Fortran"
+    ],
+    "interfaces": [
+      "cli",
+      "python-module"
+    ],
+    "library_candidates": [
+      "rapids-cudf",
+      "rapids-cuml"
+    ],
+    "limitations": [
+      "Solver performance depends mainly on the selected external optimizer and model structure.",
+      "GPU preprocessing or surrogate modeling must not be confused with nonlinear-program solver acceleration."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "mpi",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "mpi",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "idaes --version",
+      "python -c \"import idaes, pyomo\""
+    ],
+    "slug": "idaes-pyomo",
+    "workflow": "process-simulation"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "task-parallel",
+      "remote"
+    ],
+    "claim_boundary": "Task-level and surrogate planning metadata only; no live OpenModelica simulation or edge deployment is claimed.",
+    "edge_suitability": "suitable",
+    "execution_mode": "ensemble",
+    "implementation_languages": [
+      "C",
+      "C++",
+      "Modelica"
+    ],
+    "interfaces": [
+      "cli"
+    ],
+    "library_candidates": [
+      "tensorrt"
+    ],
+    "limitations": [
+      "Primary acceleration opportunity is parallel scenario execution and validated surrogate inference.",
+      "Generated-code compiler settings, solver choice, events, stiffness, and numerical equivalence require validation."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "omc --version"
+    ],
+    "slug": "openmodelica",
+    "workflow": "dynamic-control"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "openmp",
+      "task-parallel",
+      "remote"
+    ],
+    "claim_boundary": "Candidate ensemble and surrogate metadata only; no live mechanism generation or reactor result is claimed.",
+    "edge_suitability": "suitable",
+    "execution_mode": "ensemble",
+    "implementation_languages": [
+      "Python",
+      "C++",
+      "Cython"
+    ],
+    "interfaces": [
+      "python-module"
+    ],
+    "library_candidates": [
+      "curand",
+      "cublas",
+      "tensorrt"
+    ],
+    "limitations": [
+      "Large speedups usually come from parallel mechanisms, parameter sweeps, reduction, or surrogate models.",
+      "Reaction mechanism, stiffness, tolerances, conservation, and uncertainty must remain scientifically validated."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "openmp",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "openmp",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "python -c \"import cantera, rmgpy\""
+    ],
+    "slug": "cantera-rmg",
+    "workflow": "reactor-engineering"
+  },
+  {
+    "candidate_backends": [
+      "cpu",
+      "task-parallel",
+      "remote"
+    ],
+    "claim_boundary": "Guidance-only commercial integration metadata; no executable, license, live case, or performance is claimed.",
+    "edge_suitability": "unsuitable",
+    "execution_mode": "ensemble",
+    "implementation_languages": [
+      "proprietary"
+    ],
+    "interfaces": [
+      "rpc"
+    ],
+    "library_candidates": [],
+    "limitations": [
+      "Commercial installation, licensing, automation interface, and deployment policy are external.",
+      "Acceleration is primarily independent-case orchestration; no GPU backend is assumed."
+    ],
+    "parallel_strategies": [
+      "task-parallel",
+      "remote"
+    ],
+    "preferred_backends": [
+      "task-parallel",
+      "remote",
+      "cpu"
+    ],
+    "probe_hints": [
+      "Verify an authorized Aspen automation or remote execution endpoint"
+    ],
+    "slug": "aspen",
+    "workflow": "process-simulation"
+  }
+]

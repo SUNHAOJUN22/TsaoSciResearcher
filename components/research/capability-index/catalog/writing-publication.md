@@ -1,0 +1,22 @@
+# 科研写作与出版
+
+- `scientific-outline-builder` — **论文提纲**: 构建问题—方法—结果—讨论逻辑框架
+- `abstract-writer` — **科研摘要**: 生成结构化摘要并控制结论强度
+- `introduction-writer` — **引言写作**: 组织背景、研究空白、目标和贡献
+- `methodology-writer` — **方法章节**: 把实验或计算流程写成可复现方法
+- `results-writer` — **结果章节**: 基于图表和统计结果形成客观叙述
+- `discussion-writer` — **讨论章节**: 解释机理、对比文献、分析局限与外推边界
+- `conclusion-writer` — **结论章节**: 提炼受证据支持的核心结论
+- `scientific-language-polisher` — **学术语言润色**: 提升准确性、连贯性和术语一致性
+- `scientific-translator` — **科技中英翻译**: 保留公式、变量、软件命令和专业术语
+- `figure-caption-writer` — **图注生成**: 生成包含对象、条件、方法和统计信息的图注
+- `table-caption-writer` — **表题生成**: 生成规范表题、单位和注释
+- `equation-formatter` — **公式排版**: 转换LaTeX、Word公式和MathML并检查符号
+- `reference-formatter` — **参考文献格式**: 按期刊或学校格式转换引用
+- `journal-matcher` — **期刊匹配**: 按主题、方法、影响和开放获取条件推荐期刊
+- `journal-style-adapter` — **期刊格式适配**: 调整结构、字数、图表和引用格式
+- `reviewer-simulator` — **模拟审稿**: 从方法、统计、创新和表达角度提出审稿意见
+- `response-to-reviewers` — **审稿回复**: 生成逐条响应、修改定位和证据说明
+- `project-proposal-writer` — **项目申请书**: 生成科学问题、目标、路线、创新和计划
+- `technical-report-writer` — **技术报告**: 生成企业科研、阶段总结和验收报告
+- `leadership-briefing` — **领导汇报**: 把复杂科研内容压缩为决策型汇报

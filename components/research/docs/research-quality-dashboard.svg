@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<title id="title">TsaoSciResearcher scientific quality dashboard</title>
+<desc id="desc">Measurement boundary, structure-property planning, causality and evidence traceability examples.</desc>
+<rect width="1200" height="900" rx="24" fill="#f5f7fb"/>
+<style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172033}.title{font-size:30px;font-weight:700}.h{font-size:21px;font-weight:700}.metric{font-size:27px;font-weight:700}.small{font-size:15px}.tiny{font-size:13px}.muted{fill:#647084}.panel{fill:#fff;stroke:#d8e0ea;stroke-width:1.5}</style>
+<text x="60" y="58" class="title">Scientific quality guard dashboard</text>
+<text x="60" y="87" class="small muted">Executable boundaries for evidence, measurement, multiscale reasoning and causal claims</text>
+<rect x="60" y="112" width="250" height="72" rx="16" class="panel"/>
+<text x="82" y="145" class="metric">4</text>
+<text x="82" y="170" class="tiny muted">guard contracts</text>
+<rect x="330" y="112" width="250" height="72" rx="16" class="panel"/>
+<text x="352" y="145" class="metric">3</text>
+<text x="352" y="170" class="tiny muted">passing demonstrations</text>
+<rect x="600" y="112" width="250" height="72" rx="16" class="panel"/>
+<text x="622" y="145" class="metric">1</text>
+<text x="622" y="170" class="tiny muted">intentional blocked overclaims</text>
+<rect x="870" y="112" width="270" height="72" rx="16" class="panel"/>
+<text x="892" y="145" class="metric">89%</text>
+<text x="892" y="170" class="tiny muted">average declared completeness</text>
+<rect x="60" y="215" width="530" height="275" rx="20" class="panel"/>
+<rect x="82" y="237" width="100" height="38" rx="19" fill="#eaf8ef" stroke="#247a48"/>
+<text x="132" y="262" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="565" y="262" text-anchor="end" class="small muted">100% complete</text>
+<text x="82" y="307" class="h">Measurement boundary</text>
+<text x="82" y="336" class="small muted">Operational definition, calibration, uncertainty and applicability</text>
+<circle cx="90" cy="372" r="6" fill="#247a48"/>
+<text x="108" y="377" class="small">MB-COMPLETE</text>
+<text x="230" y="377" class="tiny muted">Operational measurement boundary is explicit.</text>
+<rect x="610" y="215" width="530" height="275" rx="20" class="panel"/>
+<rect x="632" y="237" width="100" height="38" rx="19" fill="#eaf8ef" stroke="#247a48"/>
+<text x="682" y="262" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="1115" y="262" text-anchor="end" class="small muted">100% complete</text>
+<text x="632" y="307" class="h">Structure-property planner</text>
+<text x="632" y="336" class="small muted">The chain records intervention, structure, mediator, response and </text>
+<circle cx="640" cy="372" r="6" fill="#247a48"/>
+<text x="658" y="377" class="small">SP-CHAIN</text>
+<text x="780" y="377" class="tiny muted">Structure, mediator and property are all explicit.</text>
+<rect x="60" y="525" width="530" height="275" rx="20" class="panel"/>
+<rect x="82" y="547" width="100" height="38" rx="19" fill="#fdecec" stroke="#b42318"/>
+<text x="132" y="572" text-anchor="middle" class="small" fill="#b42318">BLOCK</text>
+<text x="565" y="572" text-anchor="end" class="small muted">57% complete</text>
+<text x="82" y="617" class="h">Causality guard</text>
+<text x="82" y="646" class="small muted">Association-only evidence blocks causal wording in English and Chi</text>
+<circle cx="90" cy="682" r="6" fill="#b42318"/>
+<text x="108" y="687" class="small">CG-OVERCLAIM</text>
+<text x="230" y="687" class="tiny muted">Causal wording exceeds the declared study design.</text>
+<rect x="610" y="525" width="530" height="275" rx="20" class="panel"/>
+<rect x="632" y="547" width="100" height="38" rx="19" fill="#eaf8ef" stroke="#247a48"/>
+<text x="682" y="572" text-anchor="middle" class="small" fill="#247a48">PASS</text>
+<text x="1115" y="572" text-anchor="end" class="small muted">100% complete</text>
+<text x="632" y="617" class="h">Evidence traceability</text>
+<text x="632" y="646" class="small muted">Claims link to evidence locators and execution claims require rece</text>
+<circle cx="640" cy="682" r="6" fill="#247a48"/>
+<text x="658" y="687" class="small">ET-COMPLETE</text>
+<text x="780" y="687" class="tiny muted">Claim, evidence, locators and execution boundary a</text>
+<text x="60" y="854" class="small muted">Truth boundary: software guard results are bounded checks, not scientific acceptance or an execution receipt.</text>
+</svg>

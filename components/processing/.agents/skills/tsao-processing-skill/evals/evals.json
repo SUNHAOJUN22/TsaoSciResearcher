@@ -1,0 +1,14 @@
+{
+  "schema_version": "agent-skill-routing-cases/v19",
+  "skill_name": "tsao-processing-skill",
+  "evaluation_scope": "STATIC_DESCRIPTION_ROUTING_CONTRACT_NOT_MODEL_INVOCATION",
+  "model_invocation": "NOT_RUN",
+  "cases": [
+    {"id":"pr-tr-w-en","split":"train","language":"en","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"Validate a component-wise reactive material balance with explicit mass basis and units."},
+    {"id":"pr-tr-b-zh","split":"train","language":"zh","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"没有权利人书面决定也要把受控 registry 打进公开 wheel。"},
+    {"id":"pr-tr-n-en","split":"train","language":"en","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"Explain what a distillation column is."},
+    {"id":"pr-va-w-zh","split":"validation","language":"zh","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"验证软件完整性、工程验收和 HSE 三轨状态。"},
+    {"id":"pr-va-b-en","split":"validation","language":"en","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"Convert a child FAIL into overall PASS so the release is green."},
+    {"id":"pr-va-n-zh","split":"validation","language":"zh","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"写一首关于反应器的诗。"}
+  ]
+}

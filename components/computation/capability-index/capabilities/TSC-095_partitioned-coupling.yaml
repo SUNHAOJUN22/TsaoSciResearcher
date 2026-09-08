@@ -1,0 +1,58 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Coupled multiphysics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Partitioned coupling strategy within the Coupled multiphysics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "coupling instability",
+    "inconsistent interface",
+    "time-scale mismatch"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-095",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "coupled_equations",
+    "coupling_strategy",
+    "material_models",
+    "interface_conditions",
+    "time_scale_map"
+  ],
+  "maturity": "A4",
+  "name_cn": "分区耦合",
+  "name_en": "Partitioned coupling strategy",
+  "outputs": [
+    "coupled_fields",
+    "coupling_residuals",
+    "energy_balance",
+    "coupling_convergence"
+  ],
+  "recommended_adapters": [
+    "moose",
+    "kratos"
+  ],
+  "required_evidence": [
+    "coupling graph",
+    "interface data",
+    "residual history",
+    "balance report"
+  ],
+  "risk_level": "medium",
+  "slug": "partitioned-coupling",
+  "triggers": [
+    "coupled",
+    "coupling",
+    "electro",
+    "mechanical",
+    "multiphysics",
+    "partitioned",
+    "thermo"
+  ],
+  "validators": [
+    "interface-continuity",
+    "coupling-convergence",
+    "energy-balance",
+    "partition-error"
+  ],
+  "workflow": "multiphysics"
+}

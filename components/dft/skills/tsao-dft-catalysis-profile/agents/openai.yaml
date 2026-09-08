@@ -1,0 +1,4 @@
+interface:
+  display_name: "TsaoDFT Catalysis Profile"
+  short_description: "Ti/TEA and polyolefin-catalysis domain guardrails for TsaoDFT"
+  default_prompt: "Use $tsao-dft-catalysis-profile only if my system involves DCS/MCSOMe/DMOS, Ti/TEA, Ziegler-Natta, or polyolefin-catalysis coordination/poisoning questions. Route execution and validation through $tsao-dft-researcher."

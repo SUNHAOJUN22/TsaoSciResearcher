@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json",
+  "title": "Versioned Mathematical Contract Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "schema_id",
+    "language",
+    "advisory_only",
+    "solver_executed",
+    "automatic_approval",
+    "contracts"
+  ],
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "localizedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh-CN"],
+      "properties": {
+        "en": {"$ref": "#/$defs/nonEmptyString"},
+        "zh-CN": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "bilingualContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_id", "title", "equation", "symbols", "decision_use", "implementation_relation"],
+      "properties": {
+        "contract_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "title": {"$ref": "#/$defs/localizedText"},
+        "equation": {"$ref": "#/$defs/nonEmptyString"},
+        "symbols": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/localizedText"}},
+        "decision_use": {"$ref": "#/$defs/localizedText"},
+        "implementation_relation": {"$ref": "#/$defs/localizedText"}
+      }
+    },
+    "localizedContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_id", "title", "equation", "symbols", "decision_use", "implementation_relation"],
+      "properties": {
+        "contract_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "title": {"$ref": "#/$defs/nonEmptyString"},
+        "equation": {"$ref": "#/$defs/nonEmptyString"},
+        "symbols": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/nonEmptyString"}},
+        "decision_use": {"$ref": "#/$defs/nonEmptyString"},
+        "implementation_relation": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "schema_id": {"const": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json"},
+    "language": {"enum": ["en", "zh-CN", "both"]},
+    "advisory_only": {"const": true},
+    "solver_executed": {"const": false},
+    "automatic_approval": {"const": false},
+    "contracts": {"type": "array", "minItems": 1, "items": {}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"language": {"const": "both"}}},
+      "then": {"properties": {"contracts": {"items": {"$ref": "#/$defs/bilingualContract"}}}},
+      "else": {"properties": {"contracts": {"items": {"$ref": "#/$defs/localizedContract"}}}}
+    }
+  ]
+}

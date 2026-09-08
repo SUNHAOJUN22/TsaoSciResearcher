@@ -1,0 +1,16 @@
+schema_version: "1.0"
+project_id: PROJECT
+observable: relative Gibbs free energy
+unit: kcal/mol
+components:
+  - type: conformer
+    magnitude: 0.5
+    basis: spread among accepted conformers
+  - type: method
+    magnitude: 1.5
+    basis: sensitivity calculation
+  - type: standard_state
+    magnitude: 1.9
+    basis: 1 atm versus 1 M correction at 298.15 K
+combination_rule: report_separately
+status: reviewed

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+<title id="title">Evidence Conflict Resolution</title><desc id="desc">A conceptual evidence graph retaining supporting, challenging, neutral and failed-replication evidence before a reconciliation and human review gate.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071522"/><stop offset="0.55" stop-color="#112d46"/><stop offset="1" stop-color="#221f43"/></linearGradient>
+  <linearGradient id="mix" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#62efca"/><stop offset="0.5" stop-color="#ffd166"/><stop offset="1" stop-color="#ff7895"/></linearGradient>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#73e6ff"/></marker>
+</defs>
+<rect width="1400" height="760" rx="28" fill="url(#bg)"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif">
+  <text x="70" y="70" font-size="36" font-weight="700" fill="#f5fbff">Evidence Conflict Resolution</text>
+  <text x="70" y="106" font-size="18" fill="#b9cad8">Maturity rank cannot erase disagreement: support, challenge, null and failed replication remain separate records.</text>
+
+  <rect x="70" y="165" width="310" height="160" rx="22" fill="#0d2b3d" stroke="#62efca" stroke-width="2"/>
+  <text x="98" y="207" font-size="21" font-weight="700" fill="#f5fbff">Supporting evidence</text>
+  <text x="98" y="244" font-size="15" fill="#c5f9eb">EVI-7e83… · experiment</text>
+  <text x="98" y="272" font-size="15" fill="#c5f9eb">trend and uncertainty retained</text>
+  <rect x="98" y="294" width="250" height="8" rx="4" fill="#62efca"/>
+
+  <rect x="70" y="365" width="310" height="160" rx="22" fill="#351b2c" stroke="#ff7895" stroke-width="2"/>
+  <text x="98" y="407" font-size="21" font-weight="700" fill="#f5fbff">Challenging evidence</text>
+  <text x="98" y="444" font-size="15" fill="#ffd0da">EVI-afcf… · contradiction</text>
+  <text x="98" y="472" font-size="15" fill="#ffd0da">negative result is not deleted</text>
+  <rect x="98" y="494" width="250" height="8" rx="4" fill="#ff7895"/>
+
+  <rect x="470" y="205" width="430" height="290" rx="28" fill="#10283f" stroke="#6fe5ff" stroke-width="2"/>
+  <text x="500" y="249" font-size="23" font-weight="700" fill="#f5fbff">Conflict ledger</text>
+  <line x1="540" y1="290" x2="830" y2="290" stroke="#496e86" stroke-width="2"/>
+  <circle cx="560" cy="340" r="24" fill="#153c42" stroke="#62efca" stroke-width="3"/>
+  <circle cx="810" cy="340" r="24" fill="#431d31" stroke="#ff7895" stroke-width="3"/>
+  <path d="M585 340 C650 302 720 302 785 340" fill="none" stroke="#ffd166" stroke-width="3" stroke-dasharray="10 8"/>
+  <path d="M585 340 C650 390 720 390 785 340" fill="none" stroke="#73e6ff" stroke-width="3"/>
+  <text x="620" y="324" font-size="15" fill="#ffd166">incompatible result</text>
+  <text x="625" y="402" font-size="15" fill="#9eefff">shared evidence graph</text>
+  <rect x="510" y="430" width="350" height="42" rx="12" fill="#091d31"/>
+  <text x="533" y="457" font-size="15" fill="#c8d9e4">IDs, specimens, methods, conditions, uncertainty</text>
+
+  <path d="M380 245 L455 300" stroke="#73e6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M380 445 L455 395" stroke="#73e6ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="990" y="165" width="340" height="105" rx="20" fill="#10283f" stroke="#ffd166" stroke-width="2"/>
+  <text x="1018" y="206" font-size="20" font-weight="700" fill="#f5fbff">1 · Reconcile context</text>
+  <text x="1018" y="238" font-size="15" fill="#c3d5e1">specimen · method · boundary · uncertainty</text>
+  <rect x="990" y="300" width="340" height="105" rx="20" fill="#10283f" stroke="#a98cff" stroke-width="2"/>
+  <text x="1018" y="341" font-size="20" font-weight="700" fill="#f5fbff">2 · Test alternatives</text>
+  <text x="1018" y="373" font-size="15" fill="#c3d5e1">replication · discriminating observable</text>
+  <rect x="990" y="435" width="340" height="105" rx="20" fill="#10283f" stroke="#73e6ff" stroke-width="2"/>
+  <text x="1018" y="476" font-size="20" font-weight="700" fill="#f5fbff">3 · Preserve outcome</text>
+  <text x="1018" y="508" font-size="15" fill="#c3d5e1">resolved · unresolved · superseded</text>
+  <path d="M900 350 L975 350" stroke="#73e6ff" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="70" y="585" width="1260" height="65" rx="18" fill="#221d33" stroke="url(#mix)" stroke-width="2"/>
+  <text x="100" y="615" font-size="18" font-weight="700" fill="#f5fbff">Decision rule</text>
+  <text x="245" y="615" font-size="16" fill="#d5e2ea">challenging evidence present → REVIEW-REQUIRED; do not pool incompatible evidence automatically</text>
+  <rect x="70" y="680" width="1260" height="44" rx="14" fill="#091d31" stroke="url(#mix)"/>
+  <text x="100" y="709" font-size="16" fill="#d8e9f5">Machine-readable record: supporting IDs · challenging IDs · neutral IDs · conflict_detected</text>
+</g></svg>

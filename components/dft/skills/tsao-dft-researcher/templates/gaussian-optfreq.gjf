@@ -1,0 +1,10 @@
+%chk={{JOB_NAME}}.chk
+%mem={{MEMORY}}
+%nprocshared={{NPROC}}
+#p {{METHOD}}/{{BASIS}} Opt Freq {{EXTRA_KEYWORDS}}
+
+{{TITLE}}
+
+{{CHARGE}} {{MULTIPLICITY}}
+{{COORDINATES}}
+

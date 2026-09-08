@@ -1,0 +1,32 @@
+source_workbook: AI_for_Science_最全Skill目录(3).xlsx
+catalog_ids:
+- S0168
+- S0173
+- S0174
+- S0175
+- S0176
+- S0177
+- S0178
+- S0185
+- S0186
+- S0190
+- S0191
+engine_ids:
+- E013
+- E015
+- E016
+applies_to:
+- TST/Eyring rates
+- microkinetics
+- catalysis descriptors
+- DFT-to-reactor handoffs
+not_for:
+- ignoring standard states
+- declaring RDS from barrier alone
+- mixing fitted and first-principles parameters
+version: 0.4.0-alpha.2
+implementation_status: implemented_core_handoff
+support_level: L2_VALIDATED_ADAPTER
+external_requirements:
+- Cantera/RMG/Pyomo/CatMAP optional
+orchestrated_by: tsao-dft-suite

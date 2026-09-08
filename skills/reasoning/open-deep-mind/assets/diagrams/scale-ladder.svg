@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="860" viewBox="0 0 1600 860" role="img" aria-labelledby="title desc">
+  <title id="title">Scale ladder</title>
+  <desc id="desc">Scale ladder</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="55%" stop-color="#0b1728"/>
+      <stop offset="100%" stop-color="#101126"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8d57e"/>
+      <stop offset="100%" stop-color="#e88b31"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#69e3ff"/>
+      <stop offset="100%" stop-color="#2888ff"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d69cff"/>
+      <stop offset="100%" stop-color="#7657ff"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7bf7c7"/>
+      <stop offset="100%" stop-color="#2fbf9f"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop offset="0%" stop-color="#5be4ff" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#5be4ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M 44 0 L 0 0 0 44" fill="none" stroke="#8eb3d9" stroke-opacity=".055" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
+      <feOffset in="blur" dx="0" dy="12" result="offsetBlur"/>
+      <feFlood flood-color="#000814" flood-opacity=".45" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7bdfff"/>
+    </marker>
+    <style>
+      .title { font-weight: 700; font-size: 58px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; letter-spacing: -.8px; }
+      .subtitle { font-weight: 400; font-size: 24px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #a8bfd6; }
+      .h2 { font-weight: 700; font-size: 30px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
+      .h3 { font-weight: 650; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #eaf4ff; }
+      .body { font-weight: 400; font-size: 19px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #afc3d8; }
+      .small { font-weight: 500; font-size: 16px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #91a9c2; }
+      .tiny { font-weight: 600; font-size: 13px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #8da7c1; letter-spacing: 1px; }
+      .label { font-weight: 700; font-size: 18px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .num { font-weight: 800; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .card { fill: #111e31; stroke: #37506b; stroke-width: 1.4; }
+      .soft { fill: #0d1a2d; stroke: #243c57; stroke-width: 1.2; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" rx="28" fill="url(#bg)"/>
+  <rect width="100%" height="100%" rx="28" fill="url(#grid)"/>
+
+  <text x="76" y="88" class="title">The Scale Ladder</text>
+  <text x="76" y="130" class="subtitle">Every transition requires a mapping, a closure, lost-information accounting, and validation.</text>
+  <g transform="translate(108,205)" filter="url(#shadow)">
+    <path d="M0 520 H230 V435 H460 V350 H690 V265 H920 V180 H1150 V95 H1380 V0" fill="none" stroke="#34506d" stroke-width="3"/>
+    <g transform="translate(0,435)">
+      <rect width="230" height="85" rx="18" fill="#30291c" stroke="#d39a43"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">FIRST PHILOSOPHY</text>
+      <text x="115" y="62" text-anchor="middle" class="small">foundation qualification</text>
+    </g>
+    <g transform="translate(230,350)">
+      <rect width="230" height="85" rx="18" fill="#25243b" stroke="#8e7bff"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">DOMAIN PRINCIPLES</text>
+      <text x="115" y="62" text-anchor="middle" class="small">laws · duties · constraints</text>
+    </g>
+    <g transform="translate(460,265)">
+      <rect width="230" height="85" rx="18" fill="#172d3e" stroke="#36b9df"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">MODELS</text>
+      <text x="115" y="62" text-anchor="middle" class="small">mechanism · equations</text>
+    </g>
+    <g transform="translate(690,180)">
+      <rect width="230" height="85" rx="18" fill="#172d3e" stroke="#36b9df"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">SIMULATION</text>
+      <text x="115" y="62" text-anchor="middle" class="small">numerical · formal · learned</text>
+    </g>
+    <g transform="translate(920,95)">
+      <rect width="230" height="85" rx="18" fill="#18322f" stroke="#43cda8"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">EVIDENCE</text>
+      <text x="115" y="62" text-anchor="middle" class="small">measurement · intervention</text>
+    </g>
+    <g transform="translate(1150,10)">
+      <rect width="230" height="85" rx="18" fill="#30291c" stroke="#d39a43"/>
+      <text x="115" y="34" text-anchor="middle" class="h3">ACTION</text>
+      <text x="115" y="62" text-anchor="middle" class="small">decision · monitor · revise</text>
+    </g>
+  </g>
+  <g transform="translate(138,760)">
+    <path d="M0 0 H1320" stroke="#7bdfff" stroke-width="4" marker-end="url(#arrow)"/>
+    <path d="M1320 28 H0" stroke="#e4a552" stroke-width="3" stroke-dasharray="12 10" marker-end="url(#arrow)"/>
+    <text x="660" y="-15" text-anchor="middle" class="small">DERIVATION AND PREDICTION</text>
+    <text x="660" y="58" text-anchor="middle" class="small">EVIDENCE, FAILURE, AND PHILOSOPHICAL REVISION</text>
+  </g>
+
+</svg>

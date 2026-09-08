@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "artifacts": {
+      "type": "array"
+    },
+    "claim_boundary": {
+      "type": "string"
+    },
+    "convergence": {
+      "type": "object"
+    },
+    "observables": {
+      "type": "object"
+    },
+    "state": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "uncertainty": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "task_id",
+    "state",
+    "claim_boundary"
+  ],
+  "type": "object"
+}

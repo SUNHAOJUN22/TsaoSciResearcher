@@ -1,0 +1,61 @@
+name: Bug report
+description: Report reproducible repository, installer, parser, validator, Skill-routing or documentation behavior.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include secrets, licensed files, proprietary structures or exploit details. Use the private security route for vulnerabilities.
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      placeholder: Full 40-character SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Root quality gate or CI
+        - Installer
+        - Molecular DFT Skill
+        - Periodic DFT Skill
+        - Structure preparation
+        - HPC and provenance
+        - DFT plus ML
+        - Kinetics and multiscale
+        - Catalysis profile
+        - Documentation or visual assets
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Use synthetic or non-sensitive fixtures and include the exact command.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and forbidden behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs and evidence
+      description: Redact credentials and private paths.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Scientific and security boundaries
+      options:
+        - label: I have not included credentials, licensed executables, POTCAR, restricted pseudopotentials/basis libraries or proprietary data.
+          required: true
+        - label: I am not treating command completion as proof of scientific correctness.
+          required: true

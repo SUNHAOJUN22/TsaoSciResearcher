@@ -1,0 +1,8 @@
+schema_version: "1.0"
+engine: vasp
+version: unknown
+support_level: L2_VALIDATED_ADAPTER
+adapter_scripts: [preflight_vasp.py, parse_vasp.py]
+site_regression_artifacts: []
+limitations: [POTCAR not distributed, parser covers selected fields]
+status: reviewed

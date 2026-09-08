@@ -1,0 +1,82 @@
+{
+  "acceptance": {
+    "acceleration_plan_speedup_at_least_5_percent": true,
+    "all_scientific_benchmarks_pass": true,
+    "compensated_balance_preserves_small_residual": true,
+    "convergence_peak_memory_below_1_percent": true,
+    "convergence_speedup_at_least_10_percent": true,
+    "extreme_uncertainty_is_finite": true,
+    "parser_retained_no_material_regression": true,
+    "scientific_benchmark_no_material_regression": true,
+    "source_roots_are_isolated": true,
+    "uncertainty_speedup_at_least_10_percent": true
+  },
+  "audit_generation": "math-performance-audit-v10",
+  "baseline": {
+    "acceleration_plan_seconds": 3.7993686000000085e-05,
+    "compensated_balance_residual": 0.0,
+    "convergence_250k_peak_bytes": 8265992,
+    "convergence_250k_seconds": 0.049464373999995814,
+    "convergence_result": {
+      "delta": 1.599986809708298e-11,
+      "passed": true,
+      "threshold": 1.000004e-08
+    },
+    "extreme_uncertainty": null,
+    "extreme_uncertainty_finite": false,
+    "parser_20mib_throughput_mib_s": 333.07458988945723,
+    "schema_version": "1.0",
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.003605464999999697,
+    "source_root": "/tmp/math-v10-final-baseline",
+    "uncertainty_seconds": 1.072619099999983e-06
+  },
+  "baseline_sha": "f405ed6ea9e1aa964ddc8aee24c955cd7526bb44",
+  "candidate": {
+    "acceleration_plan_seconds": 3.573046199999652e-05,
+    "compensated_balance_residual": -1.0,
+    "convergence_250k_peak_bytes": 512,
+    "convergence_250k_seconds": 0.04000247399999779,
+    "convergence_result": {
+      "delta": 1.599986809708298e-11,
+      "passed": true,
+      "threshold": 1.000004e-08
+    },
+    "extreme_uncertainty": 1.4142135623730951e+308,
+    "extreme_uncertainty_finite": true,
+    "parser_20mib_throughput_mib_s": 335.38653616910426,
+    "schema_version": "1.0",
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.0036093009999973447,
+    "source_root": "/home/runner/work/TsaoSciComputation/TsaoSciComputation",
+    "uncertainty_seconds": 6.827577500001069e-07
+  },
+  "candidate_source_sha": "086bf0ca85876597c9758121fea3b7bb240e9144",
+  "changes": [
+    "Stable independent-uncertainty propagation with math.hypot.",
+    "O(1)-memory streaming convergence with overflow-safe thresholds.",
+    "Compensated conservation residuals with math.fsum.",
+    "Fail-closed finite scientific benchmark error arithmetic.",
+    "Bounded acceleration-library recommendation cache.",
+    "Source-root-isolated reproducible mathematical performance harness."
+  ],
+  "claim_boundary": "Same-host repository-local Python mathematical kernels and acceleration planning only; no external solver, GPU kernel or production-HPC speedup is claimed.",
+  "convergence_peak_memory_ratio": 6.194053901818438e-05,
+  "issue": 48,
+  "rejected_candidates": [
+    {
+      "candidate": "compiled-regex parser failure-cue prefilter",
+      "decision": "REJECTED_AND_REVERTED",
+      "measured_parser_ratio": 0.29591813485507673
+    }
+  ],
+  "schema_version": "1.0",
+  "speedups": {
+    "acceleration_plan": 1.0633415823171777,
+    "convergence_time": 1.236532870441927,
+    "parser": 1.006941226829745,
+    "scientific_benchmarks": 0.9989371903319644,
+    "uncertainty": 1.571009776161186
+  },
+  "status": "PASS"
+}

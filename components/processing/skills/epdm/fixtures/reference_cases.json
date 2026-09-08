@@ -1,0 +1,390 @@
+{
+  "valid_case": {
+    "catalyst": {
+      "family": "metallocene",
+      "vanadium_benchmark": true,
+      "total_metal_mol": 0.01,
+      "active_site_mol": 0.006,
+      "active_site_evidence_ids": [
+        "E-ACTIVE"
+      ],
+      "vanadium_benchmark_evidence_ids": [
+        "E-BENCHMARK"
+      ]
+    },
+    "monomers": {
+      "ethylene_mol_L": 1.2,
+      "propylene_mol_L": 1.0,
+      "diene": "ENB",
+      "diene_mol_L": 0.04,
+      "diene_topology_measured": true,
+      "diene_topology_evidence_ids": [
+        "E-DIENE-TOPOLOGY"
+      ]
+    },
+    "kinetics": {
+      "parameters": {
+        "kp_e_L_mol_s": 2.0,
+        "kp_p_L_mol_s": 1.6,
+        "kp_d_L_mol_s": 0.5,
+        "k_transfer_s": 0.08,
+        "k_deactivation_s": 0.02,
+        "k_poison_L_mol_s": 10.0
+      },
+      "secondary_diene_insertion_probability": 0.05,
+      "branch_efficiency": 0.5,
+      "gel_critical_branch_index": 1.0,
+      "parameter_basis": "SYNTHETIC_REFERENCE_TEST",
+      "parameter_evidence_ids": [
+        "E-KINETICS"
+      ]
+    },
+    "impurities": {
+      "poison_mol_L": 1e-06
+    },
+    "reactor": {
+      "volume_L": 100.0,
+      "heat_generation_kW": 80.0,
+      "heat_removal_capacity_kW": 110.0,
+      "phase_stable": true,
+      "mixing_qualified": true,
+      "mode": "CONTINUOUS",
+      "phase_stability_evidence_ids": [
+        "E-PHASE"
+      ],
+      "mixing_evidence_ids": [
+        "E-MIXING"
+      ]
+    },
+    "recovery": {
+      "fresh_poison_mol_h": 1e-05,
+      "recycle_fraction": 0.8,
+      "purge_fraction": 0.05,
+      "guard_removal_fraction": 0.95,
+      "max_poison_mol_h": 2e-05,
+      "non_equilibrium_devolatilization": true,
+      "devolatilization_evidence_ids": [
+        "E-DEVOL"
+      ]
+    },
+    "product_bridge": {
+      "raw_polymer": {
+        "status": "PASS",
+        "evidence_ids": [
+          "E-RAW_POLYMER"
+        ]
+      },
+      "fixed_compound": {
+        "status": "PASS",
+        "evidence_ids": [
+          "E-FIXED_COMPOUND"
+        ]
+      },
+      "cure": {
+        "status": "PASS",
+        "evidence_ids": [
+          "E-CURE"
+        ]
+      },
+      "part_durability": {
+        "status": "PASS",
+        "evidence_ids": [
+          "E-PART_DURABILITY"
+        ]
+      },
+      "customer_line": {
+        "status": "PASS",
+        "evidence_ids": [
+          "E-CUSTOMER_LINE"
+        ]
+      }
+    },
+    "case_kind": "SYNTHETIC_REFERENCE_TEST"
+  },
+  "valid_package": {
+    "package_id": "EPDM-SYNTHETIC-REFERENCE",
+    "process_family": "EPDM continuous solution polymerization",
+    "status": "PASS",
+    "tolerances": {
+      "composition_abs": 1e-08,
+      "mass_relative": 1e-08,
+      "energy_relative": 1e-08
+    },
+    "design_basis": {
+      "basis_version": "SYNTHETIC-1",
+      "capacity_kg_h": 1000.0,
+      "operating_hours_h_y": 8000.0,
+      "components": [
+        "polymer_solution"
+      ]
+    },
+    "streams": [
+      {
+        "stream_id": "S-IN",
+        "source": "BOUNDARY_IN",
+        "destination": "R-1",
+        "total_mass_kg_h": 1000.0,
+        "enthalpy_kW": 100.0,
+        "composition": {
+          "polymer_solution": 1.0
+        },
+        "evidence_ids": [
+          "E-PFD"
+        ]
+      },
+      {
+        "stream_id": "S-OUT",
+        "source": "R-1",
+        "destination": "BOUNDARY_OUT",
+        "total_mass_kg_h": 1000.0,
+        "enthalpy_kW": 120.0,
+        "composition": {
+          "polymer_solution": 1.0
+        },
+        "evidence_ids": [
+          "E-PFD"
+        ]
+      }
+    ],
+    "equipment": [
+      {
+        "equipment_id": "R-1",
+        "type": "CSTR",
+        "inlet_stream_ids": [
+          "S-IN"
+        ],
+        "outlet_stream_ids": [
+          "S-OUT"
+        ],
+        "duty_kW": 20.0,
+        "design_status": "PASS"
+      }
+    ],
+    "utilities": [
+      {
+        "utility_id": "CW",
+        "consumption": 10.0,
+        "unit": "t/h"
+      }
+    ],
+    "controls": [
+      {
+        "loop_id": "TIC-1",
+        "controlled_variable": "reactor temperature",
+        "manipulated_variable": "cooling duty",
+        "measurement_tag": "TT-1",
+        "final_element_tag": "TV-1",
+        "status": "PASS"
+      }
+    ],
+    "hse": [
+      {
+        "hazard_id": "HZ-1",
+        "scenario": "loss of cooling",
+        "safeguards": [
+          "high-temperature trip"
+        ],
+        "status": "PASS"
+      }
+    ],
+    "evidence_ledger": [
+      {
+        "evidence_id": "E-PFD",
+        "status": "QUALIFIED",
+        "locator": "synthetic fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-ACTIVE",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-CURE",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-CUSTOMER_LINE",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-FIXED_COMPOUND",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-PART_DURABILITY",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-RAW_POLYMER",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-BENCHMARK",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-DIENE-TOPOLOGY",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-KINETICS",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-PHASE",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-MIXING",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      },
+      {
+        "evidence_id": "E-DEVOL",
+        "status": "QUALIFIED",
+        "locator": "synthetic EPDM fixture",
+        "applicability": "synthetic reference software test"
+      }
+    ],
+    "acceptance": [
+      {
+        "criterion_id": "ACC-1",
+        "description": "synthetic closure",
+        "status": "PASS",
+        "evidence_ids": [
+          "E-PFD"
+        ],
+        "approver": "Synthetic Process Approver"
+      }
+    ],
+    "approvals": {
+      "package_approver": "Synthetic Package Approver",
+      "process": "Synthetic Process Approver",
+      "controls": "Synthetic Controls Approver",
+      "hse": "Synthetic HSE Approver"
+    },
+    "epdm_case": {
+      "catalyst": {
+        "family": "metallocene",
+        "vanadium_benchmark": true,
+        "total_metal_mol": 0.01,
+        "active_site_mol": 0.006,
+        "active_site_evidence_ids": [
+          "E-ACTIVE"
+        ],
+        "vanadium_benchmark_evidence_ids": [
+          "E-BENCHMARK"
+        ]
+      },
+      "monomers": {
+        "ethylene_mol_L": 1.2,
+        "propylene_mol_L": 1.0,
+        "diene": "ENB",
+        "diene_mol_L": 0.04,
+        "diene_topology_measured": true,
+        "diene_topology_evidence_ids": [
+          "E-DIENE-TOPOLOGY"
+        ]
+      },
+      "kinetics": {
+        "parameters": {
+          "kp_e_L_mol_s": 2.0,
+          "kp_p_L_mol_s": 1.6,
+          "kp_d_L_mol_s": 0.5,
+          "k_transfer_s": 0.08,
+          "k_deactivation_s": 0.02,
+          "k_poison_L_mol_s": 10.0
+        },
+        "secondary_diene_insertion_probability": 0.05,
+        "branch_efficiency": 0.5,
+        "gel_critical_branch_index": 1.0,
+        "parameter_basis": "SYNTHETIC_REFERENCE_TEST",
+        "parameter_evidence_ids": [
+          "E-KINETICS"
+        ]
+      },
+      "impurities": {
+        "poison_mol_L": 1e-06
+      },
+      "reactor": {
+        "volume_L": 100.0,
+        "heat_generation_kW": 80.0,
+        "heat_removal_capacity_kW": 110.0,
+        "phase_stable": true,
+        "mixing_qualified": true,
+        "mode": "CONTINUOUS",
+        "phase_stability_evidence_ids": [
+          "E-PHASE"
+        ],
+        "mixing_evidence_ids": [
+          "E-MIXING"
+        ]
+      },
+      "recovery": {
+        "fresh_poison_mol_h": 1e-05,
+        "recycle_fraction": 0.8,
+        "purge_fraction": 0.05,
+        "guard_removal_fraction": 0.95,
+        "max_poison_mol_h": 2e-05,
+        "non_equilibrium_devolatilization": true,
+        "devolatilization_evidence_ids": [
+          "E-DEVOL"
+        ]
+      },
+      "product_bridge": {
+        "raw_polymer": {
+          "status": "PASS",
+          "evidence_ids": [
+            "E-RAW_POLYMER"
+          ]
+        },
+        "fixed_compound": {
+          "status": "PASS",
+          "evidence_ids": [
+            "E-FIXED_COMPOUND"
+          ]
+        },
+        "cure": {
+          "status": "PASS",
+          "evidence_ids": [
+            "E-CURE"
+          ]
+        },
+        "part_durability": {
+          "status": "PASS",
+          "evidence_ids": [
+            "E-PART_DURABILITY"
+          ]
+        },
+        "customer_line": {
+          "status": "PASS",
+          "evidence_ids": [
+            "E-CUSTOMER_LINE"
+          ]
+        }
+      },
+      "case_kind": "SYNTHETIC_REFERENCE_TEST"
+    }
+  }
+}

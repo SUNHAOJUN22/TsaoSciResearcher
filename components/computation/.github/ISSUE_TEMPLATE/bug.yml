@@ -1,0 +1,63 @@
+name: Software defect
+description: Report reproducible incorrect software behavior that is not a security vulnerability.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include secrets, license files, proprietary solver inputs, private datasets, or production DCS/SIS data. Follow SECURITY.md for vulnerabilities.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v3.0.2 or a full commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - CLI and routing
+        - Contract or Schema validation
+        - Adapter probing, command planning, or parsing
+        - State, acceptance, or handoff
+        - Security, paths, execution, or provenance
+        - Packaging, installation, SBOM, or release
+        - Documentation or generated assets
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproducible steps
+      description: Use synthetic or redacted fixtures and include exact commands.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior and invariant
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or machine-readable evidence
+      render: shell
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Safety checks
+      options:
+        - label: I removed credentials, licenses, proprietary data, and production-control information.
+          required: true
+        - label: This is not a privately reportable security vulnerability.
+          required: true

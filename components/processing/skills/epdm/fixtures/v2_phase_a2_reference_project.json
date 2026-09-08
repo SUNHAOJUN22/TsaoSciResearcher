@@ -1,0 +1,3181 @@
+{
+  "schema_version": "2.0.0",
+  "project_id": "EPDM-V2-PHASE-A1-TUTORIAL",
+  "evidence_ledger": [
+    {
+      "evidence_id": "EV-CATALYST",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-CATALYST-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-DIENE",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-DIENE-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-THERMO",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-THERMO-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-RATE",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-RATE-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-EA",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-EA-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-DATA",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-DATA-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    },
+    {
+      "evidence_id": "EV-CASE",
+      "status": "QUALIFIED",
+      "source_type": "SYNTHETIC_FIXTURE",
+      "source_id": "SRC-CASE-TUTORIAL",
+      "locator": "Phase A1 deterministic software fixture",
+      "dataset_id": null,
+      "sha256": null,
+      "notes": "Software contract fixture only; no scientific or engineering approval.",
+      "applicability_domain_ids": [
+        "AD-EPDM-TUTORIAL-1"
+      ]
+    }
+  ],
+  "applicability_domains": [
+    {
+      "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+      "temperature_K": [
+        298.15,
+        373.15
+      ],
+      "pressure_Pa": [
+        100000.0,
+        5000000.0
+      ],
+      "ethylene_fraction": [
+        0.0,
+        1.0
+      ],
+      "propylene_fraction": [
+        0.0,
+        1.0
+      ],
+      "diene_fraction": [
+        0.0,
+        0.1
+      ],
+      "hydrogen_ratio": [
+        0.0,
+        0.2
+      ],
+      "reactor_types": [
+        "BATCH",
+        "SEMIBATCH",
+        "CSTR",
+        "SOLUTION_CSTR"
+      ],
+      "catalyst_ids": [
+        "CAT-MET-TUTORIAL"
+      ],
+      "diene_ids": [
+        "DIENE-ENB-TUTORIAL"
+      ],
+      "extensions": {}
+    }
+  ],
+  "catalyst_passports": [
+    {
+      "catalyst_id": "CAT-MET-TUTORIAL",
+      "display_name": "Synthetic metallocene tutorial catalyst",
+      "family": "METALLOCENE",
+      "site_model": "SINGLE_SITE",
+      "metal": "Zr",
+      "cocatalyst": "MAO",
+      "catalyst_lot_id": null,
+      "site_capacity": {
+        "value": 0.6,
+        "unit": "mol/kg",
+        "basis": "synthetic fixture",
+        "standard_uncertainty": null,
+        "uncertainty_unit": null
+      },
+      "site_capacity_basis": "PER_MASS_CATALYST",
+      "active_site_basis": "CALIBRATED",
+      "simulator_component_status": "NOT_APPLICABLE",
+      "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+      "evidence_ids": [
+        "EV-CATALYST"
+      ],
+      "extensions": {}
+    }
+  ],
+  "diene_passports": [
+    {
+      "diene_id": "DIENE-ENB-TUTORIAL",
+      "identity": "ENB",
+      "canonical_name": "5-ethylidene-2-norbornene",
+      "cas_number": "16219-75-3",
+      "registry_version": "2.0.0",
+      "molecular_weight": {
+        "value": 0.12019,
+        "unit": "kg/mol",
+        "basis": "synthetic fixture",
+        "standard_uncertainty": null,
+        "uncertainty_unit": null
+      },
+      "repeat_segment_id": "SEG-ENB-1",
+      "retained_double_bond_segment_id": "SEG-ENB-TDB-1",
+      "second_insertion_supported": false,
+      "terminal_model_supported": true,
+      "thermo_parameter_source_id": "SRC-THERMO-ENB",
+      "kinetic_parameter_source_id": "SRC-KIN-ENB",
+      "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+      "evidence_ids": [
+        "EV-DIENE"
+      ],
+      "extensions": {}
+    }
+  ],
+  "thermo_passports": [
+    {
+      "thermo_passport_id": "THERMO-TUTORIAL-1",
+      "method_id": "REFERENCE-IDEAL-1",
+      "method_family": "REFERENCE_IDEAL",
+      "parameter_set_id": "THERMO-PARAM-TUTORIAL-1",
+      "fitted_components": [
+        "ETHYLENE",
+        "PROPYLENE",
+        "ENB",
+        "SOLVENT"
+      ],
+      "temperature_range_K": [
+        298.15,
+        373.15
+      ],
+      "pressure_range_Pa": [
+        100000.0,
+        5000000.0
+      ],
+      "evidence_ids": [
+        "EV-THERMO"
+      ],
+      "validation_dataset_ids": [
+        "DS-THERMO-TUTORIAL"
+      ],
+      "backend_type": "REFERENCE_IDEAL",
+      "simulator_version": null,
+      "extensions": {}
+    }
+  ],
+  "kinetic_parameter_sets": [
+    {
+      "parameter_set_id": "KPS-MET-ENB-TUTORIAL-1",
+      "catalyst_id": "CAT-MET-TUTORIAL",
+      "diene_id": "DIENE-ENB-TUTORIAL",
+      "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+      "rate_laws": [
+        {
+          "rate_law_id": "RL-PROP-E-1",
+          "expression_id": "LIVE_SITE_TIMES_ETHYLENE",
+          "reactant_orders": {
+            "LIVE_SITE": 1.0,
+            "ETHYLENE": 1.0
+          },
+          "concentration_basis": "MOLARITY",
+          "rate_output_basis": "PER_REACTOR_VOLUME",
+          "temperature_form": "ARRHENIUS_KREF",
+          "parameter_roles": {
+            "KP-E": "PROPAGATION_RATE",
+            "EA-E": "ACTIVATION_ENERGY"
+          }
+        }
+      ],
+      "parameters": [
+        {
+          "parameter_id": "KP-E",
+          "reaction_id": "RXN-PROP-E",
+          "rate_law_id": "RL-PROP-E-1",
+          "parameter_role": "PROPAGATION_RATE",
+          "value": 0.002,
+          "unit": "m^3/(mol*s)",
+          "stored_quantity_kind": "K_REF",
+          "reference_temperature_K": 323.15,
+          "lower_bound": 1e-06,
+          "upper_bound": 1.0,
+          "evidence_id": "EV-RATE",
+          "estimated": true,
+          "scope": "GLOBAL",
+          "maturity": "LAB_CALIBRATED",
+          "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+          "standard_error": 0.0001,
+          "confidence_interval_95": [
+            0.0018,
+            0.0022
+          ],
+          "covariance_group_id": "COV-GROUP-1",
+          "uncertainty_method": "synthetic fixture"
+        },
+        {
+          "parameter_id": "EA-E",
+          "reaction_id": "RXN-PROP-E",
+          "rate_law_id": "RL-PROP-E-1",
+          "parameter_role": "ACTIVATION_ENERGY",
+          "value": 35000.0,
+          "unit": "J/mol",
+          "stored_quantity_kind": "ACTIVATION_ENERGY",
+          "reference_temperature_K": null,
+          "lower_bound": 10000.0,
+          "upper_bound": 100000.0,
+          "evidence_id": "EV-EA",
+          "estimated": false,
+          "scope": "GLOBAL",
+          "maturity": "LITERATURE_PRIOR",
+          "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+          "standard_error": null,
+          "confidence_interval_95": null,
+          "covariance_group_id": null,
+          "uncertainty_method": null
+        }
+      ],
+      "evidence_ids": [
+        "EV-RATE",
+        "EV-EA"
+      ],
+      "extensions": {}
+    }
+  ],
+  "state_definitions": [
+    {
+      "state_definition_id": "STATE-EXTENSIVE-L2-1",
+      "version": "2.0.0",
+      "basis": "EXTENSIVE_REACTOR_AMOUNT",
+      "energy_formulation": "ISOTHERMAL",
+      "variables": [
+        {
+          "variable_id": "N_E",
+          "description": "ethylene amount",
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "level_minimum": 1,
+          "site_family_indexed": false,
+          "terminal_indexed": false,
+          "conserved_inventory_id": "INV-E"
+        },
+        {
+          "variable_id": "N_P",
+          "description": "propylene amount",
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "level_minimum": 1,
+          "site_family_indexed": false,
+          "terminal_indexed": false,
+          "conserved_inventory_id": "INV-P"
+        },
+        {
+          "variable_id": "N_SITE_VACANT",
+          "description": "vacant active sites",
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "level_minimum": 2,
+          "site_family_indexed": true,
+          "terminal_indexed": false,
+          "conserved_inventory_id": "INV-SITE"
+        }
+      ]
+    }
+  ],
+  "reaction_networks": [
+    {
+      "schema": "TSAO-EPDM-V2-REACTION-NETWORK-1",
+      "network_id": "EPDM-V2-TERMINAL-NETWORK-1",
+      "version": "2.2.0",
+      "model_level": 2,
+      "state_definition_id": "STATE-EXTENSIVE-L2-1",
+      "generated_state_definition_id": "STATE-EXTENSIVE-L2-1:L2:GENERATED",
+      "generated_state_digest_sha256": "718abd62985f3bf7224c41ed633c402f6dc5283b079f5d974dbd07ca22fed810",
+      "site_family_ids": [
+        "SITE-A"
+      ],
+      "terminal_ids": [
+        "E",
+        "P",
+        "D"
+      ],
+      "options": {
+        "enable_cocatalyst_activation": true,
+        "enable_hydrogen_activation": false,
+        "transfer_to_monomers": [
+          "E",
+          "P",
+          "D"
+        ],
+        "enable_hydrogen_transfer": true,
+        "transfer_agents": [
+          "SOLVENT",
+          "COCATALYST"
+        ],
+        "enable_spontaneous_deactivation": true,
+        "enable_poison_deactivation": true,
+        "enable_hydrogen_inhibition": true,
+        "enable_tdb": false
+      },
+      "channels": [
+        {
+          "reaction_id": "ACT_SPON:SITE-A",
+          "family": "ACT_SPON",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "N_SITE_POTENTIAL:SITE-A"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "N_SITE_POTENTIAL:SITE-A",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "ACT_COCAT:SITE-A",
+          "family": "ACT_COCAT",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "N_SITE_POTENTIAL:SITE-A"
+          ],
+          "modifier_state_ids": [
+            "N_COCATALYST"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "N_SITE_POTENTIAL:SITE-A",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAIN_INI:SITE-A:E",
+          "family": "CHAIN_INI",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "N_SITE_VACANT:SITE-A",
+            "N_E"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "INITIATE_UNIT_CHAIN",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": null,
+              "target_terminal_id": "E",
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAIN_INI:SITE-A:P",
+          "family": "CHAIN_INI",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "N_SITE_VACANT:SITE-A",
+            "N_P"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "INITIATE_UNIT_CHAIN",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": null,
+              "target_terminal_id": "P",
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAIN_INI:SITE-A:D",
+          "family": "CHAIN_INI",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "N_SITE_VACANT:SITE-A",
+            "N_D"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "INITIATE_UNIT_CHAIN",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": null,
+              "target_terminal_id": "D",
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:E:E",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E",
+            "N_E"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "N_E",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": "E",
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:E:P",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E",
+            "N_P"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_P",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": "P",
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:E:D",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E",
+            "N_D"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_D",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": "D",
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:E:E",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_E"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:E:P",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_P"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:E:D",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_D"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_H2:SITE-A:E",
+          "family": "CHAT_H2",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_H2"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:E:SOLVENT",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_SOLVENT"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:E:COCATALYST",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_COCATALYST"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_SPON:SITE-A:E",
+          "family": "DEACT_SPON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_DEAD:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_POISON:LIVE:SITE-A:E",
+          "family": "DEACT_POISON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:E"
+          ],
+          "modifier_state_ids": [
+            "N_POISON"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_POISONED:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "E",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:P:E",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P",
+            "N_E"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_E",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": "E",
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:P:P",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P",
+            "N_P"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "N_P",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": "P",
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:P:D",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P",
+            "N_D"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_D",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": "D",
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:P:E",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_E"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:P:P",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_P"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:P:D",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_D"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_H2:SITE-A:P",
+          "family": "CHAT_H2",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_H2"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:P:SOLVENT",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_SOLVENT"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:P:COCATALYST",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_COCATALYST"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_SPON:SITE-A:P",
+          "family": "DEACT_SPON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_DEAD:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_POISON:LIVE:SITE-A:P",
+          "family": "DEACT_POISON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:P"
+          ],
+          "modifier_state_ids": [
+            "N_POISON"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_POISONED:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "P",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:D:E",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D",
+            "N_E"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:E",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_E",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": "E",
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:D:P",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D",
+            "N_P"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "LAMBDA0:SITE-A:P",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_P",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": "P",
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "PROPAGATION:SITE-A:D:D",
+          "family": "PROPAGATION",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D",
+            "N_D"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "N_D",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "PROPAGATE_TERMINAL",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": "D",
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:D:E",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "E",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_E"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "E"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:D:P",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "P",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_P"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "P"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_MON:SITE-A:D:D",
+          "family": "CHAT_MON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": "D",
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_D"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": "D"
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_H2:SITE-A:D",
+          "family": "CHAT_H2",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_H2"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:D:SOLVENT",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_SOLVENT"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "CHAT_AGENT:SITE-A:D:COCATALYST",
+          "family": "CHAT_AGENT",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_COCATALYST"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_SPON:SITE-A:D",
+          "family": "DEACT_SPON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_DEAD:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_POISON:LIVE:SITE-A:D",
+          "family": "DEACT_POISON",
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "LAMBDA0:SITE-A:D"
+          ],
+          "modifier_state_ids": [
+            "N_POISON"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "LAMBDA0:SITE-A:D",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "MU0:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_POISONED:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [
+            {
+              "kind": "TERMINATE_TO_DEAD",
+              "site_family_id": "SITE-A",
+              "source_terminal_id": "D",
+              "target_terminal_id": null,
+              "incoming_monomer_id": null
+            }
+          ],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "DEACT_POISON:VACANT:SITE-A",
+          "family": "DEACT_POISON",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "N_SITE_VACANT:SITE-A"
+          ],
+          "modifier_state_ids": [
+            "N_POISON"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "N_SITE_POISONED:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "INH_H2_FORWARD:SITE-A",
+          "family": "INH_H2_FORWARD",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "N_SITE_VACANT:SITE-A"
+          ],
+          "modifier_state_ids": [
+            "N_H2"
+          ],
+          "stoichiometry": [
+            {
+              "state_id": "N_SITE_INHIBITED_H2:SITE-A",
+              "coefficient": 1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": -1.0
+            }
+          ],
+          "moment_rules": [],
+          "rate_law_id": null
+        },
+        {
+          "reaction_id": "INH_H2_REVERSE:SITE-A",
+          "family": "INH_H2_REVERSE",
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "incoming_monomer_id": null,
+          "reactant_state_ids": [
+            "N_SITE_INHIBITED_H2:SITE-A"
+          ],
+          "modifier_state_ids": [],
+          "stoichiometry": [
+            {
+              "state_id": "N_SITE_INHIBITED_H2:SITE-A",
+              "coefficient": -1.0
+            },
+            {
+              "state_id": "N_SITE_VACANT:SITE-A",
+              "coefficient": 1.0
+            }
+          ],
+          "moment_rules": [],
+          "rate_law_id": null
+        }
+      ],
+      "state_ids": [
+        "N_E",
+        "N_P",
+        "N_D",
+        "N_H2",
+        "N_SOLVENT",
+        "N_COCATALYST",
+        "N_POISON",
+        "N_SITE_POTENTIAL:SITE-A",
+        "N_SITE_VACANT:SITE-A",
+        "N_SITE_INHIBITED_H2:SITE-A",
+        "N_SITE_POISONED:SITE-A",
+        "N_SITE_DEAD:SITE-A",
+        "LAMBDA0:SITE-A:E",
+        "LAMBDA0:SITE-A:P",
+        "LAMBDA0:SITE-A:D",
+        "LAMBDA1:SITE-A:E",
+        "LAMBDA1:SITE-A:P",
+        "LAMBDA1:SITE-A:D",
+        "MU0:SITE-A",
+        "MU1:SITE-A"
+      ],
+      "stoichiometric_matrix": [
+        [
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -1.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          -1.0,
+          -1.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          -1.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          -1.0,
+          0.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "matrix_shape": [
+        20,
+        41
+      ],
+      "family_counts": {
+        "ACT_COCAT": 1,
+        "ACT_SPON": 1,
+        "CHAIN_INI": 3,
+        "CHAT_AGENT": 6,
+        "CHAT_H2": 3,
+        "CHAT_MON": 9,
+        "DEACT_POISON": 4,
+        "DEACT_SPON": 3,
+        "INH_H2_FORWARD": 1,
+        "INH_H2_REVERSE": 1,
+        "PROPAGATION": 9
+      },
+      "numerical_execution": "NOT_IMPLEMENTED_PHASE_A2",
+      "digest_sha256": "18daec20b3d2fde28b7fa924b33442a9fcd68fc2bc0637a8db31934b90e7e73a"
+    }
+  ],
+  "reactor_networks": [],
+  "datasets": [
+    {
+      "dataset_id": "DS-THERMO-TUTORIAL",
+      "description": "Synthetic thermodynamic closure fixture",
+      "catalyst_id": "CAT-MET-TUTORIAL",
+      "diene_id": "DIENE-ENB-TUTORIAL",
+      "experiment_ids": [
+        "EXP-THERMO-1"
+      ],
+      "operating_conditions": [
+        {
+          "variable": "TEMPERATURE",
+          "quantity": {
+            "value": 323.15,
+            "unit": "K",
+            "basis": "setpoint",
+            "standard_uncertainty": null,
+            "uncertainty_unit": null
+          },
+          "statistic": "SETPOINT"
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "T-DENSITY",
+          "observation_id": "OBS-DENSITY-1",
+          "experiment_id": "EXP-THERMO-1",
+          "experiment_group_id": "GROUP-THERMO-1",
+          "dataset_id": "DS-THERMO-TUTORIAL",
+          "reactor_id": "R-TUTORIAL",
+          "grade_id": "GRADE-TUTORIAL",
+          "variable": "DENSITY",
+          "measured": {
+            "value": 700.0,
+            "unit": "kg/m^3",
+            "basis": "synthetic fixture",
+            "standard_uncertainty": 5.0,
+            "uncertainty_unit": "kg/m^3"
+          },
+          "uncertainty_model_id": "UNC-DENSITY-1",
+          "explicit_weight": null,
+          "evidence_id": "EV-DATA",
+          "use": "TUTORIAL"
+        }
+      ],
+      "preprocessing_record_id": "PREP-THERMO-1",
+      "split_manifest_id": "SPLIT-THERMO-1",
+      "evidence_ids": [
+        "EV-DATA"
+      ],
+      "role": "TUTORIAL",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "DS-KIN-TUTORIAL",
+      "description": "Synthetic composition target fixture",
+      "catalyst_id": "CAT-MET-TUTORIAL",
+      "diene_id": "DIENE-ENB-TUTORIAL",
+      "experiment_ids": [
+        "EXP-KIN-1"
+      ],
+      "operating_conditions": [
+        {
+          "variable": "TEMPERATURE",
+          "quantity": {
+            "value": 323.15,
+            "unit": "K",
+            "basis": "setpoint",
+            "standard_uncertainty": null,
+            "uncertainty_unit": null
+          },
+          "statistic": "SETPOINT"
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "T-COMP-E",
+          "observation_id": "OBS-COMP-1",
+          "experiment_id": "EXP-KIN-1",
+          "experiment_group_id": "GROUP-KIN-1",
+          "dataset_id": "DS-KIN-TUTORIAL",
+          "reactor_id": "R-TUTORIAL",
+          "grade_id": "GRADE-TUTORIAL",
+          "variable": "ETHYLENE_FRACTION",
+          "measured": {
+            "value": 0.6,
+            "unit": "1",
+            "basis": "mole fraction",
+            "standard_uncertainty": 0.01,
+            "uncertainty_unit": "1"
+          },
+          "uncertainty_model_id": "UNC-COMP-1",
+          "explicit_weight": null,
+          "evidence_id": "EV-DATA",
+          "use": "CALIBRATION"
+        }
+      ],
+      "preprocessing_record_id": "PREP-KIN-1",
+      "split_manifest_id": "SPLIT-KIN-1",
+      "evidence_ids": [
+        "EV-DATA"
+      ],
+      "role": "CALIBRATION",
+      "extensions": {}
+    }
+  ],
+  "gpc_datasets": [],
+  "calibration_plans": [
+    {
+      "calibration_plan_id": "PLAN-TUTORIAL-1",
+      "stages": [
+        {
+          "stage_id": "STAGE-T",
+          "stage_kind": "THERMO_RESIDENCE",
+          "target_ids": [
+            "T-DENSITY"
+          ],
+          "varied_parameter_ids": [],
+          "fixed_parameter_ids": [
+            "KP-E",
+            "EA-E"
+          ],
+          "prerequisite_gate_ids": [
+            "A1_SCHEMA_STRUCTURAL"
+          ]
+        },
+        {
+          "stage_id": "STAGE-S1",
+          "stage_kind": "SINGLE_SITE_GLOBAL",
+          "target_ids": [
+            "T-COMP-E"
+          ],
+          "varied_parameter_ids": [
+            "KP-E"
+          ],
+          "fixed_parameter_ids": [
+            "EA-E"
+          ],
+          "prerequisite_gate_ids": [
+            "A1_THERMO_PREREQUISITES"
+          ]
+        }
+      ],
+      "parameter_bindings": [
+        {
+          "parameter_id": "KP-E",
+          "scope": "GLOBAL",
+          "transform": "LOG",
+          "regularization_strength": null
+        },
+        {
+          "parameter_id": "EA-E",
+          "scope": "GLOBAL",
+          "transform": "LINEAR",
+          "regularization_strength": null
+        }
+      ],
+      "allow_grade_specific_parameters": false,
+      "allow_reactor_specific_parameters": false,
+      "extensions": {}
+    }
+  ],
+  "cases": [
+    {
+      "schema_version": "2.0.0",
+      "case_id": "CASE-TUTORIAL-1",
+      "model_generation": "V2_TERMINAL_MOMENT",
+      "model_level": 2,
+      "catalyst_passport_id": "CAT-MET-TUTORIAL",
+      "diene_passport_id": "DIENE-ENB-TUTORIAL",
+      "thermo_passport_id": "THERMO-TUTORIAL-1",
+      "applicability_domain_id": "AD-EPDM-TUTORIAL-1",
+      "kinetic_parameter_set_id": "KPS-MET-ENB-TUTORIAL-1",
+      "state_definition_id": "STATE-EXTENSIVE-L2-1",
+      "reactor": {
+        "reactor_id": "R-TUTORIAL",
+        "reactor_type": "SEMIBATCH",
+        "state_basis": "EXTENSIVE_REACTOR_AMOUNT"
+      },
+      "feeds": [],
+      "initial_state": {
+        "state_basis": "EXTENSIVE_REACTOR_AMOUNT",
+        "values": {
+          "N_E": 120.0,
+          "N_P": 100.0,
+          "N_SITE_VACANT": 0.1
+        }
+      },
+      "solver_settings": {
+        "integrator_kind": "RK4_FIXED",
+        "relative_tolerance": null,
+        "absolute_tolerance": null
+      },
+      "qualification_policy_id": "POLICY-SOFTWARE-ONLY-1",
+      "evidence_ids": [
+        "EV-CASE"
+      ],
+      "engineering_use_requested": false,
+      "qualification_report_id": null,
+      "extensions": {
+        "execution_status": "NOT_IMPLEMENTED_PHASE_A1"
+      },
+      "generated_state_definition_id": "STATE-EXTENSIVE-L2-1:L2:GENERATED",
+      "reaction_network_id": "EPDM-V2-TERMINAL-NETWORK-1"
+    }
+  ],
+  "qualification": {
+    "software_status": "NOT_EVALUATED",
+    "thermodynamic_status": "NOT_EVALUATED",
+    "kinetic_calibration_status": "NOT_EVALUATED",
+    "independent_validation_status": "NOT_EVALUATED",
+    "engineering_use_status": "NOT_EVALUATED",
+    "gate_results": [],
+    "errors": [],
+    "holds": [],
+    "evidence_ids": [],
+    "extensions": {}
+  },
+  "extensions": {
+    "case_kind": "SYNTHETIC_REFERENCE_TEST",
+    "phase": "A2_REACTION_NETWORK_AND_STATE_GENERATOR",
+    "numerical_execution": "NOT_IMPLEMENTED_PHASE_A2"
+  },
+  "generated_state_definitions": [
+    {
+      "schema": "TSAO-EPDM-V2-GENERATED-STATE-DEFINITION-1",
+      "generated_state_definition_id": "STATE-EXTENSIVE-L2-1:L2:GENERATED",
+      "source_state_definition_id": "STATE-EXTENSIVE-L2-1",
+      "source_catalog_schema": "TSAO-EPDM-V2-STATE-CATALOG-1",
+      "version": "2.1.0",
+      "model_level": 2,
+      "basis": "EXTENSIVE_REACTOR_AMOUNT",
+      "energy_formulation": "ISOTHERMAL",
+      "site_family_ids": [
+        "SITE-A"
+      ],
+      "terminal_ids": [
+        "E",
+        "P",
+        "D"
+      ],
+      "variables": [
+        {
+          "state_id": "N_E",
+          "base_variable_id": "N_E",
+          "index": 0,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_P",
+          "base_variable_id": "N_P",
+          "index": 1,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_D",
+          "base_variable_id": "N_D",
+          "index": 2,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_H2",
+          "base_variable_id": "N_H2",
+          "index": 3,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_SOLVENT",
+          "base_variable_id": "N_SOLVENT",
+          "index": 4,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_COCATALYST",
+          "base_variable_id": "N_COCATALYST",
+          "index": 5,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_POISON",
+          "base_variable_id": "N_POISON",
+          "index": 6,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 1,
+          "site_family_id": null,
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "N_SITE_POTENTIAL:SITE-A",
+          "base_variable_id": "N_SITE_POTENTIAL",
+          "index": 7,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "base_variable_id": "N_SITE_VACANT",
+          "index": 8,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "N_SITE_INHIBITED_H2:SITE-A",
+          "base_variable_id": "N_SITE_INHIBITED_H2",
+          "index": 9,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "N_SITE_POISONED:SITE-A",
+          "base_variable_id": "N_SITE_POISONED",
+          "index": 10,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "N_SITE_DEAD:SITE-A",
+          "base_variable_id": "N_SITE_DEAD",
+          "index": 11,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "base_variable_id": "LAMBDA0",
+          "index": 12,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "base_variable_id": "LAMBDA0",
+          "index": 13,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "base_variable_id": "LAMBDA0",
+          "index": 14,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "nonnegative": true,
+          "conserved_inventory_id": "SITE_TOTAL:SITE-A"
+        },
+        {
+          "state_id": "LAMBDA1:SITE-A:E",
+          "base_variable_id": "LAMBDA1",
+          "index": 15,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "E",
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "LAMBDA1:SITE-A:P",
+          "base_variable_id": "LAMBDA1",
+          "index": 16,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "P",
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "LAMBDA1:SITE-A:D",
+          "base_variable_id": "LAMBDA1",
+          "index": 17,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": "D",
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "base_variable_id": "MU0",
+          "index": 18,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        },
+        {
+          "state_id": "MU1:SITE-A",
+          "base_variable_id": "MU1",
+          "index": 19,
+          "unit": "mol",
+          "basis": "EXTENSIVE_REACTOR_AMOUNT",
+          "model_level": 2,
+          "site_family_id": "SITE-A",
+          "terminal_id": null,
+          "nonnegative": true,
+          "conserved_inventory_id": null
+        }
+      ],
+      "digest_sha256": "718abd62985f3bf7224c41ed633c402f6dc5283b079f5d974dbd07ca22fed810",
+      "numerical_execution": "NOT_IMPLEMENTED_PHASE_A2"
+    }
+  ]
+}

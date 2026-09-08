@@ -1,0 +1,35 @@
+name: ResinDB contracts V17
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+      - name: Install frozen dependencies
+        run: npm ci
+      - name: Typecheck complete application
+        run: npm run typecheck
+      - name: Run V17 screening regression contracts
+        run: npx vitest run src/lib/__tests__/contractsV17.test.ts --pool=forks --maxWorkers=1
+      - name: Validate production build
+        run: npm run build

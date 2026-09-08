@@ -1,0 +1,265 @@
+{
+  "killed": 64,
+  "method": "controlled non-equivalent operator mutation probes",
+  "results": [
+    {
+      "id": "finite-any",
+      "killed": true
+    },
+    {
+      "id": "finite-first-only",
+      "killed": true
+    },
+    {
+      "id": "finite-last-inverted",
+      "killed": true
+    },
+    {
+      "id": "finite-nonempty",
+      "killed": true
+    },
+    {
+      "id": "finite-ignore-nan",
+      "killed": true
+    },
+    {
+      "id": "finite-string-check",
+      "killed": true
+    },
+    {
+      "id": "finite-zero-threshold",
+      "killed": true
+    },
+    {
+      "id": "finite-unconditional",
+      "killed": true
+    },
+    {
+      "id": "conv-always",
+      "killed": true
+    },
+    {
+      "id": "conv-reversed",
+      "killed": true
+    },
+    {
+      "id": "conv-first-last-wrong",
+      "killed": true
+    },
+    {
+      "id": "conv-signed",
+      "killed": true
+    },
+    {
+      "id": "conv-double-tolerance",
+      "killed": true
+    },
+    {
+      "id": "conv-integer-delta",
+      "killed": true
+    },
+    {
+      "id": "conv-ignore-latest",
+      "killed": true
+    },
+    {
+      "id": "conv-round-zero",
+      "killed": true
+    },
+    {
+      "id": "balance-ignore-accumulation",
+      "killed": true
+    },
+    {
+      "id": "balance-add-accumulation",
+      "killed": true
+    },
+    {
+      "id": "balance-output-only",
+      "killed": true
+    },
+    {
+      "id": "balance-unconditional",
+      "killed": true
+    },
+    {
+      "id": "balance-large-threshold",
+      "killed": true
+    },
+    {
+      "id": "balance-signed",
+      "killed": true
+    },
+    {
+      "id": "balance-integer-normalized",
+      "killed": true
+    },
+    {
+      "id": "balance-relative-wrong-scale",
+      "killed": true
+    },
+    {
+      "id": "unit-any-string",
+      "killed": true
+    },
+    {
+      "id": "unit-nonempty",
+      "killed": true
+    },
+    {
+      "id": "unit-alpha",
+      "killed": true
+    },
+    {
+      "id": "unit-length",
+      "killed": true
+    },
+    {
+      "id": "unit-default",
+      "killed": true
+    },
+    {
+      "id": "unit-substring",
+      "killed": true
+    },
+    {
+      "id": "unit-casefold-only",
+      "killed": true
+    },
+    {
+      "id": "unit-not-none",
+      "killed": true
+    },
+    {
+      "id": "accept-completed-only",
+      "killed": true
+    },
+    {
+      "id": "accept-any-required",
+      "killed": true
+    },
+    {
+      "id": "accept-default-true",
+      "killed": true
+    },
+    {
+      "id": "accept-ignore-missing",
+      "killed": true
+    },
+    {
+      "id": "accept-nonempty",
+      "killed": true
+    },
+    {
+      "id": "accept-count-one",
+      "killed": true
+    },
+    {
+      "id": "accept-policy-open",
+      "killed": true
+    },
+    {
+      "id": "accept-unconditional",
+      "killed": true
+    },
+    {
+      "id": "uq-sum",
+      "killed": true
+    },
+    {
+      "id": "uq-mean",
+      "killed": true
+    },
+    {
+      "id": "uq-max",
+      "killed": true
+    },
+    {
+      "id": "uq-min",
+      "killed": true
+    },
+    {
+      "id": "uq-sum-squares",
+      "killed": true
+    },
+    {
+      "id": "uq-product",
+      "killed": true
+    },
+    {
+      "id": "uq-root-sum",
+      "killed": true
+    },
+    {
+      "id": "uq-first",
+      "killed": true
+    },
+    {
+      "id": "state-any-known",
+      "killed": true
+    },
+    {
+      "id": "state-target-present",
+      "killed": true
+    },
+    {
+      "id": "state-source-known",
+      "killed": true
+    },
+    {
+      "id": "state-always",
+      "killed": true
+    },
+    {
+      "id": "state-nonterminal",
+      "killed": true
+    },
+    {
+      "id": "state-accepted-special",
+      "killed": true
+    },
+    {
+      "id": "state-chain-search",
+      "killed": true
+    },
+    {
+      "id": "state-ignore-source",
+      "killed": true
+    },
+    {
+      "id": "path-string-prefix",
+      "killed": true
+    },
+    {
+      "id": "path-nonempty",
+      "killed": true
+    },
+    {
+      "id": "path-parent-exists",
+      "killed": true
+    },
+    {
+      "id": "path-no-absolute-check",
+      "killed": true
+    },
+    {
+      "id": "path-name-only",
+      "killed": true
+    },
+    {
+      "id": "path-dot-normalized",
+      "killed": true
+    },
+    {
+      "id": "path-common-root",
+      "killed": true
+    },
+    {
+      "id": "path-unconditional",
+      "killed": true
+    }
+  ],
+  "schema_version": "1.0",
+  "survived": 0,
+  "total": 64
+}

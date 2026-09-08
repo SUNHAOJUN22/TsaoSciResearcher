@@ -1,0 +1,61 @@
+schema_version: "1.0"
+profile_id: HWOPT-VASP-H100-SIM-001
+evidence:
+  source_kind: simulation
+  labels:
+    - SIMULATION_ONLY
+    - NOT_REAL_HARDWARE
+    - NOT_PERFORMANCE_EVIDENCE
+engine: vasp
+stage: engine
+workload:
+  model: periodic-plane-wave
+  atoms: 256
+  kpoints: 4
+  fft_grid_points: 2097152
+  expected_kernel: auto
+  estimated_transfer_gb: 4.0
+  arithmetic_intensity_flop_per_byte: 30.0
+hardware:
+  target: hpc
+  cpu_arch: x86_64
+  nodes: 1
+  physical_cores: 64
+  logical_threads: 128
+  numa_nodes: 2
+  memory_gb: 512
+  tasks_per_node: 4
+  gpu_vendor: nvidia
+  gpu_model: H100
+  gpu_architecture: hopper
+  gpus_per_node: 4
+  gpu_memory_gb: 80
+  memory_bandwidth_gb_s: 3350
+  cpus_per_gpu: 16
+  interconnect: nvlink
+software:
+  backend: cuda
+  provider: auto
+  engine_build:
+    accelerator_supported: true
+    build_fingerprint_id: BUILD-VASP-H100-SIM-001
+  custom_integration: false
+  model_family: none
+  edge_runtime: auto
+  libraries:
+    - cuBLAS
+    - cuSOLVER
+    - cuFFT
+    - NCCL
+  available_libraries:
+    - cuBLAS
+    - cuSOLVER
+    - cuFFT
+    - NCCL
+policy:
+  precision: fp64
+  require_cpu_fp64_reference: true
+  require_cpu_fallback: true
+  edge_uncertainty_gate: true
+  remote_dft_fallback: true
+  requested_speedup_claim: false

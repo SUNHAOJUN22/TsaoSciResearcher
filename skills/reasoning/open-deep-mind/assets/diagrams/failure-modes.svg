@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="970" viewBox="0 0 1600 970" role="img" aria-labelledby="title desc">
+  <title id="title">Failure-mode radar</title>
+  <desc id="desc">Failure-mode radar</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="55%" stop-color="#0b1728"/>
+      <stop offset="100%" stop-color="#101126"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8d57e"/>
+      <stop offset="100%" stop-color="#e88b31"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#69e3ff"/>
+      <stop offset="100%" stop-color="#2888ff"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d69cff"/>
+      <stop offset="100%" stop-color="#7657ff"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7bf7c7"/>
+      <stop offset="100%" stop-color="#2fbf9f"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop offset="0%" stop-color="#5be4ff" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#5be4ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M 44 0 L 0 0 0 44" fill="none" stroke="#8eb3d9" stroke-opacity=".055" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
+      <feOffset in="blur" dx="0" dy="12" result="offsetBlur"/>
+      <feFlood flood-color="#000814" flood-opacity=".45" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7bdfff"/>
+    </marker>
+    <style>
+      .title { font-weight: 700; font-size: 58px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; letter-spacing: -.8px; }
+      .subtitle { font-weight: 400; font-size: 24px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #a8bfd6; }
+      .h2 { font-weight: 700; font-size: 30px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
+      .h3 { font-weight: 650; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #eaf4ff; }
+      .body { font-weight: 400; font-size: 19px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #afc3d8; }
+      .small { font-weight: 500; font-size: 16px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #91a9c2; }
+      .tiny { font-weight: 600; font-size: 13px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #8da7c1; letter-spacing: 1px; }
+      .label { font-weight: 700; font-size: 18px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .num { font-weight: 800; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .card { fill: #111e31; stroke: #37506b; stroke-width: 1.4; }
+      .soft { fill: #0d1a2d; stroke: #243c57; stroke-width: 1.2; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" rx="28" fill="url(#bg)"/>
+  <rect width="100%" height="100%" rx="28" fill="url(#grid)"/>
+  <text x="76" y="88" class="title">Failure-Mode Radar</text><text x="76" y="130" class="subtitle">Deep language can conceal shallow foundations. Diagnose before adding detail.</text><g transform="translate(800,500)"><circle r="170" fill="#2a1720" stroke="#d85865" stroke-width="3" filter="url(#shadow)"/><text x="0" y="-25" text-anchor="middle" class="h2">FALSE</text><text x="0" y="16" text-anchor="middle" class="h2">FOUNDATION</text><text x="0" y="55" text-anchor="middle" class="small">claim appears deeper</text><text x="0" y="80" text-anchor="middle" class="small">than its warrant</text>
+      <line x1="0" y1="0" x2="-330" y2="-220" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-435,-258)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#gold)"/>
+        <text x="52" y="43" class="small">EQUIVOCATION</text>
+      </g>
+      <line x1="0" y1="0" x2="-120" y2="-330" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-225,-368)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#cyan)"/>
+        <text x="52" y="43" class="small">REIFICATION</text>
+      </g>
+      <line x1="0" y1="0" x2="130" y2="-330" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(25,-368)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#violet)"/>
+        <text x="52" y="43" class="small">FALSE DICHOTOMY</text>
+      </g>
+      <line x1="0" y1="0" x2="340" y2="-220" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(235,-258)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#mint)"/>
+        <text x="52" y="43" class="small">CAUSE ≠ CORRELATION</text>
+      </g>
+      <line x1="0" y1="0" x2="390" y2="20" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(285,-18)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#gold)"/>
+        <text x="52" y="43" class="small">SCALE JUMP</text>
+      </g>
+      <line x1="0" y1="0" x2="300" y2="250" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(195,212)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#cyan)"/>
+        <text x="52" y="43" class="small">HIDDEN VALUE</text>
+      </g>
+      <line x1="0" y1="0" x2="90" y2="350" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-15,312)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#violet)"/>
+        <text x="52" y="43" class="small">PRECISION THEATER</text>
+      </g>
+      <line x1="0" y1="0" x2="-160" y2="350" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-265,312)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#mint)"/>
+        <text x="52" y="43" class="small">PROXY OPTIMIZATION</text>
+      </g>
+      <line x1="0" y1="0" x2="-350" y2="240" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-455,202)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#gold)"/>
+        <text x="52" y="43" class="small">DELETION FETISH</text>
+      </g>
+      <line x1="0" y1="0" x2="-420" y2="0" stroke="#425b74" stroke-width="2" stroke-dasharray="7 8"/>
+      <g transform="translate(-525,-38)">
+        <rect width="210" height="76" rx="20" class="card"/>
+        <circle cx="27" cy="38" r="14" fill="url(#cyan)"/>
+        <text x="52" y="43" class="small">AUTHORITY AS PROOF</text>
+      </g></g>
+  <g transform="translate(275,865)">
+    <rect width="1050" height="62" rx="22" class="soft"/>
+    <text x="525" y="39" text-anchor="middle" class="h3">Repair = type the claim · state scope · expose support · build rival · define falsifier</text>
+  </g>
+
+</svg>

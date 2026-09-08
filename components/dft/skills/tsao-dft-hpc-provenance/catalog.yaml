@@ -1,0 +1,69 @@
+source_workbook: AI_for_Science_最全Skill目录(3).xlsx
+catalog_ids:
+- S0279
+- S0280
+- S0281
+- S0282
+- S0283
+- S0284
+- S0285
+- S0286
+- S0287
+- S0288
+- S0289
+- S0290
+- S0291
+- S0292
+- S0293
+- S0294
+- S0295
+- S0296
+- S0297
+- S0298
+engine_ids:
+- E018
+- E031
+- E032
+applies_to:
+- Gaussian/periodic DFT HPC
+- non-invoking hardware and environment inventory
+- science-identity-locked automatic-tuning candidate generation
+- structured-argv Slurm/PBS/local execution contracts
+- NVIDIA CUDA-X and OpenACC acceleration planning
+- AMD ROCm/HIP acceleration planning
+- Intel oneAPI/SYCL and Apple Metal acceleration planning
+- C++/Fortran/native-extension and Kokkos portability boundaries
+- Python Array API and DLPack interoperability
+- edge orchestration and validated surrogate inference
+- benchmark candidate materialization
+- executable benchmark and Parser Schemas
+- Gaussian/VASP/QE/CP2K unified Parser state contracts
+- deterministic Parser-to-benchmark evidence bridges
+- real benchmark evidence import and validation
+- numerical-equivalence-first performance comparison
+- Ed25519-signed independent review
+- atomic content-addressed performance evidence bundles
+- evidence-root verification
+- scoped L3 performance eligibility
+- batch campaigns
+- provenance and restart
+- scientific CI
+not_for:
+- silent job submission
+- external engine invocation by inventory or automatic-tuning tools
+- raw shell commands from formal manifests
+- unsigned approval or review
+- secret environment value collection
+- scientific method selection
+- redistribution or patching of licensed software
+- unmeasured universal speedup claims
+- automatic public L3 capability promotion
+version: 0.4.0-alpha.2
+implementation_status: implemented_generation_validation_and_signed_evidence_qualification
+support_level: L2_VALIDATED_ADAPTER
+external_requirements:
+- real accelerator, versioned engine build and site required for L3
+- immutable content-addressed real-engine artifacts required for scoped L3 evidence
+- Ed25519-signed independent review bound to policy, plan, candidates and evidence root
+- explicit public capability registration after scoped qualification
+orchestrated_by: tsao-dft-suite

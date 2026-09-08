@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="960" viewBox="0 0 1600 960" role="img" aria-labelledby="title desc">
+  <title id="title">Domain routing map</title>
+  <desc id="desc">Domain routing map</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="55%" stop-color="#0b1728"/>
+      <stop offset="100%" stop-color="#101126"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8d57e"/>
+      <stop offset="100%" stop-color="#e88b31"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#69e3ff"/>
+      <stop offset="100%" stop-color="#2888ff"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d69cff"/>
+      <stop offset="100%" stop-color="#7657ff"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7bf7c7"/>
+      <stop offset="100%" stop-color="#2fbf9f"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop offset="0%" stop-color="#5be4ff" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#5be4ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M 44 0 L 0 0 0 44" fill="none" stroke="#8eb3d9" stroke-opacity=".055" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
+      <feOffset in="blur" dx="0" dy="12" result="offsetBlur"/>
+      <feFlood flood-color="#000814" flood-opacity=".45" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7bdfff"/>
+    </marker>
+    <style>
+      .title { font-weight: 700; font-size: 58px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; letter-spacing: -.8px; }
+      .subtitle { font-weight: 400; font-size: 24px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #a8bfd6; }
+      .h2 { font-weight: 700; font-size: 30px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
+      .h3 { font-weight: 650; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #eaf4ff; }
+      .body { font-weight: 400; font-size: 19px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #afc3d8; }
+      .small { font-weight: 500; font-size: 16px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #91a9c2; }
+      .tiny { font-weight: 600; font-size: 13px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #8da7c1; letter-spacing: 1px; }
+      .label { font-weight: 700; font-size: 18px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .num { font-weight: 800; font-size: 22px; font-family: Inter, "Segoe UI", Arial, sans-serif; fill: #07111f; }
+      .card { fill: #111e31; stroke: #37506b; stroke-width: 1.4; }
+      .soft { fill: #0d1a2d; stroke: #243c57; stroke-width: 1.2; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" rx="28" fill="url(#bg)"/>
+  <rect width="100%" height="100%" rx="28" fill="url(#grid)"/>
+  <text x="76" y="88" class="title">One Method, Domain-Specific Standards</text><text x="76" y="130" class="subtitle">The core is portable; evidence, safety, and validation are routed by domain.</text><g transform="translate(800,500)"><circle r="132" fill="#151c35" stroke="#8e7bff" stroke-width="3" filter="url(#shadow)"/><text x="0" y="-18" text-anchor="middle" class="h2">OPEN</text><text x="0" y="20" text-anchor="middle" class="h2">DEEP MIND</text><text x="0" y="52" text-anchor="middle" class="small">Φ → P → TEST</text></g>
+    <path d="M 800 500 L 800 230" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(655,160)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#gold)"/>
+      <text x="92" y="46" class="h3">SCIENCE</text>
+      <text x="92" y="75" class="small">mechanism · evidence</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+    <path d="M 800 500 L 1140 360" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(995,290)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#cyan)"/>
+      <text x="92" y="46" class="h3">ENGINEERING</text>
+      <text x="92" y="75" class="small">function · failure</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+    <path d="M 800 500 L 1140 650" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(995,580)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#violet)"/>
+      <text x="92" y="46" class="h3">STRATEGY</text>
+      <text x="92" y="75" class="small">value · options</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+    <path d="M 800 500 L 800 770" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(655,700)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#mint)"/>
+      <text x="92" y="46" class="h3">POLICY</text>
+      <text x="92" y="75" class="small">rights · distribution</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+    <path d="M 800 500 L 460 650" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(315,580)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#gold)"/>
+      <text x="92" y="46" class="h3">PERSONAL</text>
+      <text x="92" y="75" class="small">values · experiments</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+    <path d="M 800 500 L 460 360" stroke="#38516d" stroke-width="3"/>
+    <g transform="translate(315,290)" filter="url(#shadow)">
+      <rect width="290" height="140" rx="26" class="card"/>
+      <circle cx="50" cy="48" r="26" fill="url(#cyan)"/>
+      <text x="92" y="46" class="h3">CREATIVE</text>
+      <text x="92" y="75" class="small">tension · usefulness</text>
+      <line x1="24" y1="96" x2="266" y2="96" stroke="#38516d"/>
+      <text x="145" y="122" text-anchor="middle" class="tiny">ROUTED QUALITY GATE</text>
+    </g>
+  <g transform="translate(270,874)">
+    <rect width="1060" height="54" rx="22" class="soft"/>
+    <text x="530" y="34" text-anchor="middle" class="h3">Cross-domain rule: the strictest active evidence, safety, and ethical standard governs.</text>
+  </g>
+
+</svg>

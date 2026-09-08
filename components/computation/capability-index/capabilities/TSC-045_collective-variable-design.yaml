@@ -1,0 +1,56 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Enhanced sampling and free energy",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Collective-variable design within the Enhanced sampling and free energy workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "poor overlap",
+    "hidden slow variable",
+    "unconverged bias"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-045",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "base_system",
+    "collective_variables",
+    "bias_protocol",
+    "windows_or_walkers",
+    "reweighting_plan"
+  ],
+  "maturity": "A4",
+  "name_cn": "集体变量设计",
+  "name_en": "Collective-variable design",
+  "outputs": [
+    "free_energy_surface",
+    "bias_history",
+    "overlap_metrics",
+    "uncertainty"
+  ],
+  "recommended_adapters": [
+    "plumed"
+  ],
+  "required_evidence": [
+    "bias inputs",
+    "trajectory segments",
+    "histograms",
+    "reweighting records"
+  ],
+  "risk_level": "medium",
+  "slug": "collective-variable-design",
+  "triggers": [
+    "collective",
+    "free energy",
+    "metadynamics",
+    "plumed",
+    "umbrella",
+    "variable"
+  ],
+  "validators": [
+    "collective-variable-fitness",
+    "window-overlap",
+    "bias-convergence",
+    "reweighting"
+  ],
+  "workflow": "enhanced-sampling"
+}

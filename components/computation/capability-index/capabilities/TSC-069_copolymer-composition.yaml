@@ -1,0 +1,54 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Polymerization kinetics and populations",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Copolymer composition prediction within the Polymerization kinetics and populations workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "closure bias",
+    "stiffness",
+    "nonidentifiable parameter"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-069",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "reaction_network",
+    "rate_constants",
+    "reactor_conditions",
+    "moments_or_bins",
+    "chain_transfer_model"
+  ],
+  "maturity": "A4",
+  "name_cn": "共聚物组成",
+  "name_en": "Copolymer composition prediction",
+  "outputs": [
+    "conversion",
+    "molecular_weight_distribution",
+    "composition_distribution",
+    "parameter_uncertainty"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "reaction schema",
+    "parameter sources",
+    "solver settings",
+    "distribution comparisons"
+  ],
+  "risk_level": "medium",
+  "slug": "copolymer-composition",
+  "triggers": [
+    "composition",
+    "copolymer",
+    "kinetics",
+    "molecular weight",
+    "pbe",
+    "polymerization"
+  ],
+  "validators": [
+    "mass-balance",
+    "moment-closure",
+    "distribution-normalization",
+    "identifiability"
+  ],
+  "workflow": "polymerization"
+}

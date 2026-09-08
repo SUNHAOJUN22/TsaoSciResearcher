@@ -1,0 +1,33 @@
+{
+  "model_id": "arch-cost-001",
+  "model_class": "constraint",
+  "purpose": "compare architecture options under operability and consistency constraints",
+  "states": ["deployment topology", "module coupling", "operational burden"],
+  "controls": ["module boundary design", "service extraction"],
+  "parameters": [
+    {
+      "name": "active developers",
+      "value_or_range": 3,
+      "unit": "people",
+      "source": "current team roster",
+      "uncertainty": "may change over the decision horizon"
+    }
+  ],
+  "relations_or_equations": [
+    "feasible(option) iff consistency, security, operability, and delivery constraints are satisfied"
+  ],
+  "constraints": ["transaction integrity", "security controls", "bounded operational capacity"],
+  "initial_conditions": [],
+  "boundary_conditions": [],
+  "boundary": {
+    "system": "single product and delivery team",
+    "scale": "software architecture",
+    "time": "next 12 months"
+  },
+  "observation_model": "release and incident telemetry plus team workflow records",
+  "error_model": "future workload and staffing are uncertain",
+  "assumptions_and_closures": ["current traffic does not require independently scaled services"],
+  "validity_domain": "current product, staffing, traffic, and regulatory regime",
+  "numerical_checks": ["order-of-magnitude operational load estimate"],
+  "falsifiers": ["measured deployment contention dominates modular-monolith operational savings"]
+}

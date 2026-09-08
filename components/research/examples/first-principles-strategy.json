@@ -1,0 +1,722 @@
+{
+  "schema_version": "1.3",
+  "strategy_id": "FPS-3398cbfff19ce545",
+  "status": "advisory-only",
+  "question": "How do interfacial trap states control charge transport and breakdown under a possible scale extrapolation?",
+  "observables": [
+    "trap energy distribution 1.0 eV",
+    "space-charge density 20 C/m3"
+  ],
+  "conditions": [
+    "303 K",
+    "20 kV/mm"
+  ],
+  "constraints": [],
+  "available_evidence": [
+    "peer-reviewed literature analysis",
+    "converged DFT simulation calculation",
+    "independent TSDC and PEA experiment measurements"
+  ],
+  "classification": {
+    "primary_regime": "charge-transport-dielectric",
+    "primary_name_zh": "电荷输运、介电响应与击穿",
+    "primary_name_en": "Charge transport, dielectric response, and breakdown",
+    "selected_regimes": [
+      "charge-transport-dielectric",
+      "electronic-structure"
+    ],
+    "scores": {
+      "charge-transport-dielectric": 7,
+      "electronic-structure": 7
+    },
+    "clarification_required": true,
+    "clarification_questions": [
+      "Define the decision-critical observable, unit, acceptable error, and comparison baseline."
+    ]
+  },
+  "first_principles_frame": {
+    "degrees_of_freedom": [
+      "electronic/trap states",
+      "carrier populations",
+      "polarisation",
+      "electric and thermal fields"
+    ],
+    "governing_principles": [
+      "charge conservation",
+      "Poisson equation",
+      "detailed balance for hopping",
+      "electrothermal energy balance"
+    ],
+    "conserved_quantities": [
+      "total charge including electrodes/reservoirs",
+      "energy in coupled electrothermal models"
+    ],
+    "symmetries_and_constraints": [
+      "electrode geometry",
+      "electrostatic boundary conditions",
+      "charge neutrality or injection law"
+    ],
+    "state_variables": [
+      "carrier density",
+      "trap occupancy",
+      "potential",
+      "polarisation",
+      "temperature",
+      "microstructure descriptors"
+    ],
+    "thermodynamic_potential": [
+      "electrochemical potential",
+      "free-energy landscape for carriers and polarisation"
+    ],
+    "statistical_ensemble": [
+      "open carrier reservoirs with driven non-equilibrium transport"
+    ],
+    "equilibrium_status": "non-equilibrium or mixed; forcing and observation time must be explicit",
+    "length_scales": [
+      "electronic localisation",
+      "trap spacing and morphology",
+      "insulation thickness"
+    ],
+    "time_scales": [
+      "electronic transition",
+      "hopping/trapping",
+      "polarisation relaxation",
+      "space-charge and thermal evolution"
+    ],
+    "dimensionless_or_scale_tests": [
+      "localisation length versus trap spacing",
+      "carrier transit versus trapping time",
+      "electrical versus thermal runaway time"
+    ],
+    "reduction_assumptions": [
+      "selected trap/transport states form an adequate coarse-grained network",
+      "field and temperature coupling is represented"
+    ]
+  },
+  "method_ladder": [
+    {
+      "rank": 1,
+      "role": "minimum-sufficient",
+      "family": "electronic and electrostatic state analysis",
+      "representative_methods": [
+        "electronic-structure defect/interface analysis",
+        "electrostatic barrier and image-force analysis"
+      ],
+      "target_observables": [
+        "trap energetics",
+        "injection barriers",
+        "localisation",
+        "dielectric response origins"
+      ],
+      "rationale": "Start from states and electrochemical driving forces when microscopic trapping or injection controls the observable.",
+      "assumptions": [
+        "representative chemistry and morphology are available"
+      ],
+      "required_inputs": [
+        "local structures/interfaces",
+        "charge states",
+        "electrode model",
+        "dielectric environment"
+      ],
+      "validation": [
+        "spectroscopy",
+        "thermally stimulated measurements",
+        "functional/supercell sensitivity"
+      ],
+      "falsification": [
+        "calculated state hierarchy cannot explain temperature/field trends"
+      ],
+      "uncertainty": [
+        "structural ensemble",
+        "electronic method",
+        "interface model"
+      ],
+      "escalate_if": [
+        "mesoscopic carrier statistics and field redistribution dominate"
+      ]
+    },
+    {
+      "rank": 2,
+      "role": "escalation",
+      "family": "mesoscopic carrier transport",
+      "representative_methods": [
+        "master-equation or hopping model",
+        "kinetic Monte Carlo",
+        "multiple-trapping model",
+        "drift-diffusion-Poisson"
+      ],
+      "target_observables": [
+        "mobility",
+        "space charge",
+        "current",
+        "trap occupancy",
+        "transients"
+      ],
+      "rationale": "Propagate microscopic states into observable transport while enforcing charge conservation and field self-consistency.",
+      "assumptions": [
+        "transport states and transition rates are sufficient",
+        "injection and recombination laws are specified"
+      ],
+      "required_inputs": [
+        "state distribution",
+        "rate model",
+        "electrode conditions",
+        "geometry",
+        "temperature and field history"
+      ],
+      "validation": [
+        "current-voltage-temperature trends",
+        "transient charge profiles",
+        "limiting laws",
+        "independent mobility data"
+      ],
+      "falsification": [
+        "one parameter set cannot reproduce both steady and transient observables"
+      ],
+      "uncertainty": [
+        "state density",
+        "rates",
+        "injection",
+        "morphology",
+        "finite size"
+      ],
+      "escalate_if": [
+        "collective polarisation, morphology evolution, or thermal feedback becomes controlling"
+      ]
+    },
+    {
+      "rank": 3,
+      "role": "escalation",
+      "family": "coupled electrothermal and failure strategy",
+      "representative_methods": [
+        "electrothermal drift-diffusion",
+        "phase-field/electrical-tree model",
+        "stochastic weakest-link or defect-network model"
+      ],
+      "target_observables": [
+        "runaway",
+        "field localisation",
+        "breakdown probability and path"
+      ],
+      "rationale": "Add failure physics only after charge, heat, and defect couplings are independently constrained.",
+      "assumptions": [
+        "failure criterion and defect statistics are evidence-based"
+      ],
+      "required_inputs": [
+        "thermal/electrical properties",
+        "defect statistics",
+        "boundary conditions",
+        "failure observations"
+      ],
+      "validation": [
+        "energy and charge balance",
+        "thickness/temperature scaling",
+        "hold-out breakdown data"
+      ],
+      "falsification": [
+        "model fits only through unconstrained defect or threshold parameters"
+      ],
+      "uncertainty": [
+        "defect population",
+        "failure criterion",
+        "electrothermal coupling"
+      ],
+      "escalate_if": [
+        "failure remains dominated by unknown manufacturing defects requiring new measurement"
+      ]
+    },
+    {
+      "rank": 4,
+      "role": "cross-regime-bridge",
+      "family": "bridge charge-transport-dielectric with electronic-structure",
+      "representative_methods": [
+        "sequential parameter passing with validation at each scale",
+        "joint inference only when bridge variables are identifiable"
+      ],
+      "target_observables": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "rationale": "The question activates more than one physical regime; coupling must use measurable bridge variables and propagate uncertainty.",
+      "assumptions": [
+        "each submodel is independently valid in its regime"
+      ],
+      "required_inputs": [
+        "scale-specific inputs",
+        "bridge-variable definitions",
+        "cross-scale validation data"
+      ],
+      "validation": [
+        "closure tests",
+        "uncertainty propagation",
+        "independent cross-regime observables"
+      ],
+      "falsification": [
+        "coupled result depends on an unvalidated or non-identifiable bridge variable"
+      ],
+      "uncertainty": [
+        "model discrepancy at each scale",
+        "bridge-variable covariance"
+      ],
+      "escalate_if": [
+        "scale separation fails or concurrent coupling is demonstrably required"
+      ]
+    }
+  ],
+  "cross_scale_plan": {
+    "required": true,
+    "secondary_regimes": [
+      "electronic-structure"
+    ],
+    "bridge_variables": [
+      "carrier density",
+      "trap occupancy",
+      "potential",
+      "electron density",
+      "ionic geometry",
+      "occupation",
+      "trap energy distribution 1.0 eV",
+      "space-charge density 20 C/m3"
+    ],
+    "coupling_rule": "Prefer sequential, uncertainty-aware coupling; use concurrent coupling only when scale separation fails and validation data exist."
+  },
+  "scientific_passport": {
+    "passport_version": "1.2",
+    "strategy_id": "FPS-3398cbfff19ce545",
+    "model_contract": {
+      "state_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "polarisation",
+        "temperature",
+        "microstructure descriptors"
+      ],
+      "governing_principles": [
+        "charge conservation",
+        "Poisson equation",
+        "detailed balance for hopping",
+        "electrothermal energy balance"
+      ],
+      "assumptions": [
+        "selected trap/transport states form an adequate coarse-grained network",
+        "field and temperature coupling is represented",
+        "representative chemistry and morphology are available"
+      ],
+      "applicability_domain": [
+        "303 K",
+        "20 kV/mm"
+      ],
+      "failure_conditions": [
+        "calculated state hierarchy cannot explain temperature/field trends",
+        "one parameter set cannot reproduce both steady and transient observables"
+      ]
+    },
+    "bridge_contract": {
+      "required": true,
+      "source_regimes": [
+        "charge-transport-dielectric",
+        "electronic-structure"
+      ],
+      "bridge_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "electron density",
+        "ionic geometry",
+        "occupation",
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "acceptance_tests": [
+        "bridge variables are measurable or independently inferable",
+        "each scale-specific model is validated before coupling",
+        "uncertainty is propagated across every scale bridge"
+      ]
+    },
+    "evidence_contract": {
+      "classification_basis": "item-level lexical classification of user-declared evidence; this is not independent validation",
+      "declared_only": true,
+      "maturity_rank": 3,
+      "maturity_level": "E3-experimental",
+      "levels_detected": [
+        "E1-theoretical",
+        "E2-computational",
+        "E3-experimental"
+      ],
+      "evidence_items": [
+        "peer-reviewed literature analysis",
+        "converged DFT simulation calculation",
+        "independent TSDC and PEA experiment measurements"
+      ],
+      "evidence_inventory": [
+        {
+          "evidence_id": "EVI-12dbb6448e22",
+          "statement": "peer-reviewed literature analysis",
+          "declared_rank": 1,
+          "declared_level": "E1-theoretical",
+          "matched_markers": [
+            "literature",
+            "review"
+          ],
+          "verification_status": "declared-unverified"
+        },
+        {
+          "evidence_id": "EVI-8ccbc7efa86b",
+          "statement": "converged DFT simulation calculation",
+          "declared_rank": 2,
+          "declared_level": "E2-computational",
+          "matched_markers": [
+            "simulation",
+            "calculation",
+            "dft"
+          ],
+          "verification_status": "declared-unverified"
+        },
+        {
+          "evidence_id": "EVI-bdc105a8704b",
+          "statement": "independent TSDC and PEA experiment measurements",
+          "declared_rank": 3,
+          "declared_level": "E3-experimental",
+          "matched_markers": [
+            "experiment",
+            "measurement",
+            "measurements",
+            "tsdc",
+            "pea"
+          ],
+          "verification_status": "declared-unverified"
+        }
+      ],
+      "minimum_next_evidence": [
+        "demonstrate transferability across samples, operators, or operating conditions",
+        "seek pilot, field, or manufacturing validation when the decision is industrial"
+      ]
+    },
+    "claim_contract": {
+      "claim_type": "causal",
+      "triggers": [
+        "control"
+      ],
+      "minimum_evidence_rank": 3,
+      "observed_evidence_rank": 3,
+      "status": "guarded",
+      "required_evidence": [
+        "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
+        "independent measurement and at least one competing-mechanism test"
+      ],
+      "language_boundary": "The contract limits admissible wording; it does not independently verify the declared evidence or establish the claim."
+    },
+    "quantity_dimension_contract": {
+      "status": "pass",
+      "parsed_quantities": [
+        {
+          "statement": "trap energy distribution 1.0 eV",
+          "label": "trap energy distribution",
+          "value": "1.0",
+          "unit": "eV",
+          "normalized_unit": "eV",
+          "dimension": "energy"
+        },
+        {
+          "statement": "space-charge density 20 C/m3",
+          "label": "space charge density",
+          "value": "20",
+          "unit": "C/m3",
+          "normalized_unit": "C/m3",
+          "dimension": "charge-density"
+        },
+        {
+          "statement": "303 K",
+          "label": "declared temperature quantity",
+          "value": "303",
+          "unit": "K",
+          "normalized_unit": "K",
+          "dimension": "temperature"
+        },
+        {
+          "statement": "20 kV/mm",
+          "label": "declared electric-field quantity",
+          "value": "20",
+          "unit": "kV/mm",
+          "normalized_unit": "kV/mm",
+          "dimension": "electric-field"
+        }
+      ],
+      "missing_unit_statements": [],
+      "dimension_conflicts": [],
+      "unit_variations": [],
+      "rule": "Every decision-critical numerical quantity must carry an interpretable unit and preserve dimensional consistency across comparisons and scale bridges.",
+      "required_checks": [
+        "declare units for every decision-critical numerical input and observable",
+        "convert compared quantities to compatible dimensions before inference",
+        "record any unit conversion and tolerance in the evidence trail"
+      ]
+    },
+    "applicability_contract": {
+      "status": "blocked",
+      "explicit_extrapolation": true,
+      "extrapolation_markers": [
+        "extrapolat"
+      ],
+      "declared_domain": [
+        "303 K",
+        "20 kV/mm"
+      ],
+      "transfer_evidence_markers": [],
+      "rule": "Predictions outside the declared calibration and validation domain require independent transfer evidence and uncertainty inflation; in-domain accuracy cannot be assumed to transfer.",
+      "required_checks": [
+        "state the calibrated and independently validated operating domain",
+        "identify every requested target condition outside that domain",
+        "obtain independent transfer validation before industrial or safety-critical use",
+        "report extrapolation uncertainty separately from in-domain uncertainty"
+      ]
+    },
+    "evidence_conflict_contract": {
+      "status": "pass",
+      "conflict_detected": false,
+      "supporting_evidence_ids": [],
+      "challenging_evidence_ids": [],
+      "neutral_evidence_ids": [
+        "EVI-12dbb6448e22",
+        "EVI-8ccbc7efa86b",
+        "EVI-bdc105a8704b"
+      ],
+      "rule": "Supporting, null, negative, and contradictory evidence must remain visible; evidence maturity cannot erase disagreement or failed replication.",
+      "required_checks": [
+        "reconcile differences in specimen, method, boundary condition, and uncertainty",
+        "retain negative, null, and failed-replication results in the evidence record",
+        "avoid pooling incompatible evidence until the source of disagreement is tested"
+      ]
+    },
+    "identifiability_contract": {
+      "status": "review-required",
+      "warning_markers": [],
+      "comparison_markers": [],
+      "discriminating_observables": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "minimum_alternatives": 1,
+      "rule": "A mechanism or parameter set is decision-usable only when the declared observables can distinguish it from at least one plausible alternative under the stated uncertainty.",
+      "required_checks": [
+        "test at least one plausible alternative mechanism or model class",
+        "evaluate structural and practical parameter identifiability",
+        "use observables that change differently under competing explanations",
+        "report equivalence classes when the available data cannot identify a unique mechanism"
+      ]
+    },
+    "uncertainty_contract": {
+      "categories": [
+        "parameter",
+        "numerical",
+        "sampling",
+        "boundary-condition",
+        "measurement",
+        "model-form",
+        "scale-transfer"
+      ],
+      "propagation_target": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "acceptance_rule": "Report uncertainty against the decision threshold and declare extrapolation outside the calibration and validation domain."
+    }
+  },
+  "integrity_gates": {
+    "causal_claim": {
+      "status": "guarded",
+      "triggers": [
+        "control"
+      ],
+      "rule": "Causal language requires temporal or intervention logic, competing-mechanism tests, and evidence beyond correlation.",
+      "required_checks": [
+        "state the causal intervention, counterfactual, or temporal ordering",
+        "compare at least one plausible competing mechanism",
+        "separate correlation, prediction, mechanism consistency, and causal identification"
+      ]
+    },
+    "scale_jump": {
+      "status": "pass",
+      "source_regime": "charge-transport-dielectric",
+      "source_tier": 2,
+      "target_tier": 2,
+      "tier_gap": 0,
+      "target_markers": [],
+      "bridge_variables": [
+        "carrier density",
+        "trap occupancy",
+        "potential",
+        "electron density",
+        "ionic geometry",
+        "occupation",
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "missing_bridge_requirements": []
+    },
+    "quantity_dimension": {
+      "status": "pass",
+      "parsed_quantities": [
+        {
+          "statement": "trap energy distribution 1.0 eV",
+          "label": "trap energy distribution",
+          "value": "1.0",
+          "unit": "eV",
+          "normalized_unit": "eV",
+          "dimension": "energy"
+        },
+        {
+          "statement": "space-charge density 20 C/m3",
+          "label": "space charge density",
+          "value": "20",
+          "unit": "C/m3",
+          "normalized_unit": "C/m3",
+          "dimension": "charge-density"
+        },
+        {
+          "statement": "303 K",
+          "label": "declared temperature quantity",
+          "value": "303",
+          "unit": "K",
+          "normalized_unit": "K",
+          "dimension": "temperature"
+        },
+        {
+          "statement": "20 kV/mm",
+          "label": "declared electric-field quantity",
+          "value": "20",
+          "unit": "kV/mm",
+          "normalized_unit": "kV/mm",
+          "dimension": "electric-field"
+        }
+      ],
+      "missing_unit_statements": [],
+      "dimension_conflicts": [],
+      "unit_variations": [],
+      "rule": "Every decision-critical numerical quantity must carry an interpretable unit and preserve dimensional consistency across comparisons and scale bridges.",
+      "required_checks": [
+        "declare units for every decision-critical numerical input and observable",
+        "convert compared quantities to compatible dimensions before inference",
+        "record any unit conversion and tolerance in the evidence trail"
+      ]
+    },
+    "applicability_extrapolation": {
+      "status": "blocked",
+      "explicit_extrapolation": true,
+      "extrapolation_markers": [
+        "extrapolat"
+      ],
+      "declared_domain": [
+        "303 K",
+        "20 kV/mm"
+      ],
+      "transfer_evidence_markers": [],
+      "rule": "Predictions outside the declared calibration and validation domain require independent transfer evidence and uncertainty inflation; in-domain accuracy cannot be assumed to transfer.",
+      "required_checks": [
+        "state the calibrated and independently validated operating domain",
+        "identify every requested target condition outside that domain",
+        "obtain independent transfer validation before industrial or safety-critical use",
+        "report extrapolation uncertainty separately from in-domain uncertainty"
+      ]
+    },
+    "evidence_conflict": {
+      "status": "pass",
+      "conflict_detected": false,
+      "supporting_evidence_ids": [],
+      "challenging_evidence_ids": [],
+      "neutral_evidence_ids": [
+        "EVI-12dbb6448e22",
+        "EVI-8ccbc7efa86b",
+        "EVI-bdc105a8704b"
+      ],
+      "rule": "Supporting, null, negative, and contradictory evidence must remain visible; evidence maturity cannot erase disagreement or failed replication.",
+      "required_checks": [
+        "reconcile differences in specimen, method, boundary condition, and uncertainty",
+        "retain negative, null, and failed-replication results in the evidence record",
+        "avoid pooling incompatible evidence until the source of disagreement is tested"
+      ]
+    },
+    "identifiability": {
+      "status": "review-required",
+      "warning_markers": [],
+      "comparison_markers": [],
+      "discriminating_observables": [
+        "trap energy distribution 1.0 eV",
+        "space-charge density 20 C/m3"
+      ],
+      "minimum_alternatives": 1,
+      "rule": "A mechanism or parameter set is decision-usable only when the declared observables can distinguish it from at least one plausible alternative under the stated uncertainty.",
+      "required_checks": [
+        "test at least one plausible alternative mechanism or model class",
+        "evaluate structural and practical parameter identifiability",
+        "use observables that change differently under competing explanations",
+        "report equivalence classes when the available data cannot identify a unique mechanism"
+      ]
+    },
+    "mechanism_competition": {
+      "status": "required",
+      "rule": "A preferred mechanism must be tested against at least one plausible alternative.",
+      "minimum_alternatives": 1
+    }
+  },
+  "decision_readiness": {
+    "status": "blocked",
+    "automatic_approval": false,
+    "human_review_required": true,
+    "blocking_codes": [
+      "EXTRAPOLATION_UNVALIDATED"
+    ],
+    "review_codes": [
+      "CLAIM_LANGUAGE_REVIEW_REQUIRED",
+      "IDENTIFIABILITY_REVIEW_REQUIRED"
+    ],
+    "next_best_evidence": [
+      "demonstrate transferability across samples, operators, or operating conditions",
+      "seek pilot, field, or manufacturing validation when the decision is industrial",
+      "temporal ordering, intervention, natural experiment, or explicit counterfactual logic",
+      "independent measurement and at least one competing-mechanism test",
+      "spectroscopy",
+      "current-voltage-temperature trends",
+      "compare at least one plausible competing mechanism before accepting the preferred explanation",
+      "declare units for every decision-critical numerical input and observable"
+    ],
+    "handoff_rule": "External execution planning may proceed only after blockers are closed, review items are addressed, and a qualified human approves a checksum-bound handoff."
+  },
+  "validation_plan": [
+    "test conservation laws, symmetries, units, and limiting cases",
+    "demonstrate numerical and model convergence appropriate to the method",
+    "validate against independent experiment, benchmark, or higher/lower-fidelity model",
+    "compare at least one plausible competing mechanism",
+    "spectroscopy",
+    "thermally stimulated measurements",
+    "current-voltage-temperature trends",
+    "transient charge profiles"
+  ],
+  "uncertainty_plan": [
+    "separate parameter, numerical, sampling, boundary-condition, and model-form uncertainty",
+    "propagate uncertainty to the declared observable and decision threshold",
+    "report extrapolation beyond the calibration and validation domain",
+    "structural ensemble",
+    "electronic method",
+    "state density",
+    "rates"
+  ],
+  "decision_rules": [
+    "start with the lowest-fidelity method that can predict the declared observable and be falsified",
+    "escalate resolution only when a failed validation identifies a missing degree of freedom or scale",
+    "do not treat agreement with one dataset as mechanism proof",
+    "retain negative, null, and contradictory results in the evidence record",
+    "do not convert a planned strategy into a completed, checked, validated, or accepted result without execution evidence"
+  ],
+  "human_review": [
+    "qualified domain review of governing physics, assumptions, and method hierarchy before external execution",
+    "approval of computational cost, data egress, software licence, safety, and acceptance criteria where applicable"
+  ],
+  "execution_boundary": {
+    "solver_executed": false,
+    "external_execution_required": true,
+    "statement": "TsaoSciResearcher generated an advisory strategy only; no DFT, MD, FEM, CFD, process simulation, or other solver was run.",
+    "next_step": "Convert an approved strategy into a checksum-bound external handoff, then review returned receipts and results separately."
+  }
+}

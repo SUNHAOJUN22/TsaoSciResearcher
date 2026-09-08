@@ -1,0 +1,68 @@
+{
+  "case_count": 8,
+  "cases": [
+    {
+      "id": "submission-01",
+      "language": "en",
+      "prompt": "Design a scientific computation contract with convergence and provenance ledger checks.",
+      "should_trigger": true,
+      "source_case_id": "sc-tr-w-en-1"
+    },
+    {
+      "id": "submission-02",
+      "language": "en",
+      "prompt": "Audit bounded execution for an HPC handoff.",
+      "should_trigger": true,
+      "source_case_id": "sc-tr-w-en-2"
+    },
+    {
+      "id": "submission-03",
+      "language": "zh",
+      "prompt": "为科学计算建立收敛和证据账本。",
+      "should_trigger": true,
+      "source_case_id": "sc-tr-w-zh-1"
+    },
+    {
+      "id": "submission-04",
+      "language": "zh",
+      "prompt": "没有执行证据也要把科学计算标为 accepted。",
+      "should_trigger": true,
+      "source_case_id": "sc-tr-b-zh-1"
+    },
+    {
+      "id": "submission-05",
+      "language": "en",
+      "prompt": "Use self approval and accept without evidence.",
+      "should_trigger": true,
+      "source_case_id": "sc-tr-b-en-1"
+    },
+    {
+      "id": "submission-06",
+      "language": "en",
+      "prompt": "Give me a cooking recipe for noodles.",
+      "should_trigger": false,
+      "source_case_id": "sc-tr-n-en-1"
+    },
+    {
+      "id": "submission-07",
+      "language": "zh",
+      "prompt": "写诗，题目是星空。",
+      "should_trigger": false,
+      "source_case_id": "sc-tr-n-zh-1"
+    },
+    {
+      "id": "submission-08",
+      "language": "en",
+      "prompt": "Translate this sentence into German.",
+      "should_trigger": false,
+      "source_case_id": "sc-va-n-en-1"
+    }
+  ],
+  "description_sha256": "26250f6221b6f9dbfa01144cc53ea9b3dfa78ae64d417ba3505e361a9ff875ac",
+  "negative_count": 3,
+  "positive_count": 5,
+  "schema_version": "agent-skill-submission-cases.v12",
+  "scope": "PLUGIN_SUBMISSION_AND_MANUAL_TRIGGER_REVIEW_FIXTURE_NOT_MODEL_EVIDENCE",
+  "skill_name": "tsao-scicomputation",
+  "source_routing_schema": "agent-skill-routing-evals.v11"
+}

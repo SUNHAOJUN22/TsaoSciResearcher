@@ -1,0 +1,67 @@
+{
+  "format": "TSAO-POE-MODEL-PASSPORT-1",
+  "models": [
+    {
+      "model_id": "POE-MODEL-001",
+      "model_type": "MATLAB",
+      "software": "MATLAB",
+      "software_version": "HISTORICAL_UNKNOWN",
+      "purpose": "Historical POE kinetic parameter calculations",
+      "unit_system": "SI",
+      "applicability_domain": "Historical SJTU laboratory cases only; equations and units require author confirmation",
+      "source_path": "controlled/POE_Kinetics.m",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "dependencies": [],
+      "evidence_ids": ["POE-ASSET-001"],
+      "execution_status": "HISTORICAL_ONLY",
+      "validation_status": "HOLD",
+      "approver": null
+    },
+    {
+      "model_id": "POE-MODEL-002",
+      "model_type": "ASPEN_PLUS",
+      "software": "Aspen Plus",
+      "software_version": "HISTORICAL_UNKNOWN",
+      "purpose": "Historical thousand-ton steady-state process model",
+      "unit_system": "SI",
+      "applicability_domain": "Historical case; recycle closure is unresolved",
+      "source_path": "controlled/poe_1000t_steady.apw",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "dependencies": ["property database and user models"],
+      "evidence_ids": ["POE-ASSET-002"],
+      "execution_status": "HISTORICAL_ONLY",
+      "validation_status": "HOLD",
+      "approver": null
+    },
+    {
+      "model_id": "POE-MODEL-003",
+      "model_type": "ASPEN_DYNAMICS",
+      "software": "Aspen Dynamics",
+      "software_version": "HISTORICAL_UNKNOWN",
+      "purpose": "Historical dynamic and control study",
+      "unit_system": "SI",
+      "applicability_domain": "Historical thousand-ton case; industrial-scale dynamic asset is not located",
+      "source_path": "controlled/poe_1000t_dynamic.dynf",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "dependencies": ["matching Aspen Plus case"],
+      "evidence_ids": ["POE-ASSET-003"],
+      "execution_status": "HISTORICAL_ONLY",
+      "validation_status": "HOLD",
+      "approver": null
+    },
+    {
+      "model_id": "POE-MODEL-004",
+      "model_type": "PYTHON_REFERENCE",
+      "software": "TSAO POE",
+      "software_version": "1.2.0-tsao.3",
+      "purpose": "Transparent P0/P1 known-solution reference calculations",
+      "unit_system": "SI",
+      "applicability_domain": "Synthetic or deidentified reference fixtures; not a fitted plant model",
+      "dependencies": ["numpy"],
+      "evidence_ids": ["POE-REF-P1"],
+      "execution_status": "QUALIFIED_REFERENCE",
+      "validation_status": "PASS",
+      "approver": "TSAO automated software qualification"
+    }
+  ]
+}

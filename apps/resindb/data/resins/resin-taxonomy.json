@@ -1,0 +1,439 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-24",
+  "dataKind": "resin-taxonomy",
+  "sourceType": "curated-demo",
+  "recordStatus": "demo",
+  "data": [
+    {
+      "id": "root_plastic",
+      "name": "通用塑料 (Commodity Plastics)",
+      "children": [
+        {
+          "id": "cat_pe",
+          "name": "聚乙烯 (PE)",
+          "children": [
+            {
+              "id": "sub_hdpe",
+              "name": "高密度聚乙烯 (HDPE)",
+              "children": [
+                {
+                  "id": "sub_hdpe_blow",
+                  "name": "吹塑级 (Blow Molding)"
+                },
+                {
+                  "id": "sub_hdpe_inj",
+                  "name": "注塑级 (Injection)"
+                },
+                {
+                  "id": "sub_hdpe_pipe",
+                  "name": "管材级 (Pipe)"
+                },
+                {
+                  "id": "sub_hdpe_film",
+                  "name": "薄膜级 (Film)"
+                },
+                {
+                  "id": "sub_hdpe_wire",
+                  "name": "电线电缆级 (Wire & Cable)"
+                }
+              ]
+            },
+            {
+              "id": "sub_ldpe",
+              "name": "低密度聚乙烯 (LDPE)",
+              "children": [
+                {
+                  "id": "sub_ldpe_film",
+                  "name": "薄膜级"
+                },
+                {
+                  "id": "sub_ldpe_coat",
+                  "name": "涂覆级 (Coating)"
+                }
+              ]
+            },
+            {
+              "id": "sub_lldpe",
+              "name": "线性低密度聚乙烯 (LLDPE)"
+            },
+            {
+              "id": "sub_mpe",
+              "name": "茂金属聚乙烯 (mPE)"
+            },
+            {
+              "id": "sub_uhmwpe",
+              "name": "超高分子量聚乙烯 (UHMWPE)"
+            },
+            {
+              "id": "sub_eva",
+              "name": "乙烯-乙酸乙烯酯共聚物 (EVA)",
+              "children": [
+                {
+                  "id": "sub_eva_foam",
+                  "name": "发泡级"
+                },
+                {
+                  "id": "sub_eva_adhesive",
+                  "name": "胶粘剂级"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat_pp",
+          "name": "聚丙烯 (PP)",
+          "children": [
+            {
+              "id": "sub_pp_homo",
+              "name": "均聚聚丙烯 (Homopolymer PP)"
+            },
+            {
+              "id": "sub_pp_copo",
+              "name": "抗冲共聚聚丙烯 (Impact Copolymer PP)"
+            },
+            {
+              "id": "sub_pp_rand",
+              "name": "无规共聚聚丙烯 (Random Copolymer PP)"
+            },
+            {
+              "id": "sub_pp_mfr_high",
+              "name": "高流动PP (High Flow PP)"
+            },
+            {
+              "id": "sub_pp_filler",
+              "name": "填充改性PP (Filled PP)"
+            },
+            {
+              "id": "sub_pp_reinforced",
+              "name": "增强改性PP (Reinforced PP)"
+            }
+          ]
+        },
+        {
+          "id": "cat_pvc",
+          "name": "聚氯乙烯 (PVC)",
+          "children": [
+            {
+              "id": "sub_pvc_s",
+              "name": "悬浮级 (PVC-S)"
+            },
+            {
+              "id": "sub_pvc_e",
+              "name": "乳液级 (PVC-E)"
+            },
+            {
+              "id": "sub_pvc_cpvc",
+              "name": "氯化聚氯乙烯 (CPVC)"
+            }
+          ]
+        },
+        {
+          "id": "cat_ps",
+          "name": "聚苯乙烯 (PS)",
+          "children": [
+            {
+              "id": "sub_gpps",
+              "name": "通用级 (GPPS)"
+            },
+            {
+              "id": "sub_hips",
+              "name": "高抗冲 (HIPS)"
+            },
+            {
+              "id": "sub_eps",
+              "name": "可发性 (EPS)"
+            }
+          ]
+        },
+        {
+          "id": "cat_abs",
+          "name": "ABS/SAN",
+          "children": [
+            {
+              "id": "sub_abs_gen",
+              "name": "通用级ABS"
+            },
+            {
+              "id": "sub_abs_heat",
+              "name": "耐热级ABS"
+            },
+            {
+              "id": "sub_abs_fr",
+              "name": "阻燃级ABS"
+            },
+            {
+              "id": "sub_abs_plate",
+              "name": "电镀级ABS"
+            },
+            {
+              "id": "sub_san",
+              "name": "丙烯腈-苯乙烯 (SAN/AS)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "root_eng",
+      "name": "工程塑料 (Engineering Plastics)",
+      "children": [
+        {
+          "id": "cat_pa",
+          "name": "聚酰胺 (PA/尼龙)",
+          "children": [
+            {
+              "id": "sub_pa6",
+              "name": "尼龙6 (PA6)"
+            },
+            {
+              "id": "sub_pa66",
+              "name": "尼龙66 (PA66)"
+            },
+            {
+              "id": "sub_pa_long",
+              "name": "长碳链尼龙 (PA11/PA12/PA610/PA612)"
+            },
+            {
+              "id": "sub_pga",
+              "name": "半芳香族尼龙 (PPA)"
+            },
+            {
+              "id": "sub_pa_transparent",
+              "name": "透明尼龙"
+            },
+            {
+              "id": "sub_pa_alloy",
+              "name": "尼龙合金"
+            }
+          ]
+        },
+        {
+          "id": "cat_pc",
+          "name": "聚碳酸酯 (PC)",
+          "children": [
+            {
+              "id": "sub_pc_inj",
+              "name": "注塑级"
+            },
+            {
+              "id": "sub_pc_ext",
+              "name": "挤出级"
+            },
+            {
+              "id": "sub_pc_alloy",
+              "name": "PC合金",
+              "children": [
+                {
+                  "id": "sub_pc_abs",
+                  "name": "PC/ABS"
+                },
+                {
+                  "id": "sub_pc_pbt",
+                  "name": "PC/PBT"
+                },
+                {
+                  "id": "sub_pc_asa",
+                  "name": "PC/ASA"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat_pom",
+          "name": "聚甲醛 (POM)",
+          "children": [
+            {
+              "id": "sub_pom_homo",
+              "name": "均聚POM"
+            },
+            {
+              "id": "sub_pom_copo",
+              "name": "共聚POM"
+            }
+          ]
+        },
+        {
+          "id": "cat_pbt_pet",
+          "name": "聚酯 (PBT/PET)",
+          "children": [
+            {
+              "id": "sub_pbt_gen",
+              "name": "PBT通用级"
+            },
+            {
+              "id": "sub_pbt_reinf",
+              "name": "PBT增强级"
+            },
+            {
+              "id": "sub_pet_bottle",
+              "name": "PET瓶级"
+            },
+            {
+              "id": "sub_pet_fiber",
+              "name": "PET纤维级"
+            }
+          ]
+        },
+        {
+          "id": "cat_pmma",
+          "name": "聚甲基丙烯酸甲酯 (PMMA)"
+        },
+        {
+          "id": "cat_ppe",
+          "name": "改性聚苯醚 (MPPO/PPE)"
+        }
+      ]
+    },
+    {
+      "id": "root_high_perf",
+      "name": "特种/高性能聚合物",
+      "children": [
+        {
+          "id": "cat_peek_family",
+          "name": "聚芳醚酮类 (PEEK/PEKK)"
+        },
+        {
+          "id": "cat_pps",
+          "name": "聚苯硫醚 (PPS)"
+        },
+        {
+          "id": "cat_lcp",
+          "name": "液晶聚合物 (LCP)"
+        },
+        {
+          "id": "cat_sulfone",
+          "name": "聚砜类 (PSU/PES/PPSU)"
+        },
+        {
+          "id": "cat_pi_family",
+          "name": "聚酰亚胺类 (PI/PEI/PAI)"
+        },
+        {
+          "id": "cat_fluor",
+          "name": "氟塑料 (PTFE/PVDF/FEP/ETFE)"
+        }
+      ]
+    },
+    {
+      "id": "root_tpe",
+      "name": "热塑性弹性体 (TPE)",
+      "children": [
+        {
+          "id": "cat_tpu",
+          "name": "热塑性聚氨酯 (TPU)"
+        },
+        {
+          "id": "cat_tpes",
+          "name": "苯乙烯类弹性体 (SBS/SEBS/SIS)"
+        },
+        {
+          "id": "cat_tpv_tpo",
+          "name": "聚烯烃类弹性体 (TPV/TPO/POE)"
+        },
+        {
+          "id": "cat_tpee",
+          "name": "热塑性聚酯弹性体 (TPEE)"
+        },
+        {
+          "id": "cat_tpa",
+          "name": "热塑性尼龙弹性体 (TPA)"
+        }
+      ]
+    },
+    {
+      "id": "root_rubber",
+      "name": "合成橡胶 (Synthetic Rubber)",
+      "children": [
+        {
+          "id": "cat_epdm",
+          "name": "乙丙橡胶 (EPDM)"
+        },
+        {
+          "id": "cat_sbr",
+          "name": "丁苯橡胶 (SBR)"
+        },
+        {
+          "id": "cat_br",
+          "name": "顺丁橡胶 (BR)"
+        },
+        {
+          "id": "cat_nbr",
+          "name": "丁腈橡胶 (NBR)"
+        },
+        {
+          "id": "cat_iir",
+          "name": "丁基橡胶 (IIR)"
+        },
+        {
+          "id": "cat_cr",
+          "name": "氯丁橡胶 (CR)"
+        },
+        {
+          "id": "cat_sir",
+          "name": "硅橡胶 (SIR)"
+        },
+        {
+          "id": "cat_fkm",
+          "name": "氟橡胶 (FKM)"
+        }
+      ]
+    },
+    {
+      "id": "root_thermoset",
+      "name": "热固性塑料 (Thermosets)",
+      "children": [
+        {
+          "id": "cat_epoxy",
+          "name": "环氧树脂 (Epoxy)"
+        },
+        {
+          "id": "cat_phenolic",
+          "name": "酚醛树脂 (PF)"
+        },
+        {
+          "id": "cat_pu",
+          "name": "聚氨酯 (PU)"
+        }
+      ]
+    },
+    {
+      "id": "root_bio",
+      "name": "可再生/生物基材料",
+      "children": [
+        {
+          "id": "cat_biodegradable",
+          "name": "生物降解塑料 (PLA/PBAT/PHA/PCL)"
+        },
+        {
+          "id": "cat_bio_polyolefin",
+          "name": "生物基聚烯烃 (Bio-PE/Bio-PP)"
+        },
+        {
+          "id": "cat_rplast",
+          "name": "再生塑料 (PCR/PIR)"
+        }
+      ]
+    },
+    {
+      "id": "root_additive",
+      "name": "助剂/色母/复合料",
+      "children": [
+        {
+          "id": "cat_color",
+          "name": "色母/功能母粒"
+        },
+        {
+          "id": "cat_compound",
+          "name": "合金/复合改性料"
+        },
+        {
+          "id": "cat_filler_master",
+          "name": "填充母粒"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# 数据统计与可视化
+
+- `scientific-data-profiler` — **科学数据画像**: 识别字段类型、范围、分布、缺失和异常
+- `data-cleaning` — **数据清洗**: 处理缺失、重复、异常、编码和格式错误
+- `unit-normalizer` — **单位标准化**: 统一单位并执行量纲换算
+- `physical-bounds-validator` — **物理边界检查**: 检查数据是否违反物理可行范围
+- `mass-balance-checker` — **物料衡算**: 检查物料收支闭合和组分守恒
+- `energy-balance-checker` — **能量衡算**: 检查热量、功和焓收支闭合
+- `outlier-diagnoser` — **异常值诊断**: 区分录入错误、仪器异常与真实现象
+- `batch-effect-analyzer` — **批次效应分析**: 识别实验批次、设备和时间造成的系统偏差
+- `calibration-validator` — **校准验证**: 检查校准曲线、残差、线性范围与检出限
+- `descriptive-statistics` — **描述性统计**: 生成分布、中心、离散和分位数指标
+- `hypothesis-testing` — **假设检验**: 根据数据条件选择并执行统计检验
+- `anova-analyzer` — **方差分析**: 执行单因素、多因素和重复测量ANOVA
+- `regression-diagnostics` — **回归诊断**: 检查残差、异方差、共线性和高影响点
+- `bayesian-inference` — **贝叶斯推断**: 进行先验、似然、后验和预测分析
+- `uncertainty-quantification` — **不确定性量化**: 分解输入、模型和测量不确定性
+- `sensitivity-analysis` — **灵敏度分析**: 执行局部、全局、Sobol和Morris分析
+- `power-analysis` — **统计功效**: 计算样本量、效应量和统计功效
+- `causal-inference` — **因果推断**: 使用因果图、匹配、工具变量等方法
+- `publication-quality-plot` — **期刊级绘图**: 自动生成单位、误差、图例和高分辨率图
+- `scientific-dashboard` — **科研仪表盘**: 构建指标、筛选、趋势和异常监控界面

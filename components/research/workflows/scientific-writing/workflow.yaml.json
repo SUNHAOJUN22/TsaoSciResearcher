@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "scientific-writing",
+  "purpose": "基于论断—证据图完成可追溯科学写作",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "冻结章节目的和受众",
+    "批准论断—证据映射",
+    "分离结果描述和解释",
+    "保留条件、不确定性和替代解释",
+    "执行引用支持、图表交叉引用和修订日志"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

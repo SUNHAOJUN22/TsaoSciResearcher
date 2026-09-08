@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "laboratory",
+  "purpose": "管理SOP、批号、样品链、仪器校准、QC、偏差和CAPA",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "冻结SOP版本和安全审批",
+    "登记材料批号和样品ID",
+    "检查仪器ID与校准状态",
+    "安排空白/参考/QC样",
+    "保留环境、原始数据、偏差和CAPA"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

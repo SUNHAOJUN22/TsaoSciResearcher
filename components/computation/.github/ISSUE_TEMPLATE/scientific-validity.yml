@@ -1,0 +1,52 @@
+name: Scientific validity or applicability concern
+description: Report a model, unit, reference-state, convergence, uncertainty, or applicability problem.
+title: "[Science] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A successful process or parser does not establish scientific validity. Provide enough evidence to distinguish software behavior from model suitability.
+  - type: input
+    id: capability
+    attributes:
+      label: Capability, workflow, or adapter
+      placeholder: TSC-XXX, workflow slug, or adapter slug
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Scientific claim or decision affected
+    validations:
+      required: true
+  - type: textarea
+    id: model
+    attributes:
+      label: Model, assumptions, units, and reference state
+    validations:
+      required: true
+  - type: textarea
+    id: convergence
+    attributes:
+      label: Numerical convergence and physical validation evidence
+    validations:
+      required: true
+  - type: textarea
+    id: uncertainty
+    attributes:
+      label: Uncertainty, sensitivity, and applicability boundary
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Proposed correction or acceptance criterion
+  - type: checkboxes
+    id: review
+    attributes:
+      label: Review boundary
+      options:
+        - label: I understand that high-risk reactor, control, safety, runaway, digital-twin, and commercial decisions require qualified domain review.
+          required: true
+        - label: I used synthetic or non-confidential evidence.
+          required: true

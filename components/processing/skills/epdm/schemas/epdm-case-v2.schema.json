@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/epdm-case-v2.schema.json",
+  "title": "EPDM V2 case contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "case_id",
+    "model_generation",
+    "model_level",
+    "catalyst_passport_id",
+    "diene_passport_id",
+    "thermo_passport_id",
+    "applicability_domain_id",
+    "kinetic_parameter_set_id",
+    "state_definition_id",
+    "reactor",
+    "feeds",
+    "initial_state",
+    "solver_settings",
+    "qualification_policy_id",
+    "evidence_ids",
+    "extensions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "model_generation": {
+      "const": "V2_TERMINAL_MOMENT"
+    },
+    "model_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "catalyst_passport_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "diene_passport_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "thermo_passport_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "applicability_domain_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "kinetic_parameter_set_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "reactor": {
+      "type": "object",
+      "required": [
+        "reactor_id",
+        "reactor_type",
+        "state_basis"
+      ],
+      "properties": {
+        "reactor_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "reactor_type": {
+          "enum": [
+            "BATCH",
+            "SEMIBATCH",
+            "CSTR",
+            "CSTR_SERIES",
+            "PFR",
+            "HSBR_CSTR_SERIES",
+            "GAS_PHASE_FBR_REFERENCE",
+            "SOLUTION_CSTR"
+          ]
+        },
+        "state_basis": {
+          "enum": [
+            "EXTENSIVE_REACTOR_AMOUNT",
+            "AXIAL_MOLAR_FLOW",
+            "INTENSIVE_REFERENCE_FIXTURE"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "feeds": {
+      "type": "array"
+    },
+    "initial_state": {
+      "type": "object",
+      "required": [
+        "state_basis",
+        "values"
+      ],
+      "properties": {
+        "state_basis": {
+          "enum": [
+            "EXTENSIVE_REACTOR_AMOUNT",
+            "AXIAL_MOLAR_FLOW",
+            "INTENSIVE_REFERENCE_FIXTURE"
+          ]
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "solver_settings": {
+      "type": "object",
+      "required": [
+        "integrator_kind"
+      ],
+      "properties": {
+        "integrator_kind": {
+          "enum": [
+            "RK4_FIXED",
+            "RK45_ADAPTIVE",
+            "BDF_OPTIONAL",
+            "RADAU_OPTIONAL"
+          ]
+        },
+        "relative_tolerance": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "absolute_tolerance": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "qualification_policy_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "engineering_use_requested": {
+      "type": "boolean",
+      "default": false
+    },
+    "qualification_report_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    },
+    "generated_state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "reaction_network_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "engineering_use_requested": {
+            "const": true
+          }
+        },
+        "required": [
+          "engineering_use_requested"
+        ]
+      },
+      "then": {
+        "required": [
+          "qualification_report_id"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

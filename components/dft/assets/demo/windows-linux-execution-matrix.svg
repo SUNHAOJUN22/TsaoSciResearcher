@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Windows and Linux execution matrix</title>
+  <desc id="desc">Synthetic conceptual matrix comparing the shared TsaoDFT control-plane quality gates on Windows PowerShell and Linux, while distinguishing local orchestration from external HPC engines. This is not scientific data.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06111f"/><stop offset="1" stop-color="#111c31"/></linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1687ff"/><stop offset="1" stop-color="#58c7ff"/></linearGradient>
+    <linearGradient id="lin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7a56ff"/><stop offset="1" stop-color="#b075ff"/></linearGradient>
+    <linearGradient id="pass" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#19bd7a"/><stop offset="1" stop-color="#61e6a2"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000" flood-opacity=".35"/></filter>
+    <style>
+      .f{font-family:Inter,Segoe UI,Arial,sans-serif}.w{fill:#eef7ff}.m{fill:#a8bad0}.h{font-size:28px;font-weight:760}.k{font-size:12px;font-weight:800;letter-spacing:.11em}.l{font-size:17px;font-weight:750}.s{font-size:13px}.card{fill:#0e1d30;stroke:#2a4766;stroke-width:1.4}.row{fill:#11263b;stroke:#294b68;stroke-width:1}.tick{stroke:#07111f;stroke-width:3;fill:none}
+    </style>
+  </defs>
+  <rect width="1120" height="520" rx="24" fill="url(#bg)"/>
+  <circle cx="82" cy="76" r="80" fill="#148dff" opacity=".08"/><circle cx="1030" cy="450" r="120" fill="#8d5dff" opacity=".08"/>
+  <text class="f w h" x="48" y="52">One scientific contract across Windows and Linux</text>
+  <text class="f m s" x="48" y="79">Platform-specific launchers, shared validation, identical evidence boundaries.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="48" y="108" width="310" height="316" rx="22" fill="url(#win)"/>
+    <text class="f" x="74" y="139" font-size="12" font-weight="800" letter-spacing=".12em" fill="#062544">WINDOWS CONTROL PLANE</text>
+    <text class="f" x="74" y="171" font-size="23" font-weight="800" fill="#062544">PowerShell + Python 3.12</text>
+    <text class="f" x="74" y="196" font-size="13" fill="#0b4267">private owner workflow · local execution</text>
+    <g transform="translate(74,222)">
+      <rect x="0" y="0" width="258" height="38" rx="12" fill="#062544" opacity=".72"/><text class="f w s" x="18" y="24">privacy-bounded inventory</text>
+      <rect x="0" y="48" width="258" height="38" rx="12" fill="#062544" opacity=".72"/><text class="f w s" x="18" y="72">same registry + architecture gates</text>
+      <rect x="0" y="96" width="258" height="38" rx="12" fill="#062544" opacity=".72"/><text class="f w s" x="18" y="120">structured argv · no shell text</text>
+      <rect x="0" y="144" width="258" height="38" rx="12" fill="#062544" opacity=".72"/><text class="f w s" x="18" y="168">Windows evidence artifact</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="card" x="382" y="108" width="356" height="316" rx="22"/>
+    <text class="f w k" x="410" y="139">SHARED PERMANENT QUALITY GATE</text>
+    <text class="f w l" x="410" y="171">Contracts before claims</text>
+    <g transform="translate(410,196)">
+      <rect class="row" x="0" y="0" width="300" height="40" rx="11"/><circle cx="276" cy="20" r="11" fill="url(#pass)"/><path class="tick" d="M270 20l4 4 8-9"/><text class="f w s" x="16" y="25">dependency + constraints</text>
+      <rect class="row" x="0" y="48" width="300" height="40" rx="11"/><circle cx="276" cy="68" r="11" fill="url(#pass)"/><path class="tick" d="M270 68l4 4 8-9"/><text class="f w s" x="16" y="73">acceleration registry drift</text>
+      <rect class="row" x="0" y="96" width="300" height="40" rx="11"/><circle cx="276" cy="116" r="11" fill="url(#pass)"/><path class="tick" d="M270 116l4 4 8-9"/><text class="f w s" x="16" y="121">compute architecture audit</text>
+      <rect class="row" x="0" y="144" width="300" height="40" rx="11"/><circle cx="276" cy="164" r="11" fill="url(#pass)"/><path class="tick" d="M270 164l4 4 8-9"/><text class="f w s" x="16" y="169">Ruff · mypy · coverage · Bandit</text>
+      <rect class="row" x="0" y="192" width="300" height="40" rx="11"/><circle cx="276" cy="212" r="11" fill="url(#pass)"/><path class="tick" d="M270 212l4 4 8-9"/><text class="f w s" x="16" y="217">unit tests · evidence boundaries</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="762" y="108" width="310" height="316" rx="22" fill="url(#lin)"/>
+    <text class="f" x="788" y="139" font-size="12" font-weight="800" letter-spacing=".12em" fill="#180b3a">LINUX / HPC CONTROL PLANE</text>
+    <text class="f" x="788" y="171" font-size="23" font-weight="800" fill="#180b3a">Python 3.10 · 3.12 · 3.13</text>
+    <text class="f" x="788" y="196" font-size="13" fill="#3d1d6f">local · Slurm · PBS adapters</text>
+    <g transform="translate(788,222)">
+      <rect x="0" y="0" width="258" height="38" rx="12" fill="#180b3a" opacity=".7"/><text class="f w s" x="18" y="24">three-version compatibility</text>
+      <rect x="0" y="48" width="258" height="38" rx="12" fill="#180b3a" opacity=".7"/><text class="f w s" x="18" y="72">CodeQL + supply-chain audit</text>
+      <rect x="0" y="96" width="258" height="38" rx="12" fill="#180b3a" opacity=".7"/><text class="f w s" x="18" y="120">scheduler manifests + binding</text>
+      <rect x="0" y="144" width="258" height="38" rx="12" fill="#180b3a" opacity=".7"/><text class="f w s" x="18" y="168">external engine handoff</text>
+    </g>
+  </g>
+
+  <path d="M358 266h24M738 266h24" stroke="#73dfff" stroke-width="3" stroke-dasharray="6 5"/>
+  <rect x="250" y="448" width="620" height="38" rx="19" fill="#102b35" stroke="#2e6d78"/>
+  <text class="f w s" x="560" y="472" text-anchor="middle">Windows local owner workflows ↔ Linux/HPC external engines via structured files, hashes and acceptance gates</text>
+  <text class="f" x="48" y="504" font-size="13" font-weight="800" fill="#ffcf70">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+  <text class="f" x="1072" y="504" text-anchor="end" font-size="12" fill="#7f94ab">Platform PASS ≠ engine execution ≠ performance qualification</text>
+</svg>

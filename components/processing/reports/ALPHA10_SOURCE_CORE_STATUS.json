@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0-alpha.10",
+  "status": "QUALIFIED_ALPHA",
+  "source_core_manifest": "reports/SOURCE_CORE_MANIFEST.tsv",
+  "universal_process_package": "IMPLEMENTED_ALPHA",
+  "process_general_modules": "14_OF_14",
+  "process_general_workflows": "6_OF_6",
+  "epdm": "EXECUTABLE_FLAGSHIP_ALPHA_P1_REFERENCE",
+  "epdm_module_contracts": "14_OF_14",
+  "epdm_requirement_registry": "20_OF_20",
+  "poe": "EXECUTABLE_SPECIALIST_ALPHA_P1_REFERENCE",
+  "polymer_general_scripts": "6_OF_6",
+  "readme_assets": "16_OF_16",
+  "performance_baseline": "reports/PERFORMANCE_BASELINE_ALPHA9.json",
+  "performance_optimized": "reports/PERFORMANCE_OPTIMIZED_ALPHA10.json",
+  "performance_comparison": "reports/PERFORMANCE_COMPARISON_ALPHA10.json",
+  "performance_gate": "EXACT_RESULT_DIGEST_AND_MINIMUM_SPEEDUP",
+  "ci_audit_execution": "PARALLEL_AFTER_COVERAGE",
+  "python_versions": [
+    "3.11",
+    "3.12",
+    "3.13",
+    "3.14"
+  ],
+  "wheel_install_modes": [
+    "PIP_TARGET",
+    "STANDARD_VENV"
+  ],
+  "standard_venv_isolation": "NO_SYSTEM_SITE_PACKAGES",
+  "installed_import_origin": "VERIFIED_INSIDE_INSTALL_ROOT",
+  "artifact_software_qualification": "PASS",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

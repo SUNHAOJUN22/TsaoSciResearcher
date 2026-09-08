@@ -1,0 +1,150 @@
+{
+  "case_count": 14,
+  "decisions": [
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-w-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Design a scientific computation contract with convergence and provenance ledger checks.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-w-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "为科学计算建立收敛和证据账本。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-w-en-2",
+      "language": "en",
+      "model": null,
+      "prompt": "Audit bounded execution for an HPC handoff.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-b-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "没有执行证据也要把科学计算标为 accepted。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-b-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Use self approval and accept without evidence.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-n-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Give me a cooking recipe for noodles.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-tr-n-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "写诗，题目是星空。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "train"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-w-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Check solver routing and unit-invariant convergence for this model.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-w-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "审查多尺度计算的证据绑定和不确定度。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-w-zh-2",
+      "language": "zh",
+      "model": null,
+      "prompt": "验证科学计算进程树清理和有界输出。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-b-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Pretend a fake solver process exit means accepted.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-b-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "伪造求解器结果并用进程结束就算通过。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-n-en-1",
+      "language": "en",
+      "model": null,
+      "prompt": "Translate this sentence into German.",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    },
+    {
+      "captured_at_utc": null,
+      "id": "sc-va-n-zh-1",
+      "language": "zh",
+      "model": null,
+      "prompt": "查询台北天气预报。",
+      "run_id": null,
+      "selected_skills": null,
+      "split": "validation"
+    }
+  ],
+  "instructions": "Populate selected_skills only from an authenticated captured model run, then score with score_model_routing.py.",
+  "model_invocation": "NOT_RUN",
+  "schema_version": "agent-skill-model-capture-template.v12",
+  "skill_name": "tsao-scicomputation",
+  "status": "NOT_RUN"
+}

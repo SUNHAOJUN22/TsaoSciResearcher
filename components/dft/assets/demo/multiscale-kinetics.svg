@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470" role="img" aria-label="DFT to kinetics and multiscale models">
+<title>DFT to kinetics and multiscale models</title>
+<desc>A synthetic multiscale chain from DFT energetics to reaction networks and reactor handoff. Synthetic demonstration only and not scientific data.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#030816"/>
+    <stop offset="0.55" stop-color="#071529"/>
+    <stop offset="1" stop-color="#061020"/>
+  </linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2E8CFF"/><stop offset="1" stop-color="#62D4FF"/>
+  </linearGradient>
+  <linearGradient id="violet" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#6D5DFB"/><stop offset="1" stop-color="#D06BFF"/>
+  </linearGradient>
+  <linearGradient id="warm" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#F59E0B"/><stop offset="1" stop-color="#FB4B5A"/>
+  </linearGradient>
+  <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+    <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#173052" stroke-width="1" opacity=".55"/>
+  </pattern>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .h1 {font:700 30px Inter,Segoe UI,sans-serif;fill:#F4F8FF}
+    .ey {font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.4px;fill:#66C8FF}
+    .t {font:600 16px Inter,Segoe UI,sans-serif;fill:#CFE3FF}
+    .s {font:400 13px Inter,Segoe UI,sans-serif;fill:#9FB5D2}
+    .mono {font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#76D9FF}
+    .chip {font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace}
+  </style>
+</defs>
+<rect width="1120" height="470" rx="24" fill="url(#bg)"/>
+<rect x="1" y="1" width="1118" height="468" rx="23" fill="none" stroke="#23528C" stroke-width="2"/>
+<rect width="1120" height="470" rx="24" fill="url(#grid)" opacity=".42"/>
+<text x="34" y="34" class="ey">DFT → RATE → NETWORK → REACTOR</text><text x="34" y="72" class="h1">Every scale transition declares assumptions and uncertainty.</text><rect x="34" y="105" width="340" height="310" rx="16" fill="#07152A" stroke="#27598F" stroke-width="1.5"/>
+<text x="52" y="133" class="t">Energetics</text>
+<text x="52" y="154" class="s">accepted ΔG and ΔG‡</text><path d="M 70 350 H 330 M 90 330 C 145 315 165 170 215 170 C 260 170 270 310 325 325" fill="none" stroke="url(#warm)" stroke-width="5" filter="url(#glow)"/><line x1="215" y1="170" x2="215" y2="330" stroke="#778EAC" stroke-dasharray="6 6"/><text x="215" y="150" text-anchor="middle" class="t">TS</text><text x="235" y="245" class="t">ΔG‡</text><rect x="400" y="105" width="300" height="310" rx="16" fill="#07152A" stroke="#765BFF" stroke-width="1.5"/>
+<text x="418" y="133" class="t">Reaction network</text>
+<text x="418" y="154" class="s">rates · coverage · detailed balance</text><circle cx="455" cy="245" r="25" fill="#102342" stroke="#9F7BFF" stroke-width="3"/><text x="455" y="251" text-anchor="middle" class="t">A</text><circle cx="550" cy="175" r="25" fill="#102342" stroke="#9F7BFF" stroke-width="3"/><text x="550" y="181" text-anchor="middle" class="t">B</text><circle cx="645" cy="245" r="25" fill="#102342" stroke="#9F7BFF" stroke-width="3"/><text x="645" y="251" text-anchor="middle" class="t">C</text><circle cx="550" cy="330" r="25" fill="#102342" stroke="#9F7BFF" stroke-width="3"/><text x="550" y="336" text-anchor="middle" class="t">D</text><path d="M 455 245 L 550 175" stroke="#62D4FF" stroke-width="2"/><path d="M 550 175 L 645 245" stroke="#62D4FF" stroke-width="2"/><path d="M 645 245 L 550 330" stroke="#62D4FF" stroke-width="2"/><path d="M 550 330 L 455 245" stroke="#62D4FF" stroke-width="2"/><path d="M 455 245 L 645 245" stroke="#62D4FF" stroke-width="2"/><rect x="726" y="105" width="360" height="310" rx="16" fill="#07152A" stroke="#22C55E" stroke-width="1.5"/>
+<text x="744" y="133" class="t">Multiscale handoff</text>
+<text x="744" y="154" class="s">microkinetics → reactor / PBE</text><rect x="760" y="175" width="256" height="36" rx="10" fill="#071D34" stroke="#2E8CFF"/><text x="888" y="198" text-anchor="middle" class="chip" fill="#E6F3FF">RATE TABLE</text><rect x="760" y="229" width="256" height="36" rx="10" fill="#071D34" stroke="#18B7D4"/><text x="888" y="252" text-anchor="middle" class="chip" fill="#E6F3FF">SITE BALANCE</text><rect x="760" y="283" width="256" height="36" rx="10" fill="#071D34" stroke="#765BFF"/><text x="888" y="306" text-anchor="middle" class="chip" fill="#E6F3FF">UNCERTAINTY</text><rect x="760" y="337" width="256" height="36" rx="10" fill="#071D34" stroke="#22C55E"/><text x="888" y="360" text-anchor="middle" class="chip" fill="#E6F3FF">REACTOR INPUT</text>
+<rect x="760" y="436" width="332" height="22" rx="7" fill="#07192F" stroke="#2E7CC8"/>
+<text x="926" y="451" text-anchor="middle" class="mono">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+</svg>

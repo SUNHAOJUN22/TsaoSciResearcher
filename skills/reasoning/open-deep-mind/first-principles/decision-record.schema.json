@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenDeepMind First Principles Decision Record",
+  "type": "object",
+  "required": [
+    "decision_id",
+    "decision",
+    "foundation_trace",
+    "assumptions",
+    "uncertainty",
+    "rival_model",
+    "falsifiers",
+    "next_discriminating_action",
+    "review_trigger"
+  ],
+  "properties": {
+    "decision_id": {"type": "string", "minLength": 1},
+    "decision": {"type": "string", "minLength": 1},
+    "foundation_trace": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": "string", "minLength": 1},
+    "rival_model": {"type": "string", "minLength": 1},
+    "falsifiers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "next_discriminating_action": {"type": "string", "minLength": 1},
+    "monitoring_variables": {"type": "array", "items": {"type": "string"}},
+    "review_trigger": {"type": "string", "minLength": 1},
+    "reversal_condition": {"type": "string"}
+  },
+  "additionalProperties": false
+}

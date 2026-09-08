@@ -1,0 +1,18 @@
+{
+  "schema_version": "agent-skill-model-capture-template/v19",
+  "skill_name": "resindb-science-screening-audit",
+  "status": "NOT_RUN",
+  "model": null,
+  "model_version": null,
+  "run_id": null,
+  "captured_at_utc": null,
+  "instruction_digest": null,
+  "decisions": [
+    {"id":"rd-tr-w-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rd-tr-b-zh","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rd-tr-n-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rd-va-w-zh","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rd-va-b-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rd-va-n-zh","selected_skills":null,"request_sha256":null,"response_sha256":null}
+  ]
+}

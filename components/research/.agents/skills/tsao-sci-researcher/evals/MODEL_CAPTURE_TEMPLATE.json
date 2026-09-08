@@ -1,0 +1,18 @@
+{
+  "schema_version": "agent-skill-model-capture-template/v19",
+  "skill_name": "tsao-sci-researcher",
+  "status": "NOT_RUN",
+  "model": null,
+  "model_version": null,
+  "run_id": null,
+  "captured_at_utc": null,
+  "instruction_digest": null,
+  "decisions": [
+    {"id":"rs-tr-w-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rs-tr-b-zh","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rs-tr-n-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rs-va-w-zh","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rs-va-b-en","selected_skills":null,"request_sha256":null,"response_sha256":null},
+    {"id":"rs-va-n-zh","selected_skills":null,"request_sha256":null,"response_sha256":null}
+  ]
+}

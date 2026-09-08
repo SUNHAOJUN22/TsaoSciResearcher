@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="500" viewBox="0 0 1120 500" role="img" aria-labelledby="title desc">
+  <title id="title">Edge to HPC scientific feedback loop</title>
+  <desc id="desc">Synthetic conceptual loop connecting edge validation and surrogate inference with remote HPC DFT, evidence review, and model update. Not scientific data.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#08101f"/><stop offset="1" stop-color="#1a1230"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0ea5e9"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <linearGradient id="hpc" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <linearGradient id="evidence" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10b981"/><stop offset="1" stop-color="#84cc16"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity=".38"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a5b4fc"/></marker>
+  </defs>
+  <rect width="1120" height="500" rx="28" fill="url(#bg)"/>
+  <text x="54" y="60" fill="#f8fafc" font-size="28" font-family="Inter,Segoe UI,sans-serif" font-weight="700">Edge ↔ HPC scientific feedback loop</text>
+  <text x="54" y="88" fill="#a5b4fc" font-size="15" font-family="Inter,Segoe UI,sans-serif">Fast local decisions remain bounded by uncertainty, provenance and remote first-principles evidence.</text>
+
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,sans-serif">
+    <rect x="54" y="135" width="260" height="220" rx="28" fill="#0c2740" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="184" cy="190" r="42" fill="url(#edge)"/>
+    <path d="M165 181h38v25h-38zM174 170h20v12h-20z" fill="#e0f2fe" opacity=".9"/>
+    <text x="184" y="255" text-anchor="middle" fill="#e0f2fe" font-size="21" font-weight="700">Edge node</text>
+    <text x="184" y="284" text-anchor="middle" fill="#bae6fd" font-size="14">validation · features · inference</text>
+    <text x="184" y="307" text-anchor="middle" fill="#7dd3fc" font-size="13">latency · memory · power</text>
+    <rect x="92" y="322" width="184" height="22" rx="11" fill="#123b5a"/>
+    <text x="184" y="338" text-anchor="middle" fill="#7dd3fc" font-size="11">NO PRODUCTION DFT KERNEL</text>
+
+    <rect x="430" y="128" width="260" height="234" rx="28" fill="#2a1742" stroke="#c084fc" stroke-width="1.5"/>
+    <circle cx="560" cy="190" r="42" fill="url(#hpc)"/>
+    <g stroke="#f5d0fe" stroke-width="3" fill="none"><path d="M535 174h50v14h-50zM535 193h50v14h-50zM535 212h50v14h-50z"/><circle cx="545" cy="181" r="2" fill="#f5d0fe"/><circle cx="545" cy="200" r="2" fill="#f5d0fe"/><circle cx="545" cy="219" r="2" fill="#f5d0fe"/></g>
+    <text x="560" y="260" text-anchor="middle" fill="#fae8ff" font-size="21" font-weight="700">Remote DFT / HPC</text>
+    <text x="560" y="289" text-anchor="middle" fill="#e9d5ff" font-size="14">VASP · QE · CP2K · Gaussian</text>
+    <text x="560" y="312" text-anchor="middle" fill="#d8b4fe" font-size="13">CPU reference · GPU candidate</text>
+    <rect x="470" y="327" width="180" height="22" rx="11" fill="#42235f"/>
+    <text x="560" y="343" text-anchor="middle" fill="#e9d5ff" font-size="11">REAL ENGINE EVIDENCE</text>
+
+    <rect x="806" y="135" width="260" height="220" rx="28" fill="#123329" stroke="#34d399" stroke-width="1.5"/>
+    <circle cx="936" cy="190" r="42" fill="url(#evidence)"/>
+    <path d="M919 168h34v44h-34zM925 178h22M925 187h22M925 196h15" stroke="#ecfccb" stroke-width="3" fill="none"/>
+    <text x="936" y="255" text-anchor="middle" fill="#ecfdf5" font-size="21" font-weight="700">Evidence gate</text>
+    <text x="936" y="284" text-anchor="middle" fill="#bbf7d0" font-size="14">hashes · parser · equivalence</text>
+    <text x="936" y="307" text-anchor="middle" fill="#86efac" font-size="13">review · qualification · fallback</text>
+    <rect x="844" y="322" width="184" height="22" rx="11" fill="#1d4b3b"/>
+    <text x="936" y="338" text-anchor="middle" fill="#a7f3d0" font-size="11">PUBLIC LEVEL UNCHANGED</text>
+  </g>
+
+  <path d="M314 230C360 190 386 190 430 230" fill="none" stroke="#a5b4fc" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="372" y="183" text-anchor="middle" fill="#bfdbfe" font-size="12" font-family="Inter,Segoe UI,sans-serif">OOD / uncertainty</text>
+  <path d="M690 230C736 190 760 190 806 230" fill="none" stroke="#a5b4fc" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="748" y="183" text-anchor="middle" fill="#e9d5ff" font-size="12" font-family="Inter,Segoe UI,sans-serif">immutable outputs</text>
+  <path d="M936 355C880 437 260 437 184 355" fill="none" stroke="#a5b4fc" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="560" y="428" text-anchor="middle" fill="#c7d2fe" font-size="14" font-family="Inter,Segoe UI,sans-serif">accepted labels + calibration + model update</text>
+  <text x="1090" y="486" text-anchor="end" fill="#fbbf24" font-size="11" font-family="Inter,Segoe UI,sans-serif">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+</svg>

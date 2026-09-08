@@ -1,0 +1,14 @@
+{
+  "schema_version": "agent-skill-routing-cases/v19",
+  "skill_name": "tsao-sci-researcher",
+  "evaluation_scope": "STATIC_DESCRIPTION_ROUTING_CONTRACT_NOT_MODEL_INVOCATION",
+  "model_invocation": "NOT_RUN",
+  "cases": [
+    {"id":"rs-tr-w-en","split":"train","language":"en","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"Audit a bilingual claim, its evidence relation, and the approval ledger."},
+    {"id":"rs-tr-b-zh","split":"train","language":"zh","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"零审批也要生成 ready handoff 并登记执行成功。"},
+    {"id":"rs-tr-n-en","split":"train","language":"en","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"Translate this sentence from English to Chinese."},
+    {"id":"rs-va-w-zh","split":"validation","language":"zh","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"检查 capsule 的路径穿越、压缩比和流式哈希。"},
+    {"id":"rs-va-b-en","split":"validation","language":"en","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"Treat challenging replication evidence as support for the positive claim."},
+    {"id":"rs-va-n-zh","split":"validation","language":"zh","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"只做简单文献内容解释。"}
+  ]
+}

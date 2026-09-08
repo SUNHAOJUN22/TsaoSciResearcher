@@ -1,0 +1,12 @@
+{
+  "format": "TSAO-SOURCE-CORE-STATUS-1",
+  "version": "0.1.0-alpha.7",
+  "status": "EXTERNAL_VERIFICATION",
+  "qualification_model": "The source tree does not self-certify. GitHub Actions and deterministic snapshots provide commit-specific evidence.",
+  "source_manifest": "reports/SOURCE_CORE_MANIFEST.tsv",
+  "ci_workflow": ".github/workflows/ci.yml",
+  "artifact_software_qualification": "NOT_EVALUATED",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

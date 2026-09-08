@@ -1,0 +1,8 @@
+Gaussian 16: test fixture
+Charge = 0 Multiplicity = 1
+SCF Done:  E(RB3LYP) =  -100.123456789     A.U. after 10 cycles
+Frequencies --    25.0000  100.0000  200.0000
+Zero-point correction=                           0.100000 (Hartree/Particle)
+Thermal correction to Gibbs Free Energy=         0.080000
+Sum of electronic and thermal Free Energies=   -100.043456789
+Normal termination of Gaussian 16

@@ -1,0 +1,42 @@
+name: Scientific or engineering capability
+description: Propose a new module, model, schema, workflow or specialist skill
+title: "[Capability]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision problem
+      description: What decision must TSAO support, and at which G0-G18 Gate?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and exclusions
+      description: State process domain, chemistry, scales and explicit non-applicability.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Primary evidence
+      description: Standards, papers, patents, official documentation or validated case data with locators.
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Proposed executable contract
+      description: Inputs, equations or algorithm, outputs, uncertainty, failure modes, exit criteria and tests.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Integrity boundary
+      options:
+        - label: I will not represent plans or simulations as completed experiments or approvals.
+          required: true
+        - label: I will add positive and negative tests and preserve fail-closed Gate semantics.
+          required: true

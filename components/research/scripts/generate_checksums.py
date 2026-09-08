@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import ROOT, atomic_write_text
+
+EXCLUDED_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".hypothesis",
+    ".tsao-research",
+    "artifacts",
+    "__pycache__",
+    "build",
+    "dist",
+    "site",
+}
+GENERATED_PREFIXES = ("dist-", "dist_", "build-", "build_", "release-", "release_")
+EXCLUDED_FILES = {"SHA256SUMS"}
+EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".sha256"}
+COVERAGE_RUNTIME_PATTERNS = (".coverage", ".coverage.*")
+DEFERRED_COMPOSITE = (
+    "NOT-RECORDED  TREE-SHA256 "
+    "(composite evidence; run scripts/generate_checksums.py --write from a complete checkout)\n"
+)
+
+
+def _is_coverage_runtime_file(path: Path) -> bool:
+    return path.name == ".coverage" or path.name.startswith(".coverage.")
+
+
+def source_files(root: Path = ROOT) -> list[Path]:
+    files: list[Path] = []
+    for path in root.rglob("*"):
+        relative = path.relative_to(root)
+        if any(part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts):
+            continue
+        if relative.parts and relative.parts[0].startswith(GENERATED_PREFIXES):
+            continue
+        if path.is_symlink():
+            raise ValueError(f"source tree contains symbolic link: {relative.as_posix()}")
+        if not path.is_file():
+            continue
+        if _is_coverage_runtime_file(path):
+            continue
+        if path.name in EXCLUDED_FILES or path.suffix in EXCLUDED_SUFFIXES:
+            continue
+        files.append(path)
+    return sorted(files, key=lambda item: item.relative_to(root).as_posix())
+
+
+def build(root: Path = ROOT) -> str:
+    tree = hashlib.sha256()
+    files = source_files(root)
+    for path in files:
+        relative = path.relative_to(root).as_posix().encode("utf-8")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii")
+        tree.update(relative + b"\0" + digest + b"\n")
+    return f"{tree.hexdigest()}  TREE-SHA256 ({len(files)} files)\n"
+
+
+def _validation_scope(root: Path = ROOT) -> str:
+    path = root / "docs/VALIDATION_EVIDENCE.json"
+    if not path.is_file() or path.is_symlink():
+        return "unknown"
+    value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
+    if not isinstance(value, dict):
+        raise ValueError("validation evidence root must be an object")
+    return str(value.get("validation_scope", "unknown"))
+
+
+def rendered_checksum(root: Path = ROOT) -> str:
+    """Return the governed checksum record for the current validation scope."""
+
+    return DEFERRED_COMPOSITE if _validation_scope(root) == "composite" else build(root)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Write or verify the deterministic repository-tree checksum."
+    )
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--write", action="store_true")
+    mode.add_argument("--check", action="store_true")
+    args = parser.parse_args()
+    checksum_path = ROOT / "SHA256SUMS"
+    if args.write:
+        expected = rendered_checksum()
+        atomic_write_text(checksum_path, expected)
+        print(f"wrote {checksum_path}: {expected.strip()}")
+        return
+    if checksum_path.is_symlink() or not checksum_path.is_file():
+        print("SHA256SUMS is missing or unsafe", file=sys.stderr)
+        raise SystemExit(1)
+    actual = checksum_path.read_text(encoding="utf-8", errors="strict")
+    expected = rendered_checksum()
+    if actual != expected:
+        if _validation_scope() == "composite":
+            print("SHA256SUMS must explicitly defer the digest in composite evidence mode", file=sys.stderr)
+        else:
+            print("SHA256SUMS is stale; run scripts/generate_checksums.py --write", file=sys.stderr)
+            print(f"checked-in: {actual.strip()}", file=sys.stderr)
+            print(f"expected:   {expected.strip()}", file=sys.stderr)
+        raise SystemExit(1)
+    if expected == DEFERRED_COMPOSITE:
+        print("repository-tree checksum NOT RECORDED: composite evidence mode")
+    else:
+        print(f"repository-tree checksum PASS: {expected.strip()}")
+
+
+if __name__ == "__main__":
+    main()

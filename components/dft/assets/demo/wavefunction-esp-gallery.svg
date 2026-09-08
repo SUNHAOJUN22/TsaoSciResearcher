@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470" role="img" aria-label="Wavefunction and surface figure contract">
+<title>Wavefunction and surface figure contract</title>
+<desc>A dark evidence dashboard for orbital and electrostatic-potential figures. Synthetic demonstration only and not scientific data.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#030816"/>
+    <stop offset="0.55" stop-color="#071529"/>
+    <stop offset="1" stop-color="#061020"/>
+  </linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2E8CFF"/><stop offset="1" stop-color="#62D4FF"/>
+  </linearGradient>
+  <linearGradient id="violet" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#6D5DFB"/><stop offset="1" stop-color="#D06BFF"/>
+  </linearGradient>
+  <linearGradient id="warm" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#F59E0B"/><stop offset="1" stop-color="#FB4B5A"/>
+  </linearGradient>
+  <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+    <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#173052" stroke-width="1" opacity=".55"/>
+  </pattern>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>
+    .h1 {font:700 30px Inter,Segoe UI,sans-serif;fill:#F4F8FF}
+    .ey {font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.4px;fill:#66C8FF}
+    .t {font:600 16px Inter,Segoe UI,sans-serif;fill:#CFE3FF}
+    .s {font:400 13px Inter,Segoe UI,sans-serif;fill:#9FB5D2}
+    .mono {font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#76D9FF}
+    .chip {font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace}
+  </style>
+</defs>
+<rect width="1120" height="470" rx="24" fill="url(#bg)"/>
+<rect x="1" y="1" width="1118" height="468" rx="23" fill="none" stroke="#23528C" stroke-width="2"/>
+<rect width="1120" height="470" rx="24" fill="url(#grid)" opacity=".42"/>
+<text x="34" y="34" class="ey">WAVEFUNCTION · SURFACE · ORBITAL</text><text x="34" y="72" class="h1">One visual contract, three evidence layers.</text><rect x="34" y="102" width="480" height="300" rx="16" fill="#07152A" stroke="#27598F" stroke-width="1.5"/>
+<text x="52" y="130" class="t">Molecular and surface evidence</text>
+<text x="52" y="151" class="s">synthetic orbital lobes + ESP legend</text><line x1="120" y1="230" x2="188" y2="178" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><line x1="188" y1="178" x2="250" y2="232" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><line x1="250" y1="232" x2="188" y2="292" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><line x1="250" y1="232" x2="330" y2="185" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><line x1="330" y1="185" x2="395" y2="250" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><line x1="120" y1="230" x2="188" y2="292" stroke="#8BA7C7" stroke-width="8" stroke-linecap="round"/><circle cx="120" cy="230" r="38" fill="#58A6FF" opacity=".18" filter="url(#glow)"/><circle cx="120" cy="230" r="26" fill="#58A6FF" stroke="#D5E7FF" stroke-width="2"/><circle cx="188" cy="178" r="34" fill="#E24A3B" opacity=".18" filter="url(#glow)"/><circle cx="188" cy="178" r="22" fill="#E24A3B" stroke="#D5E7FF" stroke-width="2"/><circle cx="250" cy="232" r="36" fill="#B7C6D8" opacity=".18" filter="url(#glow)"/><circle cx="250" cy="232" r="24" fill="#B7C6D8" stroke="#D5E7FF" stroke-width="2"/><circle cx="188" cy="292" r="37" fill="#765BFF" opacity=".18" filter="url(#glow)"/><circle cx="188" cy="292" r="25" fill="#765BFF" stroke="#D5E7FF" stroke-width="2"/><circle cx="330" cy="185" r="35" fill="#30D5C8" opacity=".18" filter="url(#glow)"/><circle cx="330" cy="185" r="23" fill="#30D5C8" stroke="#D5E7FF" stroke-width="2"/><circle cx="395" cy="250" r="34" fill="#F59E0B" opacity=".18" filter="url(#glow)"/><circle cx="395" cy="250" r="22" fill="#F59E0B" stroke="#D5E7FF" stroke-width="2"/><defs><linearGradient id="esp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#225DFF"/><stop offset=".5" stop-color="#5BE5C7"/><stop offset="1" stop-color="#FF4B55"/></linearGradient></defs>
+<rect x="455" y="158" width="18" height="170" rx="9" fill="url(#esp)"/>
+<text x="484" y="170" class="mono">+0.03</text><text x="484" y="247" class="mono">0.00</text><text x="484" y="325" class="mono">−0.03</text><rect x="540" y="102" width="546" height="145" rx="16" fill="#07152A" stroke="#27598F" stroke-width="1.5"/>
+<text x="558" y="130" class="t">Figure contract</text>
+<text x="558" y="151" class="s">units · isovalue · source · acceptance</text><rect x="562" y="154" width="16" height="16" rx="4" fill="#2E8CFF"/><text x="590" y="167" class="s">SOURCE ARTIFACT</text><rect x="562" y="182" width="16" height="16" rx="4" fill="#18B7D4"/><text x="590" y="195" class="s">ISOVALUE / UNITS</text><rect x="562" y="210" width="16" height="16" rx="4" fill="#765BFF"/><text x="590" y="223" class="s">METHOD FINGERPRINT</text><rect x="562" y="238" width="16" height="16" rx="4" fill="#22C55E"/><text x="590" y="251" class="s">ACCEPTANCE STATUS</text><rect x="540" y="267" width="546" height="135" rx="16" fill="#07152A" stroke="#7A4EB8" stroke-width="1.5"/>
+<text x="558" y="295" class="t">Claim boundary</text>
+<text x="558" y="316" class="s">visual interpretation is not causal proof</text><path d="M 570 330 H 760" stroke="#F59E0B" stroke-width="3"/>
+<circle cx="570" cy="330" r="7" fill="#F59E0B"/><circle cx="760" cy="330" r="7" fill="#F59E0B"/>
+<text x="782" y="335" class="s">scope explicit</text>
+<text x="570" y="372" class="mono">NO ORBITAL / ESP CLAIM WITHOUT VALIDATED SOURCE</text>
+<rect x="760" y="436" width="332" height="22" rx="7" fill="#07192F" stroke="#2E7CC8"/>
+<text x="926" y="451" text-anchor="middle" class="mono">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+</svg>

@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "deep-research",
+  "purpose": "执行可审计检索、筛选、证据提取和冲突综合",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "建立概念块、别名和布尔式",
+    "记录数据库、日期、过滤器和检索版本",
+    "去重并执行题名/摘要/全文筛选",
+    "精确定位方法、参数、结果和限制",
+    "保留相反证据并定义停止规则"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

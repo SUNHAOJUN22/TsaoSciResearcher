@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "current-main-readme-visual-audit-2.0.0",
+  "project": "TsaoSciComputation",
+  "generatedFiles": [
+    "README.md",
+    "README.zh-CN.md",
+    "docs/CURRENT_MAIN_ACCEPTANCE.md",
+    "docs/current-main/tsao-scicomputation-current-main-en.svg",
+    "docs/current-main/tsao-scicomputation-current-main-zh.svg"
+  ],
+  "codeAnchors": [
+    "tsao_computation/adapters/base.py",
+    "tsao_computation/execution/runner.py",
+    "tsao_computation/validation/numerical.py"
+  ],
+  "failures": [],
+  "acceptance": "PASS"
+}

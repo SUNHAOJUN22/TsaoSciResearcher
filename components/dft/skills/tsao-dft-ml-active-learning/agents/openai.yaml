@@ -1,0 +1,6 @@
+interface:
+  display_name: Tsao Dft Ml Active Learning
+  short_description: Build leakage-aware DFT descriptor, surrogate, GNN, uncertainty,
+    applicability-domain, active-learning, Bayesian/multi-o
+  default_prompt: Use $tsao-dft-ml-active-learning to plan and validate this task
+    before any expensive execution.

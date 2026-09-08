@@ -1,0 +1,10 @@
+%chk={{JOB_NAME}}.chk
+%mem={{MEMORY}}
+%nprocshared={{NPROC}}
+#p {{METHOD}}/{{BASIS}} Opt=(TS,CalcFC,NoEigenTest) Freq {{EXTRA_KEYWORDS}}
+
+{{TITLE}} — TS candidate; validate mode and IRC
+
+{{CHARGE}} {{MULTIPLICITY}}
+{{COORDINATES}}
+

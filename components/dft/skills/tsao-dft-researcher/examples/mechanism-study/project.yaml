@@ -1,0 +1,49 @@
+schema_version: 2
+project_id: demo-mechanism
+name: Demonstration reaction mechanism
+status: planned
+research_question: Which proposed pathway has the lower solution-phase activation free energy?
+objective: Compare two proposed pathways and identify the rate-controlling transition-state region within the stated model.
+observable: Solution-phase relative Gibbs free-energy profile at 298.15 K.
+allowed_conclusions:
+  - pathway A lower within uncertainty
+  - pathway B lower within uncertainty
+  - unresolved within method/model uncertainty
+model_system:
+  identity: user-supplied balanced reaction
+  structure_source: user input
+  charge: unknown
+  multiplicity: unknown
+  electronic_state: ground state unless revised
+  phase_or_solvent: unknown
+  conformer_scope: reactants, complexes, TS candidates, intermediates and products
+method_fingerprint:
+  code: Gaussian 16
+  code_version: unknown
+  functional_or_method: unknown
+  basis_or_ecp: unknown
+  dispersion: unknown
+  solvent_model: unknown
+  integration_grid: unknown
+  temperature_K: 298.15
+  standard_state: 1 mol/L target; correction policy pending
+  low_frequency_treatment: qRRHO policy pending
+reference_states: [separated reactants, encounter complex when relevant]
+success_criteria:
+  - all minima have zero imaginary frequencies
+  - each decisive TS has one target mode and confirmed IRC endpoints
+  - one consistent free-energy protocol is used across pathways
+non_goals:
+  - do not run unrelated NBO or ESP analyses without a mechanistic question
+execution:
+  target: unknown
+  scheduler: unknown
+  dry_run_default: true
+  task_count_estimate: unknown
+  cpu_assumption: unknown
+  memory_assumption: unknown
+  disk_assumption: unknown
+  wall_time_estimate: unknown
+  approval_required: true
+claims: []
+created_at: example

@@ -1,0 +1,53 @@
+{
+  "question": "Should a small product team adopt microservices now?",
+  "frames": {
+    "original": "Should we migrate to microservices?",
+    "neutral": "Which architecture best satisfies current delivery, reliability, consistency, and operability requirements?",
+    "rival": "The primary bottleneck may be module boundaries and release discipline rather than deployment topology."
+  },
+  "definitions": [
+    {
+      "term": "independent deployment",
+      "working_definition": "A component can be released without coordinating unrelated component releases.",
+      "operationalization": "Measure the fraction of releases that require cross-component coordination.",
+      "exclusions": ["independent scaling", "organizational autonomy"]
+    }
+  ],
+  "ontology": {
+    "entities": ["delivery team", "software modules", "deployment units"],
+    "processes": ["development", "release", "incident recovery"],
+    "relations": ["module dependency", "team ownership"],
+    "contested": ["whether a service boundary must equal a deployment boundary"]
+  },
+  "epistemic_status": [
+    {
+      "claim": "The active team has three developers.",
+      "status": "verified",
+      "evidence": "Current team roster",
+      "uncertainty": "Future staffing may change."
+    }
+  ],
+  "logic_and_explanation": {
+    "argument_form": "abductive architecture comparison under explicit constraints",
+    "causal_or_explanatory_commitments": ["coordination cost depends on coupling and team topology"],
+    "rival_explanation": "Deployment pain may be caused by weak modular boundaries rather than monolithic deployment itself."
+  },
+  "boundary": {
+    "system": "single product and its delivery team",
+    "scale": "application architecture and team workflow",
+    "time": "next 12 months",
+    "population_or_jurisdiction": "current product organization",
+    "exclusions": ["future acquisitions", "unknown regulatory isolation requirements"]
+  },
+  "values_and_duties": {
+    "objectives": ["fast reliable delivery", "low operational burden"],
+    "non_negotiable_constraints": ["transaction integrity", "security controls"],
+    "stakeholders": ["developers", "operators", "customers"]
+  },
+  "foundation_decision": {
+    "accepted": ["current team size", "transaction integrity requirement"],
+    "conditional": ["future extraction should remain possible"],
+    "rejected": ["microservices are inherently more scalable"],
+    "blocking_unknowns": []
+  }
+}

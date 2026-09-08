@@ -1,0 +1,23 @@
+schema_version: 1
+figure_id: demo-esp-gallery
+title: ESP extrema and surface-area distribution gallery
+status: planned
+claim: Compare surface electrostatic heterogeneity across a molecular series.
+figure_type: esp_extrema_gallery
+readiness: publication_ready
+source_artifacts: [validated-fchk-files]
+comparison_group: molecular-series
+shared_parameters:
+  density_isovalue_e_bohr3: 0.001
+  esp_min: -40
+  esp_max: 40
+  esp_unit: kcal/mol
+  histogram_min: -60
+  histogram_max: 60
+  histogram_bin_width: 10
+  camera: shared-front-and-back
+  projection: orthographic
+  color_map: BGR
+panels: []
+outputs: [figures/esp-gallery.png, figures/esp-gallery.pdf]
+qa: {visually_inspected: false, final_size_checked: false, provenance_complete: false}

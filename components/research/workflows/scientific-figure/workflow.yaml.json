@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "slug": "scientific-figure",
+  "purpose": "先建立图形合同再绘图与最终尺寸质检",
+  "entry_criteria": [
+    "scientific objective recorded",
+    "inputs classified by provenance"
+  ],
+  "inputs": [
+    "workflow-specific inputs"
+  ],
+  "artifacts": [
+    "workflow-specific artifacts"
+  ],
+  "phases": [
+    "映射claim—evidence—panel",
+    "定义数据源、转换、坐标、单位和统计",
+    "定义样本量、不确定性和可访问配色",
+    "保留绘图代码与数据血缘",
+    "执行矢量/栅格导出、校验和和最终尺寸检查"
+  ],
+  "decisions": [
+    "do not claim unavailable execution",
+    "retain contradictory and null evidence",
+    "high-risk final decisions require qualified review"
+  ],
+  "failure_modes": [
+    "missing inputs",
+    "validation failure",
+    "tool unavailable"
+  ],
+  "recovery": [
+    "record event",
+    "preserve partial artifacts",
+    "resume from last valid checkpoint"
+  ],
+  "validators": [
+    "schema",
+    "state",
+    "evidence",
+    "artifact"
+  ]
+}

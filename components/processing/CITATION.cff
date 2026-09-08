@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: TSAO Process Intelligence OS
+message: If you use TSAO, cite this repository and the exact release.
+type: software
+authors:
+  - family-names: Sun
+    given-names: Haojun
+repository-code: https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL
+license: Apache-2.0
+version: 0.1.0-alpha.15
+date-released: 2026-08-02
+keywords:
+  - chemical process development
+  - process systems engineering
+  - scale-up
+  - polymerization
+  - agent skill

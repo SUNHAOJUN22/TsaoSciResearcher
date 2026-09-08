@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "repository_version": "1.2.0",
+  "router": "SKILL.md",
+  "shared": {
+    "references": "references/",
+    "assets": "assets/",
+    "scripts": "scripts/"
+  },
+  "modules": [
+    {
+      "id": "first-philosophy",
+      "symbol": "PHI",
+      "activation": "core-or-explicit",
+      "entry": "first-philosophy/METHOD.md",
+      "manifest": "first-philosophy/module.json",
+      "compatibility_alias": "FIRST_PHILOSOPHY.md",
+      "may_handoff_to": ["first-principles"],
+      "must_not_auto_load": ["triz"]
+    },
+    {
+      "id": "first-principles",
+      "symbol": "P",
+      "activation": "core-or-explicit",
+      "entry": "first-principles/METHOD.md",
+      "manifest": "first-principles/module.json",
+      "compatibility_alias": "FIRST_PRINCIPLES.md",
+      "may_handoff_to": ["first-philosophy", "triz-explicit-only"],
+      "must_not_auto_load": ["triz"]
+    },
+    {
+      "id": "triz",
+      "symbol": "T",
+      "activation": "explicit-only",
+      "entry": "triz/ROUTER.md",
+      "manifest": "triz/module.json",
+      "compatibility_alias": "TRIZ_ENGINEERING.md",
+      "may_handoff_to": ["first-principles-validation"],
+      "must_not_auto_load": []
+    }
+  ],
+  "handoffs": [
+    {
+      "from": "first-philosophy",
+      "to": "first-principles",
+      "type": "foundation-charter"
+    },
+    {
+      "from": "first-principles",
+      "to": "first-philosophy",
+      "type": "repair-when-foundation-breaks"
+    },
+    {
+      "from": "first-principles",
+      "to": "triz",
+      "type": "explicit-user-activation-only"
+    },
+    {
+      "from": "triz",
+      "to": "first-principles",
+      "type": "concept-validation"
+    }
+  ]
+}

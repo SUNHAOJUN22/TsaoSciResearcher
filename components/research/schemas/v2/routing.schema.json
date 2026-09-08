@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/routing.schema.json",
+  "title": "Routing Decision",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "primary_workflow",
+    "workflow",
+    "secondary_workflows",
+    "confidence",
+    "clarification_required",
+    "human_approval_required",
+    "matched",
+    "load_plan"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "primary_workflow": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "secondary_workflows": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "clarification_required": {
+      "type": "boolean"
+    },
+    "human_approval_required": {
+      "type": "boolean"
+    },
+    "matched": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "workflow",
+          "score",
+          "positive",
+          "negative"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "workflow": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "positive": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "negative": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "load_plan": {
+      "type": "object",
+      "required": [
+        "workflow_files"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "workflow_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

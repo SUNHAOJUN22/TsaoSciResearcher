@@ -1,0 +1,55 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Reactor engineering",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Batch-reactor model construction within the Reactor engineering workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "runaway risk",
+    "transport limitation",
+    "kinetic extrapolation"
+  ],
+  "human_approval_required": true,
+  "id": "TSC-127",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "reaction_kinetics",
+    "reactor_type",
+    "transport_assumptions",
+    "feed_conditions",
+    "heat_removal"
+  ],
+  "maturity": "A4",
+  "name_cn": "间歇反应器模型",
+  "name_en": "Batch-reactor model construction",
+  "outputs": [
+    "conversion_selectivity",
+    "temperature_profile",
+    "residence_time",
+    "scale_up_limits"
+  ],
+  "recommended_adapters": [
+    "cantera-rmg"
+  ],
+  "required_evidence": [
+    "kinetic source",
+    "reactor equations",
+    "parameter fit",
+    "safety boundary"
+  ],
+  "risk_level": "high",
+  "slug": "batch-reactor-model",
+  "triggers": [
+    "batch",
+    "cstr",
+    "pfr",
+    "reactor",
+    "rtd"
+  ],
+  "validators": [
+    "species-balance",
+    "energy-balance",
+    "kinetic-domain",
+    "runaway-screen"
+  ],
+  "workflow": "reactor-engineering"
+}

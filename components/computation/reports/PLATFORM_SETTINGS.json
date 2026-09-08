@@ -1,0 +1,13 @@
+{
+  "enable_attempt": "permission-denied",
+  "fallback_security_policy_documented": true,
+  "private_vulnerability_reporting_enabled": false,
+  "remaining_admin_actions": [
+    "enable_private_vulnerability_reporting_in_repository_settings",
+    "private_vulnerability_reporting_requires_repository_admin_enablement",
+    "verify_or_enable_main_repository_ruleset"
+  ],
+  "repository": "SUNHAOJUN22/TsaoSciComputation",
+  "repository_ruleset_desired_state_documented": true,
+  "schema_version": "1.0"
+}

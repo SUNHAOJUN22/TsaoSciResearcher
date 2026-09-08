@@ -1,0 +1,57 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "HPC and reproducible execution",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Compute-resource estimation within the HPC and reproducible execution workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "queue failure",
+    "resource exhaustion",
+    "partial output",
+    "nonreproducible restart"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-158",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "command_plan",
+    "environment_probe",
+    "resource_request",
+    "scheduler_policy",
+    "checkpoint_plan"
+  ],
+  "maturity": "A4",
+  "name_cn": "资源估计",
+  "name_en": "Compute-resource estimation",
+  "outputs": [
+    "submission_record",
+    "execution_record",
+    "artifact_manifest",
+    "failure_classification"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "environment snapshot",
+    "job script",
+    "scheduler record",
+    "output hashes"
+  ],
+  "risk_level": "medium",
+  "slug": "resource-estimation",
+  "triggers": [
+    "checkpoint",
+    "estimation",
+    "hpc",
+    "pbs",
+    "resource",
+    "scheduler",
+    "slurm"
+  ],
+  "validators": [
+    "environment",
+    "resource-bound",
+    "exit-status",
+    "artifact-integrity",
+    "restart-consistency"
+  ],
+  "workflow": "hpc-execution"
+}

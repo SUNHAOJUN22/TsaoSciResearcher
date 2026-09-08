@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="220" viewBox="0 0 920 220" role="img" aria-labelledby="title desc">
+<title id="title">TsaoSciResearcher</title><desc id="desc">Evidence-first scientific research skill logo</desc>
+<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0f766e"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
+<rect width="920" height="220" rx="32" fill="#07111f"/>
+<g transform="translate(42 34)"><circle cx="76" cy="76" r="66" fill="none" stroke="url(#g)" stroke-width="8"/>
+<path d="M38 86 C52 40 98 40 114 86 C97 126 54 126 38 86Z" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+<circle cx="76" cy="86" r="15" fill="#2dd4bf"/><path d="M76 10V40M16 76H42M110 76H136M76 132V152" stroke="#60a5fa" stroke-width="6" stroke-linecap="round"/></g>
+<text x="190" y="92" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="52" font-weight="700">TsaoSciResearcher</text>
+<text x="193" y="137" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23">Evidence-first research architecture · figures · writing · validation</text>
+<rect x="193" y="158" width="515" height="4" rx="2" fill="url(#g)"/>
+</svg>

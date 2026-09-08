@@ -1,0 +1,54 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Polymers, fillers, and composites",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Polymer crystal-interface model within the Polymers, fillers, and composites workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "insufficient cell size",
+    "poor equilibration",
+    "nonrepresentative morphology"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-074",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "polymer_structure",
+    "phase_composition",
+    "filler_or_interface",
+    "morphology_conditions",
+    "property_target"
+  ],
+  "maturity": "A4",
+  "name_cn": "聚合物晶体界面",
+  "name_en": "Polymer crystal-interface model",
+  "outputs": [
+    "morphology_descriptor",
+    "interface_metrics",
+    "network_metrics",
+    "structure_property_map"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "system build",
+    "force-field provenance",
+    "morphology snapshots",
+    "property analysis"
+  ],
+  "risk_level": "medium",
+  "slug": "polymer-crystal-interface",
+  "triggers": [
+    "carbon black",
+    "composite",
+    "crystal",
+    "morphology",
+    "percolation",
+    "polymer"
+  ],
+  "validators": [
+    "composition-balance",
+    "cell-size",
+    "morphology-statistics",
+    "replicate-consistency"
+  ],
+  "workflow": "polymer-composite"
+}

@@ -1,0 +1,55 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Multiscale coupling and handoffs",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "MD-to-continuum handoff within the Multiscale coupling and handoffs workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "unit mismatch",
+    "reference-state mismatch",
+    "uncertainty loss"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-150",
+  "implementation_level": "native",
+  "inputs": [
+    "source_model",
+    "target_model",
+    "transfer_quantity",
+    "reference_state",
+    "uncertainty",
+    "applicability"
+  ],
+  "maturity": "A5",
+  "name_cn": "分子动力学TO连续介质",
+  "name_en": "MD-to-continuum handoff",
+  "outputs": [
+    "handoff_record",
+    "transformed_parameter",
+    "uncertainty_budget",
+    "validation_status"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "source artifact",
+    "transformation code",
+    "target contract",
+    "validation comparison"
+  ],
+  "risk_level": "medium",
+  "slug": "md-to-continuum",
+  "triggers": [
+    "coarse grain",
+    "handoff",
+    "md",
+    "multiscale",
+    "parameter transfer",
+    "to"
+  ],
+  "validators": [
+    "unit",
+    "reference-state",
+    "uncertainty-propagation",
+    "applicability-overlap"
+  ],
+  "workflow": "multiscale-coupling"
+}

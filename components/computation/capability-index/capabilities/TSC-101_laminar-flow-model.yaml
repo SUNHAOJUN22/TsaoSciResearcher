@@ -1,0 +1,60 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Computational fluid dynamics",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Laminar-flow model within the Computational fluid dynamics workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "false convergence",
+    "poor mesh",
+    "inappropriate turbulence or phase model"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-101",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "flow_domain",
+    "fluid_properties",
+    "boundary_conditions",
+    "mesh",
+    "physical_models",
+    "numerical_schemes"
+  ],
+  "maturity": "A4",
+  "name_cn": "层流流动模型",
+  "name_en": "Laminar-flow model",
+  "outputs": [
+    "flow_fields",
+    "integral_quantities",
+    "residual_history",
+    "mass_energy_balance"
+  ],
+  "recommended_adapters": [
+    "openfoam",
+    "su2"
+  ],
+  "required_evidence": [
+    "mesh statistics",
+    "case files",
+    "solver logs",
+    "monitor histories"
+  ],
+  "risk_level": "medium",
+  "slug": "laminar-flow-model",
+  "triggers": [
+    "cfd",
+    "flow",
+    "laminar",
+    "multiphase",
+    "openfoam",
+    "su2",
+    "turbulence"
+  ],
+  "validators": [
+    "mesh-quality",
+    "mass-balance",
+    "residual-and-monitor",
+    "mesh-convergence",
+    "model-applicability"
+  ],
+  "workflow": "cfd"
+}

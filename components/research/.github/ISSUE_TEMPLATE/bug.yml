@@ -1,0 +1,17 @@
+name: Bug report
+description: Report reproducible routing, validation, installation or documentation defects.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes: {label: Description}
+    validations: {required: true}
+  - type: textarea
+    id: reproduce
+    attributes: {label: Reproduction steps}
+    validations: {required: true}
+  - type: input
+    id: version
+    attributes: {label: Version}
+    validations: {required: true}

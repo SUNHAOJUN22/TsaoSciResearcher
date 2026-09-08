@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="TsaoSciResearcher architecture">
+<defs><linearGradient id="b" x1="0" x2="1"><stop stop-color="#0f766e"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
+<rect width="1200" height="360" rx="28" fill="#f8fafc"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif" text-anchor="middle">
+<rect x="40" y="125" width="190" height="105" rx="18" fill="#0f172a"/><text x="135" y="169" fill="white" font-size="22" font-weight="700">Research request</text><text x="135" y="199" fill="#94a3b8" font-size="15">question · data · paper</text>
+<rect x="280" y="125" width="190" height="105" rx="18" fill="url(#b)"/><text x="375" y="169" fill="white" font-size="22" font-weight="700">Intent router</text><text x="375" y="199" fill="#dbeafe" font-size="15">15 workflows</text>
+<rect x="520" y="45" width="225" height="105" rx="18" fill="#ffffff" stroke="#0f766e" stroke-width="3"/><text x="632" y="87" fill="#0f172a" font-size="20" font-weight="700">Evidence &amp; design</text><text x="632" y="116" fill="#475569" font-size="15">references · templates</text>
+<rect x="520" y="210" width="225" height="105" rx="18" fill="#ffffff" stroke="#2563eb" stroke-width="3"/><text x="632" y="252" fill="#0f172a" font-size="20" font-weight="700">Deterministic checks</text><text x="632" y="281" fill="#475569" font-size="15">schemas · validators</text>
+<rect x="795" y="125" width="180" height="105" rx="18" fill="#0f172a"/><text x="885" y="169" fill="white" font-size="21" font-weight="700">Scientific gates</text><text x="885" y="199" fill="#94a3b8" font-size="15">check · validate</text>
+<rect x="1025" y="45" width="145" height="105" rx="18" fill="#0f766e"/><text x="1098" y="87" fill="white" font-size="20" font-weight="700">Accepted</text><text x="1098" y="116" fill="#ccfbf1" font-size="14">research artifact</text>
+<rect x="1025" y="210" width="145" height="105" rx="18" fill="#2563eb"/><text x="1098" y="249" fill="white" font-size="18" font-weight="700">Computation</text><text x="1098" y="276" fill="#dbeafe" font-size="14">structured handoff</text>
+</g>
+<g stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#a)"><defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#64748b"/></marker></defs>
+<path d="M230 177H280"/><path d="M470 160C500 130 500 105 520 100"/><path d="M470 195C500 225 500 255 520 260"/><path d="M745 100C775 115 780 145 795 160"/><path d="M745 260C775 245 780 210 795 195"/><path d="M975 155C1000 135 1010 110 1025 100"/><path d="M975 205C1000 225 1010 250 1025 260"/></g>
+</svg>

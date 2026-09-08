@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img">
+<title>Evidence Maturity Ladder</title>
+<desc>Conceptual E0 to E4 evidence progression with item-level declared status and no automatic truth certification.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071426"/><stop offset="1" stop-color="#132b4b"/></linearGradient>
+  <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".28"/></filter>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7dd3fc"/></marker>
+</defs>
+<rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+<rect x="36" y="32" width="1128" height="636" rx="24" fill="none" stroke="#27496d" stroke-width="2"/>
+<text x="70" y="92" fill="#f8fafc" font-size="34" font-family="Arial, sans-serif" font-weight="700">Evidence Maturity Ladder</text>
+<rect x="70" y="112" width="220" height="6" rx="3" fill="url(#accent)"/>
+
+<g font-family="Arial, sans-serif">
+  <path d="M110 530 L1050 530" stroke="#355b7c" stroke-width="10" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <circle cx="150" cy="530" r="54" fill="#334155" stroke="#94a3b8" stroke-width="3"/><text x="150" y="522" text-anchor="middle" fill="#fff" font-size="28" font-weight="700">E0</text><text x="150" y="553" text-anchor="middle" fill="#cbd5e1" font-size="14">Hypothesis</text>
+    <circle cx="370" cy="450" r="58" fill="#164e63" stroke="#22d3ee" stroke-width="3"/><text x="370" y="442" text-anchor="middle" fill="#fff" font-size="28" font-weight="700">E1</text><text x="370" y="473" text-anchor="middle" fill="#cffafe" font-size="14">Theory</text>
+    <circle cx="590" cy="365" r="62" fill="#1e3a8a" stroke="#60a5fa" stroke-width="3"/><text x="590" y="357" text-anchor="middle" fill="#fff" font-size="28" font-weight="700">E2</text><text x="590" y="388" text-anchor="middle" fill="#dbeafe" font-size="14">Computation</text>
+    <circle cx="810" cy="275" r="66" fill="#4c1d95" stroke="#a78bfa" stroke-width="3"/><text x="810" y="267" text-anchor="middle" fill="#fff" font-size="28" font-weight="700">E3</text><text x="810" y="298" text-anchor="middle" fill="#ede9fe" font-size="14">Experiment</text>
+    <circle cx="1030" cy="180" r="70" fill="#701a75" stroke="#f0abfc" stroke-width="3"/><text x="1030" y="172" text-anchor="middle" fill="#fff" font-size="28" font-weight="700">E4</text><text x="1030" y="203" text-anchor="middle" fill="#fae8ff" font-size="14">Industrial</text>
+  </g>
+  <path d="M190 500 C300 470 300 450 315 450" fill="none" stroke="#7dd3fc" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M425 420 C500 395 510 365 525 365" fill="none" stroke="#7dd3fc" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M650 335 C720 305 730 275 742 275" fill="none" stroke="#a78bfa" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M878 245 C945 215 950 180 958 180" fill="none" stroke="#f0abfc" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="110" y="180" fill="#dbeafe" font-size="21">Each evidence item retains its own declared level, stable ID, markers and verification status.</text>
+  <text x="110" y="220" fill="#94a3b8" font-size="18">Higher maturity guides the next validation action; it never certifies truth automatically.</text>
+</g>
+
+<text x="70" y="645" fill="#94a3b8" font-size="16" font-family="Arial, sans-serif">AI-generated conceptual illustration · not experimental or solver output</text>
+</svg>

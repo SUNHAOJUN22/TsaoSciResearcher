@@ -1,0 +1,14 @@
+{
+  "format": "TSAO-COMPLETE-DISTRIBUTION-REFERENCE-1",
+  "version": "0.1.0-alpha.6",
+  "sha256": "6948a6753bc7349104e2c3f2c8b9a4738b07d72f536cf28a7f17d1e5e5c07c25",
+  "bytes": 2851502,
+  "members": 1202,
+  "tests": 477,
+  "core_hash": "0e6a15d953b6f0478881f75caa5f1514219185ab42036d0661f180e8ee63e723",
+  "cleanroom_pass": true,
+  "artifact_software_qualification": "PASS",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

@@ -1,0 +1,54 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Polymer processing and extrusion",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Extrusion-die flow model within the Polymer processing and extrusion workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "rheology extrapolation",
+    "wall-slip ambiguity",
+    "viscous-heating error"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-111",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "die_or_screw_geometry",
+    "rheology_model",
+    "thermal_conditions",
+    "throughput",
+    "wall_conditions"
+  ],
+  "maturity": "A4",
+  "name_cn": "口模流动模型",
+  "name_en": "Extrusion-die flow model",
+  "outputs": [
+    "pressure_drop",
+    "temperature_field",
+    "residence_time",
+    "quality_risk_map"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "rheology data",
+    "geometry revision",
+    "solver case",
+    "validation measurements"
+  ],
+  "risk_level": "medium",
+  "slug": "die-flow-model",
+  "triggers": [
+    "die",
+    "extrusion",
+    "flow",
+    "melt",
+    "non-newtonian",
+    "screw"
+  ],
+  "validators": [
+    "rheology-fit",
+    "mass-balance",
+    "mesh-convergence",
+    "thermal-balance"
+  ],
+  "workflow": "extrusion"
+}

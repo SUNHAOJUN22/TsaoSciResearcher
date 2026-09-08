@@ -1,0 +1,55 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Digital twins and estimation",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Soft-sensor model within the Digital twins and estimation workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "data drift",
+    "feedback leakage",
+    "out-of-domain use"
+  ],
+  "human_approval_required": true,
+  "id": "TSC-142",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "twin_scope",
+    "measurement_map",
+    "estimator",
+    "update_policy",
+    "applicability_domain"
+  ],
+  "maturity": "A4",
+  "name_cn": "软传感器模型",
+  "name_en": "Soft-sensor model",
+  "outputs": [
+    "estimated_state",
+    "soft_sensor",
+    "drift_signal",
+    "decision_boundary"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "data manifest",
+    "model version",
+    "validation set",
+    "drift history"
+  ],
+  "risk_level": "high",
+  "slug": "soft-sensor-model",
+  "triggers": [
+    "digital twin",
+    "estimation",
+    "online",
+    "sensor",
+    "soft",
+    "soft sensor"
+  ],
+  "validators": [
+    "data-lineage",
+    "holdout-validation",
+    "drift",
+    "applicability-domain",
+    "human-approval"
+  ],
+  "workflow": "digital-twin"
+}

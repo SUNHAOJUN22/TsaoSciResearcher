@@ -1,0 +1,22 @@
+# AI与机器学习科研
+
+- `scientific-feature-engineering` — **科学特征工程**: 从分子、材料、工艺和时间序列生成可解释特征
+- `scientific-model-selector` — **科学模型选择**: 按样本量、任务与外推需求选择算法
+- `small-data-learning` — **小样本学习**: 面向科研小样本进行迁移、贝叶斯和正则化建模
+- `multi-fidelity-learning` — **多保真学习**: 融合低精度模拟、高精度计算和实验数据
+- `physics-informed-ml` — **物理信息机器学习**: 把守恒律、微分方程和物理约束嵌入模型
+- `graph-neural-network` — **图神经网络**: 面向分子、晶体、反应和网络建模
+- `surrogate-model-builder` — **代理模型**: 构建高成本仿真的快速近似模型
+- `model-calibration` — **模型校准**: 校准概率、误差区间和预测置信度
+- `applicability-domain` — **适用域检查**: 判断新样本是否超出训练分布
+- `data-leakage-detector` — **数据泄漏检查**: 检查拆分、预处理和标签泄漏
+- `cross-validation-designer` — **交叉验证设计**: 选择随机、分组、时间、结构和外推拆分
+- `explainable-ai-science` — **科学可解释AI**: 分析特征贡献、局部解释和物理一致性
+- `ml-uncertainty-estimator` — **机器学习不确定性**: 输出认知与随机不确定性
+- `active-learning-loop` — **主动学习**: 选择最有信息量的下一批计算或实验
+- `bayesian-optimization` — **贝叶斯优化**: 在昂贵目标函数下高效搜索最优条件
+- `multi-objective-optimizer` — **多目标优化**: 构建Pareto前沿并分析权衡
+- `generative-molecule-designer` — **生成式分子设计**: 根据性质约束生成候选分子
+- `generative-material-designer` — **生成式材料设计**: 生成晶体、催化剂和聚合物候选
+- `inverse-design-engine` — **逆向设计**: 从目标性能反推结构、组成和工艺
+- `autoresearch-loop` — **自动科研循环**: 自动提出改动、运行实验、评估并迭代
