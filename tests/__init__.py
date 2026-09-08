@@ -1,1 +1,0 @@
-"""TsaoSciResearcher test package."""

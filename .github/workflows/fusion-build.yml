@@ -1,0 +1,101 @@
+name: Build unified TsaoScience source
+on:
+  push:
+    branches: [fusion/astra-pro-1]
+    paths: [tools/migration/**, .github/workflows/fusion-build.yml]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: tsao-fusion-migration
+  cancel-in-progress: false
+jobs:
+  consolidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Materialize immutable sources and verified local overlay
+        run: python tools/migration/import_sources.py
+      - name: Install integration dependencies
+        run: python -m pip install -e '.[test]' psutil mypy==2.3.0
+      - name: Verify all original files and declared patches
+        run: python tools/verify_workspace.py
+      - name: Execute integration and inherited regression suites
+        run: python tools/qualify.py
+      - name: Recheck the original strict DFT trust boundary
+        run: python components/dft/scripts/run_strict_type_checks.py
+      - name: Verify the actual material workbench
+        working-directory: apps/resindb
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run validate:ai-egress
+          npm run typecheck
+          npm test
+          npm run build
+          node ../../tools/test_ai_snapshot.cjs
+          node ../../tools/test_canonical.cjs
+      - name: Verify source preservation after all tests
+        run: python tools/verify_workspace.py
+      - name: Commit the qualified migration tree with source ancestry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib, subprocess
+          def git(*args, **kwargs):
+              return subprocess.check_output(['git',*args],text=True,**kwargs).strip()
+          git('config','user.name','github-actions[bot]')
+          git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
+          git('add','-A')
+          inventory=json.loads(pathlib.Path('migration/source-map.json').read_text())
+          names=[row['target_path'] for source in inventory['sources'] for row in source['files']]
+          for start in range(0,len(names),200):
+              git('add','-f','--',*names[start:start+200])
+          tree=git('write-tree')
+          parents=json.loads(pathlib.Path(os.environ['RUNNER_TEMP'],'tsao-migration-parents.json').read_text())
+          args=['commit-tree',tree,'-p',os.environ['GITHUB_SHA']]
+          for parent in parents: args+=['-p',parent]
+          commit=git(*args,input='feat: consolidate seven repositories into TsaoScience astra-pro-1\n\nPreserve source inventory and ancestry; add shared tasks, units, evidence, typed hashing, domain adapters and workbench planning. Repair audited critical paths. Qualification is scoped software evidence, not scientific approval.\n')
+          ask=pathlib.Path(os.environ['RUNNER_TEMP'],'tsao-git-askpass.sh')
+          ask.write_text('#!/bin/sh\ncase "$1" in *Username*) printf "%s\\n" x-access-token;; *) printf "%s\\n" "$GH_TOKEN";; esac\n')
+          ask.chmod(0o700)
+          env=os.environ.copy();env['GIT_ASKPASS']=str(ask);env['GIT_TERMINAL_PROMPT']='0'
+          try:
+              subprocess.run(['git','push','origin',commit+':refs/heads/fusion/astra-pro-1'],env=env,check=True,timeout=300)
+          finally: ask.unlink(missing_ok=True)
+          pathlib.Path('.verification/migration-commit.json').write_text(json.dumps({'commit':commit,'tree':tree,'source_files':len(names),'source_parents':parents},indent=2)+'\n')
+          print('Qualified candidate commit:',commit)
+          PY
+      - name: Retain only software qualification evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: fusion-software-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .verification/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Delete the completed audit intake copy
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail-with-body --silent --show-error -X DELETE -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' https://api.github.com/repos/SUNHAOJUN22/TsaoSciResearcher/actions/artifacts/10043612804
