@@ -8,8 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> int:
-    source_map = json.loads((ROOT / 'migration/source-map.json').read_text())
-    patches = json.loads((ROOT / 'migration/patches.json').read_text())
+    source_map = json.loads((ROOT / 'migration/source-map.json').read_text(encoding='utf-8'))
+    patches = json.loads((ROOT / 'migration/patches.json').read_text(encoding='utf-8'))
     edited = {item['target_path']: item for item in patches['changes']}
     failures = []
     count = 0

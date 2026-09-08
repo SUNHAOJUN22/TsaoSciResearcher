@@ -28,7 +28,7 @@ def main() -> int:
         text = strict_dumps({"ok": True, "result": _plain(result)})
         if len(text.encode("utf-8")) > MAX_JSON_BYTES:
             raise ValueError("worker output exceeds its budget")
-        print(text)
+        sys.stdout.buffer.write(text.encode("utf-8") + b"\n")
         return 0
     except Exception as exc:
         print(json.dumps({"ok": False, "error_type": type(exc).__name__, "error": str(exc)}, allow_nan=False))
