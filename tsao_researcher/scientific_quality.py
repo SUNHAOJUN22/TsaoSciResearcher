@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -264,6 +265,28 @@ def _contains_causal_wording(claim: str) -> bool:
     return any(row["polarity"] == "AFFIRMED" for row in causal_clauses(claim))
 
 
+def _affirmed_experimental_design(design: str) -> bool:
+    """Classify legacy design text without promoting negated design terms."""
+    for token in _EXPERIMENTAL_DESIGN_TOKENS:
+        pattern = re.escape(token)
+        if token.isascii():
+            pattern = r"(?<![a-z])" + pattern + r"(?![a-z])"
+        for match in re.finditer(pattern, design, re.IGNORECASE):
+            prefix = design[max(0, match.start() - 80) : match.start()]
+            suffix = design[match.end() : match.end() + 24]
+            if token == "随机" and re.match(r"(?:抽样|采样|取样)", suffix):
+                continue
+            if re.search(
+                r"(?:non[\s_-]*|(?:not|without|no)\s+(?:(?:a|an|any|the)\s+)?"
+                r"|(?:非|未|无|没有)(?:(?:进行|采用|实施|设置)了?)?)$",
+                prefix,
+                re.IGNORECASE,
+            ):
+                continue
+            return True
+    return False
+
+
 def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
     """Block causal wording when the declared design only supports association."""
 
@@ -283,7 +306,7 @@ def guard_causal_claim(spec: Mapping[str, Any]) -> dict[str, Any]:
     claim_causal_clauses = causal_clauses(claim)
     causal_wording = any(row["polarity"] == "AFFIRMED" for row in claim_causal_clauses)
     mechanism_wording = any(token in claim.casefold() for token in _MECHANISM_TOKENS)
-    experimental_design = any(token in design for token in _EXPERIMENTAL_DESIGN_TOKENS)
+    experimental_design = _affirmed_experimental_design(design)
     support = (
         temporal_order
         and confounders_addressed
