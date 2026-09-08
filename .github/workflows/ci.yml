@@ -32,7 +32,7 @@ jobs:
       - run: python -m pip install -e '.[test]' psutil
       - run: python -m pip check
       - run: python tools/verify_workspace.py
-      - run: python tools/qualify.py
+      - run: python tools/qualify.py --profile extended
       - run: python tools/verify_workspace.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
@@ -70,6 +70,46 @@ jobs:
       - run: npm ci
       - run: npm run validate:ai-egress
       - run: npm run typecheck
-      - run: npm test
+      - run: npm test -- --reporter=default --reporter=junit --outputFile.junit=../../.verification/frontend.xml
       - run: npm run build
       - run: node ../../tools/test_ai_snapshot.cjs && node ../../tools/test_canonical.cjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: frontend-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .verification/frontend.xml
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  software-acceptance:
+    if: always()
+    needs: [python-integration, dft-strict-types, frontend]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Aggregate completed jobs only
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python - <<'PYTHON'
+          import json, os, pathlib
+          jobs=json.loads(os.environ['JOB_RESULTS'])
+          expected={'python-integration','dft-strict-types','frontend'}
+          passed=set(jobs)==expected and all(row.get('result')=='success' for row in jobs.values())
+          report={'schema_version':'tsao.final-software-acceptance/1',
+                  'github_sha':os.environ['GITHUB_SHA'], 'run_id':os.environ['GITHUB_RUN_ID'],
+                  'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],
+                  'jobs':{key:value.get('result') for key,value in jobs.items()},
+                  'state':'SCOPED_SOFTWARE_PASS' if passed else 'FAIL',
+                  'external_execution':'NOT_EVALUATED','scientific_approval':'NOT_EVALUATED'}
+          pathlib.Path('software-acceptance.json').write_text(json.dumps(report,indent=2)+'\n')
+          if not passed: raise SystemExit(1)
+          PYTHON
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: software-acceptance-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: software-acceptance.json
+          if-no-files-found: error
+          retention-days: 30
