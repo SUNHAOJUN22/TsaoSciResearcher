@@ -1,0 +1,84 @@
+{
+  "acceptance_criteria": {
+    "mass_energy_balance": true,
+    "mesh_independent": true,
+    "validated_eccentricity": true
+  },
+  "assumptions": [
+    "continuum approximation is valid",
+    "constitutive range covers simulated shear rates and temperatures"
+  ],
+  "boundary_conditions": {
+    "inlets_outlets_walls": "all velocity, pressure, thermal, and moving-wall conditions declared"
+  },
+  "compute_resources": {
+    "mpi": "selected after decomposition study",
+    "walltime": "bounded"
+  },
+  "conditions": {
+    "flow_rate_or_screw_speed": "declared",
+    "thermal_conditions": "declared"
+  },
+  "convergence_plan": {
+    "mesh": "three-level independence",
+    "residual_and_balance": "both required",
+    "time_step": "Courant/stability study"
+  },
+  "expected_artifacts": [
+    "mesh and case files",
+    "solver logs",
+    "convergence and conservation report"
+  ],
+  "human_approval_nodes": [
+    "constitutive-model approval",
+    "equipment recommendation review"
+  ],
+  "initial_conditions": {
+    "fields": "bounded initialization with restart policy"
+  },
+  "methods": [
+    "OpenFOAM CFD",
+    "non-Newtonian constitutive model",
+    "conjugate heat transfer where required"
+  ],
+  "model_object": {
+    "description": "Non-Newtonian OpenFOAM extrusion eccentricity workflow"
+  },
+  "parameter_sources": [
+    {
+      "parameter": "viscosity and thermal properties",
+      "source": "rheometry and traceable property data"
+    }
+  ],
+  "question": "Which die, rheology, thermal, and operating conditions control pressure drop, temperature, residence time, and cable-extrusion eccentricity?",
+  "scales": [
+    "continuum",
+    "equipment"
+  ],
+  "schema_version": "1.0",
+  "system": {
+    "geometry": "screw/channel/die or cable-head geometry",
+    "material": "non-Newtonian polymer melt"
+  },
+  "target_observables": [
+    "pressure_drop",
+    "temperature_field",
+    "residence_time_distribution",
+    "eccentricity_metric"
+  ],
+  "uncertainty_sources": [
+    "rheology fit",
+    "boundary conditions",
+    "mesh",
+    "process variability"
+  ],
+  "validation_plan": {
+    "checks": [
+      "mass and energy balance",
+      "pressure data",
+      "temperature data",
+      "eccentricity benchmark"
+    ]
+  },
+  "workflow": "extrusion"
+}

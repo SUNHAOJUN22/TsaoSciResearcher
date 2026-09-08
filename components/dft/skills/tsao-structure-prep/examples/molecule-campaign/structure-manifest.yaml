@@ -1,0 +1,18 @@
+schema_version: "1.1"
+structure_id: ETHANOL
+model_type: molecule
+identity: ethanol
+source: {path: unknown, sha256: unknown, origin: illustrative}
+composition: C2H6O
+atom_count: 9
+length_unit: angstrom
+periodicity: none
+charge_candidates: [0]
+multiplicity_candidates: [1]
+transformations:
+  - {operation: illustrative_import, tool_or_method: none, reason: test fixture, parent_structure_id: none}
+review:
+  status: draft
+  reviewer: null
+  checks: {identity: false, valence_or_stoichiometry: false, closest_contacts: false, atom_order: false, model_intent: false}
+  notes: [illustrative manifest only]

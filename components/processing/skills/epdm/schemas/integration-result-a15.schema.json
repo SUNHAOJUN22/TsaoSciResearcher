@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/skills/epdm/schemas/integration-result-a15.schema.json",
+  "title": "EPDM Alpha15 Integration Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "parameter_set_id",
+    "rate_package_id",
+    "state_layout_id",
+    "network_id",
+    "integration_method",
+    "time_start_s",
+    "time_end_s",
+    "initial_step_s",
+    "minimum_step_s",
+    "maximum_step_s",
+    "relative_tolerance",
+    "absolute_tolerance",
+    "maximum_steps",
+    "nonnegative_state_policy",
+    "conservation_policy",
+    "applicability_decision",
+    "reason_code",
+    "software_qualification",
+    "scientific_technical_approval",
+    "nonnegative_tolerance",
+    "maximum_consecutive_rejections",
+    "decision",
+    "final_state",
+    "times_s",
+    "accepted_steps",
+    "rejected_steps",
+    "attempted_steps",
+    "minimum_step_used_s",
+    "maximum_step_used_s",
+    "maximum_error_norm",
+    "maximum_conservation_residual",
+    "conservation",
+    "errors",
+    "holds",
+    "scientific_status",
+    "parameter_calibration"
+  ],
+  "properties": {
+    "schema": {
+      "const": "TSAO-EPDM-A15-INTEGRATION-RESULT-1"
+    },
+    "parameter_set_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "rate_package_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "state_layout_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "network_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "integration_method": {
+      "const": "ADAPTIVE_DORMAND_PRINCE_54"
+    },
+    "time_start_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "time_end_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "initial_step_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "minimum_step_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "maximum_step_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "relative_tolerance": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "absolute_tolerance": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "maximum_steps": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nonnegative_state_policy": {
+      "const": "REJECT_REDUCE_ROUNDOFF_CLAMP"
+    },
+    "conservation_policy": {
+      "const": "REQUIRE_A3_INTERNAL_AND_TRAJECTORY"
+    },
+    "applicability_decision": {
+      "const": "REQUIRE_PASS"
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^A15_[A-Z0-9_]+$"
+    },
+    "software_qualification": {
+      "const": "A15_ADAPTIVE_INTEGRATOR_SOFTWARE_VERIFIED"
+    },
+    "scientific_technical_approval": {
+      "const": "NOT_EVALUATED"
+    },
+    "nonnegative_tolerance": {
+      "type": "number",
+      "minimum": 0
+    },
+    "maximum_consecutive_rejections": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "HOLD",
+        "FAIL"
+      ]
+    },
+    "final_state": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "times_s": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "accepted_steps": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rejected_steps": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attempted_steps": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minimum_step_used_s": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "maximum_step_used_s": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "maximum_error_norm": {
+      "type": "number",
+      "minimum": 0
+    },
+    "maximum_conservation_residual": {
+      "type": "number",
+      "minimum": 0
+    },
+    "conservation": {
+      "type": "object"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "holds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scientific_status": {
+      "const": "CALCULATED_REFERENCE_ONLY"
+    },
+    "parameter_calibration": {
+      "const": "NOT_EVALUATED"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+﻿任务ID,整改任务,主要内容,完成判据,alpha6状态,批准边界
+P0-01,建立139文件POE资产注册表,逐文件保存SHA-256、类型、尺度、模型版本、编码、保密/许可、canonical/backup/temporary状态；隔离无关PP合同,源包可重复盘点，重复/临时/空文件明确，不再把二进制存在等同于能力已蒸馏,COMPLETE_SOFTWARE,NOT_EVALUATED
+P0-02,建立合同-要求-成果-证据追踪矩阵,将合同条款、总结报告、验收PPT、程序文件和验收结论逐项关联,每条验收要求均有证据定位、状态、偏差说明和审批人,COMPLETE_SOFTWARE,NOT_EVALUATED
+P0-03,重构POE模块树,至少形成产品/CQA、催化剂杂质、动力学、参数估计、热力学、流变传递、反应器CFD、稳态流程、脱挥、回收循环、动态控制、放大验收12个模块,每个模块有输入、方程/算法、单位、输出、失败模式、适用域、测试和外部执行边界,COMPLETE_SOFTWARE,NOT_EVALUATED
+P0-04,动力学代码隔离与参考实现,将历史MATLAB作为受控证据；修复或明确M_5恒为0.5、f(16)括号/量纲可疑、f(2)=0假设；建立Python参考内核,通过方程-代码逐项对照、质量守恒、单位分析、已知解和独立数据测试,COMPLETE_REFERENCE_ONLY,NOT_EVALUATED
+P0-05,物性方法资格化引擎,把PC-SAFT/SRK/REFPROP/STEAMNBS选择、参数来源、温压组成域和误差指标结构化,错误物性法、越界参数、单位冲突和缺失数据必须HOLD,COMPLETE_QUALIFIER,NOT_EVALUATED
+P0-06,POE专用稳态与动态case schema,定义组分、物流、设备、控制器、扰动、初始化、收敛、结果与接受标准,Aspen文件可映射到中立case记录；未收敛循环不得标PASS,COMPLETE_SCHEMA_VALIDATOR,NOT_EVALUATED
+P0-07,替换占位式工艺包审计,从“文件名存在且非空”升级为manifest、schema、内容、交叉引用、单位、衡算、证据和批准检查；支持中文文件映射,八个placeholder文件不能通过；本真实语料可被正确识别而非全部误报缺失,COMPLETE_ZERO_FALSE_PASS,NOT_EVALUATED
+P0-08,建立去标识化科学fixture与反例库,从原始资料提炼VLE、黏度、动力学、反应器、衡算、扰动等小型可公开/可测试数据,POE测试不再只测关键词和CSV笛卡尔积，至少覆盖正例、边界、错误单位、错误模型和冲突证据,COMPLETE_SYNTHETIC_FIXTURES,NOT_EVALUATED
+P0-09,建立实际冲突/偏差台账,登记正己烷/环己烷命名混用、1000/2000吨目录、合同多活性位与实际单活性位偏差、循环未收敛、20万吨动态证据缺失,所有冲突有source locator、影响、决策、状态和阻断Gate,COMPLETE_LEDGER,NOT_EVALUATED
+P1-01,建立Aspen模型资产护照,记录Aspen版本、数据库、property method、active flowsheet、单位集、输入输出、收敛状态、hash和外部依赖,每个.apw/.bkp/.dynf可追踪，不再依赖文件名猜测,PARTIAL_REGISTRY_ONLY,NOT_EVALUATED
+P1-02,动态控制资格化,蒸馏控制变量/操纵变量配对、阀门与容积基础、扰动矩阵、恢复时间、超调、约束、开停车和牌号切换,每个动态声明有可运行case和量化验收判据,PARTIAL_CONTRACT_AND_VALIDATOR,NOT_EVALUATED
+P1-03,修正能力矩阵和README的成熟度措辞,在完成P0前将POE的“detailed”改为“contract-level/partial”；修正主分支中不存在的完整发行清单引用,文档声明与公开源码可验证能力一致,COMPLETE_EXECUTABLE_ALPHA_STATUS,NOT_EVALUATED
+P2-01,源包卫生与说明书完善,移除临时锁、零字节占位、无关合同和冗余备份；补全模型安装、运行、恢复和结果复核说明,第三方在受支持环境中可按说明完成独立复现,COMPLETE_PUBLIC_REPO_HYGIENE; CONTROLLED_CORPUS_CLASSIFIED,NOT_EVALUATED

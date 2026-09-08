@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TsaoDFT performance qualification policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_id", "minimum_successful_repeats", "require_independent_review", "require_real_engine_source", "require_verified_artifacts", "require_performance_improvement", "numerical_equivalence", "performance", "acceleration_l3_required_evidence", "qualification_statuses"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "policy_id": {"type": "string", "minLength": 1},
+    "minimum_successful_repeats": {"type": "integer", "minimum": 1},
+    "require_independent_review": {"type": "boolean"},
+    "require_real_engine_source": {"type": "boolean"},
+    "require_verified_artifacts": {"type": "boolean"},
+    "require_performance_improvement": {"type": "boolean"},
+    "numerical_equivalence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["energy_abs_ev", "force_max_abs_ev_per_angstrom", "stress_max_abs_gpa", "property_abs_default", "property_abs"],
+      "properties": {
+        "energy_abs_ev": {"type": "number", "minimum": 0},
+        "force_max_abs_ev_per_angstrom": {"type": "number", "minimum": 0},
+        "stress_max_abs_gpa": {"type": "number", "minimum": 0},
+        "property_abs_default": {"type": "number", "minimum": 0},
+        "property_abs": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+      }
+    },
+    "performance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimum_cpu_to_candidate_speedup", "minimum_strong_scaling_efficiency", "outlier_modified_z_threshold"],
+      "properties": {
+        "minimum_cpu_to_candidate_speedup": {"type": "number", "minimum": 0},
+        "minimum_strong_scaling_efficiency": {"type": "number", "minimum": 0, "maximum": 1},
+        "outlier_modified_z_threshold": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "acceleration_l3_required_evidence": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "qualification_statuses": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Process simulation and flowsheets",
+  "claim_boundary": "Preparation, validation, and lawful local integration only; no commercial executable, license, or production run is bundled or claimed.",
+  "description": "Flowsheet uncertainty analysis within the Process simulation and flowsheets workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "property-method mismatch",
+    "recycle divergence",
+    "underspecified unit"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-124",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "component_list",
+    "property_method",
+    "flowsheet_topology",
+    "unit_models",
+    "feed_conditions",
+    "specifications"
+  ],
+  "maturity": "A4",
+  "name_cn": "流程图不确定度",
+  "name_en": "Flowsheet uncertainty analysis",
+  "outputs": [
+    "stream_table",
+    "unit_performance",
+    "mass_energy_balance",
+    "convergence_record"
+  ],
+  "recommended_adapters": [
+    "dwsim",
+    "idaes-pyomo",
+    "aspen"
+  ],
+  "required_evidence": [
+    "property package rationale",
+    "flowsheet revision",
+    "solver report",
+    "stream table"
+  ],
+  "risk_level": "medium",
+  "slug": "flowsheet-uncertainty",
+  "triggers": [
+    "aspen",
+    "dwsim",
+    "flowsheet",
+    "idaes",
+    "process",
+    "uncertainty"
+  ],
+  "validators": [
+    "property-method-fitness",
+    "mass-balance",
+    "energy-balance",
+    "recycle-convergence"
+  ],
+  "workflow": "process-simulation"
+}

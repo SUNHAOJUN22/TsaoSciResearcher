@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TsaoDFT unified engine parser result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "engine", "engine_version", "parser_version", "source_artifact", "normal_termination", "fatal_marker", "electronic_converged", "geometry_converged", "parser_accepted", "parser_acceptance_reasons", "energy", "forces", "stress", "scf_iterations", "elapsed_time_s", "warnings", "failed_stage", "scientific_acceptance", "job_index"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "engine": {"enum": ["gaussian", "vasp", "quantum-espresso", "cp2k"]},
+    "engine_version": {"type": ["string", "null"]},
+    "parser_version": {"type": "string", "minLength": 1},
+    "source_artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "normal_termination": {"type": "boolean"},
+    "fatal_marker": {"type": ["string", "null"]},
+    "electronic_converged": {"type": "boolean"},
+    "geometry_converged": {"type": ["boolean", "null"]},
+    "parser_accepted": {"type": "boolean"},
+    "parser_acceptance_reasons": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "energy": {"$ref": "#/$defs/quantity"},
+    "forces": {"$ref": "#/$defs/vector"},
+    "stress": {"$ref": "#/$defs/vector"},
+    "scf_iterations": {"type": ["integer", "null"], "minimum": 0},
+    "elapsed_time_s": {"type": ["number", "null"], "minimum": 0},
+    "warnings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "failed_stage": {"type": ["string", "null"]},
+    "scientific_acceptance": {"const": "PENDING"},
+    "job_index": {"type": ["integer", "null"], "minimum": 1}
+  },
+  "$defs": {
+    "quantity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {"value": {"type": ["number", "null"]}, "unit": {"type": "string", "minLength": 1}}
+    },
+    "vector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["values", "unit"],
+      "properties": {"values": {"type": ["array", "null"], "items": {"type": "number"}}, "unit": {"type": "string", "minLength": 1}}
+    }
+  }
+}

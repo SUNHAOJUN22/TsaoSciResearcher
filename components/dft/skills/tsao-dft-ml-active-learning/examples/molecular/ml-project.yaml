@@ -1,0 +1,14 @@
+schema_version: "1.0"
+project_id: ML-DEMO
+target: synthetic_gap
+target_unit: eV
+sample_unit: parent_structure
+dataset_path: dataset.csv
+group_column: parent_id
+split_policy: group
+preprocessing_fit_scope: train_only
+model_family: random_forest_baseline
+seeds: [17, 29, 43]
+metrics: [mae, rmse, r2]
+applicability_domain: required
+status: validated

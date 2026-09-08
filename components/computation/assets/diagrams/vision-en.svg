@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">TsaoSciComputation — evidence-bound scientific computation</title>
+<desc id="desc">Conceptual architecture for unit-aware inputs, controlled external solvers, numerical validation, provenance and independent acceptance.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071426"/><stop offset=".55" stop-color="#102b46"/><stop offset="1" stop-color="#2a123f"/></linearGradient>
+  <linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#45e0bf"/><stop offset=".52" stop-color="#62a9ff"/><stop offset="1" stop-color="#d383ff"/></linearGradient>
+  <style>.t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#f7fbff}.m{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;fill:#d9f7ff}.muted{fill:#a9c4d8}.head{font-size:50px;font-weight:700}.sub{font-size:27px}.body{font-size:29px}.small{font-size:22px}.eq{font-size:24px}.b1{fill:#0c2539;stroke:#45e0bf;stroke-width:2}.b2{fill:#122b4b;stroke:#62a9ff;stroke-width:2}.b3{fill:#271a42;stroke:#d383ff;stroke-width:2}</style>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<text x="86" y="95" class="t head">TsaoSciComputation</text>
+<text x="88" y="140" class="t sub">Unit-aware orchestration · bounded execution · reproducible numerical evidence</text>
+<rect x="86" y="180" width="1428" height="4" rx="2" fill="url(#a)"/>
+<g transform="translate(92 240)"><rect width="300" height="220" rx="26" class="b1"/><text x="27" y="54" class="t body" font-weight="700">1. Scientific datum</text><text x="27" y="96" class="t small">value · unit · dimension</text><text x="27" y="130" class="t small">method · conditions · source</text><text x="27" y="177" class="m eq">q̃ = q / qref</text></g>
+<g transform="translate(430 240)"><rect width="300" height="220" rx="26" class="b2"/><text x="27" y="54" class="t body" font-weight="700">2. Controlled solver</text><text x="27" y="96" class="t small">capability · process tree</text><text x="27" y="130" class="t small">bounded stdout / stderr</text><text x="27" y="177" class="m eq">executed ≠ accepted</text></g>
+<g transform="translate(768 240)"><rect width="300" height="220" rx="26" class="b2"/><text x="27" y="54" class="t body" font-weight="700">3. Numerical gates</text><text x="27" y="96" class="t small">convergence · balance</text><text x="27" y="130" class="t small">mesh / timestep invariance</text><text x="27" y="177" class="m eq">η = ||r|| / S ≤ τ</text></g>
+<g transform="translate(1106 240)"><rect width="300" height="220" rx="26" class="b3"/><text x="27" y="54" class="t body" font-weight="700">4. Evidence graph</text><text x="27" y="96" class="t small">artifact hashes · roles</text><text x="27" y="130" class="t small">review · expiry · revocation</text><text x="27" y="177" class="m eq">C5 requires independence</text></g>
+<path d="M392 350 H430 M730 350 H768 M1068 350 H1106" stroke="url(#a)" stroke-width="7" stroke-linecap="round"/>
+<g transform="translate(92 520)"><rect width="1314" height="214" rx="30" fill="#081b2f" stroke="#527894" stroke-width="2"/><text x="34" y="54" class="t body" font-weight="700">Cross-scale computation contract</text><text x="34" y="102" class="m eq">R = input − output + generation − consumption − accumulation</text><text x="34" y="146" class="m eq">status: planned → executed → converged → validated → independently accepted</text><text x="34" y="189" class="t small muted">Strict JSON, finite reals, declared dimensions and immutable provenance prevent silent zero-filling and self-signed acceptance.</text></g>
+<text x="92" y="820" class="t small">VISION: one governed computation fabric from quantum chemistry to process systems</text>
+<text x="92" y="858" class="t small muted">AI-designed conceptual illustration · not external solver, HPC or scientific-acceptance evidence</text>
+</svg>

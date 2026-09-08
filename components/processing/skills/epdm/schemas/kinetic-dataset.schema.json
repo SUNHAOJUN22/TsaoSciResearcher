@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/kinetic-dataset.schema.json",
+  "title": "EPDM V2 kinetic dataset",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "description",
+    "catalyst_id",
+    "diene_id",
+    "experiment_ids",
+    "operating_conditions",
+    "targets",
+    "preprocessing_record_id",
+    "split_manifest_id",
+    "evidence_ids",
+    "role"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "catalyst_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "diene_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "experiment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "operating_conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "variable",
+          "quantity",
+          "statistic"
+        ],
+        "properties": {
+          "variable": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "quantity": {
+            "$ref": "quantity-value.schema.json"
+          },
+          "statistic": {
+            "enum": [
+              "SETPOINT",
+              "TIME_AVERAGE",
+              "INITIAL",
+              "FINAL",
+              "PROFILE"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target_id",
+          "observation_id",
+          "experiment_id",
+          "experiment_group_id",
+          "dataset_id",
+          "reactor_id",
+          "grade_id",
+          "variable",
+          "measured",
+          "uncertainty_model_id",
+          "evidence_id",
+          "use"
+        ],
+        "properties": {
+          "target_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "observation_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "experiment_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "experiment_group_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "reactor_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "grade_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "variable": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "measured": {
+            "$ref": "quantity-value.schema.json"
+          },
+          "uncertainty_model_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "explicit_weight": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "exclusiveMinimum": 0
+          },
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "use": {
+            "enum": [
+              "CALIBRATION",
+              "VALIDATION",
+              "HOLDOUT",
+              "TUTORIAL",
+              "DIAGNOSTIC"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "preprocessing_record_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "split_manifest_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "role": {
+      "enum": [
+        "CALIBRATION",
+        "VALIDATION",
+        "HOLDOUT",
+        "TUTORIAL",
+        "DIAGNOSTIC"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

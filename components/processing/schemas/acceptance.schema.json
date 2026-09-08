@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://tsao.dev/schemas/acceptance.schema.json",
+  "title":"TSAO acceptance record",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["acceptance_id","requirement_id","criterion","method","evidence_ids","result","approver"],
+  "properties":{
+    "acceptance_id":{"type":"string","minLength":1},
+    "requirement_id":{"type":"string","minLength":1},
+    "criterion":{"type":"string","minLength":1},
+    "method":{"type":"string","minLength":1},
+    "evidence_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "result":{"enum":["NOT_EVALUATED","PASS","FAIL","CONDITIONAL"]},
+    "approver":{"type":["string","null"]}
+  }
+}

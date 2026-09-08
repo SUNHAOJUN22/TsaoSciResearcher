@@ -1,0 +1,131 @@
+{
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciComputation/schemas/confidence-assessment.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "const": "C5"
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "engineering_decision_ready": {
+            "const": true
+          },
+          "missing_for_next": {
+            "maxItems": 0
+          },
+          "next_level": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "enum": [
+              "UNASSESSED",
+              "C0",
+              "C1",
+              "C2",
+              "C3",
+              "C4"
+            ]
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "engineering_decision_ready": {
+            "const": false
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "claim_boundary": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "engineering_decision_ready": {
+      "type": "boolean"
+    },
+    "level": {
+      "enum": [
+        "UNASSESSED",
+        "C0",
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    "level_rank": {
+      "maximum": 5,
+      "minimum": -1,
+      "type": "integer"
+    },
+    "missing_for_next": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "next_level": {
+      "oneOf": [
+        {
+          "enum": [
+            "C0",
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "satisfied_requirements": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "1.0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "level",
+    "level_rank",
+    "satisfied_requirements",
+    "next_level",
+    "missing_for_next",
+    "engineering_decision_ready",
+    "claim_boundary"
+  ],
+  "title": "Scientific confidence assessment",
+  "type": "object"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "first-philosophy",
+  "version": "1.2.0",
+  "canonical_entry": "METHOD.md",
+  "activation": "core-or-explicit",
+  "protocol": {
+    "name": "Phi8",
+    "stages": ["Phi0", "Phi1", "Phi2", "Phi3", "Phi4", "Phi5", "Phi6", "Phi7"]
+  },
+  "inputs": [
+    "question",
+    "decision_or_deliverable",
+    "stakes",
+    "known_evidence",
+    "current_frame",
+    "stakeholders",
+    "required_confidence"
+  ],
+  "outputs": [
+    "foundation_charter",
+    "rival_frame",
+    "blocking_unknowns"
+  ],
+  "handoff_to": ["first-principles"],
+  "forbidden_auto_load": ["triz"],
+  "schema": "foundation-charter.schema.json",
+  "example": "example-foundation-charter.json",
+  "validator": "scripts/validate_module.py"
+}

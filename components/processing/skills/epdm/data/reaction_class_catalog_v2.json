@@ -1,0 +1,76 @@
+{
+  "schema": "TSAO-EPDM-V2-REACTION-CLASS-CATALOG-1",
+  "items": [
+    {
+      "reaction_family": "ACT_SPON",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "ACT_COCAT",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "ACT_H2",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "CHAIN_INI",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "PROPAGATION",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "CHAT_MON",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "CHAT_H2",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "CHAT_AGENT",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "DEACT_SPON",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "DEACT_POISON",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "INH_H2_FORWARD",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "INH_H2_REVERSE",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "TDB_GENERATION",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    {
+      "reaction_family": "TDB_POLY",
+      "implementation_status": "STRUCTURAL_CHANNEL_VERIFIED_PHASE_A2",
+      "rate_evaluation_status": "NOT_IMPLEMENTED_PHASE_A2"
+    }
+  ],
+  "phase": "A2_REACTION_NETWORK_AND_STATE_GENERATOR"
+}

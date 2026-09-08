@@ -1,0 +1,2351 @@
+{
+  "schema": "TSAO-EPDM-V2-REACTION-NETWORK-1",
+  "network_id": "EPDM-V2-TERMINAL-NETWORK-1",
+  "version": "2.2.0",
+  "model_level": 2,
+  "state_definition_id": "STATE-EXTENSIVE-L2-1",
+  "generated_state_definition_id": "STATE-EXTENSIVE-L2-1:L2:GENERATED",
+  "generated_state_digest_sha256": "718abd62985f3bf7224c41ed633c402f6dc5283b079f5d974dbd07ca22fed810",
+  "site_family_ids": [
+    "SITE-A"
+  ],
+  "terminal_ids": [
+    "E",
+    "P",
+    "D"
+  ],
+  "options": {
+    "enable_cocatalyst_activation": true,
+    "enable_hydrogen_activation": false,
+    "transfer_to_monomers": [
+      "E",
+      "P",
+      "D"
+    ],
+    "enable_hydrogen_transfer": true,
+    "transfer_agents": [
+      "SOLVENT",
+      "COCATALYST"
+    ],
+    "enable_spontaneous_deactivation": true,
+    "enable_poison_deactivation": true,
+    "enable_hydrogen_inhibition": true,
+    "enable_tdb": false
+  },
+  "channels": [
+    {
+      "reaction_id": "ACT_SPON:SITE-A",
+      "family": "ACT_SPON",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "N_SITE_POTENTIAL:SITE-A"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "N_SITE_POTENTIAL:SITE-A",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "ACT_COCAT:SITE-A",
+      "family": "ACT_COCAT",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "N_SITE_POTENTIAL:SITE-A"
+      ],
+      "modifier_state_ids": [
+        "N_COCATALYST"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "N_SITE_POTENTIAL:SITE-A",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:E",
+      "family": "CHAIN_INI",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "N_SITE_VACANT:SITE-A",
+        "N_E"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "INITIATE_UNIT_CHAIN",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": null,
+          "target_terminal_id": "E",
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:P",
+      "family": "CHAIN_INI",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "N_SITE_VACANT:SITE-A",
+        "N_P"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "INITIATE_UNIT_CHAIN",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": null,
+          "target_terminal_id": "P",
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:D",
+      "family": "CHAIN_INI",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "N_SITE_VACANT:SITE-A",
+        "N_D"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "INITIATE_UNIT_CHAIN",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": null,
+          "target_terminal_id": "D",
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:E",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E",
+        "N_E"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "N_E",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": "E",
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:P",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E",
+        "N_P"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_P",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": "P",
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:D",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E",
+        "N_D"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_D",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": "D",
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:E",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_E"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:P",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_P"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:D",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_D"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:E",
+      "family": "CHAT_H2",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_H2"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:E:SOLVENT",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_SOLVENT"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:E:COCATALYST",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_COCATALYST"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:E",
+      "family": "DEACT_SPON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_DEAD:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:E",
+      "family": "DEACT_POISON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "E",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "modifier_state_ids": [
+        "N_POISON"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_POISONED:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "E",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:E",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P",
+        "N_E"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_E",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": "E",
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:P",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P",
+        "N_P"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "N_P",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": "P",
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:D",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P",
+        "N_D"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_D",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": "D",
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:E",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_E"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:P",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_P"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:D",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_D"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:P",
+      "family": "CHAT_H2",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_H2"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:P:SOLVENT",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_SOLVENT"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:P:COCATALYST",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_COCATALYST"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:P",
+      "family": "DEACT_SPON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_DEAD:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:P",
+      "family": "DEACT_POISON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "P",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "modifier_state_ids": [
+        "N_POISON"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_POISONED:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "P",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:E",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D",
+        "N_E"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:E",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_E",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": "E",
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:P",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D",
+        "N_P"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "LAMBDA0:SITE-A:P",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_P",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": "P",
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:D",
+      "family": "PROPAGATION",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D",
+        "N_D"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "N_D",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "PROPAGATE_TERMINAL",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": "D",
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:E",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "E",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_E"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "E"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:P",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "P",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_P"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "P"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:D",
+      "family": "CHAT_MON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": "D",
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_D"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": "D"
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:D",
+      "family": "CHAT_H2",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_H2"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:D:SOLVENT",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_SOLVENT"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:D:COCATALYST",
+      "family": "CHAT_AGENT",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_COCATALYST"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:D",
+      "family": "DEACT_SPON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_DEAD:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:D",
+      "family": "DEACT_POISON",
+      "site_family_id": "SITE-A",
+      "terminal_id": "D",
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "modifier_state_ids": [
+        "N_POISON"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "LAMBDA0:SITE-A:D",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "MU0:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_POISONED:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [
+        {
+          "kind": "TERMINATE_TO_DEAD",
+          "site_family_id": "SITE-A",
+          "source_terminal_id": "D",
+          "target_terminal_id": null,
+          "incoming_monomer_id": null
+        }
+      ],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "DEACT_POISON:VACANT:SITE-A",
+      "family": "DEACT_POISON",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "N_SITE_VACANT:SITE-A"
+      ],
+      "modifier_state_ids": [
+        "N_POISON"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "N_SITE_POISONED:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "INH_H2_FORWARD:SITE-A",
+      "family": "INH_H2_FORWARD",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "N_SITE_VACANT:SITE-A"
+      ],
+      "modifier_state_ids": [
+        "N_H2"
+      ],
+      "stoichiometry": [
+        {
+          "state_id": "N_SITE_INHIBITED_H2:SITE-A",
+          "coefficient": 1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": -1.0
+        }
+      ],
+      "moment_rules": [],
+      "rate_law_id": null
+    },
+    {
+      "reaction_id": "INH_H2_REVERSE:SITE-A",
+      "family": "INH_H2_REVERSE",
+      "site_family_id": "SITE-A",
+      "terminal_id": null,
+      "incoming_monomer_id": null,
+      "reactant_state_ids": [
+        "N_SITE_INHIBITED_H2:SITE-A"
+      ],
+      "modifier_state_ids": [],
+      "stoichiometry": [
+        {
+          "state_id": "N_SITE_INHIBITED_H2:SITE-A",
+          "coefficient": -1.0
+        },
+        {
+          "state_id": "N_SITE_VACANT:SITE-A",
+          "coefficient": 1.0
+        }
+      ],
+      "moment_rules": [],
+      "rate_law_id": null
+    }
+  ],
+  "state_ids": [
+    "N_E",
+    "N_P",
+    "N_D",
+    "N_H2",
+    "N_SOLVENT",
+    "N_COCATALYST",
+    "N_POISON",
+    "N_SITE_POTENTIAL:SITE-A",
+    "N_SITE_VACANT:SITE-A",
+    "N_SITE_INHIBITED_H2:SITE-A",
+    "N_SITE_POISONED:SITE-A",
+    "N_SITE_DEAD:SITE-A",
+    "LAMBDA0:SITE-A:E",
+    "LAMBDA0:SITE-A:P",
+    "LAMBDA0:SITE-A:D",
+    "LAMBDA1:SITE-A:E",
+    "LAMBDA1:SITE-A:P",
+    "LAMBDA1:SITE-A:D",
+    "MU0:SITE-A",
+    "MU1:SITE-A"
+  ],
+  "stoichiometric_matrix": [
+    [
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      -1.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      -1.0,
+      -1.0,
+      1.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      -1.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      -1.0,
+      0.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "matrix_shape": [
+    20,
+    41
+  ],
+  "family_counts": {
+    "ACT_COCAT": 1,
+    "ACT_SPON": 1,
+    "CHAIN_INI": 3,
+    "CHAT_AGENT": 6,
+    "CHAT_H2": 3,
+    "CHAT_MON": 9,
+    "DEACT_POISON": 4,
+    "DEACT_SPON": 3,
+    "INH_H2_FORWARD": 1,
+    "INH_H2_REVERSE": 1,
+    "PROPAGATION": 9
+  },
+  "numerical_execution": "NOT_IMPLEMENTED_PHASE_A2",
+  "digest_sha256": "18daec20b3d2fde28b7fa924b33442a9fcd68fc2bc0637a8db31934b90e7e73a"
+}

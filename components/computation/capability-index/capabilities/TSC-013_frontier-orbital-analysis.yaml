@@ -1,0 +1,63 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Molecular quantum chemistry",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Frontier-orbital analysis within the Molecular quantum chemistry workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "SCF nonconvergence",
+    "wrong spin state",
+    "imaginary mode mismatch"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-013",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "molecular_structure",
+    "charge",
+    "multiplicity",
+    "electronic_method",
+    "basis_set",
+    "environment_model"
+  ],
+  "maturity": "A4",
+  "name_cn": "前线轨道分析",
+  "name_en": "Frontier-orbital analysis",
+  "outputs": [
+    "electronic_result",
+    "optimized_geometry",
+    "frequency_record",
+    "convergence_evidence"
+  ],
+  "recommended_adapters": [
+    "gaussian",
+    "orca",
+    "psi4",
+    "pyscf"
+  ],
+  "required_evidence": [
+    "input deck",
+    "solver version",
+    "native output",
+    "method fingerprint"
+  ],
+  "risk_level": "medium",
+  "slug": "frontier-orbital-analysis",
+  "triggers": [
+    "frequency",
+    "frontier",
+    "gaussian",
+    "molecule",
+    "orbital",
+    "orca",
+    "psi4",
+    "pyscf"
+  ],
+  "validators": [
+    "geometry",
+    "scf-convergence",
+    "frequency-consistency",
+    "thermochemistry",
+    "unit"
+  ],
+  "workflow": "quantum-chemistry"
+}

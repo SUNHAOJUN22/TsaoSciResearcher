@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/catalyst-passport.schema.json",
+  "title": "EPDM V2 catalyst passport",
+  "type": "object",
+  "required": [
+    "catalyst_id",
+    "display_name",
+    "family",
+    "site_model",
+    "metal",
+    "active_site_basis",
+    "simulator_component_status",
+    "applicability_domain_id",
+    "evidence_ids"
+  ],
+  "properties": {
+    "catalyst_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "enum": [
+        "VANADIUM_ZN",
+        "METALLOCENE",
+        "OTHER_COORDINATION"
+      ]
+    },
+    "site_model": {
+      "enum": [
+        "SINGLE_SITE",
+        "EFFECTIVE_MULTISITE"
+      ]
+    },
+    "metal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cocatalyst": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "catalyst_lot_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "site_capacity": {
+      "oneOf": [
+        {
+          "$ref": "quantity-value.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "site_capacity_basis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "PER_MASS_CATALYST",
+        "PER_MASS_METAL",
+        "PER_MOLE_METAL",
+        "OTHER_DECLARED",
+        null
+      ]
+    },
+    "active_site_basis": {
+      "enum": [
+        "MEASURED",
+        "CALIBRATED",
+        "LITERATURE_PRIOR",
+        "ASSUMED"
+      ]
+    },
+    "simulator_component_status": {
+      "enum": [
+        "REAL_COMPONENT",
+        "SIMULATOR_PLACEHOLDER_COMPONENT",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "applicability_domain_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "site_capacity"
+        ],
+        "properties": {
+          "site_capacity": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "site_capacity_basis"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

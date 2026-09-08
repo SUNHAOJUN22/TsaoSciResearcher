@@ -1,513 +1,92 @@
-<div align="center">
-  <img src="assets/logo.svg" alt="TsaoSciResearcher logo" width="118" />
-  <h1>TsaoSciResearcher</h1>
-  <p><strong>Evidence-first scientific strategy, mathematical contracts, guarded handoff, and validation control layer</strong></p>
-  <p>Question → observables → model contract → evidence contract → guarded external execution → receipt → acceptance evidence</p>
+# TsaoScience
 
-[简体中文](README.zh-CN.md) · [Documentation](docs/index.md) · [Architecture](docs/ARCHITECTURE.md) · [Mathematical contracts](docs/MATHEMATICAL_CONTRACTS.md) · [Validation](docs/VALIDATION.md) · [Visual atlas](docs/VISUAL_ATLAS.md)
+**从科研问题、计算与聚合过程模型，到材料数据和可追溯结果的统一工作仓库。**
 
-[![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
-</div>
+版本：`astra-pro-1 / 1.0.0a1`。唯一维护仓库：`SUNHAOJUN22/TsaoSciResearcher`。
 
-<!-- LOCALIZED_VISION_EN:START -->
-## Project vision: from scientific questions to falsifiable, transferable research plans
+这不是七个独立产品的目录集合。研究路由、计算路由、原有领域实现、统一任务图、量纲检查、执行边界、事件账本与 ResinDB 界面在同一个源码树内协同工作。领域源码、方法资料和历史测试保留；新的工作流通过固定适配器调用原实现，不复制其科学算法。
 
-<p align="center">
-  <img src="docs/localized-vision/researcher-vision-en.svg" width="100%" alt="TsaoSciResearcher English evidence-first research control architecture">
-</p>
+## 运行
 
-> The equations map to capability routing, dimensional checks, evidence conflict, uncertainty, scale bridges and receipt verification. The figure is not paper evidence, an experiment or automatic scientific approval.
-
-<!-- LOCALIZED_VISION_EN:END -->
-
-> **Release 0.7.4 · acceptance-hardened main** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
-
-## 1. What this repository is
-
-TsaoSciResearcher is a **scientific research control layer**. It helps turn an under-specified research question into a traceable, falsifiable and reviewable research strategy. The runtime performs deterministic routing, capability retrieval, scientific-quality checks, strategy construction, project-state management, checksum-bound external handoff, execution-receipt verification and reproducibility packaging.
-
-It is **not** a DFT, quantum-chemistry, molecular-dynamics, CFD, FEM, process-simulation, HPC or laboratory solver. A strategy, equation, handoff file, PASS label or AI diagram never proves that a physical calculation or experiment occurred.
-
-The implemented inventory is machine checked:
-
-| Delivery fact | Verified value |
-|---|---:|
-| Capability contracts | **341** |
-| Preserved legacy/general contracts | **158** |
-| Preserved workbook names | **322** |
-| Domain computation/engineering contracts | **164** |
-| Generic domain placeholders | **0** |
-| Runtime additions | **19** |
-| Primary workflows | **15** |
-| JSON Schemas | **20** |
-| Domain packs | **7** |
-| AI-generated conceptual diagrams | **38** |
-
-Acceptance evidence: [README audit](docs/README_AUDIT_REPORT.md), [capability matrix](docs/CAPABILITY_COVERAGE_MATRIX.md), [architecture mapping](docs/README_ARCHITECTURE_MAPPING.md), [mathematical contracts](docs/MATHEMATICAL_CONTRACTS.md), [mathematical registry schema](schemas/v2/mathematical-contract-registry.schema.json), [validation evidence](docs/VALIDATION_EVIDENCE.json), [HTML dashboard](docs/test-dashboard.html), and [SVG dashboard](docs/test-dashboard.svg).
-
-> Every diagram in this repository is an **AI-generated conceptual illustration for documentation**. It is not experimental data, a measured dataset, a numerical solver result, or proof that an external computation ran.
-
-## 2. Architecture and responsibility boundary
-
-```text
-CLI / Python API
-      │
-      ├── router.py ─────────────────────> deterministic task classification
-      ├── capabilities.py ────────────────> validated capability retrieval
-      ├── strategy.py ────────────────────> first-principles Scientific Passport
-      ├── mathematical_contracts.py ──────> schema-backed equations and interpretation limits
-      ├── scientific_quality.py ──────────> quantity, evidence, causality and traceability guards
-      ├── state.py ───────────────────────> hash-linked project state
-      ├── handoff.py / receipts.py ───────> external execution evidence boundary
-      └── capsule.py ─────────────────────> deterministic reproducibility archive
-```
-
-![Research operating architecture](docs/assets/ai/research_os_architecture.svg)
-
-![Progressive routing and loading](docs/assets/ai/progressive_routing_loading.svg)
-
-![Computation handoff boundary](docs/assets/ai/computation_handoff_boundary.svg)
-
-A typical research flow is:
-
-```text
-scientific question
-    ↓
-decision-critical observable + unit + acceptance threshold
-    ↓
-state variables + governing principles + constraints
-    ↓
-minimum-sufficient falsifiable model
-    ↓
-evidence / applicability / identifiability / bridge gates
-    ↓
-qualified human review
-    ↓
-checksum-bound external handoff
-    ↓
-execution receipt + independently reviewable evidence
-```
-
-## 3. Schema-backed mathematical contracts
-
-The `math` command exposes eight stable bilingual contracts. The payload is now validated against a packaged Draft 2020-12 Schema before it is returned.
+Python 3.11 及以上；前端沿用 Node.js 22。从本仓库根目录运行：
 
 ```bash
-python -m tsao_researcher math
-python -m tsao_researcher math --schema
-python -m tsao_researcher math --contract decision-readiness --language en
-python -m tsao_researcher math --contract quantity-dimension --language zh-CN
-python -m tsao_researcher math --contract uncertainty-budget --output contract.json
-python scripts/validate_mathematical_contracts.py --check
+python -m pip install -e '.[test]'
+python -m tsao_science doctor
+python -m tsao_science route "聚合动力学参数识别与材料性能研究"
+python -m tsao_science plan examples/poe-reference-workflow.json
+python -m tsao_science demo --workdir work/demo
+python -m tsao_science run examples/poe-reference-workflow.json --workdir work/project --execute-local
 ```
 
-Every contract response fixes the truth boundary:
+`plan` 不执行计算。`run` 需要显式授权本地参考计算。`demo` 的选择只授权固定的合成参考案例：研究路由 → 计算路由 → 原 POE 一阶模型 → 参数回归 → 材料观测元数据。它不代表实验测量、真实 DFT、Aspen 求解或材料放行。
 
-```json
-{
-  "schema_version": "1.0",
-  "schema_id": "https://sunhaojun22.github.io/TsaoSciResearcher/schemas/v2/mathematical-contract-registry.schema.json",
-  "advisory_only": true,
-  "solver_executed": false,
-  "automatic_approval": false
-}
+结果写入唯一运行目录，关联任务输入摘要、输出摘要、代码身份和事务化事件账本。校验结果文件：
+
+```bash
+python -m tsao_science verify work/demo/<run-id>/result.json
 ```
 
-The canonical Schema is [`schemas/v2/mathematical-contract-registry.schema.json`](schemas/v2/mathematical-contract-registry.schema.json). A byte-identical package mirror is shipped under `tsao_researcher/data/schemas/` so installed CLI consumers can validate the same contract offline.
+## 统一界面
 
-![Mathematical contract schema pipeline](docs/assets/ai/mathematical_contract_schema_pipeline.svg)
-
-### 3.1 Capability-ranking abstraction
-
-\[
-S(c\mid q,o,e)=w_qR(q,c)+w_oR(o,c)+w_eM(e,c)-w_xC(c)
-\]
-
-- \(c\): candidate capability
-- \(q\): scientific question
-- \(o\): decision-critical observable
-- \(e\): declared evidence context
-- \(C(c)\): conflict or exclusion penalty
-
-Use this as a decomposition of deterministic routing logic, not as a fitted statistical model. A method should be relevant to the question, able to produce the requested observable, compatible with the evidence, and not excluded by negative semantics.
-
-### 3.2 Quantity, unit and dimension contract
-
-\[
-x=(v,u,d),\qquad d_{\mathrm{left}}=d_{\mathrm{right}}
-\]
-
-A quantitative comparison should identify value \(v\), unit \(u\) and physical dimension \(d\). Missing units require review. Incompatible dimensions block the comparison.
-
-### 3.3 Applicability and extrapolation
-
-\[
-r_{\mathrm{extra}}=
-\frac{d(x,\mathcal A)}{\max(s_{\mathcal A},\varepsilon)}
-\]
-
-Here \(x\) is the target condition, \(\mathcal A\) is the declared applicability domain and \(s_{\mathcal A}\) is a characteristic domain scale. The farther the transfer, the stronger the evidence and uncertainty inflation must become. The runtime does not fabricate a numerical distance when data are absent.
-
-### 3.4 Evidence triad and conflict ledger
-
-\[
-E=(E_+,E_-,E_0),\qquad
-\kappa=\mathbf 1[E_+\neq\varnothing\land E_-\neq\varnothing]
-\]
-
-Supporting, challenging and unresolved evidence stay separate. Contradictory evidence is preserved rather than silently averaged into a positive conclusion.
-
-### 3.5 Mechanism and parameter identifiability
-
-\[
-D_{ij}(O,C)>\tau
-\qquad\text{or}\qquad
-\operatorname{rank}(J_\theta)=p
-\]
-
-Mechanism selection requires discriminating observables. Unique parameter claims require sufficient sensitivity rank. Numerical Jacobian construction remains an external analysis task.
-
-### 3.6 Decision-observable uncertainty budget
-
-\[
-\Sigma_y\approx
-J\Sigma_\theta J^{\mathsf T}
-+\Sigma_{\mathrm{num}}
-+\Sigma_{\mathrm{sample}}
-+\Sigma_{\mathrm{model}}
-+\Sigma_{\mathrm{transfer}}
-\]
-
-Uncertainty must reach the actual acceptance observable. Parameter, numerical, sampling, model-form and scale-transfer uncertainty must remain traceable instead of being collapsed into an undocumented confidence score.
-
-### 3.7 Multiscale bridge error budget
-
-\[
-U_{\mathrm{bridge}}^2=
-U_{\mathrm{source}}^2+
-U_{\mathrm{mapping}}^2+
-U_{\mathrm{closure}}^2+
-U_{\mathrm{target}}^2
-\]
-
-A microscopic result cannot jump directly to an engineering conclusion. Each bridge needs measurable bridge variables, mapping assumptions, closure validation and target-scale acceptance evidence.
-
-### 3.8 Conservative decision readiness
-
-\[
-G=\min\left(
- g_{\mathrm{quantity}},
- g_{\mathrm{applicability}},
- g_{\mathrm{evidence}},
- g_{\mathrm{identifiability}},
- g_{\mathrm{bridge}}
-\right)
-\]
-
-The weakest mandatory gate controls readiness:
-
-```text
-BLOCK < REVIEW < PASS
+```bash
+python -m tsao_science serve
+# 在另一终端运行：
+cd apps/resindb
+npm ci
+npm run dev
 ```
 
-A software `PASS` means that no declared software blocker remains. It is not physical proof and cannot bypass qualified human review.
+ResinDB 顶部的“统一科研工作台”读取同源 `/api/science/status`，并向 `/api/science/plan` 提交参考计划。浏览器与 Python 使用同一版本的任务摘要协议；摘要不一致时拒绝接收。网关只绑定回环地址，不提供求解器执行或 AI 转发接口。原有 AI 服务仍要求独立部署的同源 `/api/ai/proxy`。
 
-![Mathematical contract registry](docs/assets/ai/mathematical_contract_registry.svg)
-![Decision readiness lattice](docs/assets/ai/decision_readiness_lattice.svg)
-![Uncertainty propagation budget](docs/assets/ai/uncertainty_propagation_budget.svg)
-![Multiscale bridge error budget](docs/assets/ai/multiscale_bridge_error_budget.svg)
+## 分层与所有权
 
-Detailed bilingual interpretation: [docs/MATHEMATICAL_CONTRACTS.md](docs/MATHEMATICAL_CONTRACTS.md).
-
-## 4. Scientific model-reconstruction strategy
-
-TsaoSciResearcher selects methods from the decision physics rather than from a fashionable solver name.
-
-A generic state model is:
-
-\[
-\dot{x}=f(x,u,\theta)+\epsilon_{\mathrm{model}},
-\qquad
-y=h(x,\theta)+\epsilon_{\mathrm{measurement}}
-\]
-
-A strategy should declare:
-
-1. state variables \(x\), controls \(u\), and parameters \(\theta\);
-2. decision observable \(y\) and acceptance threshold;
-3. conserved quantities, reservoirs, boundary and initial conditions;
-4. the minimum model able to falsify the candidate mechanism;
-5. validation, uncertainty and escalation rules.
-
-For a conserved extensive quantity \(\phi\):
-
-\[
-\frac{\mathrm d}{\mathrm dt}\int_{\Omega}\rho\phi\,\mathrm dV
-+\int_{\partial\Omega}\mathbf J_\phi\cdot\mathbf n\,\mathrm dA
-=\int_{\Omega}s_\phi\,\mathrm dV
-\]
-
-This equation does not imply that a mesh, constitutive model or solver run exists. It defines what must be declared before a CFD, FEM, transport or process handoff can be considered scientifically interpretable.
-
-### Minimum-sufficient method ladder
-
-| Problem class | Start with | Escalate when |
+| 层 | 目录 | 唯一职责 |
 |---|---|---|
-| electronic structure / defects / interfaces | converged cluster or periodic DFT strategy | functional, finite-size or reference-state sensitivity matters |
-| reaction mechanism / selectivity | pathway energetics + microkinetic skeleton | pathways, solvent/dynamics or transport remain unresolved |
-| conformation / free energy | ensemble MD/MC strategy + convergence estimator | sampling or force-field evidence is inadequate |
-| morphology / phase evolution | scaling / SCFT / CGMD / DPD / phase-field strategy | mapping or closure fails |
-| flow / heat / mass transfer | analytical / control-volume / reduced model | geometry, instability or closure requires CFD/multiphysics |
-| mechanics / fracture | reduced mechanics or FEM strategy | constitutive non-identifiability or localization dominates |
-| reaction engineering | mass/energy balances + kinetics/population model | RTD, mixing or plant-data coupling is decisive |
-| mixed multiscale problem | lowest-cost falsifiable model | a validated bridge variable justifies escalation |
+| 共享基础与任务引擎 | `tsao_science/`、`contracts/` | 严格 JSON、物理量、任务依赖、固定适配器、证据身份、状态与入口 |
+| 研究设计 | `components/research/` | 科研路由、研究规约、证据和结论检查 |
+| 通用计算 | `components/computation/` | 计算路线、原有执行和资源规约 |
+| DFT 领域 | `components/dft/` | 结构、专业引擎解析、方法与计算资格 |
+| 聚合与加工 | `components/processing/` | 原有 EPDM、POE 和通用过程模型 |
+| 流程软件控制 | `components/aspen/` | Aspen/HYSYS 原有隔离与运行状态采集 |
+| 数据与人工入口 | `apps/resindb/` | 材料数据、分析界面、受控 AI 外发和统一计划预览 |
+| 可选推理方法 | `skills/reasoning/` | 原有第一哲学、第一性原理及显式选择的 TRIZ |
 
-![First-principles strategy ladder](docs/assets/ai/first_principles_strategy_ladder.svg)
-![Scientific method decision tree](docs/assets/ai/scientific_problem_method_decision_tree.svg)
-![Multiscale science pipeline](docs/assets/ai/multiscale_science_pipeline.svg)
+日常开发只有一个 Git 仓库、一个根入口、一套集成验收。模块中的旧工作流和版本说明是保留的来源记录，不是独立发布入口，也不能替代根目录的本次 CI。
 
-## 5. Scientific Passport and integrity gates
-
-A generated strategy carries structured declarations for model assumptions, evidence maturity, uncertainty, applicability and cross-scale transfer.
-
-Useful abstractions include:
-
-\[
-\mathcal P=
-\{M,E,U,A,I,B,V,F\}
-\]
-
-where \(M\) is the model contract, \(E\) evidence, \(U\) uncertainty, \(A\) applicability, \(I\) identifiability, \(B\) bridge contract, \(V\) validation and \(F\) falsification.
-
-The strategy remains advisory even when every software gate is green.
-
-![Scientific Passport matrix](docs/assets/ai/scientific_passport_matrix.svg)
-![Evidence maturity ladder](docs/assets/ai/evidence_maturity_ladder.svg)
-![Decision readiness gate](docs/assets/ai/decision_readiness_gate.svg)
-![Active evidence loop](docs/assets/ai/active_evidence_learning_loop.svg)
-![Quantity and dimension contract](docs/assets/ai/quantity_dimension_contract.svg)
-![Applicability extrapolation guard](docs/assets/ai/applicability_extrapolation_guard.svg)
-![Evidence conflict resolution](docs/assets/ai/evidence_conflict_resolution.svg)
-![Mechanism identifiability gate](docs/assets/ai/mechanism_identifiability_gate.svg)
-![Uncertainty validation](docs/assets/ai/uncertainty_quantification_validation.svg)
-![Scientific integrity causality guard](docs/assets/ai/scientific_integrity_causality_guard.svg)
-
-## 6. Acceptance strategy: exact baseline + focused delta
-
-The repository supports three validation scopes:
-
-- `preflight`: current checkout checks only; CI-only gates remain explicit `NOT_RUN`/`PARTIAL`.
-- `current-tree`: a fresh externally attested end-to-end CI run bound to the tested commit.
-- `composite`: a pinned exact-tree full-repository baseline plus a SHA-256-bound focused current-change regression.
-
-The checked-in acceptance-hardening record uses **composite** evidence. It pins the fully qualified v0.7.4 baseline and separately records the new Schema/CLI regression. It deliberately keeps:
-
-```text
-current_end_to_end_ci = NOT_RUN
-```
-
-This is stricter than copying the old full-tree checksum onto changed code. In composite mode `SHA256SUMS` explicitly defers a new whole-tree digest until a complete checkout performs the full-repository calculation.
-
-See [validation evidence](docs/VALIDATION_EVIDENCE.json), [baseline record](docs/VALIDATION_BASELINE.json), and [focused regression](docs/CURRENT_CHANGE_REGRESSION.json).
-
-![Reproducibility quality gates](docs/assets/ai/reproducibility_quality_gates.svg)
-![Compatibility matrix](docs/assets/ai/installation_compatibility_matrix.svg)
-![Supply-chain attestation](docs/assets/ai/supply_chain_release_attestation.svg)
-
-## 7. Core CLI
+## 原有高级能力仍可调用
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements-ci.lock
-python -m pip install -e . --no-deps
-python -m pip check
-
-python -m tsao_researcher --version
-python -m tsao_researcher route "run an actual DFT calculation"
-python -m tsao_researcher search "molecular dynamics" --limit 3
-python -m tsao_researcher quality examples/scientific-quality-check.json
-python -m tsao_researcher strategy \
-  "Can two mechanisms be discriminated?" \
-  --observable "rate constant 1/s" \
-  --condition "350 K" \
-  --evidence "independent measurement"
-python -m tsao_researcher math --schema
-python -m tsao_researcher math --contract decision-readiness --output contract.json
-python scripts/validate_mathematical_contracts.py --check
+python -m tsao_science component research -- math
+python -m tsao_science component computation -- route "DFT to kinetics"
+python -m tsao_science component aspen -- demo
+python -m tsao_science component processing -- doctor --root . --profile core
+python -m tsao_science component dft -- script scripts/validate_catalog.py
+python -m tsao_science component reasoning -- script open-deep-mind/scripts/validate_ledger.py <ledger.json>
 ```
 
-## 8. External execution boundary
+兼容命令在相应组件目录运行，相对文件路径以该目录为基准。组件原有许可证、运行授权和外部执行门不被此入口绕过。新任务引擎只登记已经有固定本地桥接的能力；保留的完整能力目录不被虚报为全部获得了真实求解器资格。
 
-TsaoSciResearcher prepares and verifies evidence around execution; it does not impersonate the engine.
+## 本轮实质修改
 
-```text
-validated strategy
-    ↓
-checksum-bound handoff
-    ↓
-external engine / instrument / laboratory
-    ↓
-user-supplied receipt + output hashes
-    ↓
-receipt verification
-    ↓
-qualified scientific acceptance
-```
+修正 Aspen 否定成功文本和零错误计数；消除 ResinDB 校验、审计与实际发送之间的可变载荷竞态；统一计算边界的严格 JSON；修复 DFT 动态摘要接口的严格类型问题，并将静态预检查与最终质量回执分开；拒绝邻居几何计算中的极端溢出输入；区分 POE 单参数可辨识性与时间设计覆盖，稳定小转化率计算；修正研究设计的否定语义；使命题记录验证对畸形 JSON 类型与深依赖图返回可解释结果。
 
-![Project state machine](docs/assets/ai/project_state_machine.svg)
-![Project ledgers and provenance](docs/assets/ai/project_ledgers_provenance.svg)
-![Evidence claim graph](docs/assets/ai/evidence_claim_graph.svg)
-![Evidence citation integrity](docs/assets/ai/evidence_citation_integrity_loop.svg)
-![Human approval boundary](docs/assets/ai/human_approval_acceptance_boundary.svg)
+具体原文件与新文件的对应关系见 `migration/source-map.json`；所有来源都固定到完整提交 SHA，变更摘要见 `migration/patches.json`。
 
-Example receipt workflow:
+## 验证与边界
 
 ```bash
-python -m tsao_researcher receipt record . \
-  --handoff computation/job.json \
-  --engine external-engine \
-  --engine-version 1.0 \
-  --command engine \
-  --command run \
-  --exit-code 0 \
-  --output computation/result.dat \
-  --started-at 2026-08-07T01:00:00Z \
-  --finished-at 2026-08-07T01:10:00Z
-
-python -m tsao_researcher receipt verify .
+python tools/verify_workspace.py
+python -m pytest tests
+python tools/qualify.py
 ```
 
-## 9. Reproducibility
+根 CI 执行集成测试、与本轮修改有关的原有回归，以及前端类型、测试、构建和外发检查。完整的原仓库测试与专用硬件测试仍保留。根集成通过不等于每项旧验收程序在重构后都已重新完成；状态以本次回执的实际执行清单为准，禁止沿用旧统计数字冒充本次结果。
 
-```bash
-python -m tsao_researcher capsule export . --mode metadata --output project-metadata.zip
-python -m tsao_researcher capsule export . --mode full --output project-full.zip
-python -m tsao_researcher capsule verify project-full.zip
-```
+`execution`、数值有效性、`scientific_approval` 和分发许可分开记录。软件成功、结构合法或摘要一致，不能自动升级为科学验证、独立批准或实际外部执行。
 
-A reproducibility capsule preserves software state and evidence relationships. It does not establish physical truth by itself.
+受控来源元数据保持原分类。原 Processing 分发策略仍为唯一分类判据；未获相应批准前不生成公开的全量 wheel、sdist、源码发布包或包含受控元数据的发布附件。根 editable 安装用于这个源码工作空间，独立安装的核心 wheel 不包含完整领域工作空间。
 
-## 10. Quality and testing
+## 许可与迁移
 
-The permanent quality stack includes:
-
-- four-platform Python compatibility;
-- complete regression and line/branch coverage;
-- reverse and seeded-random test ordering;
-- Ruff format/lint and strict Mypy;
-- Bandit and dependency vulnerability audit;
-- mutation testing and bounded performance smoke tests;
-- Schema validation, deterministic SBOM and documentation build;
-- byte-identical source releases and isolated wheel/sdist installation.
-
-The pinned exact-tree baseline records **314 passing tests**, **95.827% line coverage**, **93.438% branch coverage**, and **24/24 critical mutations killed**. The current Schema-delivery delta has a separate focused regression record; the README does not relabel that focused run as a fresh current-tree full CI pass.
-
-## 11. Complete conceptual atlas
-
-The following paths are machine-checked by `scripts/build_readme_facts.py`; every SVG contains `<title>` and `<desc>` accessibility metadata.
-
-<details>
-<summary>Show all 38 repository-local conceptual figures</summary>
-
-![Research OS](docs/assets/ai/research_os_architecture.svg)
-![Multi-agent orchestration](docs/assets/ai/multi_agent_orchestration.svg)
-![Evidence claim graph](docs/assets/ai/evidence_claim_graph.svg)
-![Multiscale science pipeline](docs/assets/ai/multiscale_science_pipeline.svg)
-![Reproducibility quality gates](docs/assets/ai/reproducibility_quality_gates.svg)
-![Computation handoff](docs/assets/ai/computation_handoff_boundary.svg)
-![Project state machine](docs/assets/ai/project_state_machine.svg)
-![Capability landscape](docs/assets/ai/capability_landscape.svg)
-![Requirements coverage](docs/assets/ai/original_requirements_coverage.svg)
-![Capability implementation levels](docs/assets/ai/capability_implementation_levels.svg)
-![Progressive routing](docs/assets/ai/progressive_routing_loading.svg)
-![Project ledgers](docs/assets/ai/project_ledgers_provenance.svg)
-![Evidence citation loop](docs/assets/ai/evidence_citation_integrity_loop.svg)
-![Research production pipeline](docs/assets/ai/research_production_pipeline.svg)
-![Installation compatibility](docs/assets/ai/installation_compatibility_matrix.svg)
-![Supply-chain attestation](docs/assets/ai/supply_chain_release_attestation.svg)
-![First-principles strategy](docs/assets/ai/first_principles_strategy_ladder.svg)
-![Method decision tree](docs/assets/ai/scientific_problem_method_decision_tree.svg)
-![Uncertainty validation](docs/assets/ai/uncertainty_quantification_validation.svg)
-![Causality guard](docs/assets/ai/scientific_integrity_causality_guard.svg)
-![Laboratory data quality](docs/assets/ai/laboratory_data_quality.svg)
-![Writing evidence chain](docs/assets/ai/scientific_writing_evidence_chain.svg)
-![Scientific figure edit guard](docs/assets/ai/scientific_figure_edit_guard.svg)
-![Human approval boundary](docs/assets/ai/human_approval_acceptance_boundary.svg)
-![Multiscale case study](docs/assets/ai/polymer_multiscale_case_study.svg)
-![Scientific Passport matrix](docs/assets/ai/scientific_passport_matrix.svg)
-![Evidence maturity ladder](docs/assets/ai/evidence_maturity_ladder.svg)
-![Decision readiness gate](docs/assets/ai/decision_readiness_gate.svg)
-![Active evidence loop](docs/assets/ai/active_evidence_learning_loop.svg)
-![Quantity dimension contract](docs/assets/ai/quantity_dimension_contract.svg)
-![Applicability guard](docs/assets/ai/applicability_extrapolation_guard.svg)
-![Evidence conflict](docs/assets/ai/evidence_conflict_resolution.svg)
-![Mechanism identifiability](docs/assets/ai/mechanism_identifiability_gate.svg)
-![Mathematical contract registry](docs/assets/ai/mathematical_contract_registry.svg)
-![Decision readiness lattice](docs/assets/ai/decision_readiness_lattice.svg)
-![Uncertainty propagation budget](docs/assets/ai/uncertainty_propagation_budget.svg)
-![Multiscale bridge error budget](docs/assets/ai/multiscale_bridge_error_budget.svg)
-![Mathematical contract schema pipeline](docs/assets/ai/mathematical_contract_schema_pipeline.svg)
-
-</details>
-
-## 12. Repository layout
-
-```text
-.
-├── tsao_researcher/          # deterministic runtime
-├── schemas/                  # contract and evidence Schemas
-├── capabilities/             # validated capability catalog
-├── workflows/                # research workflow contracts
-├── domain-packs/             # domain-specific capability packs
-├── scripts/                  # validation, packaging and evidence tooling
-├── tests/                    # regression and contract tests
-├── examples/                 # canonical machine-readable examples
-├── docs/                     # architecture, evidence, reports and visual atlas
-├── README.md
-├── README.zh-CN.md
-├── VERSION
-└── SHA256SUMS
-```
-
-## 13. Scientific and engineering disclaimer
-
-Passing software checks means that the declared software contracts are internally consistent at the stated evidence scope. It does **not** certify a scientific hypothesis, external solver result, instrument measurement, medical conclusion, legal conclusion or safety decision.
-
-External computations and experiments must be independently executed, recorded and reviewed. TsaoSciResearcher keeps the boundary explicit rather than fabricating a run.
-
-## 14. License
-
-Apache-2.0.
-
-<!-- CURRENT_MAIN_ACCEPTANCE_V2:START -->
-## Current `main`: question–contract–evidence–receipt loop
-
-<p align="center"><img src="docs/current-main/tsao-researcher-current-main-en.svg" width="100%" alt="Current `main`: question–contract–evidence–receipt loop"></p>
-
-> This figure is generated from current code contracts and is a research-control concept, not a paper, experiment or automatic approval result.
-
-### Core mathematical contracts
-
-$$
-G = min(g_quantity, g_applicability, g_evidence, g_identifiability, g_bridge)
-$$
-
-$$
-Σ_y = J Σ_x Jᵀ + Σ_model + Σ_scale
-$$
-
-$$
-H_receipt = SHA256(contract ∥ input ∥ engine ∥ environment ∥ result)
-$$
-
-### Usage strategy
-
-1. Define the decision, observables, conditions and dimensions before selecting models or tools.
-2. Separate sourced, computed and inferred claims; evidence conflicts must not be silently merged.
-3. Scale bridges must report identifiability, propagation assumptions and uncertainty budgets.
-4. External execution enters acceptance only with a complete receipt identity; new commits invalidate old-SHA evidence.
-
-> **Responsibility boundary：** The repository generates research strategies, contracts, evidence controls and external-execution receipts; automatic_approval=false and it does not replace experts, experiments or third-party solver qualification.
-
-Execution prompt: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
-<!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->
+新集成代码采用根目录 Apache-2.0 许可；原模块保留各自 LICENSE、NOTICE、署名及第三方例外，不能统一改写其授权。详见 `NOTICE.md`、`docs/ARCHITECTURE.md`、`docs/MIGRATION.md` 与 `docs/VALIDATION.md`。

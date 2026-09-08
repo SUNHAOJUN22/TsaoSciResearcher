@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenDeepMind Foundation Charter",
+  "type": "object",
+  "required": [
+    "question",
+    "frames",
+    "definitions",
+    "ontology",
+    "epistemic_status",
+    "logic_and_explanation",
+    "boundary",
+    "values_and_duties",
+    "foundation_decision"
+  ],
+  "properties": {
+    "question": {"type": "string", "minLength": 1},
+    "frames": {
+      "type": "object",
+      "required": ["original", "neutral", "rival"],
+      "properties": {
+        "original": {"type": "string"},
+        "neutral": {"type": "string", "minLength": 1},
+        "rival": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "working_definition", "operationalization"],
+        "properties": {
+          "term": {"type": "string", "minLength": 1},
+          "working_definition": {"type": "string", "minLength": 1},
+          "operationalization": {"type": "string"},
+          "exclusions": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "required": ["entities", "processes", "relations", "contested"],
+      "properties": {
+        "entities": {"type": "array", "items": {"type": "string"}},
+        "processes": {"type": "array", "items": {"type": "string"}},
+        "relations": {"type": "array", "items": {"type": "string"}},
+        "contested": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "epistemic_status": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "status", "uncertainty"],
+        "properties": {
+          "claim": {"type": "string", "minLength": 1},
+          "status": {"enum": ["verified", "supported", "plausible", "contested", "unknown"]},
+          "evidence": {"type": "string"},
+          "uncertainty": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "logic_and_explanation": {
+      "type": "object",
+      "required": ["argument_form", "causal_or_explanatory_commitments", "rival_explanation"],
+      "properties": {
+        "argument_form": {"type": "string"},
+        "causal_or_explanatory_commitments": {"type": "array", "items": {"type": "string"}},
+        "rival_explanation": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "boundary": {
+      "type": "object",
+      "required": ["system", "scale", "time", "exclusions"],
+      "properties": {
+        "system": {"type": "string", "minLength": 1},
+        "scale": {"type": "string", "minLength": 1},
+        "time": {"type": "string", "minLength": 1},
+        "population_or_jurisdiction": {"type": "string"},
+        "exclusions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "values_and_duties": {
+      "type": "object",
+      "required": ["objectives", "non_negotiable_constraints", "stakeholders"],
+      "properties": {
+        "objectives": {"type": "array", "items": {"type": "string"}},
+        "non_negotiable_constraints": {"type": "array", "items": {"type": "string"}},
+        "stakeholders": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "foundation_decision": {
+      "type": "object",
+      "required": ["accepted", "conditional", "rejected", "blocking_unknowns"],
+      "properties": {
+        "accepted": {"type": "array", "items": {"type": "string"}},
+        "conditional": {"type": "array", "items": {"type": "string"}},
+        "rejected": {"type": "array", "items": {"type": "string"}},
+        "blocking_unknowns": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

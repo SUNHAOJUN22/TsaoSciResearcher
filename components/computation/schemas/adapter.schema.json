@@ -1,0 +1,226 @@
+{
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciComputation/schemas/adapter.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "live_execution_verified": {
+            "const": true
+          }
+        },
+        "required": [
+          "live_execution_verified"
+        ]
+      },
+      "then": {
+        "properties": {
+          "certification": {
+            "properties": {
+              "evidence_scope": {
+                "const": "versioned-live-solver"
+              },
+              "fixture_hashes": {
+                "minItems": 1
+              },
+              "level": {
+                "const": "A5"
+              },
+              "live_solver_execution": {
+                "const": true
+              },
+              "solver_versions": {
+                "minItems": 1
+              }
+            }
+          },
+          "maturity": {
+            "const": "A5"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "certification": {
+            "properties": {
+              "level": {
+                "const": "A5"
+              }
+            },
+            "required": [
+              "level"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "live_execution_verified": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "certification": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_scope": {
+          "enum": [
+            "planning-only",
+            "repository-fixture-only",
+            "versioned-live-solver"
+          ]
+        },
+        "fixture_hashes": {
+          "items": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "last_verified": {
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        "level": {
+          "enum": [
+            "A0",
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A5"
+          ]
+        },
+        "limitations": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "live_solver_execution": {
+          "type": "boolean"
+        },
+        "solver_versions": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "verified_platforms": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "level",
+        "evidence_scope",
+        "evidence",
+        "fixture_hashes",
+        "last_verified",
+        "limitations",
+        "live_solver_execution",
+        "solver_versions",
+        "verified_platforms"
+      ],
+      "type": "object"
+    },
+    "executables": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "license_kind": {
+      "enum": [
+        "open-source",
+        "commercial",
+        "external"
+      ]
+    },
+    "live_execution_verified": {
+      "type": "boolean"
+    },
+    "maturity": {
+      "enum": [
+        "A0",
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ]
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "parser_policy": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "python_modules": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "runnable_when": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "slug": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "workflow": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "slug",
+    "name",
+    "workflow",
+    "maturity",
+    "executables",
+    "license_kind",
+    "live_execution_verified",
+    "parser_policy",
+    "runnable_when",
+    "certification"
+  ],
+  "title": "TsaoSciComputation adapter metadata",
+  "type": "object"
+}

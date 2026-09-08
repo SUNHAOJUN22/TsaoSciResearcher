@@ -1,0 +1,683 @@
+[
+  {
+    "capability_ids": [
+      "TSC-001",
+      "TSC-002",
+      "TSC-003",
+      "TSC-004"
+    ],
+    "keywords": [
+      "scale",
+      "method",
+      "model",
+      "fidelity"
+    ],
+    "name_cn": "计算尺度与方法选择",
+    "name_en": "Scale and method selection",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "scale-selection"
+  },
+  {
+    "capability_ids": [
+      "TSC-005",
+      "TSC-006",
+      "TSC-007",
+      "TSC-008",
+      "TSC-009",
+      "TSC-010",
+      "TSC-011",
+      "TSC-012",
+      "TSC-013",
+      "TSC-014",
+      "TSC-015",
+      "TSC-016"
+    ],
+    "keywords": [
+      "molecule",
+      "orca",
+      "gaussian",
+      "psi4",
+      "pyscf",
+      "frequency",
+      "orbital"
+    ],
+    "name_cn": "分子量子化学",
+    "name_en": "Molecular quantum chemistry",
+    "recommended_adapters": [
+      "gaussian",
+      "orca",
+      "psi4",
+      "pyscf"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "quantum-chemistry"
+  },
+  {
+    "capability_ids": [
+      "TSC-017",
+      "TSC-018",
+      "TSC-019",
+      "TSC-020",
+      "TSC-021",
+      "TSC-022",
+      "TSC-023",
+      "TSC-024",
+      "TSC-025",
+      "TSC-026",
+      "TSC-027",
+      "TSC-028"
+    ],
+    "keywords": [
+      "periodic",
+      "crystal",
+      "dft",
+      "vasp",
+      "qe",
+      "cp2k",
+      "surface",
+      "defect"
+    ],
+    "name_cn": "周期性DFT与材料计算",
+    "name_en": "Periodic DFT and materials",
+    "recommended_adapters": [
+      "quantum-espresso",
+      "cp2k",
+      "vasp",
+      "abacus",
+      "gpaw",
+      "ase-pymatgen"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "periodic-dft"
+  },
+  {
+    "capability_ids": [
+      "TSC-029",
+      "TSC-030",
+      "TSC-031",
+      "TSC-032",
+      "TSC-033",
+      "TSC-034"
+    ],
+    "keywords": [
+      "neb",
+      "reaction path",
+      "barrier",
+      "transition"
+    ],
+    "name_cn": "反应路径与稀有事件",
+    "name_en": "Reaction paths and rare events",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "reaction-path"
+  },
+  {
+    "capability_ids": [
+      "TSC-035",
+      "TSC-036",
+      "TSC-037",
+      "TSC-038",
+      "TSC-039",
+      "TSC-040",
+      "TSC-041",
+      "TSC-042",
+      "TSC-043",
+      "TSC-044"
+    ],
+    "keywords": [
+      "md",
+      "gromacs",
+      "lammps",
+      "openmm",
+      "trajectory",
+      "force field"
+    ],
+    "name_cn": "分子动力学",
+    "name_en": "Molecular dynamics",
+    "recommended_adapters": [
+      "gromacs",
+      "openmm",
+      "lammps"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "molecular-dynamics"
+  },
+  {
+    "capability_ids": [
+      "TSC-045",
+      "TSC-046",
+      "TSC-047",
+      "TSC-048",
+      "TSC-049",
+      "TSC-050"
+    ],
+    "keywords": [
+      "plumed",
+      "free energy",
+      "metadynamics",
+      "umbrella"
+    ],
+    "name_cn": "增强采样与自由能",
+    "name_en": "Enhanced sampling and free energy",
+    "recommended_adapters": [
+      "plumed"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "enhanced-sampling"
+  },
+  {
+    "capability_ids": [
+      "TSC-051",
+      "TSC-052",
+      "TSC-053",
+      "TSC-054",
+      "TSC-055",
+      "TSC-056"
+    ],
+    "keywords": [
+      "deepmd",
+      "mace",
+      "ml potential",
+      "training"
+    ],
+    "name_cn": "机器学习原子间势",
+    "name_en": "Machine-learning interatomic potentials",
+    "recommended_adapters": [
+      "deepmd",
+      "mace"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "machine-learning-potential"
+  },
+  {
+    "capability_ids": [
+      "TSC-057",
+      "TSC-058",
+      "TSC-059",
+      "TSC-060",
+      "TSC-061",
+      "TSC-062",
+      "TSC-063",
+      "TSC-064"
+    ],
+    "keywords": [
+      "catalysis",
+      "microkinetic",
+      "turnover",
+      "adsorption"
+    ],
+    "name_cn": "催化与微观动力学",
+    "name_en": "Catalysis and microkinetics",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "catalysis"
+  },
+  {
+    "capability_ids": [
+      "TSC-065",
+      "TSC-066",
+      "TSC-067",
+      "TSC-068",
+      "TSC-069",
+      "TSC-070",
+      "TSC-071",
+      "TSC-072"
+    ],
+    "keywords": [
+      "polymerization",
+      "pbe",
+      "molecular weight",
+      "kinetics"
+    ],
+    "name_cn": "聚合动力学与群体分布",
+    "name_en": "Polymerization kinetics and populations",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "polymerization"
+  },
+  {
+    "capability_ids": [
+      "TSC-073",
+      "TSC-074",
+      "TSC-075",
+      "TSC-076",
+      "TSC-077",
+      "TSC-078",
+      "TSC-079",
+      "TSC-080",
+      "TSC-081",
+      "TSC-082"
+    ],
+    "keywords": [
+      "polymer",
+      "composite",
+      "carbon black",
+      "percolation",
+      "morphology"
+    ],
+    "name_cn": "高分子与复合材料",
+    "name_en": "Polymers, fillers, and composites",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "polymer-composite"
+  },
+  {
+    "capability_ids": [
+      "TSC-083",
+      "TSC-084",
+      "TSC-085",
+      "TSC-086",
+      "TSC-087",
+      "TSC-088",
+      "TSC-089",
+      "TSC-090"
+    ],
+    "keywords": [
+      "fem",
+      "finite element",
+      "solid",
+      "thermal",
+      "diffusion"
+    ],
+    "name_cn": "有限元分析",
+    "name_en": "Finite-element analysis",
+    "recommended_adapters": [
+      "dolfinx",
+      "elmer"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "finite-element"
+  },
+  {
+    "capability_ids": [
+      "TSC-091",
+      "TSC-092",
+      "TSC-093",
+      "TSC-094",
+      "TSC-095",
+      "TSC-096",
+      "TSC-097",
+      "TSC-098"
+    ],
+    "keywords": [
+      "multiphysics",
+      "coupled",
+      "thermo",
+      "electro",
+      "mechanical"
+    ],
+    "name_cn": "多物理场耦合",
+    "name_en": "Coupled multiphysics",
+    "recommended_adapters": [
+      "moose",
+      "kratos"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "multiphysics"
+  },
+  {
+    "capability_ids": [
+      "TSC-099",
+      "TSC-100",
+      "TSC-101",
+      "TSC-102",
+      "TSC-103",
+      "TSC-104",
+      "TSC-105",
+      "TSC-106",
+      "TSC-107",
+      "TSC-108"
+    ],
+    "keywords": [
+      "cfd",
+      "openfoam",
+      "su2",
+      "flow",
+      "turbulence",
+      "multiphase"
+    ],
+    "name_cn": "计算流体力学",
+    "name_en": "Computational fluid dynamics",
+    "recommended_adapters": [
+      "openfoam",
+      "su2"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "cfd"
+  },
+  {
+    "capability_ids": [
+      "TSC-109",
+      "TSC-110",
+      "TSC-111",
+      "TSC-112",
+      "TSC-113",
+      "TSC-114"
+    ],
+    "keywords": [
+      "extrusion",
+      "non-newtonian",
+      "melt",
+      "die",
+      "screw"
+    ],
+    "name_cn": "高分子加工与挤出",
+    "name_en": "Polymer processing and extrusion",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "extrusion"
+  },
+  {
+    "capability_ids": [
+      "TSC-115",
+      "TSC-116",
+      "TSC-117",
+      "TSC-118",
+      "TSC-119",
+      "TSC-120",
+      "TSC-121",
+      "TSC-122",
+      "TSC-123",
+      "TSC-124"
+    ],
+    "keywords": [
+      "process",
+      "flowsheet",
+      "aspen",
+      "dwsim",
+      "idaes"
+    ],
+    "name_cn": "流程模拟与流程系统",
+    "name_en": "Process simulation and flowsheets",
+    "recommended_adapters": [
+      "dwsim",
+      "idaes-pyomo",
+      "aspen"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "process-simulation"
+  },
+  {
+    "capability_ids": [
+      "TSC-125",
+      "TSC-126",
+      "TSC-127",
+      "TSC-128",
+      "TSC-129",
+      "TSC-130",
+      "TSC-131",
+      "TSC-132"
+    ],
+    "keywords": [
+      "reactor",
+      "cstr",
+      "pfr",
+      "batch",
+      "rtd"
+    ],
+    "name_cn": "反应器工程",
+    "name_en": "Reactor engineering",
+    "recommended_adapters": [
+      "cantera-rmg"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "reactor-engineering"
+  },
+  {
+    "capability_ids": [
+      "TSC-133",
+      "TSC-134",
+      "TSC-135",
+      "TSC-136",
+      "TSC-137",
+      "TSC-138",
+      "TSC-139",
+      "TSC-140"
+    ],
+    "keywords": [
+      "dynamic",
+      "control",
+      "pid",
+      "transient",
+      "modelica"
+    ],
+    "name_cn": "动态模拟与控制",
+    "name_en": "Dynamic simulation and control",
+    "recommended_adapters": [
+      "openmodelica"
+    ],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "dynamic-control"
+  },
+  {
+    "capability_ids": [
+      "TSC-141",
+      "TSC-142",
+      "TSC-143",
+      "TSC-144",
+      "TSC-145",
+      "TSC-146"
+    ],
+    "keywords": [
+      "digital twin",
+      "soft sensor",
+      "estimation",
+      "online"
+    ],
+    "name_cn": "数字孪生与估计",
+    "name_en": "Digital twins and estimation",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "digital-twin"
+  },
+  {
+    "capability_ids": [
+      "TSC-147",
+      "TSC-148",
+      "TSC-149",
+      "TSC-150",
+      "TSC-151",
+      "TSC-152",
+      "TSC-153",
+      "TSC-154",
+      "TSC-155",
+      "TSC-156"
+    ],
+    "keywords": [
+      "multiscale",
+      "handoff",
+      "coarse grain",
+      "parameter transfer"
+    ],
+    "name_cn": "跨尺度耦合与数据交接",
+    "name_en": "Multiscale coupling and handoffs",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "multiscale-coupling"
+  },
+  {
+    "capability_ids": [
+      "TSC-157",
+      "TSC-158",
+      "TSC-159",
+      "TSC-160",
+      "TSC-161",
+      "TSC-162",
+      "TSC-163",
+      "TSC-164"
+    ],
+    "keywords": [
+      "hpc",
+      "slurm",
+      "pbs",
+      "scheduler",
+      "checkpoint"
+    ],
+    "name_cn": "HPC与可复现执行",
+    "name_en": "HPC and reproducible execution",
+    "recommended_adapters": [],
+    "required_gates": [
+      "contract",
+      "preflight",
+      "completion",
+      "convergence",
+      "physical_validation",
+      "uncertainty",
+      "acceptance"
+    ],
+    "slug": "hpc-execution"
+  }
+]

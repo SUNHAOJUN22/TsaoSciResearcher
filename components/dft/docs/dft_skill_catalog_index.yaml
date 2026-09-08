@@ -1,0 +1,287 @@
+version: 0.4.0-alpha.2
+source_workbook: AI_for_Science_最全Skill目录(3).xlsx
+skills:
+  tsao-dft-suite:
+    catalog_ids:
+    - S0001
+    - S0002
+    - S0006
+    - S0013
+    - S0014
+    - S0015
+    - S0016
+    - S0017
+    - S0028
+    - S0029
+    - S0030
+    - S0031
+    - S0320
+    - S0321
+    - S0322
+    slugs:
+    - research-intent-router
+    - research-question-formulator
+    - feasibility-assessor
+    - research-route-planner
+    - human-approval-gate
+    - scientific-validation-gate
+    - long-task-state-manager
+    - research-artifact-manager
+    - audit-log-manager
+    - method-extractor
+    - parameter-extractor
+    - claim-evidence-linker
+    - reference-integrity-checker
+    - evidence-level-labeler
+    - model-governance
+  tsao-dft-researcher:
+    catalog_ids:
+    - S0001
+    - S0002
+    - S0006
+    - S0008
+    - S0013
+    - S0014
+    - S0015
+    - S0016
+    - S0017
+    - S0028
+    - S0029
+    - S0030
+    - S0031
+    - S0119
+    - S0120
+    - S0121
+    - S0122
+    - S0123
+    - S0124
+    - S0125
+    - S0126
+    - S0127
+    - S0128
+    - S0129
+    - S0130
+    - S0320
+    - S0321
+    - S0322
+    slugs:
+    - research-intent-router
+    - research-question-formulator
+    - feasibility-assessor
+    - research-route-planner
+    - human-approval-gate
+    - scientific-validation-gate
+    - long-task-state-manager
+    - research-artifact-manager
+    - audit-log-manager
+    - method-extractor
+    - parameter-extractor
+    - claim-evidence-linker
+    - reference-integrity-checker
+    - charge-multiplicity-assignment
+    - quantum-method-selector
+    - dft-input-generator
+    - geometry-optimization
+    - frequency-analysis
+    - transition-state-search
+    - irc-analysis
+    - reaction-pathway-explorer
+    - thermochemistry-calculator
+    - electronic-structure-analysis
+    - weak-interaction-analysis
+    - spectroscopy-predictor
+    - evidence-level-labeler
+    - hallucination-guard
+    - model-governance
+  tsao-structure-prep:
+    catalog_ids:
+    - S0115
+    - S0116
+    - S0117
+    - S0118
+    - S0119
+    - S0131
+    - S0132
+    - S0133
+    - S0134
+    - S0171
+    - S0172
+    slugs:
+    - molecular-structure-builder
+    - structure-cleaner
+    - conformer-generator
+    - protonation-state-predictor
+    - charge-multiplicity-assignment
+    - crystal-structure-builder
+    - symmetry-analyzer
+    - surface-slab-builder
+    - defect-generator
+    - catalyst-structure-generator
+    - adsorption-site-sampler
+  tsao-periodic-dft-materials:
+    catalog_ids:
+    - S0131
+    - S0132
+    - S0133
+    - S0134
+    - S0135
+    - S0136
+    - S0137
+    - S0138
+    - S0139
+    - S0140
+    - S0141
+    - S0142
+    - S0143
+    - S0144
+    slugs:
+    - crystal-structure-builder
+    - symmetry-analyzer
+    - surface-slab-builder
+    - defect-generator
+    - kpoint-convergence
+    - cutoff-convergence
+    - band-structure-analysis
+    - dos-pdos-analysis
+    - phonon-analysis
+    - elastic-property-calculator
+    - defect-formation-energy
+    - adsorption-energy-calculator
+    - neb-barrier
+    - high-throughput-dft
+  tsao-dft-ml-active-learning:
+    catalog_ids:
+    - S0080
+    - S0081
+    - S0082
+    - S0083
+    - S0084
+    - S0085
+    - S0086
+    - S0087
+    - S0088
+    - S0089
+    - S0090
+    - S0091
+    - S0092
+    - S0093
+    - S0094
+    - S0095
+    - S0096
+    slugs:
+    - multi-fidelity-learning
+    - physics-informed-ml
+    - graph-neural-network
+    - surrogate-model-builder
+    - model-calibration
+    - applicability-domain
+    - data-leakage-detector
+    - cross-validation-designer
+    - explainable-ai-science
+    - ml-uncertainty-estimator
+    - active-learning-loop
+    - bayesian-optimization
+    - multi-objective-optimizer
+    - generative-molecule-designer
+    - generative-material-designer
+    - inverse-design-engine
+    - autoresearch-loop
+  tsao-dft-hpc-provenance:
+    catalog_ids:
+    - S0279
+    - S0280
+    - S0281
+    - S0282
+    - S0283
+    - S0284
+    - S0285
+    - S0286
+    - S0287
+    - S0288
+    - S0289
+    - S0290
+    - S0291
+    - S0292
+    - S0293
+    - S0294
+    - S0295
+    - S0296
+    - S0297
+    - S0298
+    slugs:
+    - hpc-environment-inspector
+    - dependency-validator
+    - job-script-generator
+    - batch-calculation-generator
+    - job-submitter
+    - job-status-monitor
+    - failure-log-classifier
+    - auto-restart
+    - resource-optimizer
+    - checkpoint-manager
+    - result-collector
+    - calculation-provenance
+    - workflow-dag
+    - container-builder
+    - reproducible-env-packager
+    - cloud-hpc-orchestrator
+    - hpc-cost-estimator
+    - reproducibility-checker
+    - scientific-ci
+    - supply-chain-security
+  tsao-dft-kinetics-multiscale:
+    catalog_ids:
+    - S0168
+    - S0173
+    - S0174
+    - S0175
+    - S0176
+    - S0177
+    - S0178
+    - S0185
+    - S0186
+    - S0190
+    - S0191
+    slugs:
+    - multiscale-mapper
+    - reaction-network-generator
+    - rate-determining-step
+    - catalyst-descriptor-extractor
+    - volcano-plot-builder
+    - microkinetic-model
+    - kinetic-monte-carlo
+    - polymerization-kinetics
+    - population-balance
+    - polymer-reactor-coupler
+    - polymerization-parameter-fit
+  tsao-dft-catalysis-profile:
+    catalog_ids:
+    - S0169
+    - S0170
+    - S0171
+    - S0172
+    - S0173
+    - S0174
+    - S0180
+    - S0181
+    - S0182
+    - S0183
+    - S0184
+    slugs:
+    - catalyst-literature-miner
+    - active-site-identifier
+    - catalyst-structure-generator
+    - adsorption-site-sampler
+    - reaction-network-generator
+    - rate-determining-step
+    - polymerization-mechanism
+    - polymerization-dft
+    - comonomer-incorporation
+    - stereoselectivity
+    - chain-transfer-analysis
+source_workbook_sha256: 7c460d12faf16b63df33df5d00dda9576124369eb76adf638c7695a0d90a794e
+source_ranges:
+- 02_Skill总目录!A1:N323
+- 03_科学计算引擎!A1:I33
+- 04_推荐部署组合!A1:F13
+- 05_优先实施清单!A1:F13

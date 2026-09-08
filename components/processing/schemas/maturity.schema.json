@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://tsao.dev/schemas/maturity.schema.json",
+  "title":"TSAO maturity record",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["current_level","status","evidence_ids","approver","levels"],
+  "properties":{
+    "current_level":{"enum":["M0","M1","M2","M3","M4","M5","M6","M7","M8","M9"]},
+    "status":{"enum":["NOT_EVALUATED","CONDITIONAL","APPROVED","REJECTED"]},
+    "evidence_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "approver":{"type":["string","null"]},
+    "levels":{"type":"array","minItems":10,"maxItems":10,"items":{"type":"object","required":["level","definition","status"],"properties":{"level":{"type":"string","pattern":"^M[0-9]$"},"definition":{"type":"string","minLength":1},"status":{"enum":["NOT_EVALUATED","CONDITIONAL","APPROVED","REJECTED"]}},"additionalProperties":false}}
+  }
+}

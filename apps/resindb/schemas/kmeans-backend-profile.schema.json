@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://resindb.local/schemas/kmeans-backend-profile.schema.json",
+  "title": "ResinDB K-Means backend benchmark profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyVersion",
+    "kernel",
+    "kernelVersion",
+    "protocolVersion",
+    "generatedAt",
+    "expiresAt",
+    "environmentFingerprint",
+    "source",
+    "eligibleForRuntimeAutoSelection",
+    "status",
+    "crossoverWorkloadOperations",
+    "minimumImprovementRatio",
+    "maximumRelativeIqr",
+    "requiredConsecutiveWins",
+    "benchmarkReportDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "kmeans-backend-profile-1.0.0" },
+    "policyVersion": { "const": "kmeans-auto-backend-policy-1.0.0" },
+    "kernel": { "const": "kmeans-assignment-update" },
+    "kernelVersion": { "const": "1.0.0" },
+    "protocolVersion": { "const": "row-major-float64-1.0.0" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "environmentFingerprint": { "type": "string", "minLength": 1 },
+    "source": { "enum": ["device-local-benchmark", "shared-ci-benchmark"] },
+    "eligibleForRuntimeAutoSelection": { "type": "boolean" },
+    "status": { "enum": ["wasm-beneficial", "typescript-preferred", "insufficient-evidence"] },
+    "crossoverWorkloadOperations": {
+      "anyOf": [
+        { "type": "integer", "minimum": 1 },
+        { "type": "null" }
+      ]
+    },
+    "minimumImprovementRatio": { "type": "number", "exclusiveMinimum": 0 },
+    "maximumRelativeIqr": { "type": "number", "minimum": 0 },
+    "requiredConsecutiveWins": { "type": "integer", "minimum": 1 },
+    "benchmarkReportDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

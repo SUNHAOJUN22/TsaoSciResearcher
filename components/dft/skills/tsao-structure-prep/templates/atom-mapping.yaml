@@ -1,0 +1,6 @@
+schema_version: "1.0"
+reference_structure_id: ref
+candidate_structure_id: candidate
+mapping_1_based: []
+reason: unknown
+review_status: draft

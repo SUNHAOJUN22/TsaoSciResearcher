@@ -1,0 +1,77 @@
+schema_version: "1.1"
+benchmark_plan_id: PERF-VASP-H100-001
+candidate_id: cpu-reference
+role: scientific-reference
+repeat_index: 1
+engine:
+  name: vasp
+  version: "6.x-site-record-required"
+  executable: vasp_std
+  build_fingerprint_id: BUILD-REPLACE-WITH-REAL-FINGERPRINT
+software:
+  compiler: REPLACE_WITH_REAL_COMPILER
+  mpi: REPLACE_WITH_REAL_MPI
+  openmp_runtime: REPLACE_WITH_REAL_OPENMP_RUNTIME
+  accelerator_runtime: none
+hardware:
+  site_id: SITE-REPLACE
+  hardware_fingerprint_id: HW-REPLACE
+  cpu_model: REPLACE_WITH_REAL_CPU
+  cpu_arch: x86_64
+  nodes: 1
+  ranks_per_node: 4
+  threads_per_rank: 8
+  gpu_vendor: none
+  gpu_model: null
+  gpu_uuids: []
+  gpu_memory_gb: null
+  driver_version: null
+  gpu_binding: none
+execution:
+  scheduler: slurm
+  job_id: JOB-REPLACE
+  run_id: RUN-REPLACE
+  site_id: SITE-REPLACE
+  filesystem: REPLACE_WITH_REAL_FILESYSTEM
+  scratch_type: REPLACE_WITH_REAL_SCRATCH
+  timestamp: "2026-01-01T00:00:00Z"
+  exit_status: 0
+scientific:
+  input_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+  method_fingerprint_id: MF-REPLACE
+  model_identity:
+    functional: PBE
+    basis_or_pseudopotential: POTCAR-TITEL-HASH-REPLACE
+    corrections: none
+  convergence_thresholds:
+    ediff_ev: 1.0e-6
+    force_ev_per_angstrom: 0.01
+  observable_set: [energy, forces]
+  parser_accepted: false
+  parser_status: REJECTED
+  results:
+    energy_ev: null
+    forces_ev_per_angstrom: null
+    stress_gpa: null
+    properties: {}
+performance:
+  wall_time_s: 1.0
+  cpu_time_s: 0.0
+  scf_iterations: 0
+  peak_host_memory_mb: 0.0
+  peak_device_memory_mb: null
+  cpu_utilization_percent: null
+  gpu_utilization_percent: null
+  io_bytes: 0
+  energy_joules: null
+artifacts:
+  - path: REPLACE_WITH_REAL_OUTPUT
+    sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    verification_status: NOT_CHECKED
+evidence_source:
+  kind: synthetic-template
+  source_id: repository-template
+  missing_fields:
+    - real engine execution
+    - real hardware identity
+    - real output artifact

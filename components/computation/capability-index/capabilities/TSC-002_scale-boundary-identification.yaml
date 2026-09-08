@@ -1,0 +1,52 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Scale and method selection",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Scale-boundary identification within the Scale and method selection workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "ambiguous observable",
+    "scale mismatch",
+    "unsupported fidelity"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-002",
+  "implementation_level": "native",
+  "inputs": [
+    "scientific_question",
+    "system_definition",
+    "target_observables",
+    "available_evidence",
+    "resource_constraints"
+  ],
+  "maturity": "A5",
+  "name_cn": "尺度边界识别",
+  "name_en": "Scale-boundary identification",
+  "outputs": [
+    "scale_map",
+    "method_shortlist",
+    "fidelity_plan",
+    "validation_plan"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "problem statement",
+    "observable definition",
+    "resource envelope"
+  ],
+  "risk_level": "medium",
+  "slug": "scale-boundary-identification",
+  "triggers": [
+    "boundary",
+    "fidelity",
+    "method",
+    "model",
+    "scale"
+  ],
+  "validators": [
+    "contract-schema",
+    "scope-boundary",
+    "method-fitness",
+    "evidence-gap"
+  ],
+  "workflow": "scale-selection"
+}

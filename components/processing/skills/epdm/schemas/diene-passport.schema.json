@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/diene-passport.schema.json",
+  "title": "EPDM V2 diene passport",
+  "type": "object",
+  "required": [
+    "diene_id",
+    "identity",
+    "canonical_name",
+    "cas_number",
+    "registry_version",
+    "molecular_weight",
+    "repeat_segment_id",
+    "second_insertion_supported",
+    "terminal_model_supported",
+    "applicability_domain_id",
+    "evidence_ids"
+  ],
+  "properties": {
+    "diene_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "identity": {
+      "enum": [
+        "ENB",
+        "DCPD",
+        "VNB",
+        "OTHER"
+      ]
+    },
+    "canonical_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cas_number": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "molecular_weight": {
+      "$ref": "quantity-value.schema.json"
+    },
+    "repeat_segment_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "retained_double_bond_segment_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "second_insertion_supported": {
+      "type": "boolean"
+    },
+    "terminal_model_supported": {
+      "type": "boolean"
+    },
+    "thermo_parameter_source_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kinetic_parameter_source_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "applicability_domain_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

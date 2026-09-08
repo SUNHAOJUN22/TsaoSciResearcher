@@ -1,0 +1,119 @@
+{
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciComputation/schemas/resource-broker-gpu-binding-evidence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "claim": {
+            "additionalProperties": false,
+            "properties": {
+              "cpu_cores": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "gpu_devices": {
+                "items": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "license_tokens": {
+                "additionalProperties": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "cpu_cores",
+              "gpu_devices",
+              "license_tokens"
+            ],
+            "type": "object"
+          },
+          "detail": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "environment": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "expected": {
+            "enum": [
+              "accepted",
+              "rejected"
+            ]
+          },
+          "observed": {
+            "enum": [
+              "accepted",
+              "rejected"
+            ]
+          },
+          "passed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "case_id",
+          "environment",
+          "claim",
+          "expected",
+          "observed",
+          "passed",
+          "detail"
+        ],
+        "type": "object"
+      },
+      "minItems": 6,
+      "type": "array"
+    },
+    "claim_boundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "evidence_id": {
+      "const": "resource-broker-gpu-binding-v6-hardening"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "source_sha256": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minProperties": 3,
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "status",
+    "source_sha256",
+    "cases",
+    "claim_boundary"
+  ],
+  "title": "Resource broker GPU binding evidence",
+  "type": "object"
+}

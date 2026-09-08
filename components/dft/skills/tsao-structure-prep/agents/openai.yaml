@@ -1,0 +1,6 @@
+interface:
+  display_name: Tsao Structure Prep
+  short_description: 'Prepare and audit molecular and periodic structures before DFT:
+    identity, bond/valence cleanup, tautomers and protonatio'
+  default_prompt: Use $tsao-structure-prep to plan and validate this task before any
+    expensive execution.

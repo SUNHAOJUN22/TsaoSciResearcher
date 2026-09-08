@@ -1,0 +1,31 @@
+{
+  "format": "TSAO-RELEASE-IDENTITY-3",
+  "version": "0.1.0-alpha.15",
+  "source_core": {
+    "manifest": "reports/SOURCE_CORE_MANIFEST.tsv",
+    "overlay": "reports/SOURCE_CORE_OVERLAY.tsv",
+    "qualification": "SOFTWARE_VERIFICATION",
+    "status": "reports/ALPHA12_ZERO_FALSE_PASS_QUALIFICATION.json"
+  },
+  "artifact_software_qualification": "PASS",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "hse_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED",
+  "complete_distribution": {
+    "reference": "reports/COMPLETE_DISTRIBUTION_REFERENCE.json",
+    "qualification": "NOT_EVALUATED"
+  },
+  "qualification_boundary": "SOFTWARE_ADAPTIVE_INTEGRATION_ONLY",
+  "alpha12_qualification_run_id": 30714590133,
+  "wheel_filename": "tsao_processing_skill-0.1.0a15-py3-none-any.whl",
+  "wheel_sha256": "BOUND_TO_POST_COMMIT_CI_ARTIFACT",
+  "alpha13_qualification_run_id": 30715515305,
+  "alpha14_qualification_run_id": 30736637313,
+  "alpha15_qualification_run_id": 30755394393,
+  "qualification_candidate_wheel_sha256": "155d9b1bb83b1507b6d98753a8a9fb6bf67e9d479038fc227ccdd7106907fe1f",
+  "qualification_candidate_wheel_sha256_scope": "QUALIFICATION_RUN_30755394393_EXACT_CANDIDATE_TREE_560ed88624660af7cc6f2bb7ea35ce8e9a49dbd7",
+  "final_commit": "SELF",
+  "final_commit_binding": "CONTAINING_GIT_COMMIT_RESOLVED_BY_POST_COMMIT_REVERSE_AUDIT"
+}

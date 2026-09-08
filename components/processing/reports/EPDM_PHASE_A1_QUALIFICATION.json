@@ -1,0 +1,74 @@
+{
+  "schema": "TSAO-EPDM-PHASE-A1-QUALIFICATION-2",
+  "phase": "EPDM_PHASE_A1_SCIENTIFIC_CONTRACTS_AND_SCHEMAS",
+  "status": "PASS",
+  "baseline_commit": "f9984c6416fadc62680c35a4134aed03dbb57257",
+  "qualification_trigger_commit": "9fd26a49800a7d06a710a11774a4bee4b1eb6aa6",
+  "qualified_code_tree_sha": "8bb39b32a0d4b9409108eaac8d8471cdae1206f8",
+  "qualification_run_id": 30520639664,
+  "qualification_run_url": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/actions/runs/30520639664",
+  "evidence_recovery_finalizer_run_id": 30521338676,
+  "evidence_recovery_finalizer_run_url": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/actions/runs/30521338676",
+  "cross_platform_matrix": [
+    {
+      "name": "qualification (macos/3.14)",
+      "job_id": 90799982627,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.11)",
+      "job_id": 90799982638,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.12)",
+      "job_id": 90799982722,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.13)",
+      "job_id": 90799982668,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.14)",
+      "job_id": 90799982681,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (windows/3.14)",
+      "job_id": 90799982679,
+      "conclusion": "success"
+    }
+  ],
+  "test_count": 260,
+  "coverage_gate": "PASS_FAIL_UNDER_75",
+  "ruff": "PASS_ALL_MATRIX_JOBS",
+  "wheel_build": "PASS_ALL_MATRIX_JOBS",
+  "wheel_content": "PASS_ALL_MATRIX_JOBS",
+  "wheel_content_verifier_index_optimization": "PASS_SEMANTICS_PRESERVED",
+  "isolated_runtime": "PASS_ALL_MATRIX_JOBS",
+  "skillpack_delivery": "PASS_ALL_MATRIX_JOBS",
+  "performance_regression_gate": "PASS_UBUNTU_PYTHON_3_14_UNCHANGED_THRESHOLD",
+  "performance_baseline": "ALPHA10_EXTENDED_UNCHANGED",
+  "v1_public_api_lock": "PASS_ZERO_REGRESSION",
+  "v1_golden_numeric_lock": "PASS_ZERO_REGRESSION",
+  "frozen_enumerations_and_contracts": "SOFTWARE_VERIFIED_PHASE_A1",
+  "json_schemas": "DRAFT_2020_12_STRICT_SOFTWARE_VERIFIED",
+  "semantic_cross_reference_validator": "PASS",
+  "si_unit_and_evidence_gates": "PASS",
+  "layered_qualification_derivation": "PASS",
+  "v1_to_v2_migration": "METADATA_ONLY_NO_EVIDENCE_FABRICATION",
+  "requirements_count": 80,
+  "v2_numerical_execution": "NOT_IMPLEMENTED_PHASE_A1",
+  "reaction_network_rhs": "NOT_IMPLEMENTED",
+  "thermodynamics_calibration_gpc_moments_reactors_dynamics": "NOT_IMPLEMENTED",
+  "temporary_workflows": "REMOVED_IN_FINAL_COMMIT",
+  "qualification_boundary": "SOFTWARE_CONTRACTS_ONLY",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "hse_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED",
+  "next_phase": "EPDM_PHASE_A2_REACTION_NETWORK_AND_STATE_GENERATOR"
+}

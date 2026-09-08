@@ -1,0 +1,12 @@
+{
+  "schema_version": "tsao.dft.parser-adapter.v4",
+  "authoritative_parser": "engine_parser_contract.py",
+  "legacy_entry_points": [
+    "skills/tsao-dft-researcher/scripts/parse_gaussian.py",
+    "skills/tsao-periodic-dft-materials/scripts/parse_vasp.py",
+    "skills/tsao-periodic-dft-materials/scripts/parse_qe.py",
+    "skills/tsao-periodic-dft-materials/scripts/parse_cp2k.py"
+  ],
+  "required_precedence": "fatal_and_nonconvergence_over_success",
+  "external_execution_status": "EXTERNAL_DFT_EXECUTION_NOT_VERIFIED"
+}

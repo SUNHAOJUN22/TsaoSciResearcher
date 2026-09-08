@@ -1,0 +1,43 @@
+name: Capability or adapter request
+description: Propose a bounded capability, workflow, or solver integration without overstating live support.
+title: "[Capability] "
+body:
+  - type: input
+    id: objective
+    attributes:
+      label: Scientific objective
+    validations:
+      required: true
+  - type: textarea
+    id: observable
+    attributes:
+      label: Observable, units, reference state, and acceptance evidence
+    validations:
+      required: true
+  - type: textarea
+    id: method
+    attributes:
+      label: Proposed method, scale, solver, and lawful environment
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Required fixtures, convergence studies, physical checks, and uncertainty treatment
+    validations:
+      required: true
+  - type: textarea
+    id: unsupported
+    attributes:
+      label: Explicit unsupported behavior and failure boundaries
+    validations:
+      required: true
+  - type: checkboxes
+    id: claims
+    attributes:
+      label: Claim discipline
+      options:
+        - label: I will not treat adapter presence as proof of solver availability or scientific validity.
+          required: true
+        - label: I will not provide proprietary binaries, licenses, manuals, or datasets.
+          required: true

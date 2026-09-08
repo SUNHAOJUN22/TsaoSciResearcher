@@ -1,0 +1,71 @@
+{
+  "schema": "TSAO-EPDM-PHASE-A2-QUALIFICATION-2",
+  "phase": "EPDM_PHASE_A2_REACTION_NETWORK_AND_STATE_GENERATOR",
+  "status": "PASS",
+  "baseline_commit": "70c8aa46e16ba5c73e0305fc6426a0ef27937af3",
+  "payload_sha256": "d3f03c572ac2666aea6f31c90530e86faf66adbac07a55c942881b25b95d9093",
+  "final_tree_normalization": "TRAILING_BLANK_LINE_REMOVED_FROM_TEST_WHEEL_CONTRACT",
+  "qualified_code_tree_sha": "1c599f1576ac270aead6594edcf5449eeb2dda5a",
+  "qualification_run_id": 30563804221,
+  "qualification_run_url": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/actions/runs/30563804221",
+  "cross_platform_matrix": [
+    {
+      "name": "qualification (macos/3.14)",
+      "job_id": 90943175543,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.11)",
+      "job_id": 90943175561,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.12)",
+      "job_id": 90943175547,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.13)",
+      "job_id": 90943175499,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (ubuntu/3.14)",
+      "job_id": 90943175485,
+      "conclusion": "success"
+    },
+    {
+      "name": "qualification (windows/3.14)",
+      "job_id": 90943175461,
+      "conclusion": "success"
+    }
+  ],
+  "test_count": 278,
+  "coverage_gate": "PASS_FAIL_UNDER_75",
+  "ruff": "PASS_ALL_MATRIX_JOBS",
+  "wheel_build": "PASS_ALL_MATRIX_JOBS",
+  "wheel_content": "PASS_A2_EXPLICIT_MEMBERS",
+  "isolated_runtime": "PASS_A2_STRUCTURAL_SMOKE_ALL_MATRIX_JOBS",
+  "skillpack_delivery": "PASS_ALL_MATRIX_JOBS",
+  "performance_regression_gate": "PASS_UBUNTU_PYTHON_3_14_UNCHANGED_THRESHOLD",
+  "v1_public_api_lock": "PASS_ZERO_REGRESSION",
+  "v1_golden_numeric_lock": "PASS_ZERO_REGRESSION",
+  "phase_a1_contracts_and_schemas": "PASS_ZERO_REGRESSION",
+  "deterministic_generated_state_layout": "SOFTWARE_VERIFIED_PHASE_A2",
+  "terminal_incoming_propagation_topology": "SOFTWARE_VERIFIED_PHASE_A2",
+  "structural_stoichiometric_matrix": "SOFTWARE_VERIFIED_PHASE_A2",
+  "active_site_inventory_conservation": "PASS",
+  "tdb_structural_pathways": "OPTIONAL_LEVEL3_SOFTWARE_VERIFIED",
+  "requirements_count": 80,
+  "numerical_execution": "NOT_IMPLEMENTED_PHASE_A2",
+  "rate_evaluation_rhs_integration": "NOT_IMPLEMENTED",
+  "thermodynamics_calibration_gpc_moments_reactors_dynamics": "NOT_IMPLEMENTED",
+  "temporary_workflows": "REMOVED_IN_FINAL_COMMIT",
+  "qualification_boundary": "SOFTWARE_STRUCTURE_ONLY",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "hse_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED",
+  "next_phase": "EPDM_PHASE_A3_RATE_LAWS_PARAMETER_BINDING_AND_STRUCTURAL_RHS"
+}

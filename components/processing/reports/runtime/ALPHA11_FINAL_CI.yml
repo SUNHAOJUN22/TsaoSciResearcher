@@ -1,0 +1,141 @@
+name: TSAO alpha11 qualification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tsao-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  qualification:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        os: [ubuntu-latest]
+        include:
+          - os: windows-latest
+            python-version: "3.14"
+          - os: macos-latest
+            python-version: "3.14"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
+      - name: Install
+        run: python -m pip install --quiet -e .[dev]
+      - name: Dependency integrity
+        run: python -m pip check
+      - name: Verify permanent repository hygiene
+        run: >-
+          python -c "from pathlib import Path; w=sorted(p.name for p in Path('.github/workflows').glob('*.yml')); assert w==['ci.yml'],w; f=[p.as_posix() for p in Path('.').rglob('*') if p.is_file() and ('-once.yml' in p.name or 'CANDIDATE' in p.name or 'DIAGNOSTIC' in p.name)]; assert not f,f"
+      - name: Clean editable-install metadata
+        run: python -c "import pathlib, shutil; [shutil.rmtree(path) for path in pathlib.Path('.').glob('*.egg-info') if path.is_dir()]"
+      - name: Verify deterministic README graphics and visual contract
+        run: |
+          python scripts/generate_readme_assets.py
+          python scripts/generate_extended_readme_assets.py
+          python scripts/generate_decision_readme_assets.py
+          python scripts/generate_performance_readme_assets.py
+          python scripts/generate_uiux_readme_assets.py
+          python scripts/harden_readme_svg_accessibility.py
+          python scripts/verify_readme_visual_accessibility.py
+          python scripts/sync_readme_visuals.py --check
+          git diff --exit-code -- docs/assets/readme README.md README.zh-CN.md
+      - name: Core, specialists, Ruff and coverage qualification
+        run: python scripts/run_ci.py
+      - name: Universal Skillpack closure
+        run: |
+          python -m tsao.skillpacks --root .
+          python -m tsao.cli package template --family "generic process"
+      - name: Build wheel
+        run: python -m pip wheel --no-deps --no-build-isolation . -w wheelhouse
+      - name: Verify wheel members and installed runtime
+        run: |
+          python scripts/verify_wheel_contents.py --wheel-dir wheelhouse
+          python scripts/verify_wheel_runtime.py --wheel-dir wheelhouse
+      - name: Upload release wheel
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.14' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-wheel-alpha11-${{ github.sha }}
+          path: wheelhouse/*.whl
+          if-no-files-found: error
+          retention-days: 30
+      - name: Extended performance regression gate
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.14'
+        run: |
+          python scripts/benchmark_performance_v2.py \
+            --repeats 3 \
+            --wheel-dir wheelhouse \
+            --output reports/runtime/PERFORMANCE_RESULTS_V2.json
+          python scripts/compare_performance_v2.py \
+            --baseline reports/PERFORMANCE_BASELINE_ALPHA10_EXTENDED.json \
+            --current reports/runtime/PERFORMANCE_RESULTS_V2.json \
+            --output reports/runtime/PERFORMANCE_COMPARISON_V2.json
+          python scripts/update_performance_readme.py \
+            --comparison reports/PERFORMANCE_COMPARISON_ALPHA11.json --check
+      - name: CLI smoke
+        run: |
+          python -m tsao.cli doctor --root . --profile core
+          python -m tsao.skillpacks --root .
+          python -m tsao.cli route "POE solution polymerization and solvent recovery"
+          python -m tsao.cli package template --family "continuous chemical process"
+          python -m tsao.cli epdm status
+          python -m tsao.cli epdm audit
+          python -m tsao.cli epdm reference-demo
+          python -m tsao.cli epdm model-suite --temperature-k 323.15 --residence-s 300
+          python -m tsao.cli poe status --root .
+          python -m tsao.cli poe audit-p0 --root .
+          python -m tsao.cli poe audit-p1 --root .
+          python -m tsao.cli poe reference-demo
+      - name: Upload qualification reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-qualification-${{ matrix.os }}-py${{ matrix.python-version }}-${{ github.sha }}
+          path: |
+            reports/runtime/CI_RESULTS.json
+            reports/runtime/PERFORMANCE_RESULTS_V2.json
+            reports/runtime/PERFORMANCE_COMPARISON_V2.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  source-snapshot:
+    needs: qualification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: python -m pip install --quiet -e .
+      - name: Verify committed source identity
+        run: python -m tsao.cli doctor --root . --profile core
+      - name: Build deterministic public-source snapshot
+        run: python scripts/export_source_snapshot.py --root . --out TSAO-PROCESSING-SKILL-source-alpha.11.zip
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tsao-source-alpha11-${{ github.sha }}
+          path: |
+            TSAO-PROCESSING-SKILL-source-alpha.11.zip
+            TSAO-PROCESSING-SKILL-source-alpha.11.zip.sha256
+          if-no-files-found: error
+          retention-days: 14

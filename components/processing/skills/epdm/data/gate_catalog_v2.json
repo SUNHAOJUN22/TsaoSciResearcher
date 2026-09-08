@@ -1,0 +1,90 @@
+{
+  "schema": "TSAO-EPDM-V2-GATE-CATALOG-1",
+  "items": [
+    {
+      "gate_id": "A1_SCHEMA_STRUCTURAL",
+      "layer": "SOFTWARE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "SEMANTIC_REFERENCE_UNRESOLVED"
+      ]
+    },
+    {
+      "gate_id": "A1_UNITS_VALID",
+      "layer": "SOFTWARE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "INVALID_UNIT_BASIS"
+      ]
+    },
+    {
+      "gate_id": "A1_EVIDENCE_RESOLVED",
+      "layer": "SOFTWARE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "MISSING_EVIDENCE",
+        "SEMANTIC_REFERENCE_UNRESOLVED"
+      ]
+    },
+    {
+      "gate_id": "A1_DIENE_SUPPORTED",
+      "layer": "SOFTWARE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "UNSUPPORTED_TOPOLOGY"
+      ]
+    },
+    {
+      "gate_id": "A1_STATE_BASIS_VALID",
+      "layer": "SOFTWARE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "MIXED_STATE_BASIS"
+      ]
+    },
+    {
+      "gate_id": "A1_THERMO_PREREQUISITES",
+      "layer": "THERMODYNAMIC",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "BLOCKED_BY_THERMODYNAMICS",
+        "MISSING_EVIDENCE"
+      ]
+    },
+    {
+      "gate_id": "A1_CALIBRATION_BINDING_VALID",
+      "layer": "KINETIC_CALIBRATION",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "ILLEGAL_PARAMETER_BINDING",
+        "MISSING_EVIDENCE"
+      ]
+    },
+    {
+      "gate_id": "A1_OPTIONAL_GPC",
+      "layer": "KINETIC_CALIBRATION",
+      "mandatory": false,
+      "applicability": "gpc_datasets_present",
+      "permitted_reason_codes": [
+        "NONE",
+        "MODEL_SELECTION_INCONCLUSIVE"
+      ]
+    },
+    {
+      "gate_id": "A1_ENGINEERING_APPROVAL",
+      "layer": "ENGINEERING_USE",
+      "mandatory": true,
+      "permitted_reason_codes": [
+        "NONE",
+        "APPROVAL_MISSING"
+      ]
+    }
+  ]
+}

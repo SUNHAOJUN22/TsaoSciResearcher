@@ -1,0 +1,14 @@
+schema_version: "1.0"
+project_id: ML001
+target: unknown
+target_unit: unknown
+sample_unit: parent_structure
+dataset_path: dataset.csv
+group_column: parent_id
+split_policy: group
+preprocessing_fit_scope: train_only
+model_family: baseline-first
+seeds: [17, 29, 43]
+metrics: [mae, rmse, r2]
+applicability_domain: required
+status: planned

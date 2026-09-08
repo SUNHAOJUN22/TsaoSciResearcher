@@ -1,0 +1,6 @@
+interface:
+  display_name: Tsao Dft Kinetics Multiscale
+  short_description: Convert validated DFT thermochemistry into transition-state-theory
+    rates, reaction networks, microkinetic and multiscale
+  default_prompt: Use $tsao-dft-kinetics-multiscale to plan and validate this task
+    before any expensive execution.

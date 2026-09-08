@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "kmeans-backend-benchmark-policy-1.0.0",
+  "profileSchemaVersion": "kmeans-backend-profile-1.0.0",
+  "reportSchemaVersion": "kmeans-backend-benchmark-report-1.0.0",
+  "policyVersion": "kmeans-auto-backend-policy-1.0.0",
+  "kernel": "kmeans-assignment-update",
+  "kernelVersion": "1.0.0",
+  "protocolVersion": "row-major-float64-1.0.0",
+  "profileMaxAgeDays": 30,
+  "minimumImprovementRatio": 1.15,
+  "maximumRelativeIqr": 0.25,
+  "requiredConsecutiveWins": 2
+}

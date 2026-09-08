@@ -1,0 +1,66 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Periodic DFT and materials",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Adsorption-energy calculation within the Periodic DFT and materials workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "Pulay stress",
+    "metallic smearing mismatch",
+    "unconverged basis"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-024",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "periodic_structure",
+    "pseudopotential_family",
+    "exchange_correlation",
+    "kpoint_plan",
+    "cutoff_plan"
+  ],
+  "maturity": "A4",
+  "name_cn": "吸附能量",
+  "name_en": "Adsorption-energy calculation",
+  "outputs": [
+    "relaxed_structure",
+    "total_energy",
+    "electronic_structure",
+    "convergence_series"
+  ],
+  "recommended_adapters": [
+    "quantum-espresso",
+    "cp2k",
+    "vasp",
+    "abacus",
+    "gpaw",
+    "ase-pymatgen"
+  ],
+  "required_evidence": [
+    "structure file",
+    "pseudopotential hashes",
+    "native output",
+    "convergence tables"
+  ],
+  "risk_level": "medium",
+  "slug": "adsorption-energy",
+  "triggers": [
+    "adsorption",
+    "cp2k",
+    "crystal",
+    "defect",
+    "dft",
+    "energy",
+    "periodic",
+    "qe",
+    "surface",
+    "vasp"
+  ],
+  "validators": [
+    "cell-consistency",
+    "kpoint-convergence",
+    "cutoff-convergence",
+    "force-stress",
+    "unit"
+  ],
+  "workflow": "periodic-dft"
+}

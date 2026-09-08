@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Canonical acceleration registry governance</title>
+  <desc id="desc">Synthetic conceptual diagram of one canonical acceleration registry feeding two validated planning views and permanent drift gates. This is not scientific data or performance evidence.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#101a33"/></linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7357ff"/><stop offset="1" stop-color="#28c8ff"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#19c37d"/><stop offset="1" stop-color="#67e8a6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity=".35"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6ed8ff"/></marker>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#eef6ff}.h{font-size:28px;font-weight:700}.s{font-size:15px;fill:#a9bdd4}.k{font-size:13px;font-weight:700;letter-spacing:.08em;fill:#8de8ff}.c{fill:#0e1b2d;stroke:#294666;stroke-width:1.5}.ct{font-size:17px;font-weight:700}.sm{font-size:13px;fill:#a9bdd4}.pill{font-size:12px;font-weight:700;fill:#dff9ff}.line{stroke:#6ed8ff;stroke-width:2.2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1120" height="520" rx="24" fill="url(#bg)"/>
+  <circle cx="1020" cy="76" r="92" fill="#2e8fff" opacity=".08"/><circle cx="90" cy="454" r="120" fill="#7357ff" opacity=".08"/>
+  <text class="t h" x="48" y="54">One registry. Two compatible views. Zero silent drift.</text>
+  <text class="t s" x="48" y="82">CUDA-X · ROCm · oneAPI · Metal · portable interfaces</text>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="116" width="310" height="176" rx="22" fill="url(#core)"/>
+    <text class="t k" x="430" y="146">CANONICAL FACT SOURCE</text>
+    <text class="t" x="430" y="178" font-size="23" font-weight="700">acceleration_registry.py</text>
+    <text class="t sm" x="430" y="205">27 libraries · vendor/backend contract</text>
+    <text class="t sm" x="430" y="226">aliases · purposes · compatibility</text>
+    <g>
+      <rect x="430" y="248" width="72" height="25" rx="12" fill="#07111f" opacity=".62"/><text class="t pill" x="445" y="265">CUDA</text>
+      <rect x="510" y="248" width="72" height="25" rx="12" fill="#07111f" opacity=".62"/><text class="t pill" x="526" y="265">HIP</text>
+      <rect x="590" y="248" width="72" height="25" rx="12" fill="#07111f" opacity=".62"/><text class="t pill" x="604" y="265">SYCL</text>
+    </g>
+  </g>
+
+  <path class="line" d="M405 188 C342 188 332 184 300 184"/>
+  <path class="line" d="M715 188 C780 188 790 184 820 184"/>
+  <path class="line" d="M560 292 L560 340"/>
+
+  <g filter="url(#shadow)">
+    <rect class="c" x="48" y="122" width="252" height="142" rx="18"/>
+    <text class="t k" x="70" y="151">PLANNER VIEW A</text>
+    <text class="t ct" x="70" y="181">plan_acceleration</text>
+    <text class="t sm" x="70" y="207">engine-native backends</text>
+    <text class="t sm" x="70" y="228">CUDA-X / ROCm / oneAPI / Metal</text>
+    <circle cx="270" cy="145" r="12" fill="#27d49b"/><path d="M264 145l4 4 8-9" stroke="#07111f" stroke-width="3" fill="none"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect class="c" x="820" y="122" width="252" height="142" rx="18"/>
+    <text class="t k" x="842" y="151">PLANNER VIEW B</text>
+    <text class="t ct" x="842" y="181">hardware optimizer</text>
+    <text class="t sm" x="842" y="207">workload-specific decisions</text>
+    <text class="t sm" x="842" y="228">edge runtime / communication / math</text>
+    <circle cx="1042" cy="145" r="12" fill="#27d49b"/><path d="M1036 145l4 4 8-9" stroke="#07111f" stroke-width="3" fill="none"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="250" y="340" width="620" height="112" rx="22" fill="#0b2330" stroke="#2e7694" stroke-width="1.5"/>
+    <text class="t k" x="278" y="372">PERMANENT DRIFT GATE · LINUX + WINDOWS</text>
+    <text class="t ct" x="278" y="403">Exact libraries · aliases · backends · vendor compatibility</text>
+    <text class="t sm" x="278" y="429">Any mismatch fails CI before capability claims or benchmark qualification.</text>
+    <rect x="753" y="368" width="88" height="48" rx="16" fill="url(#green)"/>
+    <text x="775" y="398" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16" font-weight="800" fill="#062016">PASS</text>
+  </g>
+
+  <text x="48" y="493" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#ffcf70">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+  <text x="1072" y="493" text-anchor="end" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" fill="#7f94ab">Registry presence ≠ installed library ≠ measured speedup</text>
+</svg>

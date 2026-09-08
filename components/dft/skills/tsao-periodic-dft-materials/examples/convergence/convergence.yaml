@@ -1,0 +1,7 @@
+schema_version: "1.0"
+study_id: CUT
+parameter: cutoff_ry
+values: [40, 50, 60, 70]
+observable: total_energy_per_atom_ev
+tolerance: 0.002
+fixed_method_fingerprint: M-PBE

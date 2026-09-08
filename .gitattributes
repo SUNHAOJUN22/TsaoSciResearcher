@@ -1,2 +1,3 @@
-*.pdf binary
-docs/README_AUDIT_REPORT.md -whitespace
+# Preserve source bytes when developer core.autocrlf is enabled.
+# Components that opt back into text normalization inherit LF checkout.
+* -text eol=lf

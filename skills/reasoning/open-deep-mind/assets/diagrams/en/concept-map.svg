@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+    <title id="title">The Deep-Reasoning Operating System</title><desc id="desc">Not a pile of methods: a closed loop connecting meaning, evidence, mechanisms, models, creativity, and action.</desc>
+    <defs>
+      <linearGradient id="concept-en-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbff"/><stop offset=".55" stop-color="#edf4ff"/><stop offset="1" stop-color="#e9f8f5"/></linearGradient>
+      <linearGradient id="concept-en-cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1178ff"/><stop offset="1" stop-color="#0b5ed7"/></linearGradient>
+      <linearGradient id="concept-en-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe29a"/><stop offset="1" stop-color="#e9891a"/></linearGradient>
+      <linearGradient id="concept-en-violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7c8ff"/><stop offset="1" stop-color="#6f48cf"/></linearGradient>
+      <linearGradient id="concept-en-mint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ffe7"/><stop offset="1" stop-color="#008e73"/></linearGradient>
+      <radialGradient id="concept-en-halo"><stop offset="0" stop-color="#1178ff" stop-opacity=".32"/><stop offset="1" stop-color="#1178ff" stop-opacity="0"/></radialGradient>
+      <pattern id="concept-en-grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#8ba7c7" stroke-opacity=".08" stroke-width="1"/></pattern>
+      <filter id="concept-en-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="concept-en-shadow" x="-40%" y="-40%" width="180%" height="190%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#31557d" flood-opacity=".25"/></filter>
+      <marker id="concept-en-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1178ff"/></marker>
+      <clipPath id="concept-en-sceneclip"><rect x="870" y="0" width="730" height="480" rx="28"/></clipPath>
+      <linearGradient id="concept-en-fade" x1="0" x2="1"><stop offset="0" stop-color="#f8fbff" stop-opacity="1"/><stop offset=".35" stop-color="#f8fbff" stop-opacity=".55"/><stop offset="1" stop-color="#f8fbff" stop-opacity="0"/></linearGradient>
+      
+      <style>
+        .title{font:700 50px Inter,Segoe UI,Arial,sans-serif;fill:#0c2b59;letter-spacing:-.5px}
+        .subtitle{font:400 21px Inter,Segoe UI,Arial,sans-serif;fill:#526b8c}
+        .h2{font:700 29px Inter,Segoe UI,Arial,sans-serif;fill:#0c2b59}
+        .h3{font:700 21px Inter,Segoe UI,Arial,sans-serif;fill:#0c2b59}
+        .body{font:400 18px Inter,Segoe UI,Arial,sans-serif;fill:#526b8c}
+        .small{font:500 15px Inter,Segoe UI,Arial,sans-serif;fill:#526b8c}
+        .tiny{font:700 12px Inter,Segoe UI,Arial,sans-serif;fill:#8295ad;letter-spacing:.8px}
+        .formula{font:500 18px JetBrains Mono,DejaVu Sans Mono,monospace;fill:#0c2b59}
+        .formula2{font:600 21px STIX Two Text,Georgia,serif;fill:#0c2b59}
+        .card{fill:#ffffff;fill-opacity:.92;stroke:#b9cbe3;stroke-width:1.2}
+        .card2{fill:#f8fbff;fill-opacity:.92;stroke:#b9cbe3;stroke-width:1.1}
+      </style>
+    </defs>
+    <rect width="1600" height="820" rx="30" fill="url(#concept-en-bg)"/>
+    <rect width="1600" height="820" rx="30" fill="url(#concept-en-grid)"/>
+    
+    <circle cx="1320" cy="120" r="330" fill="url(#concept-en-halo)"/>
+    <circle cx="210" cy="760" r="330" fill="url(#concept-en-halo)" opacity=".35"/>
+    <text x="84" y="62" class="tiny">OPENDEEPMIND · SYSTEM MAP</text><text x="84" y="118" class="title">The Deep-Reasoning Operating System</text>
+    <text x="84" y="158" class="subtitle">Not a pile of methods: a closed loop connecting meaning, evidence, mechanisms, models, creativity, and action.</text><circle cx="800" cy="455" r="132" fill="url(#concept-en-halo)"/><circle cx="800" cy="455" r="92" class="card" filter="url(#concept-en-glow)"/><circle cx="800" cy="455" r="64" fill="url(#concept-en-cyan)" opacity=".12" stroke="#1178ff" stroke-width="2"/><text x="800" y="448" text-anchor="middle" class="h2">Open</text><text x="800" y="482" text-anchor="middle" class="h2">DeepMind</text><path d="M800.0,350.0 Q834.0,268.1 800.0,170.0" fill="none" stroke="#1178ff" stroke-width="2.5" opacity=".72"/><rect x="678.0" y="118.0" width="244" height="104" rx="22" class="card"/><circle cx="722.0" cy="170.0" r="24" fill="#1178ff" opacity=".18" stroke="#1178ff"/><text x="760.0" y="177.0" class="h3">First Philosophy</text><path d="M890.9,402.5 Q978.9,391.0 1046.8,312.5" fill="none" stroke="#008e73" stroke-width="2.5" opacity=".72"/><rect x="924.8" y="260.5" width="244" height="104" rx="22" class="card"/><circle cx="968.8" cy="312.5" r="24" fill="#008e73" opacity=".18" stroke="#008e73"/><text x="1006.8" y="319.5" class="h3">First Principles</text><path d="M890.9,507.5 Q944.9,577.9 1046.8,597.5" fill="none" stroke="#e9891a" stroke-width="2.5" opacity=".72"/><rect x="924.8" y="545.5" width="244" height="104" rx="22" class="card"/><circle cx="968.8" cy="597.5" r="24" fill="#e9891a" opacity=".18" stroke="#e9891a"/><text x="1006.8" y="604.5" class="h3">Systems Thinking</text><path d="M800.0,560.0 Q766.0,641.9 800.0,740.0" fill="none" stroke="#6f48cf" stroke-width="2.5" opacity=".72"/><rect x="678.0" y="688.0" width="244" height="104" rx="22" class="card"/><circle cx="722.0" cy="740.0" r="24" fill="#6f48cf" opacity=".18" stroke="#6f48cf"/><text x="760.0" y="747.0" class="h3">Evidence &amp; Causality</text><path d="M709.1,507.5 Q621.1,519.0 553.2,597.5" fill="none" stroke="#d7434e" stroke-width="2.5" opacity=".72"/><rect x="431.2" y="545.5" width="244" height="104" rx="22" class="card"/><circle cx="475.2" cy="597.5" r="24" fill="#d7434e" opacity=".18" stroke="#d7434e"/><text x="513.2" y="604.5" class="h3">Mathematical Modeling</text><path d="M709.1,402.5 Q655.1,332.1 553.2,312.5" fill="none" stroke="#0b5ed7" stroke-width="2.5" opacity=".72"/><rect x="431.2" y="260.5" width="244" height="104" rx="22" class="card"/><circle cx="475.2" cy="312.5" r="24" fill="#0b5ed7" opacity=".18" stroke="#0b5ed7"/><text x="513.2" y="319.5" class="h3">Creativity &amp; AI</text><rect x="170" y="718" width="1260" height="62" rx="22" class="card"/><text x="800" y="757" text-anchor="middle" class="formula2">Deep Reasoning = Semantic Clarity × Evidence Quality × Mechanism × Falsifiability × Revisability</text><ellipse cx="800" cy="455" rx="435" ry="265" fill="none" stroke="#6f48cf" stroke-width="1.5" stroke-dasharray="8 12" opacity=".5"/></svg>

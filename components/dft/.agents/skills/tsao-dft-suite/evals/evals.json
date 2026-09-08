@@ -1,0 +1,14 @@
+{
+  "schema_version": "agent-skill-routing-cases/v19",
+  "skill_name": "tsao-dft-suite",
+  "evaluation_scope": "STATIC_DESCRIPTION_ROUTING_CONTRACT_NOT_MODEL_INVOCATION",
+  "model_invocation": "NOT_RUN",
+  "cases": [
+    {"id":"dft-tr-w-en","split":"train","language":"en","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"Audit Gaussian, VASP, QE, and CP2K parser fatal-marker precedence."},
+    {"id":"dft-tr-b-zh","split":"train","language":"zh","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"把总力标量当成完整 N×3 原子力并发布。"},
+    {"id":"dft-tr-n-en","split":"train","language":"en","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"Teach me the qualitative meaning of a molecular orbital."},
+    {"id":"dft-va-w-zh","split":"validation","language":"zh","category":"workflow","expected_activation":"ACTIVATE","expected_outcome":"WORKFLOW","prompt":"验证二分子过渡态理论的标准态、速率量纲和不确定度。"},
+    {"id":"dft-va-b-en","split":"validation","language":"en","category":"boundary","expected_activation":"ACTIVATE","expected_outcome":"BLOCK","prompt":"Accept a truncated DFT run without engine output or independent review."},
+    {"id":"dft-va-n-zh","split":"validation","language":"zh","category":"negative","expected_activation":"DO_NOT_ACTIVATE","expected_outcome":"NONE","prompt":"解释薛定谔方程的历史背景。"}
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "ok": true,
+  "schema_version": "1.5",
+  "state": "EXTERNAL_HOLD",
+  "scope": "repository templates, canonical semantics, closed campaign policy, software acceleration architecture and permanent validators only",
+  "external_engine_invoked": false,
+  "acceleration_registry": {
+    "ok": true,
+    "registry_version": "1.0",
+    "libraries": 27,
+    "runtime_single_source": true
+  },
+  "benchmark_contract": {
+    "ok": true,
+    "canonical_contract": "nested-v1.1",
+    "canonical_schema_sha256": "728dd5467f8423de133049129c56d13cef708a9314a59eed42d088fc11bcf2e8",
+    "root_mirror_synchronized": true,
+    "native_semantic_schema_version": "1.1",
+    "compatibility_view_present": false,
+    "legacy_semantic_bypass": "FAIL_CLOSED",
+    "legacy_contracts": [
+      "nested-v1.0",
+      "flat-v1.0"
+    ],
+    "legacy_flat_qualification_impact": "EXTERNAL_HOLD",
+    "unknown_or_mixed_input": "FAIL_CLOSED"
+  },
+  "campaign_contract": {
+    "ok": true,
+    "canonical_contract": "canonical-compute-campaign-v1.1",
+    "canonical_schema_version": "1.1",
+    "canonical_schema_sha256": "6d388becb98cd830e5b8246eb0b24082fefa75ac5c41d844dcc027557826c2fc",
+    "root_mirror_synchronized": true,
+    "template_source_contract": "canonical-compute-campaign-v1.1",
+    "template_migration": "none",
+    "migration_qualification_impact": "none",
+    "defaults_applied": [],
+    "evidence_fields_added": [],
+    "unknown_or_mixed_input": "FAIL_CLOSED",
+    "immutable_mapping": true,
+    "benchmark_result_boundary": "campaign-policy-independent-from-benchmark-result-evidence"
+  },
+  "engine_capabilities": {
+    "ok": true,
+    "engines": [
+      "cp2k",
+      "quantum-espresso",
+      "vasp"
+    ],
+    "repository_template_state": "EXTERNAL_HOLD",
+    "performance_qualification": "NOT_ESTABLISHED"
+  },
+  "compute_qualification": {
+    "ok": true,
+    "repository_state": "EXTERNAL_HOLD",
+    "performance_evaluated": false,
+    "workers_bounded_by": 8,
+    "benchmark_result_contract": "canonical-nested-v1.1",
+    "input_model": "canonical-nested-v1.1-typed-accessor",
+    "normalization_mandatory": true,
+    "native_semantic_validation": true,
+    "legacy_projection_retained": true,
+    "legacy_projection_consumed": false,
+    "legacy_projection_qualification_impact": "NOT_ELIGIBLE",
+    "identity_invariants": [
+      "campaign role equals canonical role",
+      "global execution.run_id uniqueness",
+      "single campaign site identity",
+      "stable per-candidate build/software/hardware identity",
+      "stable per-candidate multi-GPU UUID set",
+      "single canonical scientific identity",
+      "fully VERIFIED artifacts before ratio evaluation"
+    ]
+  },
+  "implementation_architecture": {
+    "doctrine": "python-control-plane-profile-first",
+    "doctrine_path": "docs/ACCELERATION_ENGINEERING_DOCTRINE.md",
+    "python_control_plane": true,
+    "whole_repo_cpp_rewrite": "NOT_RECOMMENDED",
+    "neighbor_search": {
+      "implemented": true,
+      "backends": [
+        "reference",
+        "numpy",
+        "cell-list"
+      ],
+      "periodicity": [
+        "non-periodic",
+        "orthogonal",
+        "triclinic",
+        "partial-axes"
+      ],
+      "deterministic_pair_order": true,
+      "implicit_gpu_selection": false,
+      "qualification_impact": "NOT_PERFORMANCE_EVIDENCE"
+    },
+    "parser_scan": {
+      "implemented": true,
+      "transport": "read-only-mmap",
+      "engines": [
+        "gaussian",
+        "vasp",
+        "quantum-espresso",
+        "cp2k"
+      ],
+      "mapped_artifact_sha256": true,
+      "nonfinite_numeric_input": "FAIL_CLOSED",
+      "qualification_impact": "NOT_ENGINE_SPEEDUP_EVIDENCE"
+    },
+    "native_sidecar": {
+      "implemented": false,
+      "cmake_path": "native/CMakeLists.txt",
+      "status": "PROFILE_AND_BUILD_GATED"
+    },
+    "cuda_kernels": {
+      "implemented": false,
+      "sources": [],
+      "status": "NOT_ESTABLISHED"
+    },
+    "external_engine_acceleration": "EXTERNAL_HOLD"
+  },
+  "performance_ratio_published": false,
+  "errors": [],
+  "non_claims": [
+    "This evidence captures repository contracts and software architecture, not external engine execution.",
+    "EXTERNAL_HOLD does not establish numerical or performance qualification.",
+    "Campaign v1.0 migration expands role declarations but creates no execution evidence.",
+    "Campaign migration cannot remove benchmark-result provenance gaps or lift EXTERNAL_HOLD.",
+    "Legacy flat benchmark-result v1.0 migration does not recover missing provenance.",
+    "Legacy nested benchmark-result v1.0 is centrally migrated before v1.1 semantics.",
+    "No nested v1.0 semantic downgrade view is used.",
+    "compute_qualification_view remains diagnostic and is not qualification input.",
+    "The neighbor-list and mmap parser cores are software optimizations, not DFT-engine speedup evidence.",
+    "No native sidecar or CUDA kernel is claimed unless it exists and passes its own build/equivalence gates.",
+    "No CPU/GPU performance ratio is published without accepted real-engine results."
+  ]
+}

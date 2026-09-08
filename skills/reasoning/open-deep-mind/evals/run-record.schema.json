@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenDeepMind Benchmark Run Record",
+  "type": "object",
+  "required": ["case_id", "configuration", "repetition", "model", "route", "loaded_modules", "response_text", "total_tokens", "duration_ms"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "configuration": {"type": "string"},
+    "repetition": {"type": "integer", "minimum": 1},
+    "model": {"type": "string"},
+    "model_version": {"type": "string"},
+    "route": {"enum": ["phi", "p", "phi-p", "triz", "none", "unknown"]},
+    "loaded_modules": {"type": "array", "items": {"type": "string"}},
+    "response_text": {"type": "string"},
+    "total_tokens": {"type": "integer", "minimum": 0},
+    "duration_ms": {"type": "integer", "minimum": 0},
+    "repository_commit": {"type": "string"},
+    "run_timestamp": {"type": "string"}
+  },
+  "additionalProperties": true
+}

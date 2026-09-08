@@ -1,0 +1,8 @@
+schema_version: "1.0"
+campaign_id: G16-CONFORMERS
+base_manifest: ../examples/slurm/hpc-manifest.yaml
+max_concurrent: 24
+scratch_root: ./array-scratch
+tasks:
+  - {task_id: conformer-000, input: conformer-000.gjf, workdir: ./runs/conformer-000, stdout: conformer-000.log, stderr: conformer-000.stderr}
+  - {task_id: conformer-001, input: conformer-001.gjf, workdir: ./runs/conformer-001, stdout: conformer-001.log, stderr: conformer-001.stderr}

@@ -1,0 +1,112 @@
+{
+  "cases": [
+    {
+      "case_id": "cpu-only-no-gpu-binding",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [],
+        "license_tokens": {}
+      },
+      "detail": "binding accepted",
+      "environment": {},
+      "expected": "accepted",
+      "observed": "accepted",
+      "passed": true
+    },
+    {
+      "case_id": "matching-cuda-claim",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [
+          0
+        ],
+        "license_tokens": {}
+      },
+      "detail": "binding accepted",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "expected": "accepted",
+      "observed": "accepted",
+      "passed": true
+    },
+    {
+      "case_id": "matching-hip-rocr-aliases",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [
+          0
+        ],
+        "license_tokens": {}
+      },
+      "detail": "binding accepted",
+      "environment": {
+        "HIP_VISIBLE_DEVICES": "0",
+        "ROCR_VISIBLE_DEVICES": "0"
+      },
+      "expected": "accepted",
+      "observed": "accepted",
+      "passed": true
+    },
+    {
+      "case_id": "unclaimed-cuda-exposure",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [],
+        "license_tokens": {}
+      },
+      "detail": "GPU-visible command environment requires a matching GPU resource claim",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true
+    },
+    {
+      "case_id": "conflicting-hip-rocr-aliases",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [
+          0
+        ],
+        "license_tokens": {}
+      },
+      "detail": "GPU resource claim does not match the immutable ROCR_VISIBLE_DEVICES environment",
+      "environment": {
+        "HIP_VISIBLE_DEVICES": "0",
+        "ROCR_VISIBLE_DEVICES": "1"
+      },
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true
+    },
+    {
+      "case_id": "malformed-secondary-alias",
+      "claim": {
+        "cpu_cores": 1,
+        "gpu_devices": [
+          0
+        ],
+        "license_tokens": {}
+      },
+      "detail": "visible-device environment is not a comma-separated integer list",
+      "environment": {
+        "HIP_VISIBLE_DEVICES": "0",
+        "ROCR_VISIBLE_DEVICES": "gpu1"
+      },
+      "expected": "rejected",
+      "observed": "rejected",
+      "passed": true
+    }
+  ],
+  "claim_boundary": "This deterministic evidence validates resource-claim and visible-device environment consistency only. It does not claim that a GPU, solver, license, MPI runtime or production workload was executed or scientifically qualified.",
+  "evidence_id": "resource-broker-gpu-binding-v6-hardening",
+  "schema_version": "1.0",
+  "source_sha256": {
+    "tests/test_acceleration_batch.py": "76240527840063cfc073a633149ab9c88b0ac814ab9854c0b38b7b5538afe350",
+    "tests/test_resource_broker_evidence.py": "eaa7838e5e2ed238d068db029801747e1ab89f774a85a42b42fa2013cc679e69",
+    "tsao_computation/execution/resources.py": "f02502425419a65817702872b7464077c9f0a7daabd9b35c308538da0fc9227c"
+  },
+  "status": "PASS"
+}

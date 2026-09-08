@@ -1,0 +1,25 @@
+schema_version: 1
+figure_id: FIG001
+title: Example ESP comparison
+status: planned
+claim: unknown
+figure_type: esp_comparison
+readiness: publication_ready
+source_artifacts: []
+comparison_group: example-series
+shared_parameters:
+  density_isovalue_e_bohr3: 0.001
+  esp_min: -0.05
+  esp_max: 0.05
+  esp_unit: a.u.
+  camera: unknown
+  projection: orthographic
+  color_map: BGR
+panels: []
+outputs:
+  - figures/FIG001.png
+  - figures/FIG001.pdf
+qa:
+  visually_inspected: false
+  final_size_checked: false
+  provenance_complete: false

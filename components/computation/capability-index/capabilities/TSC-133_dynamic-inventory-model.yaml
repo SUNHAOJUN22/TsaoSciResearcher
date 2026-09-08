@@ -1,0 +1,57 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Dynamic simulation and control",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Dynamic inventory model within the Dynamic simulation and control workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "unstable controller",
+    "unobservable state",
+    "unsafe sequence"
+  ],
+  "human_approval_required": true,
+  "id": "TSC-133",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "dynamic_model",
+    "inventory_states",
+    "actuators",
+    "sensors",
+    "control_structure",
+    "disturbances"
+  ],
+  "maturity": "A4",
+  "name_cn": "dynamic库存模型",
+  "name_en": "Dynamic inventory model",
+  "outputs": [
+    "dynamic_response",
+    "control_metrics",
+    "constraint_violations",
+    "scenario_evidence"
+  ],
+  "recommended_adapters": [
+    "openmodelica"
+  ],
+  "required_evidence": [
+    "model equations",
+    "initial state",
+    "controller settings",
+    "scenario traces"
+  ],
+  "risk_level": "high",
+  "slug": "dynamic-inventory-model",
+  "triggers": [
+    "control",
+    "dynamic",
+    "inventory",
+    "modelica",
+    "pid",
+    "transient"
+  ],
+  "validators": [
+    "steady-state-initialization",
+    "state-balance",
+    "controller-stability",
+    "scenario-coverage"
+  ],
+  "workflow": "dynamic-control"
+}

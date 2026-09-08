@@ -1,0 +1,156 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Immutable release tag matching v$(cat VERSION)
+        required: true
+        type: string
+
+permissions: read-all
+
+concurrency:
+  group: release-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REQUESTED_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - name: Validate immutable release request
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$GITHUB_REF" = "refs/heads/main"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          VERSION_VALUE="$(tr -d '[:space:]' < VERSION)"
+          TAG="$REQUESTED_TAG"
+          test "$TAG" = "v$VERSION_VALUE"
+          printf 'VERSION_VALUE=%s\n' "$VERSION_VALUE" >> "$GITHUB_ENV"
+          printf 'RELEASE_TAG=%s\n' "$TAG" >> "$GITHUB_ENV"
+          python scripts/sync_version_metadata.py --check
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release already exists: $TAG" >&2
+            exit 2
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag already exists without a release: $TAG" >&2
+            exit 3
+          fi
+
+      - name: Build and verify release artifacts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          export SOURCE_DATE_EPOCH="$(git show -s --format=%ct "$GITHUB_SHA")"
+          python -m pip install -e '.[validation,quality]'
+          python scripts/validate_skill_spec.py
+          python scripts/sync_package_assets.py --check
+          python scripts/build_adapter_docs.py --check
+          python scripts/build_workflow_docs.py --check
+          python scripts/build_examples.py --check
+          python scripts/build_manifest.py --check
+          python scripts/verify_all.py --profile all
+          python scripts/verify_all.py --profile benchmark
+          git diff --exit-code
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          cp reports/FINAL_VERIFICATION.json dist/FINAL_VERIFICATION.json
+          python scripts/build_release_manifest.py --output-dir dist
+
+      - name: Attest release provenance
+        id: provenance
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26
+        with:
+          subject-path: |
+            dist/TsaoSciComputation-*.zip
+            dist/TsaoSciComputation-*.tar.gz
+            dist/tsao_scicomputation-*.whl
+
+      - name: Attest release SBOM
+        id: sbom-attestation
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26
+        with:
+          subject-path: |
+            dist/TsaoSciComputation-*.zip
+            dist/TsaoSciComputation-*.tar.gz
+            dist/tsao_scicomputation-*.whl
+          sbom-path: dist/TsaoSciComputation-${{ env.VERSION_VALUE }}.spdx.json
+
+      - name: Complete release evidence bundle
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cp "${{ steps.provenance.outputs.bundle-path }}" \
+            "dist/TsaoSciComputation-${VERSION_VALUE}.provenance.sigstore.json"
+          cp "${{ steps.sbom-attestation.outputs.bundle-path }}" \
+            "dist/TsaoSciComputation-${VERSION_VALUE}.sbom.sigstore.json"
+          python scripts/build_release_manifest.py --output-dir dist
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: TsaoSciComputation-release-${{ github.run_id }}-${{ github.run_attempt }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish immutable tag and GitHub Release
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          TAG="$RELEASE_TAG"
+          cleanup_unpublished_tag() {
+            code=$?
+            set +e
+            if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              git push origin ":refs/tags/$TAG" || true
+            fi
+            exit "$code"
+          }
+          trap cleanup_unpublished_tag ERR
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "$TAG" "$GITHUB_SHA" -m "TsaoSciComputation $TAG"
+          git push origin "refs/tags/$TAG"
+          gh release create "$TAG" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --latest \
+            --title "TsaoSciComputation $TAG" \
+            --notes-file "docs/releases/v${VERSION_VALUE}.md"
+          trap - ERR
+
+      - name: Verification guidance
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ## Consumer verification
+
+          ```bash
+          sha256sum -c SHA256SUMS
+          gh attestation verify TsaoSciComputation-X.Y.Z.zip \
+            --repo SUNHAOJUN22/TsaoSciComputation
+          ```
+          EOF

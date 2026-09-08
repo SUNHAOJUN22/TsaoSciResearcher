@@ -1,0 +1,87 @@
+{
+  "acceptance_criteria": {
+    "experimental_validation": true,
+    "finite_size_converged": true
+  },
+  "assumptions": [
+    "contact/tunneling law is calibrated",
+    "morphology ensemble represents processing variability"
+  ],
+  "boundary_conditions": {
+    "domain": "size convergence required",
+    "electrodes": "geometry and contact treatment declared"
+  },
+  "compute_resources": {
+    "ensemble_size": "set by confidence target",
+    "parallelism": "bounded by available resources"
+  },
+  "conditions": {
+    "composition": "formulation design",
+    "temperature_range": "measurement and processing range declared"
+  },
+  "convergence_plan": {
+    "domain_size": "finite-size study",
+    "mesh_or_network": "resolution study",
+    "realizations": "confidence-interval convergence"
+  },
+  "expected_artifacts": [
+    "morphology ensemble",
+    "network models",
+    "structure-property uncertainty report"
+  ],
+  "human_approval_nodes": [
+    "transport-law approval",
+    "formulation recommendation review"
+  ],
+  "initial_conditions": {
+    "morphologies": "multiple statistically independent realizations"
+  },
+  "methods": [
+    "stochastic morphology",
+    "percolation network",
+    "effective transport",
+    "rheology-structure linkage"
+  ],
+  "model_object": {
+    "description": "PP semiconductor shielding percolation workflow"
+  },
+  "parameter_sources": [
+    {
+      "parameter": "particle and interface transport",
+      "source": "experiment or validated lower-scale handoff"
+    }
+  ],
+  "question": "How do carbon-black loading, dispersion, and selective localization govern conductivity, rheology, and temperature stability in PP-based shielding material?",
+  "scales": [
+    "mesoscale",
+    "continuum",
+    "processing"
+  ],
+  "schema_version": "1.0",
+  "system": {
+    "filler": "conductive carbon black",
+    "matrix": "PP/elastomer formulation",
+    "morphology": "statistical ensemble"
+  },
+  "target_observables": [
+    "volume_resistivity",
+    "percolation_threshold",
+    "rheology",
+    "temperature_stability"
+  ],
+  "uncertainty_sources": [
+    "dispersion",
+    "contact resistance",
+    "particle morphology",
+    "processing history"
+  ],
+  "validation_plan": {
+    "checks": [
+      "resistivity curve",
+      "percolation scaling",
+      "rheology",
+      "temperature cycling"
+    ]
+  },
+  "workflow": "polymer-composite"
+}

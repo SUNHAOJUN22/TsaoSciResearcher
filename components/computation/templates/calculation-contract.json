@@ -1,0 +1,57 @@
+{
+  "acceptance_criteria": {
+    "scientific_answer": "The accepted result must answer the stated question within the declared applicability domain."
+  },
+  "assumptions": ["List every physical, chemical, statistical, and numerical assumption."],
+  "boundary_conditions": {
+    "description": "Explicit boundary conditions or a justified not-applicable statement."
+  },
+  "compute_resources": {
+    "accelerator_policy": "preferred",
+    "allow_fallback": true,
+    "deterministic": true,
+    "placement": "local",
+    "precision": "fp64",
+    "preferred_backends": [
+      "cuda",
+      "hip",
+      "sycl",
+      "openmp",
+      "mpi",
+      "task-parallel",
+      "remote",
+      "cpu"
+    ]
+  },
+  "conditions": {"temperature": {"unit": "K", "value": 298.15}},
+  "convergence_plan": {
+    "criteria": ["method-specific numerical and discretization/sampling convergence"]
+  },
+  "expected_artifacts": [
+    "native input",
+    "native output",
+    "method fingerprint",
+    "validation report"
+  ],
+  "human_approval_nodes": ["method selection", "scientific acceptance"],
+  "initial_conditions": {
+    "description": "Explicit initial conditions or a justified not-applicable statement."
+  },
+  "methods": ["Replace with the selected and justified method"],
+  "model_object": {
+    "description": "The modeled molecule, material, morphology, domain, reactor, or flowsheet."
+  },
+  "parameter_sources": [
+    {"parameter": "example", "source": "literature, experiment, or upstream model"}
+  ],
+  "question": "Replace with a falsifiable scientific question",
+  "scales": ["electronic, atomistic, mesoscale, continuum, reactor, process, or control"],
+  "schema_version": "1.0",
+  "system": {"description": "System composition, geometry, phases, and identifiers."},
+  "target_observables": ["observable with unit and reference state"],
+  "uncertainty_sources": ["parameter", "model-form", "sampling", "numerical"],
+  "validation_plan": {
+    "checks": ["units", "conservation", "benchmark", "experiment", "applicability"]
+  },
+  "workflow": null
+}

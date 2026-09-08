@@ -1,0 +1,20 @@
+schema_version: 1
+figure_id: demo-hl-gallery
+title: HOMO/LUMO gallery
+status: planned
+claim: Compare frontier-orbital localization and energy gaps across a molecular series.
+figure_type: homolumo_gallery
+readiness: publication_ready
+source_artifacts: [validated-orbital-cubes, orbital-energy-table]
+comparison_group: molecular-series
+shared_parameters:
+  orbital_isovalue_au: 0.020
+  phase_positive: blue
+  phase_negative: orange
+  camera: shared
+  projection: orthographic
+  energy_unit: eV
+  decimal_places: 2
+panels: []
+outputs: [figures/homolumo-gallery.png, figures/homolumo-gallery.pdf]
+qa: {visually_inspected: false, final_size_checked: false, provenance_complete: false}

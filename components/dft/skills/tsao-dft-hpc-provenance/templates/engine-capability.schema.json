@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tsao-dft/engine-capability.schema.json",
+  "title": "TsaoDFT EngineCapability",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "capability_id",
+    "engine",
+    "executable_name",
+    "engine_version",
+    "build",
+    "parallel",
+    "accelerator",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "capability_id": {"type": "string", "minLength": 1},
+    "engine": {"enum": ["vasp", "quantum-espresso", "cp2k"]},
+    "executable_name": {"type": "string", "minLength": 1},
+    "engine_version": {"$ref": "#/$defs/valueOrUnavailable"},
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compiler",
+        "compiler_version",
+        "build_type",
+        "linked_libraries",
+        "build_fingerprint_sha256"
+      ],
+      "properties": {
+        "compiler": {"$ref": "#/$defs/valueOrUnavailable"},
+        "compiler_version": {"$ref": "#/$defs/valueOrUnavailable"},
+        "build_type": {"$ref": "#/$defs/valueOrUnavailable"},
+        "linked_libraries": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "build_fingerprint_sha256": {"$ref": "#/$defs/hashOrUnavailable"}
+      }
+    },
+    "parallel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mpi_implementation", "mpi_version", "openmp_runtime"],
+      "properties": {
+        "mpi_implementation": {"$ref": "#/$defs/valueOrUnavailable"},
+        "mpi_version": {"$ref": "#/$defs/valueOrUnavailable"},
+        "openmp_runtime": {"$ref": "#/$defs/valueOrUnavailable"}
+      }
+    },
+    "accelerator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "backend", "gpu_vendor", "toolkit_version"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "backend": {"enum": ["cpu", "cuda", "openacc", "hip", "sycl", "openmp-offload"]},
+        "gpu_vendor": {"enum": ["none", "nvidia", "amd", "intel"]},
+        "toolkit_version": {"$ref": "#/$defs/valueOrUnavailable"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_kind",
+        "executable_sha256",
+        "version_probe_observed",
+        "version_probe_argv",
+        "upstream_tests_passed",
+        "execution_authorized"
+      ],
+      "properties": {
+        "source_kind": {"enum": ["declared", "observed", "simulation"]},
+        "executable_sha256": {"$ref": "#/$defs/hashOrUnavailable"},
+        "version_probe_observed": {"type": "boolean"},
+        "version_probe_argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "upstream_tests_passed": {"type": "boolean"},
+        "execution_authorized": {"type": "boolean"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"engine": {"const": "vasp"}}},
+      "then": {"properties": {"executable_name": {"enum": ["vasp_std", "vasp_gam", "vasp_ncl"]}}}
+    },
+    {
+      "if": {"properties": {"engine": {"const": "quantum-espresso"}}},
+      "then": {"properties": {"executable_name": {"const": "pw.x"}}}
+    },
+    {
+      "if": {"properties": {"engine": {"const": "cp2k"}}},
+      "then": {"properties": {"executable_name": {"enum": ["cp2k.psmp", "cp2k.popt", "cp2k.ssmp", "cp2k.sopt"]}}}
+    },
+    {
+      "if": {"properties": {"accelerator": {"properties": {"enabled": {"const": false}}}}},
+      "then": {
+        "properties": {
+          "accelerator": {
+            "properties": {"backend": {"const": "cpu"}, "gpu_vendor": {"const": "none"}}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "valueOrUnavailable": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "not": {"const": "NOT_AVAILABLE"}},
+        {"const": "NOT_AVAILABLE"}
+      ]
+    },
+    "hashOrUnavailable": {
+      "oneOf": [
+        {"$ref": "#/$defs/sha256"},
+        {"const": "NOT_AVAILABLE"}
+      ]
+    }
+  }
+}

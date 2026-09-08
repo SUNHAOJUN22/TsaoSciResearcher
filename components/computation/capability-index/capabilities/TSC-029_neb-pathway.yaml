@@ -1,0 +1,53 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Reaction paths and rare events",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Nudged-elastic-band pathway within the Reaction paths and rare events workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "path discontinuity",
+    "wrong saddle point",
+    "image collapse"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-029",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "reactant_state",
+    "product_state",
+    "path_method",
+    "images",
+    "force_tolerance"
+  ],
+  "maturity": "A4",
+  "name_cn": "NEB路径",
+  "name_en": "Nudged-elastic-band pathway",
+  "outputs": [
+    "minimum_energy_path",
+    "transition_state_candidate",
+    "barrier",
+    "path_validation"
+  ],
+  "recommended_adapters": [],
+  "required_evidence": [
+    "endpoint structures",
+    "image trajectory",
+    "force history",
+    "frequency evidence"
+  ],
+  "risk_level": "medium",
+  "slug": "neb-pathway",
+  "triggers": [
+    "barrier",
+    "neb",
+    "pathway",
+    "reaction path",
+    "transition"
+  ],
+  "validators": [
+    "endpoint-consistency",
+    "force-convergence",
+    "imaginary-mode",
+    "path-continuity"
+  ],
+  "workflow": "reaction-path"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "policy": "Preserve the vendored transcription byte-for-byte where practical; normalize only at lookup time and report the anomaly. Publication-critical matrix claims require independent source verification.",
+  "anomalies": {
+    "19,9": {
+      "kind": "duplicate_principle_id",
+      "vendored_value": [8, 35, 35],
+      "normalized_value": [8, 35],
+      "status": "independently cross-checked",
+      "cross_checks": [
+        "https://www.triz-consulting.de/heatmap-web/triz_matrix_analyzer.html",
+        "https://www.triz40.com/aff_Matrix_TRIZ.php"
+      ],
+      "note": "Independent online matrix renderings list principles 8 and 35 for improving parameter 19 vs worsening parameter 9. The duplicate 35 is retained in the vendored transcription for provenance and removed by the lookup utility."
+    }
+  }
+}

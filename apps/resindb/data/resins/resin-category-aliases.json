@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-25",
+  "dataKind": "resin-category-aliases",
+  "sourceType": "curated-schema",
+  "recordStatus": "reference",
+  "data": [
+    {
+      "categoryId": "sub_hdpe_inj",
+      "canonicalName": "HDPE",
+      "aliases": [
+        "hdpe",
+        "high density polyethylene",
+        "高密度聚乙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_ldpe_film",
+      "canonicalName": "LDPE",
+      "aliases": [
+        "ldpe",
+        "low density polyethylene",
+        "低密度聚乙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_lldpe",
+      "canonicalName": "LLDPE",
+      "aliases": [
+        "lldpe",
+        "linear low density polyethylene",
+        "线性低密度聚乙烯"
+      ]
+    },
+    {
+      "categoryId": "cat_pe",
+      "canonicalName": "PE",
+      "aliases": [
+        "pe",
+        "polyethylene",
+        "聚乙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_pp_homo",
+      "canonicalName": "PP-H",
+      "aliases": [
+        "pp-h",
+        "homopolymer pp",
+        "均聚聚丙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_pp_rand",
+      "canonicalName": "PP-R",
+      "aliases": [
+        "pp-r",
+        "ppr",
+        "random copolymer pp",
+        "无规共聚聚丙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_pp_copo",
+      "canonicalName": "PP-B",
+      "aliases": [
+        "pp-b",
+        "impact copolymer pp",
+        "抗冲共聚聚丙烯"
+      ]
+    },
+    {
+      "categoryId": "cat_pp",
+      "canonicalName": "PP",
+      "aliases": [
+        "pp",
+        "polypropylene",
+        "聚丙烯"
+      ]
+    },
+    {
+      "categoryId": "cat_abs",
+      "canonicalName": "ABS",
+      "aliases": [
+        "abs",
+        "acrylonitrile butadiene styrene"
+      ]
+    },
+    {
+      "categoryId": "cat_pvc",
+      "canonicalName": "PVC",
+      "aliases": [
+        "pvc",
+        "polyvinyl chloride",
+        "聚氯乙烯"
+      ]
+    },
+    {
+      "categoryId": "sub_pa6",
+      "canonicalName": "PA6",
+      "aliases": [
+        "pa6",
+        "nylon 6",
+        "尼龙6"
+      ]
+    },
+    {
+      "categoryId": "cat_pc",
+      "canonicalName": "PC",
+      "aliases": [
+        "pc",
+        "polycarbonate",
+        "聚碳酸酯"
+      ]
+    },
+    {
+      "categoryId": "cat_pbt_pet",
+      "canonicalName": "PET",
+      "aliases": [
+        "pet",
+        "polyethylene terephthalate",
+        "聚对苯二甲酸乙二醇酯"
+      ]
+    }
+  ]
+}

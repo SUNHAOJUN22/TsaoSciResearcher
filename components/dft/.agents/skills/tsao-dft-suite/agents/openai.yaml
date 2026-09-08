@@ -1,0 +1,6 @@
+interface:
+  display_name: "TSAO DFT Suite"
+  short_description: "Fail-closed DFT parsing, TST, and model evidence"
+  default_prompt: "Use $tsao-dft-suite to audit this DFT workflow, preserve standard-state and quantity semantics, and refuse unsupported acceptance."
+policy:
+  allow_implicit_invocation: true

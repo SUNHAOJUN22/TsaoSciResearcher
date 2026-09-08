@@ -1,0 +1,37 @@
+schema_version: "1.1"
+network_id: DEMO
+phase_model: solution
+standard_state: solution_1M
+energy_unit: kcal/mol
+temperature_K: 298.15
+species:
+  - id: A
+    composition: {C: 1, H: 4}
+    charge: 0
+    site_occupancy: 0
+    phase: solution
+    free_energy: 0.0
+    artifact_id: ART-A
+    method_fingerprint_id: MF001
+    acceptance_status: accepted
+  - id: B
+    composition: {C: 1, H: 4}
+    charge: 0
+    site_occupancy: 0
+    phase: solution
+    free_energy: -2.0
+    artifact_id: ART-B
+    method_fingerprint_id: MF001
+    acceptance_status: accepted
+reactions:
+  - id: R1
+    reactants: {A: 1}
+    products: {B: 1}
+    reversible: true
+    forward_barrier: 15.0
+    reverse_barrier: 17.0
+    reaction_free_energy: -2.0
+    path_degeneracy: 1
+    transition_state_artifact_id: ART-TS1
+site_balance: null
+status: validated

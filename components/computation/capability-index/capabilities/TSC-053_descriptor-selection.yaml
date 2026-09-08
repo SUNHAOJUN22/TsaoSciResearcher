@@ -1,0 +1,58 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Machine-learning interatomic potentials",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Atomic-descriptor selection within the Machine-learning interatomic potentials workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "dataset leakage",
+    "extrapolation",
+    "unstable dynamics"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-053",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "reference_dataset",
+    "descriptor_or_architecture",
+    "train_validation_split",
+    "loss_weights",
+    "active_learning_policy"
+  ],
+  "maturity": "A4",
+  "name_cn": "描述符选择",
+  "name_en": "Atomic-descriptor selection",
+  "outputs": [
+    "trained_model",
+    "error_metrics",
+    "extrapolation_map",
+    "deployment_boundary"
+  ],
+  "recommended_adapters": [
+    "deepmd",
+    "mace"
+  ],
+  "required_evidence": [
+    "dataset manifest",
+    "training configuration",
+    "model hash",
+    "benchmark outputs"
+  ],
+  "risk_level": "medium",
+  "slug": "descriptor-selection",
+  "triggers": [
+    "deepmd",
+    "descriptor",
+    "mace",
+    "ml potential",
+    "selection",
+    "training"
+  ],
+  "validators": [
+    "data-leakage",
+    "energy-force-error",
+    "stress-error",
+    "extrapolation",
+    "stability"
+  ],
+  "workflow": "machine-learning-potential"
+}

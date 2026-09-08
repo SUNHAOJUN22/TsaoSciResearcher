@@ -1,0 +1,20 @@
+{
+  "name": "tsao-dft",
+  "version": "0.4.0-alpha.2",
+  "description": "DFT-first scientific workflow Skills for molecular and periodic calculations, provenance, ML and kinetics.",
+  "author": {"name": "SUNHAOJUN22", "url": "https://github.com/SUNHAOJUN22"},
+  "homepage": "https://github.com/SUNHAOJUN22/TsaoDFT_skill",
+  "repository": "https://github.com/SUNHAOJUN22/TsaoDFT_skill",
+  "license": "MIT",
+  "skills": "../skills/",
+  "interface": {
+    "displayName": "TsaoDFT",
+    "shortDescription": "Auditable DFT research from structure to evidence",
+    "longDescription": "Routes molecular and periodic DFT through reviewed structures, method fingerprints, preflight, technical validation, HPC provenance, optional ML/kinetics, and claim/figure gates. Scientific engines are not bundled.",
+    "defaultPrompt": [
+      "Use $tsao-dft-suite to build a DFT-first project graph and stop before expensive execution.",
+      "Use $tsao-dft-researcher for a validated Gaussian/Multiwfn/VMD molecular workflow.",
+      "Use $tsao-periodic-dft-materials to preflight and parse VASP, QE, or CP2K evidence."
+    ]
+  }
+}

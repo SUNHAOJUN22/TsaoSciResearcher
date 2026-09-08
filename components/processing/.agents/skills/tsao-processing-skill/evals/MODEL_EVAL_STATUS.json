@@ -1,0 +1,9 @@
+{
+  "schema_version": "agent-skill-model-routing-status/v19",
+  "skill_name": "tsao-processing-skill",
+  "status": "NOT_RUN",
+  "reason": "No authenticated model invocation trace is committed.",
+  "static_case_count": 6,
+  "train_cases": 3,
+  "validation_cases": 3
+}

@@ -1,0 +1,10 @@
+{
+  "concurrent_provenance": "HASH_CHAINED_AND_LOCKED",
+  "package": "tsao_computation",
+  "process_tree_limit": "ENFORCED_BY_CONTRACT",
+  "real_external_execution": "NOT_VERIFIED",
+  "schema_version": "1.0",
+  "signed_capability_required": true,
+  "signed_receipt_required": true,
+  "stdout_stderr_limits": "ENFORCED_BEFORE_OVERRUN"
+}

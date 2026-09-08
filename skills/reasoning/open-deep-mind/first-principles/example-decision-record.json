@@ -1,0 +1,13 @@
+{
+  "decision_id": "arch-decision-001",
+  "decision": "Retain a modular monolith, strengthen module contracts, and define extraction triggers.",
+  "foundation_trace": ["O1", "C1", "V1", "I1"],
+  "assumptions": ["traffic and team size remain within the current regime over the review window"],
+  "uncertainty": "future staffing, regulatory isolation, or divergent scaling may change the architecture decision",
+  "rival_model": "microservices become superior if independent scaling, isolation, or release cadence differences dominate operational overhead",
+  "falsifiers": ["measured deployment contention persists after module-boundary improvements"],
+  "next_discriminating_action": "instrument deployment coordination cost and trial independent module release inside the monolith",
+  "monitoring_variables": ["deployment coordination time", "incident rate", "team size", "scaling divergence"],
+  "review_trigger": "review when team size exceeds eight or deployment coordination becomes a measured top-three bottleneck",
+  "reversal_condition": "extract services when independent deployment benefit demonstrably exceeds distributed-systems overhead"
+}

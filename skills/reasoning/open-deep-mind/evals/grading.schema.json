@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenDeepMind Eval Grading",
+  "type": "object",
+  "required": ["case_id", "configuration", "assertion_results", "summary"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "configuration": {"type": "string"},
+    "assertion_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "passed", "evidence"],
+        "properties": {
+          "text": {"type": "string"},
+          "passed": {"type": "boolean"},
+          "evidence": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "red_blockers": {"type": "array", "items": {"type": "string"}},
+    "route_correct": {"type": ["boolean", "null"]},
+    "triz_false_activation": {"type": "boolean"},
+    "module_leakage": {"type": "boolean"},
+    "rival_model_present": {"type": ["boolean", "null"]},
+    "falsifier_present": {"type": ["boolean", "null"]},
+    "judge_score": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+    "summary": {
+      "type": "object",
+      "required": ["passed", "failed", "total", "pass_rate", "case_passed"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0},
+        "total": {"type": "integer", "minimum": 0},
+        "pass_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "case_passed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

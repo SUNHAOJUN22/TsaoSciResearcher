@@ -1,0 +1,62 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: open-deep-mind-validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.12"
+
+      - name: Validate First Philosophy module
+        run: python open-deep-mind/first-philosophy/scripts/validate_module.py
+
+      - name: Validate First Principles module
+        run: python open-deep-mind/first-principles/scripts/validate_module.py
+
+      - name: Validate TRIZ module
+        run: python open-deep-mind/triz/scripts/validate_triz_module.py
+
+      - name: Validate behavioral benchmark definitions
+        run: python open-deep-mind/evals/scripts/validate_evals.py
+
+      - name: Validate repository architecture
+        run: python open-deep-mind/scripts/validate_repository.py .
+
+      - name: Validate example claim ledger
+        run: python open-deep-mind/scripts/validate_ledger.py open-deep-mind/assets/example-ledger.json
+
+      - name: Smoke-test TRIZ matrix lookup
+        run: python open-deep-mind/triz/scripts/lookup_matrix.py --improve 1 --worsen 3 --json
+
+      - name: Smoke-test TRIZ Standard Inventive Solution lookup
+        run: python open-deep-mind/triz/scripts/lookup_standard_solution.py 1.2.1 --json
+
+      - name: Run regression tests
+        run: python -m unittest discover -s open-deep-mind/tests -p "test_*.py" -v
+
+      - name: Compile Python sources
+        run: python -m compileall -q open-deep-mind
+
+      - name: Reject generated or source drift
+        run: git diff --exit-code

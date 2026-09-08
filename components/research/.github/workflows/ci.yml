@@ -1,0 +1,176 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  compatibility:
+    name: compatibility-${{ matrix.os }}-py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: "3.10"
+          - os: ubuntu-latest
+            python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.12"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install exact CI dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Compile and run cross-platform contracts
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/tsr-pycache
+        run: |
+          python scripts/validate_unicode_integrity.py --check
+          python -m compileall -q scripts tsao_researcher tests
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_archive_safety.py tests/test_common.py tests/test_install.py tests/test_project_state.py tests/test_runtime_v2.py tests/test_scientific_quality.py tests/test_handoff_cli.py tests/test_receipts_capsules.py tests/test_named_capabilities.py tests/test_first_principles_strategy.py tests/test_first_principles_strategy_boundaries.py tests/test_strategy_passport.py tests/test_strategy_quantitative_integrity.py tests/test_mathematical_contracts.py tests/test_readme_facts.py tests/test_v071_hardening.py tests/test_final_acceptance_preflight.py
+          python -m tsao_researcher --version
+          python -m tsao_researcher route "run an actual DFT calculation"
+          python -m tsao_researcher search "polymer molecular dynamics" --limit 3
+          python -m tsao_researcher quality examples/scientific-quality-check.json
+          python -m tsao_researcher strategy "How do trap states control charge transport?" --observable "trap energy" --condition "applied electric field"
+          python -m tsao_researcher strategy "Can a 1.0 eV trap measurement predict product quality by extrapolation?" --observable "trap energy 1.0 eV" --condition "303 K" --evidence "independent experiment measurement"
+          python -m tsao_researcher math --schema
+          python -m tsao_researcher math --contract decision-readiness --language both --output artifacts-math-contract.json
+          python scripts/validate_mathematical_contracts.py --check
+          python scripts/validate_schemas.py
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python scripts/final_acceptance_preflight.py --root . --json
+
+  full-validation:
+    name: full-validation-and-release-evidence
+    needs: compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install exact CI dependencies and package
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Repository, metadata, schema and generated-artifact audit
+        run: |
+          python scripts/validate_unicode_integrity.py --check
+          python scripts/sync_version.py --check
+          python scripts/sync_runtime_data.py --check
+          python scripts/validate_schemas.py
+          python scripts/validate_mathematical_contracts.py --check
+          python scripts/audit_repository.py
+          python scripts/validate_structure.py
+          python scripts/build_readme_facts.py --check
+          python scripts/build_sbom.py --check
+          python scripts/build_validation_evidence.py --check
+          python scripts/build_test_dashboard.py --check
+          python scripts/build_research_quality_dashboard.py --check
+          python scripts/build_engineering_report.py --write
+          python scripts/generate_checksums.py --check
+          python scripts/build_capability_index.py --check
+          python scripts/route_task.py --self-test
+          python scripts/validate_figure.py examples/figure-contract.json
+          python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+          python scripts/final_acceptance_preflight.py --root . --json
+          python -m tsao_researcher math --schema
+          python -m tsao_researcher math --contract uncertainty-budget --language both --output artifacts-math-contract.json
+          mkdocs build --strict
+      - name: Complete regression
+        run: |
+          mkdir -p artifacts
+          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+      - name: Line and branch coverage
+        run: |
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+      - name: Reverse and seeded-random order
+        env:
+          TSR_TEST_ORDER_SEED: "20260806"
+        run: |
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+          python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+      - name: Static, type and source security
+        run: |
+          python -m ruff format --check scripts tsao_researcher tests
+          python -m ruff check scripts tsao_researcher tests
+          python -m mypy scripts tsao_researcher
+          python -m bandit -q -lll -r scripts tsao_researcher
+      - name: Dependency audit and deterministic SBOM
+        run: |
+          python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+          python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+          python scripts/build_sbom.py --check
+      - name: Mutation, performance and quality baseline
+        run: |
+          python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+          python scripts/performance_smoke.py --json-out artifacts/performance.json
+          python scripts/check_quality_baseline.py
+          python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+          python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
+      - name: Deterministic source release
+        run: |
+          python scripts/package_release.py --out dist-a
+          python scripts/package_release.py --out dist-b
+          cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+          python scripts/validate_release.py
+      - name: Build and install wheel and sdist
+        run: |
+          python -m build --sdist --wheel --outdir dist-python
+          python scripts/validate_distribution.py dist-python
+      - name: Build external publication attestation
+        run: python scripts/build_publication_attestation.py
+      - name: Upload complete validation evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: validation-evidence-${{ github.sha }}
+          path: |
+            artifacts
+            artifacts/QUALITY_HISTORY.json
+            docs/VALIDATION_EVIDENCE.json
+            docs/SBOM.cdx.json
+            docs/engineering-audit-report.pdf
+            docs/test-dashboard.html
+            docs/test-dashboard.svg
+            docs/research-quality-dashboard.html
+            docs/research-quality-dashboard.svg
+            SHA256SUMS
+            dist-a
+            dist-python
+            site
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/skills/epdm/schemas/rate-package-a3.schema.json",
+  "title": "EPDM A3 executable rate package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rate_package_id",
+    "version",
+    "network_id",
+    "bindings",
+    "parameter_sets",
+    "software_status",
+    "scientific_status",
+    "scientific_technical_approval",
+    "engineering_design_approval"
+  ],
+  "properties": {
+    "schema": {"const": "TSAO-EPDM-A3-RATE-PACKAGE-1"},
+    "rate_package_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "version": {"type": "string", "minLength": 1},
+    "network_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "parameter_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/parameter_set"}
+    },
+    "software_status": {"const": "RHS_SOFTWARE_VERIFIED"},
+    "scientific_status": {"const": "CALCULATED_REFERENCE_ONLY"},
+    "scientific_technical_approval": {"const": "NOT_EVALUATED"},
+    "engineering_design_approval": {"const": "NOT_EVALUATED"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reaction_id",
+        "rate_law_id",
+        "parameter_set_id",
+        "required_states",
+        "required_modifiers",
+        "enabled"
+      ],
+      "properties": {
+        "reaction_id": {"$ref": "#/$defs/identifier"},
+        "rate_law_id": {
+          "enum": [
+            "MASS_ACTION_AMOUNT_FIRST_ORDER",
+            "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME"
+          ]
+        },
+        "parameter_set_id": {"$ref": "#/$defs/identifier"},
+        "required_states": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "required_modifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "enabled": {"type": "boolean"}
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_temperature_k",
+        "maximum_temperature_k",
+        "minimum_volume_m3",
+        "maximum_volume_m3"
+      ],
+      "properties": {
+        "minimum_temperature_k": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_temperature_k": {"type": "number", "exclusiveMinimum": 0},
+        "minimum_volume_m3": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_volume_m3": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "parameter_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parameter_set_id",
+        "k_ref",
+        "reference_temperature_k",
+        "activation_energy",
+        "temperature_dependence",
+        "source_class",
+        "uncertainty_state",
+        "standard_uncertainty",
+        "identifiability_state",
+        "applicability_domain",
+        "evidence_references",
+        "calibrated"
+      ],
+      "properties": {
+        "parameter_set_id": {"$ref": "#/$defs/identifier"},
+        "k_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "unit"],
+          "properties": {
+            "value": {"type": "number", "minimum": 0},
+            "unit": {"enum": ["1/s", "m^3/(mol*s)"]}
+          }
+        },
+        "reference_temperature_k": {"type": "number", "exclusiveMinimum": 0},
+        "activation_energy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "unit"],
+          "properties": {
+            "value": {"type": "number", "minimum": 0},
+            "unit": {"const": "J/mol"}
+          }
+        },
+        "temperature_dependence": {"const": "ARRHENIUS_K_REF"},
+        "source_class": {
+          "enum": ["MEASURED", "ESTIMATED", "LITERATURE_PRIOR", "ASSUMED", "SYNTHETIC_FIXTURE"]
+        },
+        "uncertainty_state": {
+          "enum": ["NOT_QUANTIFIED", "STANDARD_UNCERTAINTY", "INTERVAL"]
+        },
+        "standard_uncertainty": {"type": ["number", "null"], "minimum": 0},
+        "identifiability_state": {
+          "enum": [
+            "NOT_EVALUATED",
+            "STRUCTURALLY_IDENTIFIABLE",
+            "PRACTICALLY_IDENTIFIABLE",
+            "NON_IDENTIFIABLE"
+          ]
+        },
+        "applicability_domain": {"$ref": "#/$defs/domain"},
+        "evidence_references": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "calibrated": {"type": "boolean"}
+      }
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-25",
+  "dataKind": "market-material-records",
+  "sourceType": "market-demo",
+  "recordStatus": "demo",
+  "data": [
+    {
+      "id": "STD-HDPE-5000S",
+      "source": "open_market",
+      "category": "HDPE",
+      "grade": "HDPE 5000S",
+      "manufacturer": "Sinopec Yanshan (燕山石化)",
+      "description": "标准注塑级高密度聚乙烯，具有良好的流动性、强度和刚性，常用于塑料容器、日用品和玩具制造。",
+      "properties": {
+        "density": {
+          "value": 0.954,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 1.0,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "190℃",
+          "load": "2.16kg"
+        },
+        "tensileYield": {
+          "value": 24.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 1250.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 6.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    },
+    {
+      "id": "STD-PP-T30S",
+      "source": "open_market",
+      "category": "PP",
+      "grade": "PP T30S",
+      "manufacturer": "Sinopec Yangzi (扬子石化)",
+      "description": "中等流动性均聚聚丙烯，主要用于拉丝、扁丝生产，广泛应用于编织袋、吨袋及包装材料。",
+      "properties": {
+        "density": {
+          "value": 0.905,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 3.2,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "230℃",
+          "load": "2.16kg"
+        },
+        "tensileYield": {
+          "value": 34.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 1450.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 3.5,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    },
+    {
+      "id": "STD-LDPE-2426H",
+      "source": "open_market",
+      "category": "LDPE",
+      "grade": "LDPE 2426H",
+      "manufacturer": "Sinopec Shanghai (上海石化)",
+      "description": "薄膜级低密度聚乙烯，拥有优异树脂透明性、延伸性能和开口性能，是各类复合软包装的主流原料。",
+      "properties": {
+        "density": {
+          "value": 0.923,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 1.9,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "190℃",
+          "load": "2.16kg"
+        },
+        "tensileYield": {
+          "value": 11.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 260.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 50.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    },
+    {
+      "id": "STD-ABS-757",
+      "source": "open_market",
+      "category": "ABS",
+      "grade": "ABS PA-757",
+      "manufacturer": "Chi Mei (奇美实业)",
+      "description": "超高刚性通用注塑级ABS树脂，具有优秀的表面高光泽、冲击强度和稳定可加工性，广泛应用在电器外壳、家电配件上。",
+      "properties": {
+        "density": {
+          "value": 1.04,
+          "unit": "g/cm³",
+          "standard": "ISO 1183"
+        },
+        "mfr": {
+          "value": 18.0,
+          "unit": "g/10min",
+          "standard": "ISO 1133",
+          "temp": "220℃",
+          "load": "10.0kg"
+        },
+        "tensileYield": {
+          "value": 47.0,
+          "unit": "MPa",
+          "standard": "ISO 527"
+        },
+        "flexuralModulus": {
+          "value": 2500.0,
+          "unit": "MPa",
+          "standard": "ISO 178"
+        },
+        "izodImpact": {
+          "value": 18.0,
+          "unit": "kJ/m²",
+          "standard": "ISO 180"
+        }
+      },
+      "timestamp": 1779235200000
+    }
+  ]
+}

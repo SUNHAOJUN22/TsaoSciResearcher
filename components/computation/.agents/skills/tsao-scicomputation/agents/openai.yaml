@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tsao Scientific Computation"
+  short_description: "Govern evidence-bound scientific computation"
+  brand_color: "#0057B8"
+  default_prompt: "Use $tsao-scicomputation to plan or audit this scientific-computation workflow with exact evidence gates."
+policy:
+  allow_implicit_invocation: true

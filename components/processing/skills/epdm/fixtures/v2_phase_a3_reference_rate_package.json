@@ -1,0 +1,1591 @@
+{
+  "schema": "TSAO-EPDM-A3-RATE-PACKAGE-1",
+  "rate_package_id": "A3-RATE-PACKAGE:EPDM-V2-TERMINAL-NETWORK-1",
+  "version": "3.0.0",
+  "network_id": "EPDM-V2-TERMINAL-NETWORK-1",
+  "bindings": [
+    {
+      "reaction_id": "ACT_SPON:SITE-A",
+      "rate_law_id": "MASS_ACTION_AMOUNT_FIRST_ORDER",
+      "parameter_set_id": "A3-PARAM:ACT_SPON:SITE-A",
+      "required_states": [
+        "N_SITE_POTENTIAL:SITE-A"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "ACT_COCAT:SITE-A",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:ACT_COCAT:SITE-A",
+      "required_states": [
+        "N_SITE_POTENTIAL:SITE-A"
+      ],
+      "required_modifiers": [
+        "N_COCATALYST"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:E",
+      "required_states": [
+        "N_SITE_VACANT:SITE-A",
+        "N_E"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:P",
+      "required_states": [
+        "N_SITE_VACANT:SITE-A",
+        "N_P"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAIN_INI:SITE-A:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:D",
+      "required_states": [
+        "N_SITE_VACANT:SITE-A",
+        "N_D"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:E",
+        "N_E"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:E",
+        "N_P"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:E:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:E",
+        "N_D"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_E"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_P"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:E:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_D"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_H2"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:E:SOLVENT",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:E:SOLVENT",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_SOLVENT"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:E:COCATALYST",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:E:COCATALYST",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_COCATALYST"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_FIRST_ORDER",
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:E"
+      ],
+      "required_modifiers": [
+        "N_POISON"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:P",
+        "N_E"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:P",
+        "N_P"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:P:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:P",
+        "N_D"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_E"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_P"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:P:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_D"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_H2"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:P:SOLVENT",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:P:SOLVENT",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_SOLVENT"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:P:COCATALYST",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:P:COCATALYST",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_COCATALYST"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_FIRST_ORDER",
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:P"
+      ],
+      "required_modifiers": [
+        "N_POISON"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:D",
+        "N_E"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:D",
+        "N_P"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "PROPAGATION:SITE-A:D:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:D",
+        "N_D"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:E",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:E",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_E"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:P",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:P",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_P"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_MON:SITE-A:D:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_D"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_H2:SITE-A:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_H2"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:D:SOLVENT",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:D:SOLVENT",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_SOLVENT"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "CHAT_AGENT:SITE-A:D:COCATALYST",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:D:COCATALYST",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_COCATALYST"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_SPON:SITE-A:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_FIRST_ORDER",
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_POISON:LIVE:SITE-A:D",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:D",
+      "required_states": [
+        "LAMBDA0:SITE-A:D"
+      ],
+      "required_modifiers": [
+        "N_POISON"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "DEACT_POISON:VACANT:SITE-A",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:VACANT:SITE-A",
+      "required_states": [
+        "N_SITE_VACANT:SITE-A"
+      ],
+      "required_modifiers": [
+        "N_POISON"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "INH_H2_FORWARD:SITE-A",
+      "rate_law_id": "MASS_ACTION_AMOUNT_SECOND_ORDER_VOLUME",
+      "parameter_set_id": "A3-PARAM:INH_H2_FORWARD:SITE-A",
+      "required_states": [
+        "N_SITE_VACANT:SITE-A"
+      ],
+      "required_modifiers": [
+        "N_H2"
+      ],
+      "enabled": true
+    },
+    {
+      "reaction_id": "INH_H2_REVERSE:SITE-A",
+      "rate_law_id": "MASS_ACTION_AMOUNT_FIRST_ORDER",
+      "parameter_set_id": "A3-PARAM:INH_H2_REVERSE:SITE-A",
+      "required_states": [
+        "N_SITE_INHIBITED_H2:SITE-A"
+      ],
+      "required_modifiers": [],
+      "enabled": true
+    }
+  ],
+  "parameter_sets": [
+    {
+      "parameter_set_id": "A3-PARAM:ACT_SPON:SITE-A",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "1/s"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 18000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:ACT_COCAT:SITE-A",
+      "k_ref": {
+        "value": 0.0002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 16000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:E",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 20000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:P",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 20000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAIN_INI:SITE-A:D",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 20000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:E",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:P",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:E:D",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:E",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:P",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:E:D",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:E",
+      "k_ref": {
+        "value": 5e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 12000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:E:SOLVENT",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:E:COCATALYST",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:E",
+      "k_ref": {
+        "value": 0.0001,
+        "unit": "1/s"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 10000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:E",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 8000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:E",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:P",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:P:D",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:E",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:P",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:P:D",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:P",
+      "k_ref": {
+        "value": 5e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 12000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:P:SOLVENT",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:P:COCATALYST",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:P",
+      "k_ref": {
+        "value": 0.0001,
+        "unit": "1/s"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 10000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:P",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 8000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:E",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:P",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:PROPAGATION:SITE-A:D:D",
+      "k_ref": {
+        "value": 0.002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 24000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:E",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:P",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_MON:SITE-A:D:D",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 14000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_H2:SITE-A:D",
+      "k_ref": {
+        "value": 5e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 12000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:D:SOLVENT",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:CHAT_AGENT:SITE-A:D:COCATALYST",
+      "k_ref": {
+        "value": 2e-05,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 11000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_SPON:SITE-A:D",
+      "k_ref": {
+        "value": 0.0001,
+        "unit": "1/s"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 10000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:LIVE:SITE-A:D",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 8000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:DEACT_POISON:VACANT:SITE-A",
+      "k_ref": {
+        "value": 0.0004,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 8000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:INH_H2_FORWARD:SITE-A",
+      "k_ref": {
+        "value": 0.0002,
+        "unit": "m^3/(mol*s)"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 8000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    },
+    {
+      "parameter_set_id": "A3-PARAM:INH_H2_REVERSE:SITE-A",
+      "k_ref": {
+        "value": 0.001,
+        "unit": "1/s"
+      },
+      "reference_temperature_k": 323.15,
+      "activation_energy": {
+        "value": 9000.0,
+        "unit": "J/mol"
+      },
+      "temperature_dependence": "ARRHENIUS_K_REF",
+      "source_class": "SYNTHETIC_FIXTURE",
+      "uncertainty_state": "NOT_QUANTIFIED",
+      "standard_uncertainty": null,
+      "identifiability_state": "NOT_EVALUATED",
+      "applicability_domain": {
+        "minimum_temperature_k": 250.0,
+        "maximum_temperature_k": 500.0,
+        "minimum_volume_m3": 1e-09,
+        "maximum_volume_m3": 1000000.0
+      },
+      "evidence_references": [
+        "EPDM-A3-SYNTHETIC-RATE-FIXTURE"
+      ],
+      "calibrated": false
+    }
+  ],
+  "software_status": "RHS_SOFTWARE_VERIFIED",
+  "scientific_status": "CALCULATED_REFERENCE_ONLY",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED"
+}

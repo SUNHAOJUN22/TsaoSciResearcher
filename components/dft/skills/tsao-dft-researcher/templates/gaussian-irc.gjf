@@ -1,0 +1,8 @@
+%oldchk={{TS_JOB_NAME}}.chk
+%chk={{IRC_JOB_NAME}}.chk
+%mem={{MEMORY}}
+%nprocshared={{NPROC}}
+#p {{METHOD}}/{{BASIS}} IRC=(RCFC,MaxPoints={{MAXPOINTS}}{{IRC_OPTIONS}}) Geom=AllCheck Guess=Read {{EXTRA_KEYWORDS}}
+
+{{TITLE}} — traces both directions by default; use one explicit direction only when justified
+

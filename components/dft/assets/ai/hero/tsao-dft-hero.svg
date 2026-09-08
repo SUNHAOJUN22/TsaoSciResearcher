@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="AI-assisted conceptual illustration of the TsaoDFT evidence-first DFT research operating system">
+<title>TsaoDFT evidence-first DFT research operating system</title>
+<desc>Hero-centric dark scientific interface with an AI-assisted molecular, periodic and HPC montage, compact capability modules, workflow gates and evidence cards. Illustrative only, not computational or scientific data.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020712"/><stop offset=".55" stop-color="#071326"/><stop offset="1" stop-color="#030914"/></linearGradient>
+  <linearGradient id="title" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#66D7FF"/><stop offset=".52" stop-color="#7E8CFF"/><stop offset="1" stop-color="#C477FF"/></linearGradient>
+  <linearGradient id="heroFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#020712" stop-opacity="1"/><stop offset=".38" stop-color="#020712" stop-opacity=".83"/><stop offset=".63" stop-color="#020712" stop-opacity=".18"/><stop offset="1" stop-color="#020712" stop-opacity=".08"/></linearGradient>
+  <linearGradient id="card" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1930"/><stop offset="1" stop-color="#07111F"/></linearGradient>
+  <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#143F77"/><stop offset=".45" stop-color="#17486A"/><stop offset="1" stop-color="#43235D"/></linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#173052" stroke-width="1" opacity=".28"/></pattern>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity=".42"/></filter>
+  <filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <clipPath id="heroClip"><rect x="0" y="0" width="1600" height="330" rx="24"/></clipPath>
+  <style>
+   .sans{font-family:Inter,Segoe UI,Arial,sans-serif}
+   .mono{font-family:"JetBrains Mono",Consolas,monospace}
+   .t1{font:800 70px Inter,Segoe UI,Arial,sans-serif;fill:url(#title);letter-spacing:-2px}
+   .t2{font:600 25px Inter,Segoe UI,Arial,sans-serif;fill:#EAF3FF}
+   .lead{font:400 18px Inter,Segoe UI,Arial,sans-serif;fill:#B5C6DA}
+   .section{font:700 24px Inter,Segoe UI,Arial,sans-serif;fill:#F3F8FF}
+   .label{font:700 16px Inter,Segoe UI,Arial,sans-serif;fill:#F2F7FF}
+   .small{font:500 13px Inter,Segoe UI,Arial,sans-serif;fill:#A9BDD4}
+   .tiny{font:600 11px "JetBrains Mono",Consolas,monospace;fill:#7F95AE}
+  </style>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<rect width="1600" height="900" fill="url(#grid)"/>
+
+
+<g clip-path="url(#heroClip)">
+ <rect x="18" y="18" width="1564" height="300" rx="22" fill="#031024" stroke="#1D3B62" stroke-width="1.5"/>
+ 
+<g opacity=".96">
+  <g transform="translate(790 151)" filter="url(#glow)">
+    <path d="M-122 12 C-82-54-28-54 8 10 C44 74 100 72 142 4 C102-54 49-54 10 9 C-28 72-84 73-122 12Z" fill="none" stroke="#5D9CFF" stroke-width="9" opacity=".68"/>
+    <path d="M-122 12 C-82-54-28-54 8 10 C44 74 100 72 142 4 C102-54 49-54 10 9 C-28 72-84 73-122 12Z" fill="none" stroke="#B370FF" stroke-width="3" opacity=".92"/>
+  </g>
+  <g transform="translate(686 142)" stroke="#B6D9FF" stroke-width="4" fill="none">
+    <path d="M-92 18L-42-12L6 12L52-18L96 8M-42-12L-18-60L25-46L52-18M6 12L25-46M6 12L18 58"/>
+    <g fill="#D6E7FF" stroke="#43698F" stroke-width="2">
+      <circle cx="-92" cy="18" r="11"/><circle cx="-42" cy="-12" r="13"/><circle cx="6" cy="12" r="14"/>
+      <circle cx="52" cy="-18" r="12"/><circle cx="96" cy="8" r="10"/><circle cx="-18" cy="-60" r="10"/>
+      <circle cx="25" cy="-46" r="12"/><circle cx="18" cy="58" r="10"/>
+    </g>
+    <circle cx="-42" cy="-12" r="42" fill="#2E8CFF" fill-opacity=".18" stroke="none"/>
+    <circle cx="25" cy="-46" r="45" fill="#B370FF" fill-opacity=".15" stroke="none"/>
+  </g>
+  <g transform="translate(1105 155)" stroke="#68B8FF" stroke-width="1.6">
+    <path d="M0 0L250 38L160 116L-88 78Z" fill="#091F40" fill-opacity=".8"/>
+    <g fill="#133B68">
+      <path d="M-60 68L190 106M-28 56L222 94M4 44L254 82M36 32L286 70"/>
+      <path d="M-60 68L28-10M-20 74L68-4M20 80L108 2M60 86L148 8M100 92L188 14M140 98L228 20M180 104L268 26"/>
+    </g>
+    <g fill="#F1774B" stroke="#FFD4A3">
+      <circle cx="-28" cy="56" r="7"/><circle cx="18" cy="50" r="7"/><circle cx="64" cy="44" r="7"/>
+      <circle cx="110" cy="38" r="7"/><circle cx="156" cy="32" r="7"/><circle cx="202" cy="26" r="7"/>
+      <circle cx="16" cy="80" r="7"/><circle cx="62" cy="74" r="7"/><circle cx="108" cy="68" r="7"/>
+      <circle cx="154" cy="62" r="7"/><circle cx="200" cy="56" r="7"/><circle cx="246" cy="50" r="7"/>
+    </g>
+    <g fill="#5BB5FF" stroke="#D7EDFF">
+      <circle cx="-5" cy="62" r="6"/><circle cx="41" cy="56" r="6"/><circle cx="87" cy="50" r="6"/>
+      <circle cx="133" cy="44" r="6"/><circle cx="179" cy="38" r="6"/><circle cx="225" cy="32" r="6"/>
+    </g>
+  </g>
+  <g transform="translate(1450 82)">
+    <g fill="#071833" stroke="#3D8BFF" stroke-width="2">
+      <rect x="0" y="0" width="48" height="154" rx="5"/><rect x="58" y="-12" width="48" height="166" rx="5"/>
+      <rect x="116" y="-24" width="48" height="178" rx="5"/>
+    </g>
+    <g fill="#58BFFF">
+      <circle cx="37" cy="16" r="2"/><circle cx="37" cy="36" r="2"/><circle cx="37" cy="56" r="2"/><circle cx="37" cy="76" r="2"/>
+      <circle cx="95" cy="8" r="2"/><circle cx="95" cy="28" r="2"/><circle cx="95" cy="48" r="2"/><circle cx="95" cy="68" r="2"/>
+      <circle cx="153" cy="0" r="2"/><circle cx="153" cy="20" r="2"/><circle cx="153" cy="40" r="2"/><circle cx="153" cy="60" r="2"/>
+    </g>
+    <g stroke="#285C9E" stroke-width="2" opacity=".75">
+      <path d="M10 25H30M10 45H30M10 65H30M10 85H30M10 105H30M10 125H30"/>
+      <path d="M68 17H88M68 37H88M68 57H88M68 77H88M68 97H88M68 117H88"/>
+      <path d="M126 9H146M126 29H146M126 49H146M126 69H146M126 89H146M126 109H146"/>
+    </g>
+  </g>
+  <g opacity=".55" fill="none" stroke="#58A6FF" stroke-width="2">
+    <path d="M860 78C910 24 970 36 1016 76S1110 120 1174 66"/>
+    <path d="M868 92C924 54 972 66 1024 96S1116 130 1194 88"/>
+    <path d="M892 45H1060M892 58H1010" stroke-dasharray="4 7"/>
+  </g>
+</g>
+ <rect x="18" y="18" width="1564" height="300" rx="22" fill="url(#heroFade)"/>
+ <rect x="1230" y="38" width="320" height="92" rx="14" fill="#061126" fill-opacity=".88" stroke="#5C3E86"/>
+ <text x="1256" y="68" class="sans" font-size="16" font-weight="750" fill="#EADFFF">DFT FIRST · EVIDENCE ALWAYS</text>
+ <text x="1256" y="95" class="small">Every result has provenance.</text>
+ <text x="1256" y="116" class="small">Every claim has a support edge.</text>
+</g>
+
+
+<text x="52" y="91" class="t1">TsaoDFT_skill</text>
+<text x="54" y="132" class="t2">AI-Assisted DFT Research Operating System</text>
+<text x="54" y="171" class="lead">From molecular states to periodic materials · from electrons to kinetics</text>
+<text x="54" y="199" class="lead">From calculation to accepted evidence · from data to defensible claims</text>
+
+<rect x="54" y="228" width="107" height="34" rx="9" fill="#0A2A45" stroke="#68D6FF" stroke-opacity=".55"/>
+<text x="107.5" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#68D6FF">DFT-FIRST</text>
+<rect x="173" y="228" width="134" height="34" rx="9" fill="#241A4A" stroke="#B6A4FF" stroke-opacity=".55"/>
+<text x="240.0" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#B6A4FF">REPRODUCIBLE</text>
+<rect x="319" y="228" width="107" height="34" rx="9" fill="#123E42" stroke="#65E5D0" stroke-opacity=".55"/>
+<text x="372.5" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#65E5D0">AUDITABLE</text>
+<rect x="438" y="228" width="104" height="34" rx="9" fill="#331947" stroke="#D79AFF" stroke-opacity=".55"/>
+<text x="490.0" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#D79AFF">MODULAR</text>
+<rect x="554" y="228" width="107" height="34" rx="9" fill="#0B315D" stroke="#75B9FF" stroke-opacity=".55"/>
+<text x="607.5" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#75B9FF">HPC-READY</text>
+<rect x="673" y="228" width="125" height="34" rx="9" fill="#4B2714" stroke="#FFB46B" stroke-opacity=".55"/>
+<text x="735.5" y="250" text-anchor="middle" class="sans" font-size="13" font-weight="750" fill="#FFB46B">OPEN SOURCE</text>
+
+<rect x="1170" y="275" width="380" height="29" rx="8" fill="#020712" fill-opacity=".9" stroke="#375073"/>
+<text x="1360" y="294" text-anchor="middle" class="tiny" fill="#AFC6DF">AI-ASSISTED CONCEPT · NOT COMPUTATIONAL DATA</text>
+
+
+<text x="40" y="362" class="section">At a glance</text>
+<path d="M40 375H1560" stroke="#264464" stroke-width="1"/>
+
+<rect x="40.0" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(74.0 435)">
+<g stroke="#62D8FF" stroke-width="3" fill="none" stroke-linecap="round">
+  <circle cx="0" cy="0" r="9" fill="#62D8FF" fill-opacity=".22"/>
+  <circle cx="-18" cy="-10" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <circle cx="19" cy="-11" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <circle cx="1" cy="19" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <path d="M-12-7 L-5-3 M12-7 L5-3 M1 10 L1 7"/>
+  <ellipse rx="30" ry="14" opacity=".6"/>
+  <ellipse rx="14" ry="30" transform="rotate(35)" opacity=".45"/>
+</g></g>
+<text x="112.0" y="428" class="label">Molecular DFT</text>
+<text x="112.0" y="452" class="small">Gaussian · TS/IRC · TDDFT</text>
+<rect x="112.0" y="466" width="108.0" height="3" rx="2" fill="#62D8FF" opacity=".8"/>
+<rect x="258.6" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(292.6 435)">
+<g stroke="#8A7CFF" stroke-width="3" fill="none" stroke-linejoin="round">
+ <path d="M0-24 22-12 22 14 0 27-22 14-22-12Z"/>
+ <path d="M0-24V1M22-12 0 1-22-12M0 1V27"/>
+</g></g>
+<text x="330.6" y="428" class="label">Periodic DFT</text>
+<text x="330.6" y="452" class="small">VASP · QE · CP2K</text>
+<rect x="330.6" y="466" width="108.0" height="3" rx="2" fill="#8A7CFF" opacity=".8"/>
+<rect x="477.1" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(511.1 435)">
+<g stroke="#5BE3C5" stroke-width="3.2" fill="none" stroke-linecap="round">
+ <path d="M-30 0 C-22-28-14 28-6 0S10-28 18 0 34 28 42 0"/>
+ <path d="M-30 14H42" opacity=".35"/>
+</g></g>
+<text x="549.1" y="428" class="label">Wavefunction</text>
+<text x="549.1" y="452" class="small">Multiwfn · VMD</text>
+<rect x="549.1" y="466" width="108.0" height="3" rx="2" fill="#5BE3C5" opacity=".8"/>
+<rect x="695.7" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(729.7 435)">
+<g stroke="#C277FF" stroke-width="2.5" fill="none">
+ <path d="M-26-18 0 0 26-18M-26 18 0 0 26 18M-26-18-26 18M26-18 26 18"/>
+ <circle cx="-26" cy="-18" r="5" fill="#C277FF"/><circle cx="-26" cy="18" r="5" fill="#C277FF"/>
+ <circle cx="0" cy="0" r="6" fill="#C277FF"/><circle cx="26" cy="-18" r="5" fill="#C277FF"/><circle cx="26" cy="18" r="5" fill="#C277FF"/>
+</g></g>
+<text x="767.7" y="428" class="label">DFT + ML</text>
+<text x="767.7" y="452" class="small">Data · UQ · Active learning</text>
+<rect x="767.7" y="466" width="108.0" height="3" rx="2" fill="#C277FF" opacity=".8"/>
+<rect x="914.3" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(948.3 435)">
+<g stroke="#FF9A4D" stroke-width="3" fill="none" stroke-linecap="round">
+ <path d="M-30 18 C-16 18-13-20 0-20S15 18 30 18"/>
+ <path d="M-32 24H34M-32 24V-28" opacity=".4"/>
+ <path d="M0-20V18" stroke-dasharray="4 5" opacity=".5"/>
+</g></g>
+<text x="986.3" y="428" class="label">Kinetics</text>
+<text x="986.3" y="452" class="small">ΔG‡ · TST · Microkinetics</text>
+<rect x="986.3" y="466" width="108.0" height="3" rx="2" fill="#FF9A4D" opacity=".8"/>
+<rect x="1132.9" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(1166.9 435)">
+<g stroke="#4EA4FF" stroke-width="2.7" fill="none" stroke-linejoin="round">
+ <rect x="-24" y="-28" width="48" height="17" rx="3"/><rect x="-24" y="-8" width="48" height="17" rx="3"/><rect x="-24" y="12" width="48" height="17" rx="3"/>
+ <circle cx="15" cy="-20" r="2" fill="#4EA4FF"/><circle cx="15" cy="0" r="2" fill="#4EA4FF"/><circle cx="15" cy="20" r="2" fill="#4EA4FF"/>
+ <path d="M-16-20H5M-16 0H5M-16 20H5" opacity=".45"/>
+</g></g>
+<text x="1204.9" y="428" class="label">HPC &amp; Provenance</text>
+<text x="1204.9" y="452" class="small">Slurm · PBS · Restart</text>
+<rect x="1204.9" y="466" width="108.0" height="3" rx="2" fill="#4EA4FF" opacity=".8"/>
+<rect x="1351.4" y="390" width="208.6" height="104" rx="14" fill="url(#card)" stroke="#294767" filter="url(#shadow)"/>
+<g transform="translate(1385.4 435)">
+<g stroke="#FF725E" stroke-width="3" fill="none" stroke-linejoin="round">
+ <path d="M-8-28H8M-4-28V-7L-25 24Q-28 29-21 29H21Q28 29 25 24L4-7V-28"/>
+ <path d="M-18 16 Q0 8 18 16" opacity=".7"/>
+ <circle cx="-7" cy="17" r="2" fill="#FF725E"/><circle cx="7" cy="13" r="2" fill="#FF725E"/>
+</g></g>
+<text x="1423.4" y="428" class="label">Catalysis Profile</text>
+<text x="1423.4" y="452" class="small">Ti/TEA · Polyolefins</text>
+<rect x="1423.4" y="466" width="108.0" height="3" rx="2" fill="#FF725E" opacity=".8"/>
+
+<text x="40" y="535" class="section">Evidence workflow</text>
+<text x="1540" y="535" text-anchor="end" class="small">No silent state transitions · no unsupported claims</text>
+
+<path d="M40,552 H262 L280,606 L262,660 H40 Q32,660 32,652 V560 Q32,552 40,552 Z" fill="#1778C8" fill-opacity=".25" stroke="#1778C8" stroke-width="1.5"/>
+<rect x="54" y="570" width="34" height="34" rx="9" fill="#1778C8"/>
+<text x="71" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">01</text>
+<text x="98" y="588" class="label">Structure</text>
+<text x="98" y="614" class="small">states · mapping</text>
+<path d="M281 606h8" stroke="#7EA5CA" stroke-width="2" opacity=".55"/>
+<path d="M292,552 H514 L532,606 L514,660 H292 Q284,660 284,652 V560 Q284,552 292,552 Z" fill="#137B94" fill-opacity=".25" stroke="#137B94" stroke-width="1.5"/>
+<rect x="306" y="570" width="34" height="34" rx="9" fill="#137B94"/>
+<text x="323" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">02</text>
+<text x="350" y="588" class="label">DFT</text>
+<text x="350" y="614" class="small">method fingerprint</text>
+<path d="M533 606h8" stroke="#7EA5CA" stroke-width="2" opacity=".55"/>
+<path d="M544,552 H766 L784,606 L766,660 H544 Q536,660 536,652 V560 Q536,552 544,552 Z" fill="#167B70" fill-opacity=".25" stroke="#167B70" stroke-width="1.5"/>
+<rect x="558" y="570" width="34" height="34" rx="9" fill="#167B70"/>
+<text x="575" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">03</text>
+<text x="602" y="588" class="label">Validate</text>
+<text x="602" y="614" class="small">technical gates</text>
+<path d="M785 606h8" stroke="#7EA5CA" stroke-width="2" opacity=".55"/>
+<path d="M796,552 H1018 L1036,606 L1018,660 H796 Q788,660 788,652 V560 Q788,552 796,552 Z" fill="#7550C7" fill-opacity=".25" stroke="#7550C7" stroke-width="1.5"/>
+<rect x="810" y="570" width="34" height="34" rx="9" fill="#7550C7"/>
+<text x="827" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">04</text>
+<text x="854" y="588" class="label">Analyze</text>
+<text x="854" y="614" class="small">wavefunction · properties</text>
+<path d="M1037 606h8" stroke="#7EA5CA" stroke-width="2" opacity=".55"/>
+<path d="M1048,552 H1270 L1288,606 L1270,660 H1048 Q1040,660 1040,652 V560 Q1040,552 1048,552 Z" fill="#B34E44" fill-opacity=".25" stroke="#B34E44" stroke-width="1.5"/>
+<rect x="1062" y="570" width="34" height="34" rx="9" fill="#B34E44"/>
+<text x="1079" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">05</text>
+<text x="1106" y="588" class="label">Scale</text>
+<text x="1106" y="614" class="small">ML · kinetics · HPC</text>
+<path d="M1289 606h8" stroke="#7EA5CA" stroke-width="2" opacity=".55"/>
+<path d="M1300,552 H1540 Q1548,552 1548,560 V652 Q1548,660 1540,660 H1300 Q1292,660 1292,652 V560 Q1292,552 1300,552 Z" fill="#69388F" fill-opacity=".25" stroke="#69388F" stroke-width="1.5"/>
+<rect x="1314" y="570" width="34" height="34" rx="9" fill="#69388F"/>
+<text x="1331" y="593" text-anchor="middle" class="sans" font-size="15" font-weight="800" fill="#FFFFFF">06</text>
+<text x="1358" y="588" class="label">Claim</text>
+<text x="1358" y="614" class="small">evidence-bound reporting</text>
+
+<rect x="266" y="673" width="1068" height="44" rx="13" fill="#081126" stroke="#5A3D83"/>
+<path d="M300 695H1300" stroke="#7B62A8" stroke-width="1" stroke-dasharray="4 8" opacity=".7"/>
+<text x="800" y="701" text-anchor="middle" class="sans" font-size="15" font-weight="700" fill="#D8C9FF">AUDIT TRAIL · METHOD FINGERPRINT · ARTIFACT HASH · ACCEPTANCE GATE · CLAIM SUPPORT</text>
+
+
+<text x="40" y="762" class="section">Evidence bento</text>
+
+<rect x="40" y="780" width="480" height="92" rx="15" fill="url(#card)" stroke="#294767"/>
+<rect x="40" y="780" width="7" height="92" rx="4" fill="#62D8FF"/>
+<text x="64" y="808" class="sans" font-size="14" font-weight="800" fill="#62D8FF">MOLECULAR EVIDENCE</text>
+<text x="64" y="832" class="small">Geometry · frequency · TS/IRC · wavefunction</text>
+<text x="64" y="854" class="tiny">minimum ≠ transition state · normal termination ≠ scientific acceptance</text>
+<g transform="translate(468 826) scale(.72)">
+<g stroke="#62D8FF" stroke-width="3" fill="none" stroke-linecap="round">
+  <circle cx="0" cy="0" r="9" fill="#62D8FF" fill-opacity=".22"/>
+  <circle cx="-18" cy="-10" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <circle cx="19" cy="-11" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <circle cx="1" cy="19" r="6" fill="#62D8FF" fill-opacity=".7"/>
+  <path d="M-12-7 L-5-3 M12-7 L5-3 M1 10 L1 7"/>
+  <ellipse rx="30" ry="14" opacity=".6"/>
+  <ellipse rx="14" ry="30" transform="rotate(35)" opacity=".45"/>
+</g></g>
+<rect x="540" y="780" width="480" height="92" rx="15" fill="url(#card)" stroke="#294767"/>
+<rect x="540" y="780" width="7" height="92" rx="4" fill="#8A7CFF"/>
+<text x="564" y="808" class="sans" font-size="14" font-weight="800" fill="#8A7CFF">PERIODIC EVIDENCE</text>
+<text x="564" y="832" class="small">Structure · cutoff · k-mesh · energy compatibility</text>
+<text x="564" y="854" class="tiny">surface / defect / adsorption comparisons require a shared fingerprint</text>
+<g transform="translate(972 826) scale(.78)">
+<g stroke="#8A7CFF" stroke-width="3" fill="none" stroke-linejoin="round">
+ <path d="M0-24 22-12 22 14 0 27-22 14-22-12Z"/>
+ <path d="M0-24V1M22-12 0 1-22-12M0 1V27"/>
+</g></g>
+<rect x="1040" y="780" width="520" height="92" rx="15" fill="url(#card)" stroke="#294767"/>
+<rect x="1040" y="780" width="7" height="92" rx="4" fill="#FF9A4D"/>
+<text x="1064" y="808" class="sans" font-size="14" font-weight="800" fill="#FF9A4D">SCALE &amp; PROVENANCE</text>
+<text x="1064" y="832" class="small">DFT labels · uncertainty · kinetics · HPC lineage</text>
+<text x="1064" y="854" class="tiny">model score and scheduler success never replace evidence</text>
+<g transform="translate(1510 826) scale(.72)">
+<g stroke="#FF9A4D" stroke-width="2.7" fill="none" stroke-linejoin="round">
+ <rect x="-24" y="-28" width="48" height="17" rx="3"/><rect x="-24" y="-8" width="48" height="17" rx="3"/><rect x="-24" y="12" width="48" height="17" rx="3"/>
+ <circle cx="15" cy="-20" r="2" fill="#FF9A4D"/><circle cx="15" cy="0" r="2" fill="#FF9A4D"/><circle cx="15" cy="20" r="2" fill="#FF9A4D"/>
+ <path d="M-16-20H5M-16 0H5M-16 20H5" opacity=".45"/>
+</g></g>
+</svg>

@@ -1,0 +1,340 @@
+{
+  "acceptance": {
+    "benchmark_semantics": true,
+    "benchmark_speedup": true,
+    "benchmarks_pass": true,
+    "convergence_no_regression": true,
+    "exact_compensated_balance": true,
+    "finite_extreme_uncertainty": true,
+    "mapping_plan_no_regression": true,
+    "parser_no_regression": true,
+    "plan_equal": true,
+    "preparsed_plan_speedup": true,
+    "route_cache_collapsed": true,
+    "route_equal": true,
+    "route_speedup": true,
+    "uncertainty_no_regression": true
+  },
+  "audit_generation": "math-performance-audit-v11",
+  "baseline": {
+    "acceleration_plan": {
+      "adapter_slug": "gromacs",
+      "backend": "openmp",
+      "claim_boundary": "Candidate GROMACS backend metadata only; detected gmx does not prove accelerator build support or speedup.",
+      "device_indices": [],
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      },
+      "execution_mode": "solver-native",
+      "fallback_used": true,
+      "library_candidates": [],
+      "mpi_ranks": 1,
+      "placement": "local",
+      "reason": "selected openmp for gromacs; supported=['cpu', 'cuda', 'hip', 'mpi', 'openmp', 'sycl']; detected=['cpu', 'openmp', 'task-parallel']; cpu_cores=8; mpi_ranks=1; threads_per_rank=8",
+      "threads_per_rank": 8,
+      "workflow": "molecular-dynamics"
+    },
+    "mapping_acceleration_plan_seconds": 3.6852606500001885e-05,
+    "preparsed_acceleration_plan_seconds": 2.077223149999874e-05,
+    "schema_version": "1.0",
+    "scientific_benchmarks": [
+      {
+        "absolute_error": 1.7621459846850485e-12,
+        "benchmark_id": "steady-conduction-1d",
+        "domain": "heat-transfer",
+        "expected": 0.0,
+        "invariant": "finite-difference profile matches the linear analytical solution",
+        "observed": 1.7621459846850485e-12,
+        "passed": true,
+        "relative_error": 1.7621459846850485e-12,
+        "tolerance": 1e-11
+      },
+      {
+        "absolute_error": 2.454369162335074e-11,
+        "benchmark_id": "poiseuille-pipe-flow",
+        "domain": "fluid-dynamics",
+        "expected": 0.00039269908169872416,
+        "invariant": "integrated parabolic profile matches Hagen-Poiseuille flow",
+        "observed": 0.00039269905715503254,
+        "passed": true,
+        "relative_error": 6.249999749727064e-08,
+        "tolerance": 2e-07
+      },
+      {
+        "absolute_error": 5.551115123125783e-17,
+        "benchmark_id": "cstr-first-order-balance",
+        "domain": "reaction-engineering",
+        "expected": 0.0,
+        "invariant": "steady inlet-outlet-generation mass balance closes",
+        "observed": -5.551115123125783e-17,
+        "passed": true,
+        "relative_error": 5.551115123125783e-17,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 1.0963452368173421e-14,
+        "benchmark_id": "pfr-first-order-rk4",
+        "domain": "reaction-engineering",
+        "expected": 0.2465969639416065,
+        "invariant": "RK4 plug-flow integration matches analytical first-order decay",
+        "observed": 0.24659696394161745,
+        "passed": true,
+        "relative_error": 4.445899167992002e-14,
+        "tolerance": 1e-11
+      },
+      {
+        "absolute_error": 9.999999982523988e-07,
+        "benchmark_id": "harmonic-oscillator-verlet",
+        "domain": "molecular-dynamics",
+        "expected": 0.0,
+        "invariant": "velocity-Verlet bounds total-energy drift",
+        "observed": 9.999999982523988e-07,
+        "passed": true,
+        "relative_error": 9.999999982523988e-07,
+        "tolerance": 1.1e-06
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "gaussian-chain-second-moment",
+        "domain": "polymer-statistical-mechanics",
+        "expected": 2.84592,
+        "invariant": "isotropic covariance trace equals N b^2",
+        "observed": 2.84592,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "parallel-plate-electric-field",
+        "domain": "electrostatics",
+        "expected": 100000.0,
+        "invariant": "central-difference electric field matches V/d",
+        "observed": 100000.0,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "electrothermal-steady-balance",
+        "domain": "multiphysics",
+        "expected": 0.0,
+        "invariant": "electrical input, Joule heating, and steady heat removal close",
+        "observed": 0.0,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      }
+    ],
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.0036441621666665944,
+    "semantic_route_cache_entries": 256,
+    "semantic_route_variants_seconds": 0.0418017579999983,
+    "semantic_route_workflows": [
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control"
+    ],
+    "source_root": "/tmp/math-v11-baseline"
+  },
+  "baseline_sha": "4fe936e9446bebd81c0e7b1c1d5c3bd0e403f385",
+  "candidate": {
+    "acceleration_plan": {
+      "adapter_slug": "gromacs",
+      "backend": "openmp",
+      "claim_boundary": "Candidate GROMACS backend metadata only; detected gmx does not prove accelerator build support or speedup.",
+      "device_indices": [],
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      },
+      "execution_mode": "solver-native",
+      "fallback_used": true,
+      "library_candidates": [],
+      "mpi_ranks": 1,
+      "placement": "local",
+      "reason": "selected openmp for gromacs; supported=['cpu', 'cuda', 'hip', 'mpi', 'openmp', 'sycl']; detected=['cpu', 'openmp', 'task-parallel']; cpu_cores=8; mpi_ranks=1; threads_per_rank=8",
+      "threads_per_rank": 8,
+      "workflow": "molecular-dynamics"
+    },
+    "mapping_acceleration_plan_seconds": 3.3355653000000984e-05,
+    "preparsed_acceleration_plan_seconds": 1.8997083000000357e-05,
+    "schema_version": "1.0",
+    "scientific_benchmarks": [
+      {
+        "absolute_error": 1.7621459846850485e-12,
+        "benchmark_id": "steady-conduction-1d",
+        "domain": "heat-transfer",
+        "expected": 0.0,
+        "invariant": "finite-difference profile matches the linear analytical solution",
+        "observed": 1.7621459846850485e-12,
+        "passed": true,
+        "relative_error": 1.7621459846850485e-12,
+        "tolerance": 1e-11
+      },
+      {
+        "absolute_error": 2.454369162335074e-11,
+        "benchmark_id": "poiseuille-pipe-flow",
+        "domain": "fluid-dynamics",
+        "expected": 0.00039269908169872416,
+        "invariant": "integrated parabolic profile matches Hagen-Poiseuille flow",
+        "observed": 0.00039269905715503254,
+        "passed": true,
+        "relative_error": 6.249999749727064e-08,
+        "tolerance": 2e-07
+      },
+      {
+        "absolute_error": 5.551115123125783e-17,
+        "benchmark_id": "cstr-first-order-balance",
+        "domain": "reaction-engineering",
+        "expected": 0.0,
+        "invariant": "steady inlet-outlet-generation mass balance closes",
+        "observed": -5.551115123125783e-17,
+        "passed": true,
+        "relative_error": 5.551115123125783e-17,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 1.0963452368173421e-14,
+        "benchmark_id": "pfr-first-order-rk4",
+        "domain": "reaction-engineering",
+        "expected": 0.2465969639416065,
+        "invariant": "RK4 plug-flow integration matches analytical first-order decay",
+        "observed": 0.24659696394161745,
+        "passed": true,
+        "relative_error": 4.445899167992002e-14,
+        "tolerance": 1e-11
+      },
+      {
+        "absolute_error": 9.999999982523988e-07,
+        "benchmark_id": "harmonic-oscillator-verlet",
+        "domain": "molecular-dynamics",
+        "expected": 0.0,
+        "invariant": "velocity-Verlet bounds total-energy drift",
+        "observed": 9.999999982523988e-07,
+        "passed": true,
+        "relative_error": 9.999999982523988e-07,
+        "tolerance": 1.1e-06
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "gaussian-chain-second-moment",
+        "domain": "polymer-statistical-mechanics",
+        "expected": 2.84592,
+        "invariant": "isotropic covariance trace equals N b^2",
+        "observed": 2.84592,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "parallel-plate-electric-field",
+        "domain": "electrostatics",
+        "expected": 100000.0,
+        "invariant": "central-difference electric field matches V/d",
+        "observed": 100000.0,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      },
+      {
+        "absolute_error": 0.0,
+        "benchmark_id": "electrothermal-steady-balance",
+        "domain": "multiphysics",
+        "expected": 0.0,
+        "invariant": "electrical input, Joule heating, and steady heat removal close",
+        "observed": 0.0,
+        "passed": true,
+        "relative_error": 0.0,
+        "tolerance": 1e-14
+      }
+    ],
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.002666323866666668,
+    "semantic_route_cache_entries": 1,
+    "semantic_route_variants_seconds": 0.0002271520000007854,
+    "semantic_route_workflows": [
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control",
+      "dynamic-control"
+    ],
+    "source_root": "/home/runner/work/TsaoSciComputation/TsaoSciComputation"
+  },
+  "claim_boundary": "Repository-local Python planning, routing and deterministic benchmark kernels only; no external solver, GPU kernel or production-HPC speedup is claimed.",
+  "schema_version": "1.0",
+  "speedups": {
+    "mapping_acceleration_plan": 1.104838406251582,
+    "preparsed_acceleration_plan": 1.09344321441341,
+    "scientific_benchmarks": 1.3667365064778798,
+    "semantic_route_variants": 184.0254895393999,
+    "v10_convergence": 1.00531426333479,
+    "v10_parser": 0.9971587049642507,
+    "v10_uncertainty": 0.9783737694593914
+  },
+  "status": "PASS",
+  "v10_baseline": {
+    "acceleration_plan_seconds": 3.6713683999998635e-05,
+    "compensated_balance_residual": -1.0,
+    "convergence_250k_peak_bytes": 512,
+    "convergence_250k_seconds": 0.03674322899999538,
+    "convergence_result": {
+      "delta": 1.599986809708298e-11,
+      "passed": true,
+      "threshold": 1.000004e-08
+    },
+    "extreme_uncertainty": 1.4142135623730951e+308,
+    "extreme_uncertainty_finite": true,
+    "parser_20mib_throughput_mib_s": 336.47733266612346,
+    "schema_version": "1.0",
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.0036698560000019143,
+    "source_root": "/tmp/math-v11-baseline",
+    "uncertainty_seconds": 7.196236500000452e-07
+  },
+  "v10_candidate": {
+    "acceleration_plan_seconds": 3.437523499999884e-05,
+    "compensated_balance_residual": -1.0,
+    "convergence_250k_peak_bytes": 512,
+    "convergence_250k_seconds": 0.036548998000000665,
+    "convergence_result": {
+      "delta": 1.599986809708298e-11,
+      "passed": true,
+      "threshold": 1.000004e-08
+    },
+    "extreme_uncertainty": 1.4142135623730951e+308,
+    "extreme_uncertainty_finite": true,
+    "parser_20mib_throughput_mib_s": 335.52130129117705,
+    "schema_version": "1.0",
+    "scientific_benchmarks_passed": 8,
+    "scientific_benchmarks_seconds": 0.002598900000002402,
+    "source_root": "/home/runner/work/TsaoSciComputation/TsaoSciComputation",
+    "uncertainty_seconds": 7.355304000000729e-07
+  }
+}

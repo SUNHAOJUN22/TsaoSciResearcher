@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/benchmark-result-flat-v1.0.schema.json",
+  "$comment": "LEGACY INPUT ONLY. This flat v1.0 contract is not authoritative and cannot directly establish new performance qualification.",
+  "title": "TsaoDFT legacy flat benchmark evidence result v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "benchmark_plan_id",
+    "candidate_id",
+    "engine",
+    "input_sha256",
+    "method_fingerprint_id",
+    "wall_time_seconds",
+    "parser_acceptance",
+    "exit_status",
+    "timestamp",
+    "repeat_index",
+    "evidence_source"
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nonNegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "buildFingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256", "components"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "components": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        }
+      }
+    },
+    "hardwareFingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256", "cpu", "accelerators", "topology"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "cpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["architecture", "model", "logical_threads"],
+          "properties": {
+            "architecture": {"type": "string", "minLength": 1},
+            "model": {"type": "string", "minLength": 1},
+            "physical_cores": {"$ref": "#/$defs/positiveInteger"},
+            "logical_threads": {"$ref": "#/$defs/positiveInteger"},
+            "memory_bytes": {"$ref": "#/$defs/positiveInteger"}
+          }
+        },
+        "accelerators": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["vendor", "model", "stable_id"],
+            "properties": {
+              "vendor": {"enum": ["nvidia", "amd", "intel", "apple", "none"]},
+              "model": {"type": "string", "minLength": 1},
+              "stable_id": {"type": "string", "minLength": 1},
+              "memory_bytes": {"$ref": "#/$defs/positiveInteger"}
+            }
+          }
+        },
+        "topology": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nodes", "interconnect"],
+          "properties": {
+            "nodes": {"$ref": "#/$defs/positiveInteger"},
+            "gpus_per_node": {"$ref": "#/$defs/nonNegativeInteger"},
+            "numa_nodes_per_node": {"$ref": "#/$defs/positiveInteger"},
+            "interconnect": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "benchmark_plan_id": {"$ref": "#/$defs/identifier"},
+    "candidate_id": {"$ref": "#/$defs/identifier"},
+    "engine": {"enum": ["gaussian", "vasp", "quantum-espresso", "cp2k", "ml-surrogate"]},
+    "engine_version": {"type": ["string", "null"], "minLength": 1},
+    "build_fingerprint": {
+      "oneOf": [{"$ref": "#/$defs/buildFingerprint"}, {"type": "null"}]
+    },
+    "compiler": {"type": ["string", "null"], "minLength": 1},
+    "mpi": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["implementation", "version", "ranks_per_node", "cuda_aware"],
+          "properties": {
+            "implementation": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "ranks_per_node": {"$ref": "#/$defs/positiveInteger"},
+            "cuda_aware": {"type": "boolean"}
+          }
+        },
+        {"type": "null"}
+      ]
+    },
+    "openmp_runtime": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["implementation", "version", "threads_per_rank"],
+          "properties": {
+            "implementation": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "threads_per_rank": {"$ref": "#/$defs/positiveInteger"}
+          }
+        },
+        {"type": "null"}
+      ]
+    },
+    "accelerator_runtime": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["backend", "toolkit_version", "driver_version"],
+          "properties": {
+            "backend": {"enum": ["cuda", "openacc", "hip", "sycl", "metal", "none"]},
+            "toolkit_version": {"type": "string", "minLength": 1},
+            "driver_version": {"type": "string", "minLength": 1}
+          }
+        },
+        {"type": "null"}
+      ]
+    },
+    "hardware_fingerprint": {
+      "oneOf": [{"$ref": "#/$defs/hardwareFingerprint"}, {"type": "null"}]
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpu", "accelerator"],
+      "properties": {
+        "cpu": {"type": "string", "minLength": 1},
+        "accelerator": {"type": "string", "minLength": 1}
+      }
+    },
+    "scheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "job_id"],
+      "properties": {
+        "kind": {"enum": ["local", "slurm", "pbs"]},
+        "job_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "filesystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "mount_fingerprint_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "input_sha256": {"$ref": "#/$defs/sha256"},
+    "method_fingerprint_id": {"$ref": "#/$defs/identifier"},
+    "convergence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "achieved"],
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/identifier"},
+        "achieved": {"type": "boolean"}
+      }
+    },
+    "output_artifact_sha256": {
+      "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "cpu_time_seconds": {"type": ["number", "null"], "minimum": 0},
+    "scf_iterations": {"type": ["integer", "null"], "minimum": 0},
+    "peak_host_memory_bytes": {"type": ["integer", "null"], "minimum": 0},
+    "peak_device_memory_bytes": {"type": ["integer", "null"], "minimum": 0},
+    "utilization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "accelerator_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "device_memory_percent": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "scientific_results": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "oneOf": [
+          {"type": "number"},
+          {"type": "string", "minLength": 1},
+          {"type": "array", "items": {"type": "number"}}
+        ]
+      }
+    },
+    "parser_acceptance": {"enum": ["PASS", "FAIL", "NOT_AVAILABLE"]},
+    "exit_status": {"type": "integer"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "repeat_index": {"$ref": "#/$defs/positiveInteger"},
+    "evidence_source": {
+      "enum": ["real-engine-observation", "local-parser-observation", "simulation"]
+    },
+    "missing_fields": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "parser_acceptance": {"const": "PASS"},
+          "exit_status": {"const": 0},
+          "evidence_source": {"const": "real-engine-observation"}
+        },
+        "required": ["parser_acceptance", "exit_status", "evidence_source"]
+      },
+      "then": {
+        "required": [
+          "engine_version",
+          "build_fingerprint",
+          "hardware_fingerprint",
+          "binding",
+          "convergence",
+          "output_artifact_sha256",
+          "scientific_results"
+        ]
+      }
+    }
+  ]
+}

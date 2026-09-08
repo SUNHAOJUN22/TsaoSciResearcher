@@ -1,0 +1,59 @@
+{
+  "applicability": "Project-specific conditions and thresholds must be stated in the calculation contract.",
+  "category": "Finite-element analysis",
+  "claim_boundary": "No live scientific execution is claimed without a solver/environment/input/output evidence chain and explicit acceptance record.",
+  "description": "Governing-equation contract within the Finite-element analysis workflow, with explicit assumptions, applicability limits, evidence lineage, and fail-closed scientific acceptance.",
+  "failure_modes": [
+    "mesh dependence",
+    "locking",
+    "ill-posed boundary condition"
+  ],
+  "human_approval_required": false,
+  "id": "TSC-083",
+  "implementation_level": "orchestrated",
+  "inputs": [
+    "geometry",
+    "governing_equations",
+    "material_law",
+    "boundary_initial_conditions",
+    "mesh_plan"
+  ],
+  "maturity": "A4",
+  "name_cn": "控制方程合同",
+  "name_en": "Governing-equation contract",
+  "outputs": [
+    "field_solution",
+    "reaction_quantities",
+    "mesh_study",
+    "verification_record"
+  ],
+  "recommended_adapters": [
+    "dolfinx",
+    "elmer"
+  ],
+  "required_evidence": [
+    "mesh",
+    "material table",
+    "boundary map",
+    "solver log"
+  ],
+  "risk_level": "medium",
+  "slug": "governing-equation-contract",
+  "triggers": [
+    "diffusion",
+    "equation",
+    "fem",
+    "finite element",
+    "governing",
+    "solid",
+    "thermal"
+  ],
+  "validators": [
+    "weak-form",
+    "mesh-convergence",
+    "time-step-convergence",
+    "balance",
+    "benchmark"
+  ],
+  "workflow": "finite-element"
+}

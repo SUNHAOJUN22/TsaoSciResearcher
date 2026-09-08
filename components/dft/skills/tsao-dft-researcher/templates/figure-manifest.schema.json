@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/schemas/figure-manifest.schema.json",
+  "title": "TsaoDFT Figure Manifest",
+  "type": "object",
+  "required": ["schema_version", "project_id", "figures"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "project_id": {"type": "string", "minLength": 1},
+    "figures": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}

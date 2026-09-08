@@ -1,0 +1,51 @@
+schema_version: 2
+project_id: demo-dft-ml
+name: DFT descriptor model
+status: planned
+research_question: Can DFT descriptors predict activation free energy for unseen parent molecular families?
+objective: Predict activation free energy while identifying robust descriptor associations without family leakage.
+observable: Group-held-out test MAE/RMSE, uncertainty, and applicability domain.
+allowed_conclusions:
+  - predictive within the declared domain
+  - not predictive within the declared domain
+  - unresolved because validation is insufficient
+model_system:
+  identity: reaction dataset with parent-family IDs
+  structure_source: accepted calculation archive
+  charge: recorded per sample
+  multiplicity: recorded per sample
+  electronic_state: recorded per sample
+  phase_or_solvent: one consistent protocol required
+  conformer_scope: conformers grouped by parent molecule
+method_fingerprint:
+  code: Gaussian 16 plus Python/DeepChem or scikit-learn
+  code_version: unknown
+  functional_or_method: unknown
+  basis_or_ecp: unknown
+  dispersion: unknown
+  solvent_model: unknown
+  integration_grid: unknown
+  temperature_K: 298.15
+  standard_state: one consistent protocol
+  low_frequency_treatment: one consistent protocol
+reference_states: [target definition must be fixed before modeling]
+success_criteria:
+  - grouped or scaffold split prevents family leakage
+  - linear and tree baselines are reported
+  - folds/seeds and uncertainty are reported
+  - SHAP is described as model interpretation, not causality
+non_goals:
+  - no test-set feature selection
+  - no treating conformers as independent parent molecules
+execution:
+  target: local Python or approved compute target
+  scheduler: optional
+  dry_run_default: true
+  task_count_estimate: unknown
+  cpu_assumption: unknown
+  memory_assumption: unknown
+  disk_assumption: unknown
+  wall_time_estimate: unknown
+  approval_required: true
+claims: []
+created_at: example

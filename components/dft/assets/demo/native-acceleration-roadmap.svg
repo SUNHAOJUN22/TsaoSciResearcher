@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="500" viewBox="0 0 1120 500" role="img" aria-labelledby="title desc">
+  <title id="title">Profile gated native acceleration roadmap</title>
+  <desc id="desc">Synthetic staged roadmap from Python reference through vectorized CPU, C++ and accelerator backends with evidence gates. Not scientific data.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090f1d"/><stop offset="1" stop-color="#161b2e"/></linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#334155"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0ea5e9"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16a34a"/><stop offset="1" stop-color="#84cc16"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#000" flood-opacity=".35"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#93c5fd"/></marker>
+  </defs>
+  <rect width="1120" height="500" rx="28" fill="url(#bg)"/>
+  <text x="54" y="60" fill="#f8fafc" font-size="28" font-family="Inter,Segoe UI,sans-serif" font-weight="700">Native acceleration roadmap</text>
+  <text x="54" y="88" fill="#94a3b8" font-size="15" font-family="Inter,Segoe UI,sans-serif">Every step requires a stable hotspot, numerical equivalence and measured end-to-end gain.</text>
+
+  <path d="M130 264H995" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+  <path d="M130 264H995" stroke="#60a5fa" stroke-width="2" stroke-dasharray="9 11"/>
+
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,sans-serif">
+    <g transform="translate(55 128)">
+      <rect width="210" height="232" rx="24" fill="#101827" stroke="#64748b"/>
+      <circle cx="105" cy="67" r="38" fill="url(#g1)"/>
+      <text x="105" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="800">0</text>
+      <text x="105" y="126" text-anchor="middle" fill="#e2e8f0" font-size="18" font-weight="700">Python reference</text>
+      <text x="105" y="153" text-anchor="middle" fill="#cbd5e1" font-size="13">deterministic correctness</text>
+      <text x="105" y="176" text-anchor="middle" fill="#94a3b8" font-size="12">profile real workloads</text>
+      <rect x="28" y="194" width="154" height="22" rx="11" fill="#1e293b"/>
+      <text x="105" y="209" text-anchor="middle" fill="#cbd5e1" font-size="10">AUTHORITATIVE BASELINE</text>
+    </g>
+
+    <g transform="translate(325 128)">
+      <rect width="210" height="232" rx="24" fill="#0b2538" stroke="#38bdf8"/>
+      <circle cx="105" cy="67" r="38" fill="url(#g2)"/>
+      <text x="105" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="800">1</text>
+      <text x="105" y="126" text-anchor="middle" fill="#e0f2fe" font-size="18" font-weight="700">Vectorized CPU</text>
+      <text x="105" y="153" text-anchor="middle" fill="#bae6fd" font-size="13">NumPy · BLAS · LAPACK</text>
+      <text x="105" y="176" text-anchor="middle" fill="#7dd3fc" font-size="12">streaming · chunking</text>
+      <rect x="28" y="194" width="154" height="22" rx="11" fill="#123b5a"/>
+      <text x="105" y="209" text-anchor="middle" fill="#bae6fd" font-size="10">LOWEST-RISK SPEEDUP</text>
+    </g>
+
+    <g transform="translate(595 128)">
+      <rect width="210" height="232" rx="24" fill="#25163c" stroke="#a78bfa"/>
+      <circle cx="105" cy="67" r="38" fill="url(#g3)"/>
+      <text x="105" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="800">2</text>
+      <text x="105" y="126" text-anchor="middle" fill="#f3e8ff" font-size="18" font-weight="700">Native CPU</text>
+      <text x="105" y="153" text-anchor="middle" fill="#e9d5ff" font-size="13">C++20 · OpenMP · Kokkos</text>
+      <text x="105" y="176" text-anchor="middle" fill="#d8b4fe" font-size="12">stable ABI + fallback</text>
+      <rect x="28" y="194" width="154" height="22" rx="11" fill="#42235f"/>
+      <text x="105" y="209" text-anchor="middle" fill="#e9d5ff" font-size="10">PROFILE-GATED</text>
+    </g>
+
+    <g transform="translate(865 128)">
+      <rect width="210" height="232" rx="24" fill="#15311e" stroke="#4ade80"/>
+      <circle cx="105" cy="67" r="38" fill="url(#g4)"/>
+      <text x="105" y="75" text-anchor="middle" fill="white" font-size="24" font-weight="800">3</text>
+      <text x="105" y="126" text-anchor="middle" fill="#ecfdf5" font-size="18" font-weight="700">GPU plugin</text>
+      <text x="105" y="153" text-anchor="middle" fill="#bbf7d0" font-size="13">CUDA · HIP · SYCL</text>
+      <text x="105" y="176" text-anchor="middle" fill="#86efac" font-size="12">transfer-inclusive proof</text>
+      <rect x="28" y="194" width="154" height="22" rx="11" fill="#1d4b2b"/>
+      <text x="105" y="209" text-anchor="middle" fill="#bbf7d0" font-size="10">REAL HARDWARE GATE</text>
+    </g>
+  </g>
+
+  <path d="M265 244H315" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M535 244H585" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M805 244H855" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g font-family="Inter,Segoe UI,sans-serif">
+    <rect x="96" y="401" width="928" height="48" rx="18" fill="#111c31" stroke="#334155"/>
+    <text x="135" y="431" fill="#bfdbfe" font-size="13">Gates:</text>
+    <text x="198" y="431" fill="#cbd5e1" font-size="13">representative profile</text>
+    <circle cx="342" cy="426" r="4" fill="#60a5fa"/>
+    <text x="360" y="431" fill="#cbd5e1" font-size="13">exact equivalence</text>
+    <circle cx="484" cy="426" r="4" fill="#60a5fa"/>
+    <text x="502" y="431" fill="#cbd5e1" font-size="13">conversion-inclusive benchmark</text>
+    <circle cx="710" cy="426" r="4" fill="#60a5fa"/>
+    <text x="728" y="431" fill="#cbd5e1" font-size="13">Windows/Linux fallback</text>
+    <circle cx="900" cy="426" r="4" fill="#60a5fa"/>
+    <text x="918" y="431" fill="#cbd5e1" font-size="13">signed evidence</text>
+  </g>
+  <text x="1090" y="486" text-anchor="end" fill="#fbbf24" font-size="11" font-family="Inter,Segoe UI,sans-serif">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+</svg>

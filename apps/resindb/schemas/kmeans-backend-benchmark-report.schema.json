@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://resindb.local/schemas/kmeans-backend-benchmark-report.schema.json",
+  "title": "ResinDB K-Means backend benchmark report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "repository",
+    "sha",
+    "mode",
+    "benchmarkRuntime",
+    "timingGate",
+    "environment",
+    "kernel",
+    "policy",
+    "equivalence",
+    "cases",
+    "crossoverAnalysis",
+    "reportDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "kmeans-backend-benchmark-report-1.0.0" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "repository": { "type": "string", "minLength": 1 },
+    "sha": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["smoke", "full"] },
+    "benchmarkRuntime": { "const": "node-wasm" },
+    "timingGate": { "const": "informational-only" },
+    "environment": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "runtimeVersion",
+        "platform",
+        "architecture",
+        "logicalCores",
+        "wasm",
+        "wasmSimd",
+        "wasmThreads",
+        "fingerprint"
+      ],
+      "properties": {
+        "runtime": { "const": "node" },
+        "runtimeVersion": { "type": "string" },
+        "platform": { "type": "string" },
+        "architecture": { "type": "string" },
+        "logicalCores": { "type": "integer", "minimum": 1 },
+        "wasm": { "type": "boolean" },
+        "wasmSimd": { "type": "boolean" },
+        "wasmThreads": { "type": "boolean" },
+        "fingerprint": { "type": "string", "minLength": 1 },
+        "operatingSystemRelease": { "type": "string" },
+        "cpuModel": { "type": "string" },
+        "totalMemoryBytes": { "type": "number", "minimum": 0 },
+        "v8Version": { "type": "string" }
+      }
+    },
+    "kernel": {
+      "type": "object",
+      "required": ["id", "version", "protocolVersion", "precision", "wasmBinarySha256", "nativeSourceSha256"],
+      "properties": {
+        "id": { "const": "kmeans-assignment-update" },
+        "version": { "const": "1.0.0" },
+        "protocolVersion": { "const": "row-major-float64-1.0.0" },
+        "precision": { "const": "f64" },
+        "wasmBinarySha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "nativeSourceSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["schemaVersion", "policyVersion", "minimumImprovementRatio", "maximumRelativeIqr", "requiredConsecutiveWins"],
+      "properties": {
+        "schemaVersion": { "const": "kmeans-backend-benchmark-policy-1.0.0" },
+        "policyVersion": { "const": "kmeans-auto-backend-policy-1.0.0" },
+        "minimumImprovementRatio": { "type": "number", "exclusiveMinimum": 0 },
+        "maximumRelativeIqr": { "type": "number", "minimum": 0 },
+        "requiredConsecutiveWins": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "equivalence": {
+      "type": "object",
+      "required": ["status", "caseCount"],
+      "properties": {
+        "status": { "enum": ["PASS", "FAIL"] },
+        "caseCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "samples",
+          "dimensions",
+          "clusters",
+          "iterations",
+          "warmups",
+          "repeats",
+          "workloadOperations",
+          "numericInputBytes",
+          "equivalence",
+          "typescript",
+          "wasm",
+          "speedRatio",
+          "absoluteMedianDifferenceMs"
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "samples": { "type": "integer", "minimum": 1 },
+          "dimensions": { "type": "integer", "minimum": 1 },
+          "clusters": { "type": "integer", "minimum": 1 },
+          "iterations": { "type": "integer", "minimum": 1 },
+          "warmups": { "type": "integer", "minimum": 0 },
+          "repeats": { "type": "integer", "minimum": 1 },
+          "workloadOperations": { "type": "integer", "minimum": 1 },
+          "numericInputBytes": { "type": "integer", "minimum": 8 },
+          "equivalence": { "const": "PASS" },
+          "typescript": { "$ref": "#/$defs/statistics" },
+          "wasm": { "$ref": "#/$defs/wasmStatistics" },
+          "speedRatio": { "type": "number", "exclusiveMinimum": 0 },
+          "absoluteMedianDifferenceMs": { "type": "number" }
+        }
+      }
+    },
+    "crossoverAnalysis": {
+      "type": "object",
+      "required": ["status", "crossoverWorkloadOperations", "qualifyingCaseIds", "reason"],
+      "properties": {
+        "status": { "enum": ["wasm-beneficial", "typescript-preferred", "insufficient-evidence"] },
+        "crossoverWorkloadOperations": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "type": "null" }
+          ]
+        },
+        "qualifyingCaseIds": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reportDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "statistics": {
+      "type": "object",
+      "required": [
+        "samples",
+        "sampleCount",
+        "minimumMs",
+        "q1Ms",
+        "medianMs",
+        "q3Ms",
+        "maximumMs",
+        "iqrMs",
+        "madMs",
+        "relativeIqr",
+        "medianPerCallMs"
+      ],
+      "properties": {
+        "samples": { "type": "array", "minItems": 1, "items": { "type": "number", "minimum": 0 } },
+        "sampleCount": { "type": "integer", "minimum": 1 },
+        "minimumMs": { "type": "number", "minimum": 0 },
+        "q1Ms": { "type": "number", "minimum": 0 },
+        "medianMs": { "type": "number", "minimum": 0 },
+        "q3Ms": { "type": "number", "minimum": 0 },
+        "maximumMs": { "type": "number", "minimum": 0 },
+        "iqrMs": { "type": "number", "minimum": 0 },
+        "madMs": { "type": "number", "minimum": 0 },
+        "relativeIqr": { "type": "number", "minimum": 0 },
+        "medianPerCallMs": { "type": "number", "minimum": 0 }
+      }
+    },
+    "wasmStatistics": {
+      "allOf": [
+        { "$ref": "#/$defs/statistics" },
+        {
+          "type": "object",
+          "required": ["memoryBytes"],
+          "properties": {
+            "memoryBytes": { "type": "integer", "minimum": 65536 }
+          }
+        }
+      ]
+    }
+  }
+}

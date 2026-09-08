@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/generated-state-definition.schema.json",
+  "title": "Generated EPDM V2 state definition",
+  "type": "object",
+  "required": [
+    "schema",
+    "generated_state_definition_id",
+    "source_state_definition_id",
+    "source_catalog_schema",
+    "version",
+    "model_level",
+    "basis",
+    "energy_formulation",
+    "site_family_ids",
+    "terminal_ids",
+    "variables",
+    "digest_sha256",
+    "numerical_execution"
+  ],
+  "properties": {
+    "schema": {
+      "const": "TSAO-EPDM-V2-GENERATED-STATE-DEFINITION-1"
+    },
+    "generated_state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "source_state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "source_catalog_schema": {
+      "const": "TSAO-EPDM-V2-STATE-CATALOG-1"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "basis": {
+      "enum": [
+        "EXTENSIVE_REACTOR_AMOUNT",
+        "AXIAL_MOLAR_FLOW",
+        "INTENSIVE_REFERENCE_FIXTURE"
+      ]
+    },
+    "energy_formulation": {
+      "enum": [
+        "TOTAL_ENTHALPY",
+        "INTERNAL_ENERGY",
+        "ISOTHERMAL",
+        "DIRECT_TEMPERATURE_REFERENCE"
+      ]
+    },
+    "site_family_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      }
+    },
+    "terminal_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "E",
+          "P",
+          "D"
+        ]
+      }
+    },
+    "variables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "state_id",
+          "base_variable_id",
+          "index",
+          "unit",
+          "basis",
+          "model_level",
+          "site_family_id",
+          "terminal_id",
+          "nonnegative",
+          "conserved_inventory_id"
+        ],
+        "properties": {
+          "state_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "base_variable_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unit": {
+            "enum": [
+              "1",
+              "K",
+              "Pa",
+              "s",
+              "mol",
+              "mol/s",
+              "kg",
+              "kg/s",
+              "m",
+              "m^2",
+              "m^3",
+              "m^3/s",
+              "J",
+              "W",
+              "J/K",
+              "J/mol",
+              "kg/mol",
+              "kg/m^3",
+              "mol/m^3",
+              "mol/kg",
+              "1/s",
+              "m^3/(mol*s)",
+              "Pa^-1*s^-1"
+            ]
+          },
+          "basis": {
+            "enum": [
+              "EXTENSIVE_REACTOR_AMOUNT",
+              "AXIAL_MOLAR_FLOW",
+              "INTENSIVE_REFERENCE_FIXTURE"
+            ]
+          },
+          "model_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "site_family_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "terminal_id": {
+            "oneOf": [
+              {
+                "enum": [
+                  "E",
+                  "P",
+                  "D"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nonnegative": {
+            "type": "boolean"
+          },
+          "conserved_inventory_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "digest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "numerical_execution": {
+      "const": "NOT_IMPLEMENTED_PHASE_A2"
+    }
+  },
+  "additionalProperties": false
+}

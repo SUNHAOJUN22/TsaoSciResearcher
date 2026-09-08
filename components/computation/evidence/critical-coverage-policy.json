@@ -1,0 +1,37 @@
+{
+  "critical_files": {
+    "tsao_computation/accelerators/solver.py": {
+      "minimum_branch_percent": 80.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/contracts/calculation.py": {
+      "minimum_branch_percent": 85.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/execution/runner.py": {
+      "minimum_branch_percent": 85.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/security/paths.py": {
+      "minimum_branch_percent": 85.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/state/machine.py": {
+      "minimum_branch_percent": 85.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/validation/acceptance.py": {
+      "minimum_branch_percent": 85.0,
+      "minimum_statement_percent": 90.0
+    },
+    "tsao_computation/validation/scientific_benchmarks.py": {
+      "minimum_branch_percent": 90.0,
+      "minimum_statement_percent": 95.0
+    }
+  },
+  "repository": {
+    "minimum_branch_percent": 90.0,
+    "minimum_statement_percent": 95.0
+  },
+  "schema_version": "1.0"
+}

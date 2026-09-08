@@ -1,0 +1,12 @@
+{
+  "counts": {
+    "adapters": 27,
+    "capabilities": 164,
+    "capability_input_profiles": 20,
+    "capability_output_profiles": 20,
+    "workflows": 20
+  },
+  "passed": true,
+  "problems": [],
+  "schema_version": "1.0"
+}

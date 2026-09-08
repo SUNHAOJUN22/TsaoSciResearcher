@@ -1,0 +1,35 @@
+{
+  "schema": "TSAO-BRANCH-CONSOLIDATION-REPORT-1",
+  "status": "HOLD_EXTERNAL_BRANCH_DELETE_API",
+  "original_branches": ["main", "epdm-v2-scientific-kernel", "feature/epdm-scientific-kernel-v2", "dependabot/github_actions/actions/upload-artifact-7.0.1"],
+  "original_head_shas": {
+    "main": "2ec934bd7a7534fe882c156b6cf60e73c7d2ed7b",
+    "epdm-v2-scientific-kernel": "88ba4486cc1cef9ee5e61507aba687a82f8f4424",
+    "feature/epdm-scientific-kernel-v2": "086aaa3f431f65254fb3336667b7b8def1b425ca",
+    "dependabot/github_actions/actions/upload-artifact-7.0.1": "fc5e1c471e7f9865d09ece2b0a53a2ac3fbd7cbf"
+  },
+  "merge_commits": {
+    "dependabot/github_actions/actions/upload-artifact-7.0.1": "f5dd515f4157342403c8db545abda3d27318c33a",
+    "feature/epdm-scientific-kernel-v2": "b8435b7b11c3b461d7a55157bdb3eef45e496597"
+  },
+  "conflict_resolutions": ["preserved historical branch ancestry", "removed obsolete one-time payload files after ancestry preservation"],
+  "ancestor_verification": {
+    "88ba4486cc1cef9ee5e61507aba687a82f8f4424": true,
+    "086aaa3f431f65254fb3336667b7b8def1b425ca": true,
+    "fc5e1c471e7f9865d09ece2b0a53a2ac3fbd7cbf": true
+  },
+  "deleted_remote_branches": ["dependabot/github_actions/actions/upload-artifact-7.0.1"],
+  "remaining_remote_branches": ["main", "epdm-v2-scientific-kernel", "feature/epdm-scientific-kernel-v2"],
+  "closed_prs": [54, 58],
+  "content_consolidation_pass": true,
+  "branch_deletion_pass": false,
+  "external_hold": "The connected GitHub tool exposes merge and ref-update actions but no delete-ref action; remaining branches contain no content outside main and require branch deletion through GitHub UI/API with delete-ref capability.",
+  "tests_and_qualification": {
+    "historical_A2_cross_platform": "PASS",
+    "local_doctor_core_after_source_reconstruction": "PASS",
+    "local_targeted_false_pass_tests": "PASS",
+    "local_full_suite_note": "one environment-specific process-start timing test is not representative of GitHub Actions qualification"
+  },
+  "final_branch": "main",
+  "pass": false
+}

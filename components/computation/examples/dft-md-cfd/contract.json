@@ -1,0 +1,86 @@
+{
+  "acceptance_criteria": {
+    "all_handoffs_validated": true,
+    "uncertainty_propagated": true
+  },
+  "assumptions": [
+    "handoff quantities have overlapping applicability",
+    "units and reference states are transformed explicitly"
+  ],
+  "boundary_conditions": {
+    "scale_interfaces": "source, receiver, units, conditions, and transformation declared for each edge"
+  },
+  "compute_resources": {
+    "hpc": "resource estimate per node",
+    "task_graph": "staged with restartable artifacts"
+  },
+  "conditions": {
+    "temperature_pressure_composition_path": "common overlap region declared"
+  },
+  "convergence_plan": {
+    "cfd": "mesh/time-step/balance convergence",
+    "dft": "method convergence",
+    "md": "sampling convergence"
+  },
+  "expected_artifacts": [
+    "multiscale task graph",
+    "handoff records",
+    "uncertainty propagation and validation report"
+  ],
+  "human_approval_nodes": [
+    "each scale handoff",
+    "final equipment-level acceptance"
+  ],
+  "initial_conditions": {
+    "upstream_evidence": "validated before each downstream handoff"
+  },
+  "methods": [
+    "DFT parameterization",
+    "MD transport/rheology",
+    "CFD equipment model",
+    "uncertainty propagation"
+  ],
+  "model_object": {
+    "description": "DFT-to-MD-to-CFD multiscale handoff workflow"
+  },
+  "parameter_sources": [
+    {
+      "parameter": "all transferred quantities",
+      "source": "native outputs plus validated transformation records"
+    }
+  ],
+  "question": "Can traceable lower-scale interaction, transport, and rheology parameters predict the target equipment-scale flow response with propagated uncertainty?",
+  "scales": [
+    "electronic",
+    "atomistic",
+    "continuum",
+    "equipment"
+  ],
+  "schema_version": "1.0",
+  "system": {
+    "equipment": "declared CFD domain",
+    "material": "user-specified chemistry and morphology"
+  },
+  "target_observables": [
+    "interaction_parameters",
+    "transport_coefficients",
+    "constitutive_parameters",
+    "equipment_performance"
+  ],
+  "uncertainty_sources": [
+    "electronic method",
+    "force field",
+    "sampling",
+    "constitutive fit",
+    "CFD discretization"
+  ],
+  "validation_plan": {
+    "checks": [
+      "handoff schema",
+      "unit and reference-state consistency",
+      "intermediate experiment",
+      "equipment benchmark"
+    ]
+  },
+  "workflow": "multiscale-coupling"
+}

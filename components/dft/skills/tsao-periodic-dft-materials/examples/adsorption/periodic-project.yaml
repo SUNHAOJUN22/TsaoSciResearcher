@@ -1,0 +1,36 @@
+schema_version: "1.1"
+project_id: ADS-DEMO
+engine: cp2k
+engine_version: "2024.1"
+support_level: L2_VALIDATED_ADAPTER
+task_type: adsorption
+structure_id: SLAB-ADS-001
+structure_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+model_review_id: REVIEW-001
+accepted_parent_artifact_ids: [CLEAN-SLAB, ADSORBATE]
+method_fingerprint:
+  xc: PBE
+  dispersion: D3(BJ)
+  basis_or_pseudopotential_family: GTH-PBE/MOLOPT
+  cutoff_or_grid_policy: CUTOFF=500 Ry; REL_CUTOFF=60 Ry
+  kpoint_or_supercell_policy: gamma-supercell
+  smearing_or_occupations: none
+  spin_and_u_policy: restricted; no U
+  electrostatics: periodic XYZ
+  convergence_thresholds: EPS_SCF=1e-6; forces reviewed
+convergence:
+  studies: [cutoff, rel_cutoff, supercell, vacuum]
+validation_plan:
+  technical_checks: [SCF convergence, force convergence, retained model identity]
+  scientific_checks: [reference compatibility, vacuum/supercell sensitivity, adsorption geometry review]
+periodic_model:
+  cell_or_supercell: reviewed slab supercell
+  vacuum_policy: converge and record
+  termination_or_defect: reviewed termination
+  fixed_region_policy: lower layers fixed by reviewed rule
+  dipole_or_polarity_policy: recorded
+  periodic_image_policy: lateral and normal separation converged
+energy_expression:
+  formula: E_ads = E_combined - E_clean - E_adsorbate
+  reference_artifact_ids: [CLEAN-SLAB, ADSORBATE]
+status: validated

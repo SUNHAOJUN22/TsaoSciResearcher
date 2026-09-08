@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/skills/poe/schemas/asset_registry.schema.json",
+  "title": "POE controlled source asset registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "registry_version",
+    "corpus_title",
+    "corpus_status",
+    "expected_asset_count",
+    "asset_count",
+    "scientific_approval",
+    "engineering_approval",
+    "assets"
+  ],
+  "properties": {
+    "registry_version": {"type": "string", "minLength": 1},
+    "corpus_title": {"type": "string", "minLength": 1},
+    "corpus_status": {"const": "CONTROLLED_HISTORICAL_EVIDENCE"},
+    "expected_asset_count": {"const": 139},
+    "asset_count": {"const": 139},
+    "generated_from": {"type": "string"},
+    "scientific_approval": {"const": "NOT_EVALUATED"},
+    "engineering_approval": {"const": "NOT_EVALUATED"},
+    "assets": {
+      "type": "array",
+      "minItems": 139,
+      "maxItems": 139,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asset_id","original_relative_path","sha256","bytes","extension","media_type","encoding","software","software_version","model_scale","lifecycle_status","evidence_class","license_scope","confidentiality","report_refs","contract_refs","acceptance_refs","public_fixture_eligible","notes","duplicate_asset_ids"],
+        "properties": {
+          "asset_id": {"type": "string", "pattern": "^POE-ASSET-[0-9]{4}$"},
+          "original_relative_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "extension": {"type": "string"},
+          "media_type": {"type": "string", "minLength": 1},
+          "encoding": {"type": "string", "minLength": 1},
+          "software": {"type": "string", "minLength": 1},
+          "software_version": {"type": "string", "minLength": 1},
+          "model_scale": {"type": "string", "minLength": 1},
+          "lifecycle_status": {"enum": ["CANONICAL","BACKUP","HISTORY","SNAPSHOT","TEMPORARY","EMPTY","UNRELATED","DUPLICATE"]},
+          "evidence_class": {"const": "CONTROLLED_HISTORICAL_EVIDENCE"},
+          "license_scope": {"const": "PROJECT_CONTROLLED"},
+          "confidentiality": {"const": "CONTROLLED_INTERNAL"},
+          "report_refs": {"type": "array", "items": {"type": "string"}},
+          "contract_refs": {"type": "array", "items": {"type": "string"}},
+          "acceptance_refs": {"type": "array", "items": {"type": "string"}},
+          "public_fixture_eligible": {"const": false},
+          "notes": {"type": "string", "minLength": 1},
+          "duplicate_asset_ids": {"type": "array", "items": {"type": "string", "pattern": "^POE-ASSET-[0-9]{4}$"}, "uniqueItems": true}
+        }
+      }
+    }
+  }
+}

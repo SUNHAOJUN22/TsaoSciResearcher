@@ -1,0 +1,101 @@
+{
+  "ledger_version": "1.0",
+  "conflicts": [
+    {
+      "conflict_id": "POE-CONFLICT-001",
+      "source_locator": "Reports/models use n-hexane and cyclohexane naming in different cases.",
+      "conflict": "Reports/models use n-hexane and cyclohexane naming in different cases.",
+      "technical_impact": "Incorrect solvent identity changes thermodynamic parameters and recycle composition.",
+      "applicable_case": "Pilot and intermediate flowsheets",
+      "decision": "Resolve per case using component lists and property-method records.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G5",
+        "G9"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-002",
+      "source_locator": "Directory names mix 1,000 t/y and 2,000 t/y for the intermediate report.",
+      "conflict": "Directory names mix 1,000 t/y and 2,000 t/y for the intermediate report.",
+      "technical_impact": "Scale basis, stream normalization and acceptance criteria may be misapplied.",
+      "applicable_case": "Intermediate-scale case",
+      "decision": "Create separate case IDs and obtain owner confirmation of intended capacity.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G0",
+        "G10"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-003",
+      "source_locator": "Contract requests multi-active-site parameter allocation; final report uses a single-site metallocene model.",
+      "conflict": "Contract requests multi-active-site parameter allocation; final report uses a single-site metallocene model.",
+      "technical_impact": "Model scope differs from contracted wording and affects identifiability/grade extrapolation.",
+      "applicable_case": "Kinetics",
+      "decision": "Record formal deviation and validate single-site applicability; multi-site remains NOT_EVALUATED.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G5",
+        "G7"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-004",
+      "source_locator": "Pilot-scale recycle was not fully closed because convergence was difficult.",
+      "conflict": "Pilot-scale recycle was not fully closed because convergence was difficult.",
+      "technical_impact": "Reported steady case is not a validated closed-loop process; impurity memory is absent.",
+      "applicable_case": "1 kt/y steady case",
+      "decision": "Keep HOLD until all recycle streams are connected and balances close.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G9"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-005",
+      "source_locator": "A 200 kt/y dynamic-model claim lacks a matching dynamic report or .dynf asset in the audited corpus.",
+      "conflict": "A 200 kt/y dynamic-model claim lacks a matching dynamic report or .dynf asset in the audited corpus.",
+      "technical_impact": "Dynamic operability and control claims cannot be reproduced.",
+      "applicable_case": "200 kt/y case",
+      "decision": "Require matching asset identity and dynamic validation report.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G14"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-006",
+      "source_locator": "Temporary lock, zero-byte generated files, histories, snapshots and backups coexist with canonical deliverables.",
+      "conflict": "Temporary lock, zero-byte generated files, histories, snapshots and backups coexist with canonical deliverables.",
+      "technical_impact": "False completeness and restoration ambiguity.",
+      "applicable_case": "Whole corpus",
+      "decision": "Registry isolates noncanonical assets; canonical restoration set still requires owner approval.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G1",
+        "G17"
+      ],
+      "approver": null
+    },
+    {
+      "conflict_id": "POE-CONFLICT-007",
+      "source_locator": "Two polypropylene cable-screening contracts are unrelated to the POE acceptance scope.",
+      "conflict": "Two polypropylene cable-screening contracts are unrelated to the POE acceptance scope.",
+      "technical_impact": "Unrelated evidence could contaminate claim traceability.",
+      "applicable_case": "Whole corpus",
+      "decision": "Classify as UNRELATED and exclude from POE evidence and fixtures.",
+      "status": "OPEN",
+      "blocking_gates": [
+        "G1"
+      ],
+      "approver": null
+    }
+  ],
+  "approval": "NOT_EVALUATED"
+}

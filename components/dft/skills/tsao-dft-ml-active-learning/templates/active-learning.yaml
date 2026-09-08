@@ -1,0 +1,8 @@
+schema_version: "1.0"
+cycle_id: AL001
+pool_path: pool.csv
+acquisition: uncertainty_diversity
+uncertainty_column: uncertainty
+diversity_group: parent_id
+batch_size: 5
+stop_criterion: budget_or_plateau

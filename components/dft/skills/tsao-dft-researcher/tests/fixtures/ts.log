@@ -1,0 +1,5 @@
+Gaussian 16: test fixture
+Charge = 0 Multiplicity = 1
+SCF Done:  E(RB3LYP) =  -99.500000000     A.U. after 10 cycles
+Frequencies --   -500.0000  80.0000  150.0000
+Normal termination of Gaussian 16

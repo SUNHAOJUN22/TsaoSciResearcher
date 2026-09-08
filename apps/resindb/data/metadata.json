@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "dataKind": "resin-data-metadata",
+  "sourceType": "repository-governance",
+  "recordStatus": "reference",
+  "updatedAt": "2026-07-28",
+  "data": {
+    "title": "ResinDB Pro governed resin data assets",
+    "description": "Independent versioned resin records loaded at runtime and verified by schema, SHA-256 and semantic checks.",
+    "recordClasses": [
+      "demo",
+      "reference",
+      "measured",
+      "imported"
+    ],
+    "dataPolicy": "Demo/reference records are not manufacturer certifications. Test conditions, units and sources remain explicit.",
+    "maintainer": "SunHJ"
+  }
+}

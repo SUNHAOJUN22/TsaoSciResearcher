@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/environment-inventory.schema.json",
+  "title": "TsaoComputation read-only execution environment inventory",
+  "type": "object",
+  "required": ["schema_version", "inventory_id", "observed_at", "source_kind", "privacy", "platform", "cpu", "gpus", "toolchain", "schedulers", "engines", "python_backends"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "inventory_id": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_kind": {"enum": ["real-local-inspection", "static-local-inspection", "test-fixture"]},
+    "privacy": {
+      "type": "object",
+      "required": ["environment_values_returned", "credentials_returned", "license_strings_returned", "home_directory_contents_scanned", "resolved_paths_returned"],
+      "properties": {
+        "environment_values_returned": {"const": false},
+        "credentials_returned": {"const": false},
+        "license_strings_returned": {"const": false},
+        "home_directory_contents_scanned": {"const": false},
+        "resolved_paths_returned": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "platform": {"type": "object"},
+    "cpu": {"type": "object"},
+    "gpus": {"type": "array", "items": {"type": "object"}},
+    "toolchain": {"type": "object"},
+    "schedulers": {"type": "object"},
+    "engines": {"type": "object"},
+    "python_backends": {"type": "object"},
+    "read_only_commands_invoked": {"type": "boolean"},
+    "non_claims": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

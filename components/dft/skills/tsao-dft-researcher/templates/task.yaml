@@ -1,0 +1,21 @@
+schema_version: 2
+task_id: T001
+title: Define scientific contract
+status: planned
+route: plan
+task_type: analysis
+depends_on: []
+inputs: []
+outputs: []
+calculation: null
+required_checks:
+  - observable_defined
+  - charge_multiplicity_resolved_or_marked_unknown
+  - reference_state_defined_when_needed
+acceptance_criteria:
+  - human_or_orchestrator_accepts_plan
+assumptions: []
+owner: unclaimed
+approval:
+  required: false
+  status: not_required

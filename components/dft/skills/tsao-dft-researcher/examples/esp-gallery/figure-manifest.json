@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "project_id": "demo-esp-gallery",
+  "figures": [
+    {
+      "id": "F-ESP",
+      "title": "ESP comparison gallery",
+      "role": "si",
+      "conclusion": "Compare surface electrostatic heterogeneity using one shared surface and scale.",
+      "evidence_grade": "A",
+      "outputs": ["figures/esp-gallery.png", "figures/esp-gallery.pdf"],
+      "panels": [
+        {
+          "id": "a",
+          "type": "esp",
+          "source_artifact_ids": ["accepted-esp-cube-a"],
+          "method": "project method fingerprint",
+          "basis": "project basis/ECP",
+          "phase_or_solvent": "project phase/solvent",
+          "renderer": "VMD/Tachyon",
+          "camera_id": "shared-front",
+          "comparison_group": "molecular-series",
+          "density_cube": "wavefunctions/a-density.cube",
+          "esp_cube": "wavefunctions/a-esp.cube",
+          "parameters": {
+            "density_isovalue_au": 0.001,
+            "esp_min": -40.0,
+            "esp_max": 40.0,
+            "unit": "kcal mol-1",
+            "negative_color": "red",
+            "positive_color": "blue",
+            "palette": "BGR"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" focusable="false" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="optimizeLegibility" data-design-system="scientific-midnight-bento" data-design-version="2">
+<title id="title">Governed mathematical stack</title>
+<desc id="desc">Balances, kinetics, thermodynamics, numerics and inference with explicit Gates.</desc>
+<rect width="1200" height="720" fill="#07111F"/>
+<style>text{font-family:Inter,"Segoe UI",Arial,sans-serif}.mono{font-family:"JetBrains Mono",Consolas,monospace}</style>
+<text x="52" y="72" font-size="30" font-weight="850" fill="#F8FAFC" text-anchor="start">GOVERNED MATHEMATICAL STACK</text>
+<text x="52" y="108" font-size="15" font-weight="600" fill="#A8B5C7" text-anchor="start">Equation + units + domain + evidence + Gate</text>
+<rect x="52" y="175" width="522" height="105" rx="18" fill="#101E33" stroke="#4F7CFF" stroke-width="2"/>
+<text class="mono" x="74" y="209" font-size="15" font-weight="800" fill="#4F7CFF" text-anchor="start">BALANCES</text>
+<text x="74" y="241" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">dN/dt = Fin - Fout + nu^T r</text>
+<text x="74" y="264" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="52" y="315" width="522" height="105" rx="18" fill="#101E33" stroke="#22D3EE" stroke-width="2"/>
+<text class="mono" x="74" y="349" font-size="15" font-weight="800" fill="#22D3EE" text-anchor="start">KINETICS</text>
+<text x="74" y="381" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">k(T) = A exp(-E/RT)</text>
+<text x="74" y="404" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="52" y="455" width="522" height="105" rx="18" fill="#101E33" stroke="#34D399" stroke-width="2"/>
+<text class="mono" x="74" y="489" font-size="15" font-weight="800" fill="#34D399" text-anchor="start">CHAIN MOMENTS</text>
+<text x="74" y="521" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">dmu_k/dt = generation - loss</text>
+<text x="74" y="544" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="626" y="175" width="522" height="105" rx="18" fill="#101E33" stroke="#A78BFA" stroke-width="2"/>
+<text class="mono" x="648" y="209" font-size="15" font-weight="800" fill="#A78BFA" text-anchor="start">THERMODYNAMICS</text>
+<text x="648" y="241" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">Gmix/RT = entropy + chi phi1 phi2</text>
+<text x="648" y="264" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="626" y="315" width="522" height="105" rx="18" fill="#101E33" stroke="#FBBF24" stroke-width="2"/>
+<text class="mono" x="648" y="349" font-size="15" font-weight="800" fill="#FBBF24" text-anchor="start">NUMERICS</text>
+<text x="648" y="381" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">err = norm((y5-y4)/scale)</text>
+<text x="648" y="404" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="626" y="455" width="522" height="105" rx="18" fill="#101E33" stroke="#34D399" stroke-width="2"/>
+<text class="mono" x="648" y="489" font-size="15" font-weight="800" fill="#34D399" text-anchor="start">INFERENCE</text>
+<text x="648" y="521" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">J(theta) = sum w_i residual_i^2</text>
+<text x="648" y="544" font-size="13" font-weight="500" fill="#A8B5C7" text-anchor="start">fail-closed applicability contract</text>
+<rect x="52" y="650" width="1096" height="42" rx="12" fill="#101E33" stroke="#263A55"/>
+<text class="mono" x="76" y="677" font-size="12" font-weight="700" fill="#FBBF24" text-anchor="start">NON-IDENTIFIABLE OR OUT-OF-DOMAIN RESULTS RETURN HOLD</text>
+</svg>

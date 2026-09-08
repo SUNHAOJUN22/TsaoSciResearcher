@@ -1,0 +1,87 @@
+{
+  "acceptance_criteria": {
+    "equilibrated": true,
+    "sampling_convergence_demonstrated": true
+  },
+  "assumptions": [
+    "force field and water model are qualified for the system",
+    "100 ns is a starting profile, not proof of convergence"
+  ],
+  "boundary_conditions": {
+    "electrostatics": "method and cutoff declared",
+    "periodic_box": "shape and padding justified"
+  },
+  "compute_resources": {
+    "gpu": "optional after probe",
+    "storage": "estimated from trajectory frequency"
+  },
+  "conditions": {
+    "nominal_production_ns": 100,
+    "pressure_bar": "project-specific",
+    "temperature_K": "project-specific"
+  },
+  "convergence_plan": {
+    "equilibration": "energy, temperature, pressure, and density stable",
+    "sampling": "replicate and block convergence required"
+  },
+  "expected_artifacts": [
+    "topology and run inputs",
+    "trajectories",
+    "convergence and analysis report"
+  ],
+  "human_approval_nodes": [
+    "parameterization approval",
+    "sampling acceptance"
+  ],
+  "initial_conditions": {
+    "structure": "validated with missing atoms and clashes resolved",
+    "velocities": "seeded and recorded"
+  },
+  "methods": [
+    "GROMACS preparation",
+    "minimization",
+    "NVT/NPT equilibration",
+    "replicated production MD"
+  ],
+  "model_object": {
+    "description": "Protein-nucleic-acid GROMACS 100 ns workflow"
+  },
+  "parameter_sources": [
+    {
+      "parameter": "force field and nonstandard residues",
+      "source": "validated literature or traceable parameterization"
+    }
+  ],
+  "question": "Is the protein-nucleic-acid complex structurally stable and sufficiently sampled over the nominal 100 ns production profile?",
+  "scales": [
+    "atomistic",
+    "nanosecond"
+  ],
+  "schema_version": "1.0",
+  "system": {
+    "complex": "user-supplied protein and nucleic-acid structure",
+    "protonation_and_parameters": "project-specific"
+  },
+  "target_observables": [
+    "rmsd",
+    "rmsf",
+    "radius_of_gyration",
+    "hydrogen_bonds",
+    "sampling_convergence"
+  ],
+  "uncertainty_sources": [
+    "force-field error",
+    "initial structure",
+    "finite sampling",
+    "replicate variability"
+  ],
+  "validation_plan": {
+    "checks": [
+      "PBC handling",
+      "trajectory integrity",
+      "replicate consistency",
+      "structural plausibility"
+    ]
+  },
+  "workflow": "molecular-dynamics"
+}

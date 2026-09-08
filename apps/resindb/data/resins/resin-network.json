@@ -1,0 +1,291 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-24",
+  "dataKind": "resin-reaction-network",
+  "sourceType": "curated-demo",
+  "recordStatus": "demo",
+  "data": {
+    "nodes": [
+      {
+        "id": "Ethylene",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C2H4",
+        "cas": "74-85-1",
+        "desc": "A key building block in the petrochemical industry, used to make polyethylene, ethylene oxide, and more."
+      },
+      {
+        "id": "Propylene",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C3H6",
+        "cas": "115-07-1",
+        "desc": "A major monomer used in the production of polypropylene and various propylene oxide derivatives."
+      },
+      {
+        "id": "Styrene",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C8H8",
+        "cas": "100-42-5",
+        "desc": "An aromatic hydrocarbon used mainly to produce polystyrene and various copolymers like ABS and SAN."
+      },
+      {
+        "id": "Butadiene",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C4H6",
+        "cas": "106-99-0",
+        "desc": "An important diene widely used as a monomer in the production of synthetic rubbers and polymer resins."
+      },
+      {
+        "id": "Acrylonitrile",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C3H3N",
+        "cas": "107-13-1",
+        "desc": "A reactive monomer used in the production of polyacrylonitrile, ABS plastics, and specialized synthetic rubbers."
+      },
+      {
+        "id": "Vinyl Chloride",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C2H3Cl",
+        "cas": "75-01-4",
+        "desc": "The primary precursor to polyvinyl chloride (PVC), a versatile and widely used plastic."
+      },
+      {
+        "id": "Bisphenol A",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C15H16O2",
+        "cas": "80-05-7",
+        "desc": "A key starting material for the synthesis of polycarbonates and epoxy resins."
+      },
+      {
+        "id": "Caprolactam",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C6H11NO",
+        "cas": "105-60-2",
+        "desc": "An organic compound used primarily as a monomer in the production of nylon 6 (PA6)."
+      },
+      {
+        "id": "Terephthalic Acid",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C8H6O4",
+        "cas": "100-21-0",
+        "desc": "A major precursor used in the manufacture of polyester resins like PET and PBT."
+      },
+      {
+        "id": "Ethylene Glycol",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "C2H6O2",
+        "cas": "107-21-1",
+        "desc": "Used alongside terephthalic acid to produce PET, also a common antifreeze agent."
+      },
+      {
+        "id": "Phosgene",
+        "group": "chemical",
+        "radius": 25,
+        "formula": "CCl2O",
+        "cas": "75-44-5",
+        "desc": "A highly reactive molecule used as an industrial building block for polycarbonates and polyurethanes."
+      },
+      {
+        "id": "PE",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polyethylene: the most widely produced plastic in the world, utilized in packaging, pipes, and more."
+      },
+      {
+        "id": "HDPE",
+        "group": "resin",
+        "radius": 15,
+        "desc": "High-density Polyethylene: known for its high strength-to-density ratio, used in hard containers and pipes."
+      },
+      {
+        "id": "LDPE",
+        "group": "resin",
+        "radius": 15,
+        "desc": "Low-density Polyethylene: flexible and tough, typically used for plastic bags and general films."
+      },
+      {
+        "id": "LLDPE",
+        "group": "resin",
+        "radius": 15,
+        "desc": "Linear Low-density Polyethylene: offers greater toughness and puncture resistance than LDPE."
+      },
+      {
+        "id": "EVA",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Ethylene-vinyl acetate: an elastomeric polymer that produces materials which are 'rubber-like' in softness and flexibility."
+      },
+      {
+        "id": "PP",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polypropylene: rugged and unusually resistant to many chemical solvents, bases and acids."
+      },
+      {
+        "id": "PS",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polystyrene: a strong plastic created from styrene, often used in protective packaging and food containers."
+      },
+      {
+        "id": "EPS",
+        "group": "resin",
+        "radius": 15,
+        "desc": "Expanded Polystyrene: a lightweight rigid cellular plastic used primarily in insulation and packaging."
+      },
+      {
+        "id": "ABS",
+        "group": "resin",
+        "radius": 22,
+        "desc": "Acrylonitrile Butadiene Styrene: an opaque thermoplastic polymer offering incredible impact resistance and toughness."
+      },
+      {
+        "id": "SAN",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Styrene Acrylonitrile: a copolymer plastic combining the clarity of polystyrene with the toughness of acrylonitrile."
+      },
+      {
+        "id": "PVC",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polyvinyl Chloride: the world's third-most widely produced synthetic plastic polymer, used heavily in construction."
+      },
+      {
+        "id": "PC",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polycarbonate: a strong, tough material, highly impact resistant, and some grades are optically transparent."
+      },
+      {
+        "id": "PA6",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polyamide 6 (Nylon 6): offers excellent mechanical toughness and chemical resistance, used in fibers and engineering plastics."
+      },
+      {
+        "id": "PET",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polyethylene Terephthalate: commonly used for fibers for clothing, food packaging, and liquid containers."
+      },
+      {
+        "id": "PBT",
+        "group": "resin",
+        "radius": 18,
+        "desc": "Polybutylene Terephthalate: a thermoplastic engineering polymer used heavily as an electrical insulator."
+      }
+    ],
+    "links": [
+      {
+        "source": "Ethylene",
+        "target": "PE",
+        "value": 5
+      },
+      {
+        "source": "PE",
+        "target": "HDPE",
+        "value": 2
+      },
+      {
+        "source": "PE",
+        "target": "LDPE",
+        "value": 2
+      },
+      {
+        "source": "PE",
+        "target": "LLDPE",
+        "value": 2
+      },
+      {
+        "source": "Ethylene",
+        "target": "EVA",
+        "value": 3
+      },
+      {
+        "source": "Propylene",
+        "target": "PP",
+        "value": 5
+      },
+      {
+        "source": "Styrene",
+        "target": "PS",
+        "value": 4
+      },
+      {
+        "source": "PS",
+        "target": "EPS",
+        "value": 2
+      },
+      {
+        "source": "Styrene",
+        "target": "ABS",
+        "value": 2
+      },
+      {
+        "source": "Acrylonitrile",
+        "target": "ABS",
+        "value": 2
+      },
+      {
+        "source": "Butadiene",
+        "target": "ABS",
+        "value": 2
+      },
+      {
+        "source": "Styrene",
+        "target": "SAN",
+        "value": 2
+      },
+      {
+        "source": "Acrylonitrile",
+        "target": "SAN",
+        "value": 2
+      },
+      {
+        "source": "Vinyl Chloride",
+        "target": "PVC",
+        "value": 5
+      },
+      {
+        "source": "Bisphenol A",
+        "target": "PC",
+        "value": 3
+      },
+      {
+        "source": "Phosgene",
+        "target": "PC",
+        "value": 2
+      },
+      {
+        "source": "Caprolactam",
+        "target": "PA6",
+        "value": 4
+      },
+      {
+        "source": "Terephthalic Acid",
+        "target": "PET",
+        "value": 3
+      },
+      {
+        "source": "Ethylene Glycol",
+        "target": "PET",
+        "value": 3
+      },
+      {
+        "source": "Terephthalic Acid",
+        "target": "PBT",
+        "value": 3
+      }
+    ]
+  }
+}

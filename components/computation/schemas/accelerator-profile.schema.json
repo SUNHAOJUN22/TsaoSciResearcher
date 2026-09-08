@@ -1,0 +1,157 @@
+{
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciComputation/schemas/accelerator-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidate_backends": {
+      "contains": {"const": "cpu"},
+      "items": {
+        "enum": [
+          "cpu",
+          "openmp",
+          "mpi",
+          "cuda",
+          "hip",
+          "sycl",
+          "opencl",
+          "kokkos",
+          "task-parallel",
+          "remote"
+        ]
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "claim_boundary": {"minLength": 40, "type": "string"},
+    "edge_suitability": {
+      "enum": ["suitable", "limited", "unsuitable"]
+    },
+    "execution_mode": {
+      "enum": ["solver-native", "hybrid-library", "delegated-plugin", "orchestration", "ensemble"]
+    },
+    "implementation_languages": {
+      "items": {"minLength": 1, "type": "string"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "interfaces": {
+      "items": {
+        "enum": [
+          "cli",
+          "python-module",
+          "shared-library",
+          "c-abi",
+          "rpc",
+          "container",
+          "scheduler"
+        ]
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "library_candidates": {
+      "items": {
+        "enum": [
+          "cutensor",
+          "cuequivariance",
+          "nvmath-python",
+          "cupy",
+          "cublas",
+          "cusolver",
+          "cusparse",
+          "cufft",
+          "curand",
+          "nccl",
+          "nvshmem",
+          "nvcomp",
+          "gpudirect-storage",
+          "tensorrt",
+          "rapids",
+          "rapids-cudf",
+          "rapids-cuml",
+          "warp",
+          "kokkos",
+          "mpi",
+          "dlpack-arrow"
+        ]
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "limitations": {
+      "items": {"minLength": 20, "type": "string"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "parallel_strategies": {
+      "items": {
+        "enum": [
+          "shared-memory",
+          "openmp",
+          "mpi",
+          "multi-gpu",
+          "task-parallel",
+          "remote",
+          "solver-native"
+        ]
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "preferred_backends": {
+      "items": {
+        "enum": [
+          "cpu",
+          "openmp",
+          "mpi",
+          "cuda",
+          "hip",
+          "sycl",
+          "opencl",
+          "kokkos",
+          "task-parallel",
+          "remote"
+        ]
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "probe_hints": {
+      "items": {"minLength": 3, "type": "string"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "slug": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "workflow": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "slug",
+    "workflow",
+    "interfaces",
+    "implementation_languages",
+    "parallel_strategies",
+    "candidate_backends",
+    "preferred_backends",
+    "execution_mode",
+    "edge_suitability",
+    "library_candidates",
+    "probe_hints",
+    "limitations",
+    "claim_boundary"
+  ],
+  "title": "TsaoSciComputation acceleration profile metadata",
+  "type": "object"
+}

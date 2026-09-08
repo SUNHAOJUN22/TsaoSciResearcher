@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/quantity-value.schema.json",
+  "title": "EPDM V2 quantity value",
+  "type": "object",
+  "required": [
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "value": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "1",
+        "K",
+        "Pa",
+        "s",
+        "mol",
+        "mol/s",
+        "kg",
+        "kg/s",
+        "m",
+        "m^2",
+        "m^3",
+        "m^3/s",
+        "J",
+        "W",
+        "J/K",
+        "J/mol",
+        "kg/mol",
+        "kg/m^3",
+        "mol/m^3",
+        "mol/kg",
+        "1/s",
+        "m^3/(mol*s)",
+        "Pa^-1*s^-1"
+      ]
+    },
+    "basis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "standard_uncertainty": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "uncertainty_unit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "1",
+        "K",
+        "Pa",
+        "s",
+        "mol",
+        "mol/s",
+        "kg",
+        "kg/s",
+        "m",
+        "m^2",
+        "m^3",
+        "m^3/s",
+        "J",
+        "W",
+        "J/K",
+        "J/mol",
+        "kg/mol",
+        "kg/m^3",
+        "mol/m^3",
+        "mol/kg",
+        "1/s",
+        "m^3/(mol*s)",
+        "Pa^-1*s^-1",
+        null
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "standard_uncertainty"
+        ],
+        "properties": {
+          "standard_uncertainty": {
+            "type": "number"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "uncertainty_unit"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

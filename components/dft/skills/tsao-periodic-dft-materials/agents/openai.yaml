@@ -1,0 +1,6 @@
+interface:
+  display_name: Tsao Periodic Dft Materials
+  short_description: 'Plan and validate periodic DFT and materials workflows across
+    VASP, Quantum ESPRESSO and CP2K handoffs: crystals, slabs,'
+  default_prompt: Use $tsao-periodic-dft-materials to plan and validate this task
+    before any expensive execution.

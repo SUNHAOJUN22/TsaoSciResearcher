@@ -1,0 +1,62 @@
+schema_version: "1.0"
+profile_id: HWOPT-EDGE-EQUIVARIANT-SIM-001
+evidence:
+  source_kind: simulation
+  labels:
+    - SIMULATION_ONLY
+    - NOT_REAL_HARDWARE
+    - NOT_PERFORMANCE_EVIDENCE
+engine: generic
+stage: ml-surrogate
+workload:
+  model: equivariant-atomistic-surrogate
+  atoms: 512
+  tensor_order: 3
+  batch_size: 16
+  expected_kernel: auto
+  estimated_transfer_gb: 0.5
+  arithmetic_intensity_flop_per_byte: 40.0
+hardware:
+  target: edge
+  cpu_arch: aarch64
+  nodes: 1
+  physical_cores: 12
+  logical_threads: 12
+  numa_nodes: 1
+  memory_gb: 64
+  tasks_per_node: 1
+  gpu_vendor: nvidia
+  gpu_model: EDGE_GPU_SIMULATED
+  gpu_architecture: NOT_AVAILABLE
+  gpus_per_node: 1
+  gpu_memory_gb: 16
+  memory_bandwidth_gb_s: NOT_AVAILABLE
+  cpus_per_gpu: 12
+  interconnect: none
+software:
+  backend: cuda
+  provider: auto
+  engine_build:
+    accelerator_supported: false
+    build_fingerprint_id: NOT_AVAILABLE
+  custom_integration: false
+  model_family: equivariant
+  edge_runtime: tensorrt
+  libraries:
+    - cuEquivariance
+    - cuTENSOR
+    - TensorRT
+    - ONNX Runtime
+    - Python Array API
+    - DLPack
+  available_libraries:
+    - cuEquivariance
+    - TensorRT
+    - ONNX Runtime
+policy:
+  precision: mixed-validated
+  require_cpu_fp64_reference: true
+  require_cpu_fallback: true
+  edge_uncertainty_gate: true
+  remote_dft_fallback: true
+  requested_speedup_claim: false

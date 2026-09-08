@@ -1,0 +1,10 @@
+{
+  "name": "tsao-dft-marketplace",
+  "plugins": [
+    {
+      "name": "tsao-dft",
+      "source": "https://github.com/SUNHAOJUN22/TsaoDFT_skill",
+      "description": "DFT-first computational chemistry Agent Skills"
+    }
+  ]
+}

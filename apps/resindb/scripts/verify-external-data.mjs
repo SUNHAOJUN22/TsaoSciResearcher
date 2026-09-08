@@ -1,0 +1,11 @@
+import { access, readFile, readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+const root=path.resolve(import.meta.dirname,'..');
+const distData=path.join(root,'dist','data');
+const required=['manifest.json','version.json','metadata.json','schemas/resin-data-document.schema.json','schemas/resin-product.schema.json','resins/manifest.json','resins/resin-taxonomy.json','resins/resin-category-aliases.json','resins/resin-property-groups.json','resins/resin-manufacturers.json','resins/resin-references.json','resins/polymerDatabase.json','resins/myLabUniverse.json','resins/openMarketUniverse.json','resins/resin-network.json'];
+for (const file of required) await access(path.join(distData,file));
+const bytes=(await Promise.all(required.map(async f=>(await stat(path.join(distData,f))).size))).reduce((a,b)=>a+b,0);
+if (bytes<35_000) throw new Error(`External governed data unexpectedly small: ${bytes}`);
+const assetDir=path.join(root,'dist','assets'); const js=(await readdir(assetDir)).filter(f=>f.endsWith('.js')); const text=(await Promise.all(js.map(f=>readFile(path.join(assetDir,f),'utf8')))).join('\n');
+for (const sentinel of ['prod-001','5000S-改性自测样料1号','Sinopec Shanghai (上海石化)']) if (text.includes(sentinel)) throw new Error(`Catalog sentinel embedded in JS: ${sentinel}`);
+console.log(`External data verification passed: ${required.length} files, ${bytes} bytes, no catalog sentinel in ${js.length} JS chunks.`);

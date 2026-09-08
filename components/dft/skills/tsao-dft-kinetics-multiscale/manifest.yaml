@@ -1,0 +1,57 @@
+version: 0.4.0-alpha.2
+always_load:
+- references/kinetics-contract.md
+- references/thermodynamic-consistency.md
+- references/rate-uncertainty-and-export.md
+routes:
+  tst:
+    triggers:
+    - Eyring
+    - TST
+    - rate constant
+    - barrier
+    load:
+    - references/tst-standard-states.md
+  network:
+    triggers:
+    - reaction network
+    - stoichiometry
+    - detailed balance
+    load:
+    - references/thermodynamic-consistency.md
+  microkinetics:
+    triggers:
+    - microkinetic
+    - Cantera
+    - RMG
+    - Pyomo
+    - CatMAP
+    - coverage
+    load:
+    - references/microkinetics.md
+  descriptors:
+    triggers:
+    - BEP
+    - volcano
+    - descriptor
+    - rate determining
+    load:
+    - references/descriptors.md
+  multiscale:
+    triggers:
+    - multiscale
+    - reactor
+    - population balance
+    - polymerization kinetics
+    load:
+    - references/multiscale-handoff.md
+  uncertainty_export:
+    triggers:
+    - barrier uncertainty
+    - detailed balance
+    - Cantera export
+    - kinetics handoff
+    load:
+    - references/rate-uncertainty-and-export.md
+    - references/thermodynamic-consistency.md
+    - references/multiscale-handoff.md

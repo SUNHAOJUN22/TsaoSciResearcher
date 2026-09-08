@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "resindb-readme-runtime-visual-evidence-1.0.0",
+  "generatedAt": "2026-08-08T04:13:58.496Z",
+  "cjkFont": {
+    "available": true,
+    "family": "Noto Sans CJK SC",
+    "status": "loaded"
+  },
+  "scientificCanvas": {
+    "ready": true,
+    "width": 938,
+    "height": 1991,
+    "sampled": 207832,
+    "nonBackground": 9110,
+    "chromatic": 9080,
+    "points": 6
+  },
+  "screenshots": {
+    "dashboard": "ui-dashboard-zh-light.png",
+    "emptyState": "ui-empty-state.png",
+    "productDetail": "ui-product-detail.png",
+    "analytics": "ui-scientific-analytics.png",
+    "dependencyMap": "ui-dependency-map.png",
+    "dashboardEnDark": "ui-dashboard-en-dark.png",
+    "mobile": "ui-mobile-dashboard.png",
+    "kmeansCalibration": "ui-kmeans-device-calibration.png",
+    "kmeansProfileAudit": "ui-kmeans-profile-audit.png"
+  }
+}

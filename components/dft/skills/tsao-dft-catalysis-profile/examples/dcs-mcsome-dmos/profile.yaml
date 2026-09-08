@@ -1,0 +1,28 @@
+schema_version: 1
+profile: tsao-dft-catalysis-profile
+applicable: true
+activation_reason: Compare DCS, MCSOMe, and DMOS coordination/electronic effects in a Ti/TEA-related model.
+system:
+  monomers: [DCS, MCSOMe, DMOS]
+  catalyst_or_complex: Ti model to be specified by the project
+  cocatalyst_or_ion_pair: TEA state to be specified
+  solvent_or_phase: unknown
+controlled_variables:
+  substituent_pattern: [DCS, MCSOMe, DMOS]
+  conformers: [project-defined]
+  coordination_modes: [pi, O-coordination, project-defined alternatives]
+  charge_states: [project-defined]
+  multiplicities: [project-defined]
+claims_in_scope:
+  - relative coordination propensity within one balanced cycle
+  - electronic rationale within accepted structures
+claims_out_of_scope:
+  - industrial poisoning rate without kinetics and experimental bridge
+figure_plan:
+  main: [substituent electronic effects, coordination competition, scoped mechanism]
+  extended: [orbital manifold, method sensitivity]
+  si: [complete accepted structure, ESP, and orbital galleries]
+validation:
+  balanced_cycles_defined: false
+  open_shell_checks_defined: false
+  method_sensitivity_defined: false

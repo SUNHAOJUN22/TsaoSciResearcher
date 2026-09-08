@@ -1,0 +1,113 @@
+{
+  "artifacts": {
+    "acceleration_doctrine_sha256": "7148873cf01189112b61abd82b7d2241741c591f3a8a3835a8f270b679883d53",
+    "acceptance_document_sha256": "c5dd9b8f959387ef8bf0682f928c91281569b94244e24a494a2fb97e301b9bc2",
+    "acceptance_schema_sha256": "2e4e85a047e0e4de1c86075e69af48b91bd0afa7eb793a2a53ac612a99dba2d0",
+    "capability_status_sha256": "51f8485811f0a41b281e11826a84f890455a55c88c54af60d8121b761ee6c8fd",
+    "compute_contract_evidence_sha256": "c940050a6316dec3dbc6c1ccaed0f15969c815ba466752972216b4b8bdd471be",
+    "permanent_ci_sha256": "3fdcb8ef819cfa62460735212932b26a50623143d7dfb9256de7e652a303542f",
+    "quality_gate_sha256": "35fb1ac7fbd78eb36340be4b4ad9c2866563fdb3061613d4ede52bd508657916",
+    "scientific_claim_policy_sha256": "10b948ab4618635b89f748604c008d1c111b36810665073718c7dcf75ead9a98",
+    "version_sha256": "166d180beb256bf52e170af554b55a923dffb66db4c19d2f84c1c58331137486"
+  },
+  "ci_contract": {
+    "jobs": [
+      "codeql",
+      "quality-gate",
+      "supply-chain",
+      "windows-control-plane"
+    ],
+    "python_versions": [
+      "3.10",
+      "3.12",
+      "3.13"
+    ],
+    "windows_runner": true
+  },
+  "compute_contract_evidence_source": "generated-file",
+  "errors": [],
+  "external_execution": {
+    "declared_external_requirements": [
+      "CP2K and basis/potential files",
+      "Cantera/RMG/Pyomo/CatMAP optional",
+      "DeepChem/RDKit/GNN frameworks optional",
+      "Ed25519-signed independent review bound to policy, plan, candidates and evidence root",
+      "Gaussian 16 for real execution",
+      "Multiwfn for real analysis",
+      "Quantum ESPRESSO and pseudopotentials",
+      "RDKit/Open Babel/pymatgen/ASE optional",
+      "VASP executable and legal POTCAR at site",
+      "VMD/Tachyon for real rendering",
+      "explicit public capability registration after scoped evidence qualification",
+      "immutable content-addressed real-engine artifacts",
+      "profile activation scope must match",
+      "real accelerator and versioned engine build for measured performance evidence",
+      "real scheduler/site for L3"
+    ],
+    "engine_invoked": false,
+    "performance_evaluated": false,
+    "performance_ratio_published": false,
+    "required_evidence": [
+      "licensed real solver binary and exact version",
+      "fixed accepted input set and method fingerprint",
+      "CPU/GPU/MPI hardware and build fingerprints",
+      "site and globally unique run identities",
+      "at least three repeated runs per candidate",
+      "verified immutable artifacts and parser acceptance",
+      "scientific reference values and explicit tolerances",
+      "content-addressed evidence root and independent signed review"
+    ],
+    "state": "EXTERNAL_HOLD"
+  },
+  "non_claims": [
+    "SOFTWARE_ACCEPTANCE_READY is limited to repository software and permanent validation contracts.",
+    "It does not establish execution on Gaussian, VASP, Quantum ESPRESSO, CP2K or any licensed solver.",
+    "EXTERNAL_HOLD remains in force until fixed real-engine evidence passes numerical qualification before performance qualification.",
+    "No CPU/GPU speedup or native/CUDA execution is inferred from this report."
+  ],
+  "ok": true,
+  "quality_gate_contract": [
+    "demo assets",
+    "dependency contract",
+    "CI constraints",
+    "acceleration contracts",
+    "benchmark contract",
+    "acceleration registry",
+    "engine capabilities",
+    "compute qualification",
+    "compute contract evidence",
+    "compute architecture audit",
+    "release acceptance",
+    "packaging model",
+    "catalog",
+    "Agent eval contracts",
+    "governance",
+    "capability claims",
+    "secret patterns",
+    "ignore markers",
+    "AI assets",
+    "README visuals",
+    "README links",
+    "Ruff lint",
+    "Ruff format",
+    "mypy",
+    "trust-boundary strict mypy",
+    "coverage",
+    "Bandit",
+    "repository",
+    "unit tests"
+  ],
+  "release": "0.4.0-alpha.2",
+  "schema_version": "1.0",
+  "software_acceptance": {
+    "all_capabilities_at_least_l2": true,
+    "capability_count": 12,
+    "capability_levels": {
+      "L2_VALIDATED_ADAPTER": 12
+    },
+    "quality_gate_contract_complete": true,
+    "quality_gate_stage_count": 29,
+    "scope": "repository software, contracts, documentation and permanent CI contract",
+    "state": "SOFTWARE_ACCEPTANCE_READY"
+  }
+}

@@ -1,0 +1,27 @@
+schema_version: "1.0"
+capability_id: VASP-EXTERNAL-HOLD
+engine: vasp
+executable_name: vasp_std
+engine_version: NOT_AVAILABLE
+build:
+  compiler: NOT_AVAILABLE
+  compiler_version: NOT_AVAILABLE
+  build_type: NOT_AVAILABLE
+  linked_libraries: []
+  build_fingerprint_sha256: NOT_AVAILABLE
+parallel:
+  mpi_implementation: NOT_AVAILABLE
+  mpi_version: NOT_AVAILABLE
+  openmp_runtime: NOT_AVAILABLE
+accelerator:
+  enabled: false
+  backend: cpu
+  gpu_vendor: none
+  toolkit_version: NOT_AVAILABLE
+evidence:
+  source_kind: declared
+  executable_sha256: NOT_AVAILABLE
+  version_probe_observed: false
+  version_probe_argv: [vasp_std, --version]
+  upstream_tests_passed: false
+  execution_authorized: false

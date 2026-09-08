@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0-alpha.6",
+  "pass": true,
+  "checks": [
+    {
+      "command": [
+        "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "-m",
+        "compileall",
+        "-f",
+        "-q",
+        "tsao",
+        "scripts",
+        "skills"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "output": ""
+    },
+    {
+      "command": [
+        "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests",
+        "skills/process-general/tests",
+        "skills/poe/tests",
+        "skills/polymer-general/tests"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "output": "........................................................................ [ 66%]\n....................................                                     [100%]\n"
+    },
+    {
+      "command": [
+        "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "scripts/audit_capabilities.py"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "output": "{\n  \"pass\": true,\n  \"issues\": [],\n  \"gates\": 19,\n  \"workstreams\": 14,\n  \"maturity_levels\": 10,\n  \"subskills\": {\n    \"epdm\": {\n      \"files\": 2,\n      \"tests\": 0\n    },\n    \"poe\": {\n      \"files\": 18,\n      \"tests\": 2\n    },\n    \"polymer-general\": {\n      \"files\": 20,\n      \"tests\": 2\n    },\n    \"process-general\": {\n      \"files\": 26,\n      \"tests\": 1\n    }\n  },\n  \"technical_approval_status\": \"NOT_EVALUATED\"\n}\n"
+    },
+    {
+      "command": [
+        "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "-m",
+        "tsao.cli",
+        "doctor",
+        "--root",
+        ".",
+        "--profile",
+        "core"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "output": "{\n  \"version\": \"0.1.0-alpha.6\",\n  \"profile\": \"core\",\n  \"pass\": true,\n  \"strict_source_clean\": false,\n  \"checks\": {\n    \"repository\": {\n      \"pass\": true,\n      \"issues\": []\n    },\n    \"version\": {\n      \"pass\": true,\n      \"issues\": []\n    },\n    \"schemas\": {\n      \"pass\": true,\n      \"issues\": []\n    },\n    \"capabilities\": {\n      \"pass\": true,\n      \"issues\": []\n    },\n    \"provenance\": {\n      \"pass\": true,\n      \"issues\": []\n    },\n    \"release_identity\": {\n      \"pass\": true,\n      \"issues\": []\n    }\n  },\n  \"issues\": [],\n  \"warnings\": [],\n  \"metrics\": {\n    \"schemas\": 9,\n    \"specialists\": 4\n  },\n  \"artifact_software_qualification\": \"PASS\",\n  \"technical_approval_status\": \"NOT_EVALUATED\",\n  \"scientific_technical_approval\": \"NOT_EVALUATED\",\n  \"engineering_design_approval\": \"NOT_EVALUATED\",\n  \"customer_qualification\": \"NOT_EVALUATED\",\n  \"industrial_performance_guarantee\": \"NOT_EVALUATED\"\n}\n"
+    },
+    {
+      "command": [
+        "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "tsao",
+        "tests",
+        "scripts",
+        "skills/process-general/tests",
+        "skills/poe/scripts",
+        "skills/poe/tests",
+        "skills/polymer-general/scripts",
+        "skills/polymer-general/tests"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "output": "All checks passed!\n"
+    }
+  ],
+  "artifact_software_qualification": "PASS",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

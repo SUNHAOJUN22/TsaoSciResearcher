@@ -1,0 +1,26 @@
+{
+  "schema": "TSAO-ALPHA11-CROSS-PLATFORM-CLOSURE-1",
+  "version": "0.1.0-alpha.11",
+  "qualified_source_commit": "076e732a8ae257699379a4465dd88dc8adc65410",
+  "workflow_run_id": 30324467737,
+  "workflow_run_url": "https://github.com/SUNHAOJUN22/TSAO-PROCESSING-SKILL/actions/runs/30324467737",
+  "matrix": [
+    "ubuntu/3.11",
+    "ubuntu/3.12",
+    "ubuntu/3.13",
+    "ubuntu/3.14",
+    "windows/3.14",
+    "macos/3.14"
+  ],
+  "matrix_status": "PASS",
+  "performance_gate": "PASS_UBUNTU_PYTHON_3_14_SEVEN_REPEATS",
+  "source_snapshot": "PASS",
+  "final_evidence_worktree_status": "PASS",
+  "test_count": 225,
+  "branch_coverage_percent": 78,
+  "qualification_boundary": "SOFTWARE_ONLY",
+  "scientific_technical_approval": "NOT_EVALUATED",
+  "engineering_design_approval": "NOT_EVALUATED",
+  "customer_qualification": "NOT_EVALUATED",
+  "industrial_performance_guarantee": "NOT_EVALUATED"
+}

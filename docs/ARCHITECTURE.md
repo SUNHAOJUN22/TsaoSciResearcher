@@ -1,36 +1,27 @@
-# Architecture
+# 统一架构与实施边界
 
-TsaoSciResearcher v0.7.0 separates scientific policy, deterministic runtime services, external execution evidence and final human acceptance.
+## 有机融合的接口
 
-```mermaid
-flowchart TD
-  U[Research request] --> R[Deterministic bilingual router]
-  R --> W[One primary workflow and gates]
-  W --> C[341 capability contracts]
-  C --> S[Hash-linked project state]
-  S --> H[Guarded computation handoff]
-  H --> X[External engine or laboratory]
-  X --> E[Checksum-verified execution receipt]
-  E --> K[Claim and evidence controls]
-  K --> P[Reproducibility capsule]
-  P --> V[Software validation and external attestation]
-  V --> A{Qualified scientific acceptance}
-```
+统一流程的单位不是原仓库，而是任务、物理量、模型、材料观测与证据。任务采用 `tsao.workflow/1`，通过明确依赖和 `$ref` 传递输出；禁止引用未声明的依赖。输入经过严格 JSON 和能力注册表检查，固定本地适配器在隔离子进程中调用保留实现，结果绑定代码身份与前后任务摘要。
 
-## Runtime modules
+研究路由负责问题语义，计算路由负责数值方法，不互相替代。POE 数值模型仍只有原 `estimation.py` 一个实现；统一层只转换单位和建立接口。ResinDB 是数据与人工入口，不以浏览器本地授权替代服务端身份验证。DFT 与 Aspen 的真实执行仍由原领域适配器和目标站点资格约束。
 
-- `router.py` and `capabilities.py`: bounded deterministic routing and capability discovery.
-- `state.py`: atomic project lifecycle, registries, approvals and SHA-256 event chain.
-- `handoff.py`: contained, checksummed computation preparation; never an execution claim.
-- `receipts.py`: external execution provenance with handoff identity, timestamps and output hashes.
-- `capsule.py`: deterministic metadata/full ZIPs with per-file and tree integrity.
-- `scientific_quality.py`: measurement, structure-property, causal and evidence-traceability guards.
-- `version.py`: one version source in a checkout and installed metadata in a distribution.
+## 共享状态
 
-## Validation and supply chain
+运行状态仅回答任务是否执行与结束。数值判断保留在领域结果中；独立科学批准始终是另一维度。新集成参考流程不会自行产生科学批准。分发状态由保留的 Processing 策略计算，不由 UI、CLI 或测试 PASS 覆盖。
 
-Permanent CI is read-only and idempotent. Manual audit and nightly health runs do not mutate the repository. Tag release is the only publication workflow with content write permission besides single-main branch governance. Coverage, order independence, mutation, performance, SBOM, vulnerability audit, docs, source ZIP, wheel and sdist are all gated.
+## 数值与身份
 
-## Truth boundaries
+新身份格式为 `tsao.c14n/1`，采用带类型的树和二进制浮点数编码；它不声称实现 RFC 8785。Python 与 TypeScript 通过共同测试向量逐字节校验，浏览器实际核对服务器返回的计划摘要。整数不能精确转换为 binary64 时，Python 端拒绝，应改用声明类型的字符串。旧模块有限 JSON 的历史字节格式保留，不静默重写其历史摘要。
 
-Native software controls verify internal structure and provenance. External calculations and experiments require guarded handoff plus an execution receipt. Scientific acceptance remains a separate qualified decision.
+物理量必须注明单位。绝对温度与温差分开，表压不在缺少站点证据时转换为绝压。POE 时间与速率在计算前转换为秒与每秒，结果不通过更换标签伪装单位转换。
+
+## 执行与安全
+
+新任务接口不接受 shell 字符串或任意脚本路径。本地参考适配器在固定 Python worker 中执行，清理继承环境中的非必要信息，并限制请求、输出和耗时。Windows 与 POSIX 终止路径分开。兼容 CLI 是用户显式选择的原模块入口，保留原授权边界，不作为服务端远程执行接口。
+
+共享账本采用 SQLite 事务，避免新工作流重复扫描历史及遗留锁文件。打开与主动校验时验证完整哈希链；追加时在事务内绑定前驱。哈希链不提供独立身份或不可否认性。旧模块自有账本保持兼容，其大型历史迁移和恢复基准尚未被本轮结果替代。
+
+## 不做的伪融合
+
+不删除专业算法来换取绿色测试；不把能力目录计数当成运行结果；不同时维护第二套 POE 方程；不将所有问题强行送入七个模块；不重新许可第三方材料；不把历史测试报告重命名后当作本次证据。

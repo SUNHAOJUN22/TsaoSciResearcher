@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Backend portability stack for TsaoDFT</title>
+  <desc id="desc">Synthetic conceptual stack showing Python control, Array API and DLPack interfaces, optional native kernels, vendor backends, and external DFT engines. This is not scientific data or benchmark evidence.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06101e"/><stop offset="1" stop-color="#11172b"/></linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#765cff"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#17b8d8"/><stop offset="1" stop-color="#53e0be"/></linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ff9f43"/><stop offset="1" stop-color="#ffd56a"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000" flood-opacity=".34"/></filter>
+    <style>
+      .f{font-family:Inter,Segoe UI,Arial,sans-serif}.w{fill:#eef6ff}.muted{fill:#a6b8ce}.h{font-size:28px;font-weight:750}.k{font-size:12px;font-weight:800;letter-spacing:.12em}.label{font-size:17px;font-weight:750}.sm{font-size:13px}.box{fill:#0d1b2d;stroke:#29445f;stroke-width:1.5}.chip{fill:#12283b;stroke:#315f7e;stroke-width:1}.line{stroke:#7397b7;stroke-width:1.5;stroke-dasharray:5 5}
+    </style>
+  </defs>
+  <rect width="1120" height="520" rx="24" fill="url(#bg)"/>
+  <circle cx="960" cy="120" r="150" fill="#4a7cff" opacity=".07"/>
+  <text class="f w h" x="48" y="52">Portable interfaces above. Vendor kernels below. Evidence at every boundary.</text>
+  <text class="f muted sm" x="48" y="79">The stack preserves a deterministic CPU reference while allowing profiled native and accelerator paths.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="108" width="940" height="60" rx="16" fill="url(#violet)"/>
+    <text class="f w k" x="116" y="132">SCIENTIFIC CONTROL PLANE</text>
+    <text class="f w label" x="116" y="154">Python · schemas · provenance · parsers · workflow · signed evidence</text>
+    <rect x="884" y="121" width="116" height="34" rx="17" fill="#07111f" opacity=".55"/><text class="f w sm" x="942" y="143" text-anchor="middle">portable logic</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="150" y="190" width="820" height="58" rx="15" fill="url(#cyan)"/>
+    <text class="f" x="178" y="215" font-size="12" font-weight="800" letter-spacing=".12em" fill="#05212b">BACKEND-NEUTRAL DATA BOUNDARY</text>
+    <text class="f" x="178" y="237" font-size="17" font-weight="750" fill="#05212b">Array API · DLPack · structured argv · versioned JSON/YAML</text>
+    <rect x="816" y="202" width="124" height="34" rx="17" fill="#05212b" opacity=".72"/><text class="f w sm" x="878" y="224" text-anchor="middle">copy-aware</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="box" x="96" y="274" width="294" height="118" rx="18"/>
+    <text class="f w k" x="120" y="302">CPU REFERENCE</text>
+    <text class="f w label" x="120" y="331">NumPy · BLAS · LAPACK</text>
+    <text class="f muted sm" x="120" y="355">scientific equivalence baseline</text>
+    <text class="f muted sm" x="120" y="375">deterministic fallback</text>
+    <circle cx="356" cy="304" r="11" fill="#4de3a2"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect class="box" x="413" y="274" width="294" height="118" rx="18"/>
+    <text class="f w k" x="437" y="302">OPTIONAL NATIVE LAYER</text>
+    <text class="f w label" x="437" y="331">C++20 · OpenMP · Kokkos</text>
+    <text class="f muted sm" x="437" y="355">only measured local hotspots</text>
+    <text class="f muted sm" x="437" y="375">narrow C ABI / safe fallback</text>
+    <circle cx="673" cy="304" r="11" fill="#ffc966"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect class="box" x="730" y="274" width="294" height="118" rx="18"/>
+    <text class="f w k" x="754" y="302">OPTIONAL GPU LAYER</text>
+    <text class="f w label" x="754" y="331">CUDA · HIP · SYCL · Metal</text>
+    <text class="f muted sm" x="754" y="355">transfer and launch cost included</text>
+    <text class="f muted sm" x="754" y="375">device memory gate required</text>
+    <circle cx="990" cy="304" r="11" fill="#56c9ff"/>
+  </g>
+
+  <path class="line" d="M244 248v26M560 248v26M878 248v26"/>
+  <g filter="url(#shadow)">
+    <rect x="160" y="420" width="800" height="52" rx="16" fill="url(#amber)"/>
+    <text class="f" x="188" y="443" font-size="12" font-weight="800" letter-spacing=".1em" fill="#402300">EXTERNAL COMPUTE PLANE</text>
+    <text class="f" x="188" y="462" font-size="16" font-weight="750" fill="#402300">VASP · Quantum ESPRESSO · CP2K · Gaussian — engine-native MPI/OpenMP/GPU paths</text>
+  </g>
+
+  <text class="f" x="48" y="501" font-size="13" font-weight="800" fill="#ffcf70">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+  <text class="f" x="1072" y="501" text-anchor="end" font-size="12" fill="#7f94ab">No backend is accepted without profiling + numerical equivalence</text>
+</svg>

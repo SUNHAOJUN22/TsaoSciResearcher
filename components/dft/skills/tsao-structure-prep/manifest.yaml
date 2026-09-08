@@ -1,0 +1,60 @@
+version: 0.4.0-alpha.2
+always_load:
+- references/model-contract.md
+- references/validation.md
+routes:
+  molecular:
+    triggers:
+    - molecule
+    - ligand
+    - monomer
+    - complex
+    - conformer
+    - protonation
+    - tautomer
+    - charge
+    - multiplicity
+    load:
+    - references/molecular-prep.md
+    - references/file-formats.md
+  periodic:
+    triggers:
+    - crystal
+    - supercell
+    - slab
+    - surface
+    - defect
+    - interface
+    - adsorbate
+    load:
+    - references/periodic-prep.md
+    - references/file-formats.md
+  campaign:
+    triggers:
+    - matrix
+    - campaign
+    - enumerate
+    - sampling
+    - site
+    - orientation
+    load:
+    - references/campaign-design.md
+  audit:
+    triggers:
+    - manifest
+    - provenance
+    - duplicate
+    - hash
+    - review
+    load:
+    - references/validation.md
+  geometry_audit:
+    triggers:
+    - XYZ
+    - atom mapping
+    - closest contact
+    - geometry audit
+    - atom order
+    load:
+    - references/geometry-audit.md
+    - references/validation.md

@@ -1,0 +1,19 @@
+schema_version: "1.0"
+structure_id: MOL001
+model_type: molecule
+identity: unknown
+source:
+  path: input.xyz
+  sha256: unknown
+  origin: user_supplied
+composition: unknown
+atom_count: null
+length_unit: angstrom
+periodicity: none
+charge_candidates: [unknown]
+multiplicity_candidates: [unknown]
+transformations: []
+review:
+  status: pending
+  reviewer: null
+  notes: []

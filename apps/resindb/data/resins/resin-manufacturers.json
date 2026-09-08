@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-24",
+  "dataKind": "resin-manufacturers",
+  "sourceType": "curated-directory",
+  "recordStatus": "reference",
+  "data": [
+    {
+      "id": "m-33",
+      "name": "Sinopec Yanshan (燕山石化)",
+      "website": "www.sinopec.com",
+      "country": "China",
+      "description": "中国最大的合成橡胶及树脂生产基地之一。"
+    },
+    {
+      "id": "m-32",
+      "name": "Sinopec Yangzi (扬子石化)",
+      "website": "www.sinopec.com",
+      "country": "China",
+      "description": "国内领先的特种聚烯烃研发中心。"
+    },
+    {
+      "id": "m-30",
+      "name": "Sinopec Shanghai (上海石化)",
+      "website": "spc.com.cn",
+      "country": "China",
+      "description": "综合性石油化工企业，主要生产乙烯及其衍生物。"
+    },
+    {
+      "id": "m-cnpc-1",
+      "name": "PetroChina Daqing (大庆石化)",
+      "website": "petrochina.com.cn",
+      "country": "China",
+      "description": "中国石油旗下的重要化工基地。"
+    },
+    {
+      "id": "m-cnpc-3",
+      "name": "PetroChina Dushanzi (独山子石化)",
+      "website": "petrochina.com.cn",
+      "country": "China"
+    },
+    {
+      "id": "m-basell",
+      "name": "LyondellBasell",
+      "website": "lyondellbasell.com",
+      "country": "Netherlands"
+    },
+    {
+      "id": "m-sabic",
+      "name": "SABIC",
+      "website": "sabic.com",
+      "country": "Saudi Arabia"
+    },
+    {
+      "id": "m-exxon",
+      "name": "ExxonMobil Chemical",
+      "website": "exxonmobilchemical.com",
+      "country": "USA"
+    },
+    {
+      "id": "m-dow",
+      "name": "Dow",
+      "website": "dow.com",
+      "country": "USA"
+    },
+    {
+      "id": "m-basf",
+      "name": "BASF",
+      "website": "basf.com",
+      "country": "Germany"
+    },
+    {
+      "id": "m-covestro",
+      "name": "Covestro",
+      "website": "covestro.com",
+      "country": "Germany"
+    },
+    {
+      "id": "m-lg",
+      "name": "LG Chem",
+      "website": "lgchem.com",
+      "country": "South Korea"
+    },
+    {
+      "id": "m-chimei",
+      "name": "Chi Mei (奇美)",
+      "website": "chimeicorp.com",
+      "country": "Taiwan, China"
+    },
+    {
+      "id": "m-arlanxeo",
+      "name": "Arlanxeo",
+      "website": "arlanxeo.com",
+      "country": "Netherlands"
+    },
+    {
+      "id": "m-invista",
+      "name": "INVISTA",
+      "website": "invista.com",
+      "country": "USA"
+    },
+    {
+      "id": "m-solvay",
+      "name": "Solvay",
+      "website": "solvay.com",
+      "country": "Belgium"
+    },
+    {
+      "id": "m-arkema",
+      "name": "Arkema",
+      "website": "arkema.com",
+      "country": "France"
+    },
+    {
+      "id": "m-evonik",
+      "name": "Evonik",
+      "website": "evonik.com",
+      "country": "Germany"
+    },
+    {
+      "id": "m-toray",
+      "name": "Toray",
+      "website": "toray.com",
+      "country": "Japan"
+    },
+    {
+      "id": "m-mitsui",
+      "name": "Mitsui Chemicals",
+      "website": "mitsuichemicals.com",
+      "country": "Japan"
+    },
+    {
+      "id": "m-asahi",
+      "name": "Asahi Kasei",
+      "website": "asahi-kasei.com",
+      "country": "Japan"
+    },
+    {
+      "id": "m-lanxess",
+      "name": "LANXESS",
+      "website": "lanxess.com",
+      "country": "Germany"
+    },
+    {
+      "id": "m-celanese",
+      "name": "Celanese",
+      "website": "celanese.com",
+      "country": "USA"
+    },
+    {
+      "id": "m-borealis",
+      "name": "Borealis",
+      "website": "borealisgroup.com",
+      "country": "Austria"
+    },
+    {
+      "id": "m-borealis-borouge",
+      "name": "Borouge",
+      "website": "borouge.com",
+      "country": "UAE"
+    },
+    {
+      "id": "m-kumho",
+      "name": "Kumho Polychem (锦湖)",
+      "website": "kkpc.com",
+      "country": "South Korea"
+    },
+    {
+      "id": "m-wanhua",
+      "name": "Wanhua Chemical (万华化学)",
+      "website": "whchem.com",
+      "country": "China"
+    }
+  ]
+}

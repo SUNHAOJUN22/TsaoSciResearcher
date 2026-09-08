@@ -1,0 +1,10 @@
+# TsaoDFT 0.4.0-alpha.2 release-snapshot evidence digests
+# Source commit: d02abc442f017f839311f3d52e172eb1d015a259
+# GitHub Actions run: 30597772162
+# GitHub Actions artifact archive digests use the sha256: prefix reported by upload-artifact.
+
+45bf986c68ae74145b33c22ad5b6cae2b4f6b56f8bcb68d4dec237f06df434a0  coverage-python-3.10-d02abc442f017f839311f3d52e172eb1d015a259.zip
+88c0a160801b2b591d5f1dd881d3edf90e2ccf4af607860a036bcb53a834d09a  coverage-python-3.12-d02abc442f017f839311f3d52e172eb1d015a259.zip
+88c0a160801b2b591d5f1dd881d3edf90e2ccf4af607860a036bcb53a834d09a  coverage-python-3.13-d02abc442f017f839311f3d52e172eb1d015a259.zip
+99ae229e2cbf152b1fc3c0eec89d02f52e0219cc9493e5d8bcb5a141c5c76ecf  supply-chain-d02abc442f017f839311f3d52e172eb1d015a259.zip
+d771ff5356f59c4d14ca272b365fa44a452680c284a06a05669dc1dd7eab6321  coverage-report.json (inside Python 3.12 coverage artifact)

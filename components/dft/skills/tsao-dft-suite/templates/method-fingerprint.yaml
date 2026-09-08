@@ -1,0 +1,25 @@
+schema_version: "1.0"
+method_fingerprint_id: MF001
+domain: molecular
+engine: gaussian
+engine_version: unknown
+model_chemistry:
+  method: unknown
+  basis_or_pseudopotential: unknown
+  dispersion: none
+  solvent_or_electrostatics: gas
+numerics:
+  grid: unknown
+  scf: unknown
+  convergence: unknown
+spin_charge:
+  charge: unknown
+  multiplicity_or_magnetism: unknown
+standard_state:
+  temperature_K: 298.15
+  pressure_atm: 1.0
+  concentration_M: null
+provenance:
+  source: designed
+  source_locator: null
+status: draft

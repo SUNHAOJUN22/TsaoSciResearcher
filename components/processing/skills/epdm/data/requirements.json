@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "requirements": [
+    {"requirement_id":"EPDM-REQ-01","criterion":"Application CQA and customer test boundary are defined","status":"NOT_EVALUATED","gate":"G1","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-02","criterion":"Vanadium industrial benchmark is retained or formally retired","status":"NOT_EVALUATED","gate":"G3","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-03","criterion":"Active-site concentration is separated from total metal","status":"NOT_EVALUATED","gate":"G4","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-04","criterion":"E/P/diene insertion competition is represented","status":"NOT_EVALUATED","gate":"G5","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-05","criterion":"Transfer and deactivation mechanisms are declared","status":"NOT_EVALUATED","gate":"G5","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-06","criterion":"MWD, CCD and sequence measurements are qualified","status":"NOT_EVALUATED","gate":"G6","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-07","criterion":"Retained unsaturation and diene topology are measured","status":"NOT_EVALUATED","gate":"G7","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-08","criterion":"Long-chain branching and gel/percolation risk are bounded","status":"NOT_EVALUATED","gate":"G7","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-09","criterion":"Polymer-solution phase stability is demonstrated","status":"NOT_EVALUATED","gate":"G8","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-10","criterion":"High-viscosity mixing and heat removal are qualified","status":"NOT_EVALUATED","gate":"G9","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-11","criterion":"Quench and deashing residuals meet criteria","status":"NOT_EVALUATED","gate":"G10","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-12","criterion":"Devolatilization uses a non-equilibrium basis","status":"NOT_EVALUATED","gate":"G10","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-13","criterion":"Recycle poison memory, guard bed and purge are closed","status":"NOT_EVALUATED","gate":"G11","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-14","criterion":"Mooney and rheology bridge to a fixed compound","status":"NOT_EVALUATED","gate":"G12","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-15","criterion":"Cure response uses a controlled formulation","status":"NOT_EVALUATED","gate":"G12","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-16","criterion":"Grade transition and off-spec accounting are validated","status":"NOT_EVALUATED","gate":"G13","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-17","criterion":"Part durability is connected to molecular architecture","status":"NOT_EVALUATED","gate":"G15","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-18","criterion":"Customer-line qualification has named evidence","status":"NOT_EVALUATED","gate":"G15","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-19","criterion":"Scale-up preserves mixing, heat and residence-time constraints","status":"NOT_EVALUATED","gate":"G16","evidence_ids":[]},
+    {"requirement_id":"EPDM-REQ-20","criterion":"Package acceptance has named process, HSE and customer approvals","status":"NOT_EVALUATED","gate":"G18","evidence_ids":[]}
+  ]
+}

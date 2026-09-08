@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoSciComputation/schemas/acceleration-plan.schema.json",
+  "title": "Solver-bound acceleration plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adapter_slug", "workflow", "backend", "placement", "execution_mode",
+    "cpu_cores", "mpi_ranks", "threads_per_rank", "device_indices",
+    "library_candidates", "library_detected", "library_qualified",
+    "unmet_requirements", "qualification_status", "environment", "precision",
+    "deterministic", "allow_fallback", "resource_request",
+    "resource_request_sha256", "inventory_sha256", "adapter_profile_sha256",
+    "solver_applicable", "solver_required", "solver_bound", "solver_detected",
+    "solver_status", "solver_executable_name", "solver_executable_path",
+    "solver_binary_sha256", "solver_version_text_sha256",
+    "solver_evidence_sha256", "execution_qualification_status",
+    "acceleration_plan_sha256", "fallback_used", "reason", "claim_boundary"
+  ],
+  "properties": {
+    "adapter_slug": {"type": "string", "minLength": 1},
+    "workflow": {"type": "string"},
+    "backend": {"enum": ["cpu", "openmp", "mpi", "task-parallel", "remote", "cuda", "hip", "sycl", "opencl", "kokkos"]},
+    "placement": {"enum": ["edge", "local", "workstation", "hpc", "cloud"]},
+    "execution_mode": {"type": "string", "minLength": 1},
+    "cpu_cores": {"type": "integer", "minimum": 1},
+    "mpi_ranks": {"type": "integer", "minimum": 1},
+    "threads_per_rank": {"type": "integer", "minimum": 1},
+    "device_indices": {"type": "array", "items": {"type": "integer", "minimum": 0}, "uniqueItems": true},
+    "library_candidates": {"$ref": "#/$defs/uniqueStrings"},
+    "library_detected": {"$ref": "#/$defs/uniqueStrings"},
+    "library_qualified": {"$ref": "#/$defs/uniqueStrings"},
+    "unmet_requirements": {"$ref": "#/$defs/uniqueStrings"},
+    "qualification_status": {"enum": ["not-applicable", "candidate-only", "detected-unqualified", "qualified"]},
+    "environment": {"type": "object", "additionalProperties": {"type": "string"}},
+    "precision": {"enum": ["fp64", "fp32", "mixed", "bf16", "fp16"]},
+    "deterministic": {"type": "boolean"},
+    "allow_fallback": {"type": "boolean"},
+    "resource_request": {"type": "object"},
+    "resource_request_sha256": {"$ref": "#/$defs/sha256"},
+    "inventory_sha256": {"$ref": "#/$defs/sha256"},
+    "adapter_profile_sha256": {"$ref": "#/$defs/sha256"},
+    "solver_applicable": {"type": "boolean"},
+    "solver_required": {"type": "boolean"},
+    "solver_bound": {"type": "boolean"},
+    "solver_detected": {"type": "boolean"},
+    "solver_status": {"enum": ["not-applicable", "candidate-only", "detected-incomplete", "fingerprinted-unqualified", "version-probed-unqualified"]},
+    "solver_executable_name": {"type": ["string", "null"]},
+    "solver_executable_path": {"type": ["string", "null"]},
+    "solver_binary_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "solver_version_text_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "solver_evidence_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "execution_qualification_status": {"enum": ["not-applicable", "external-hold", "evidence-bound-unqualified"]},
+    "acceleration_plan_sha256": {"$ref": "#/$defs/sha256"},
+    "fallback_used": {"type": "boolean"},
+    "reason": {"type": "string", "minLength": 1},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "uniqueStrings": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"solver_bound": {"const": true}}},
+      "then": {"required": ["solver_evidence_sha256"]}
+    },
+    {
+      "if": {"properties": {"execution_qualification_status": {"const": "evidence-bound-unqualified"}}},
+      "then": {
+        "properties": {
+          "solver_applicable": {"const": true},
+          "solver_bound": {"const": true},
+          "solver_detected": {"const": true},
+          "solver_status": {"const": "version-probed-unqualified"}
+        }
+      }
+    }
+  ]
+}

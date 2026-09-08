@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "model_id": "MODEL",
+  "model_family": "ridge",
+  "features": [],
+  "target": "target",
+  "group_column": "parent_id",
+  "split_policy": "group",
+  "preprocessing_fit_scope": "train_only",
+  "metrics": {},
+  "counts": {},
+  "applicability_domain": null,
+  "uncertainty_calibration": null,
+  "scientific_interpretation": "exploratory",
+  "status": "draft"
+}

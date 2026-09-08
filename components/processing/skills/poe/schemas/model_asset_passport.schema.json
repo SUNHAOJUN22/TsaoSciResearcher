@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tsao/poe/model_asset_passport.schema.json",
+  "title": "POE model asset passport registry",
+  "type": "object",
+  "required": ["models"],
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "model_id",
+          "model_type",
+          "software",
+          "software_version",
+          "purpose",
+          "unit_system",
+          "applicability_domain",
+          "dependencies",
+          "evidence_ids",
+          "execution_status",
+          "validation_status"
+        ],
+        "properties": {
+          "model_id": {"type": "string", "pattern": "^POE-MODEL-[0-9]{3}$"},
+          "model_type": {"enum": ["ASPEN_PLUS", "ASPEN_DYNAMICS", "MATLAB", "ORIGIN", "CFD", "PYTHON_REFERENCE", "CUSTOM"]},
+          "software": {"type": "string", "minLength": 1},
+          "software_version": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "unit_system": {"const": "SI"},
+          "applicability_domain": {"type": "string", "minLength": 1},
+          "source_path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "dependencies": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+          "evidence_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+          "execution_status": {"enum": ["NOT_EXECUTED", "HISTORICAL_ONLY", "EXECUTED_UNQUALIFIED", "QUALIFIED_REFERENCE"]},
+          "validation_status": {"enum": ["NOT_EVALUATED", "HOLD", "FAIL", "PASS"]},
+          "approver": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

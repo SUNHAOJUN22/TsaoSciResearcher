@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/schemas/work_package.schema.json",
+  "title": "TSAO work package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["work_package_id","gate_id","workstream_id","title","owner_role","status","approval_status","inputs","outputs","blockers","external_execution","dependency_gate"],
+  "properties": {
+    "work_package_id": {"type":"string","minLength":1},
+    "gate_id": {"type":"string","pattern":"^G([0-9]|1[0-8])$"},
+    "workstream_id": {"type":"string","minLength":1},
+    "title": {"type":"string","minLength":1},
+    "owner_role": {"type":"string","minLength":1},
+    "status": {"enum":["PLANNED","IN_PROGRESS","BLOCKED","COMPLETE","CANCELLED"]},
+    "approval_status": {"enum":["NOT_EVALUATED","APPROVED","REJECTED"]},
+    "inputs": {"type":"array","items":{"type":"string"}},
+    "outputs": {"type":"array","items":{"type":"string"}},
+    "blockers": {"type":"array","items":{"type":"string"}},
+    "external_execution": {"type":"boolean"},
+    "dependency_gate": {"type":["string","null"],"pattern":"^G([0-9]|1[0-8])$"}
+  }
+}

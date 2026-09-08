@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUNHAOJUN22/TsaoDFT_skill/autotuning-candidates.schema.json",
+  "title": "TsaoComputation engine autotuning candidate set",
+  "type": "object",
+  "required": ["ok", "schema_version", "campaign_id", "engine", "scientific_identity", "candidate_count", "candidates", "selection_policy"],
+  "properties": {
+    "ok": {"const": true},
+    "schema_version": {"const": "1.0"},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "engine": {"enum": ["vasp", "quantum-espresso", "cp2k", "gaussian", "ml-surrogate"]},
+    "scientific_identity": {"type": "object"},
+    "candidate_count": {"type": "integer", "minimum": 1},
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["candidate_id", "role", "approval", "backend", "precision", "scientific_identity", "resources", "tuning"],
+        "properties": {
+          "candidate_id": {"type": "string", "minLength": 1},
+          "role": {"enum": ["scientific-reference", "acceleration-candidate"]},
+          "approval": {"const": "pending"},
+          "backend": {"type": "string"},
+          "precision": {"enum": ["fp64", "fp32", "mixed-validated"]},
+          "scientific_identity": {"type": "object"},
+          "resources": {"type": "object"},
+          "tuning": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "selection_policy": {"type": "object"}
+  },
+  "additionalProperties": true
+}

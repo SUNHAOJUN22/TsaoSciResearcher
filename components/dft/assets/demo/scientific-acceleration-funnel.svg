@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Scientific acceleration qualification funnel</title>
+  <desc id="desc">Synthetic conceptual funnel from static candidates and profiling through numerical equivalence, end-to-end benefit, signed evidence, and scoped qualification. This is not scientific data or a speedup claim.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07101d"/><stop offset="1" stop-color="#151629"/></linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#5b7cff"/><stop offset="1" stop-color="#7656ff"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#17bce0"/><stop offset="1" stop-color="#4ed8b6"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffad4d"/><stop offset="1" stop-color="#ffd66d"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000" flood-opacity=".34"/></filter>
+    <style>
+      .f{font-family:Inter,Segoe UI,Arial,sans-serif}.w{fill:#eef6ff}.m{fill:#a9bbcf}.h{font-size:28px;font-weight:760}.k{font-size:12px;font-weight:800;letter-spacing:.12em}.l{font-size:17px;font-weight:750}.s{font-size:13px}.gate{fill:#0e2032;stroke:#315472;stroke-width:1.4}.deny{fill:#251725;stroke:#713950;stroke-width:1.3}
+    </style>
+  </defs>
+  <rect width="1120" height="520" rx="24" fill="url(#bg)"/>
+  <circle cx="1010" cy="70" r="100" fill="#6f5cff" opacity=".08"/><circle cx="100" cy="450" r="120" fill="#2fd2ba" opacity=".06"/>
+  <text class="f w h" x="48" y="52">Acceleration is earned through a scientific funnel—not declared by hardware presence.</text>
+  <text class="f m s" x="48" y="80">Every narrowing stage removes unsupported, non-equivalent or non-beneficial candidates.</text>
+
+  <g filter="url(#shadow)">
+    <path d="M94 112 H1026 L930 180 H190 Z" fill="url(#g1)"/>
+    <text class="f w k" x="222" y="141">01 · DISCOVERY</text><text class="f w l" x="222" y="164">Static audit + representative runtime profile</text>
+    <text class="f w s" x="865" y="151" text-anchor="end">40 static candidates ≠ 40 bottlenecks</text>
+
+    <path d="M190 194 H930 L850 258 H270 Z" fill="#183456" stroke="#3e75a6" stroke-width="1.5"/>
+    <text class="f w k" x="300" y="219">02 · IMPLEMENTATION CANDIDATE</text><text class="f w l" x="300" y="244">Vectorize first · bounded parallelism · optional C++/GPU</text>
+
+    <path d="M270 272 H850 L780 332 H340 Z" fill="url(#g2)"/>
+    <text class="f" x="370" y="297" font-size="12" font-weight="800" letter-spacing=".12em" fill="#062c2c">03 · SCIENTIFIC EQUIVALENCE</text>
+    <text class="f" x="370" y="321" font-size="17" font-weight="760" fill="#062c2c">same method · accepted parser · tolerances pass</text>
+
+    <path d="M340 346 H780 L718 400 H402 Z" fill="url(#g3)"/>
+    <text class="f" x="430" y="371" font-size="12" font-weight="800" letter-spacing=".12em" fill="#4b2900">04 · END-TO-END BENEFIT</text>
+    <text class="f" x="430" y="393" font-size="16" font-weight="760" fill="#4b2900">transfer + launch + I/O + repeats included</text>
+
+    <path d="M402 414 H718 L662 462 H458 Z" fill="#4ce29c"/>
+    <text class="f" x="488" y="439" font-size="12" font-weight="800" letter-spacing=".1em" fill="#073523">05 · SIGNED SCOPED EVIDENCE</text>
+    <text class="f" x="488" y="456" font-size="14" font-weight="760" fill="#073523">eligible for reviewed L3 scope</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="deny" x="48" y="198" width="120" height="176" rx="18"/>
+    <text class="f" x="108" y="226" text-anchor="middle" font-size="12" font-weight="800" fill="#ff9bb3">REJECT</text>
+    <text class="f m s" x="108" y="255" text-anchor="middle">no profile</text>
+    <text class="f m s" x="108" y="281" text-anchor="middle">semantic drift</text>
+    <text class="f m s" x="108" y="307" text-anchor="middle">copy dominates</text>
+    <text class="f m s" x="108" y="333" text-anchor="middle">single run</text>
+    <text class="f m s" x="108" y="359" text-anchor="middle">unsigned review</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect class="gate" x="952" y="198" width="120" height="176" rx="18"/>
+    <text class="f" x="1012" y="226" text-anchor="middle" font-size="12" font-weight="800" fill="#8de8ff">RETAIN</text>
+    <text class="f m s" x="1012" y="255" text-anchor="middle">CPU reference</text>
+    <text class="f m s" x="1012" y="281" text-anchor="middle">failed runs</text>
+    <text class="f m s" x="1012" y="307" text-anchor="middle">input hashes</text>
+    <text class="f m s" x="1012" y="333" text-anchor="middle">build identity</text>
+    <text class="f m s" x="1012" y="359" text-anchor="middle">uncertainty</text>
+  </g>
+
+  <text class="f" x="48" y="500" font-size="13" font-weight="800" fill="#ffcf70">SYNTHETIC DEMO · NOT SCIENTIFIC DATA</text>
+  <text class="f" x="1072" y="500" text-anchor="end" font-size="12" fill="#7f94ab">Public capability remains L2 until real scoped evidence is registered</text>
+</svg>

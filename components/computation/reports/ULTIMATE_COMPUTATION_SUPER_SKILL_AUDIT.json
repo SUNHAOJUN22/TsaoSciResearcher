@@ -1,0 +1,128 @@
+{
+  "architecture": {
+    "acceleration_strategies": 13,
+    "adapters": 27,
+    "capabilities": 164,
+    "external_plan_only_targets": 33,
+    "invocation_kinds": [
+      "cli",
+      "commercial-adapter",
+      "container",
+      "local-solver",
+      "python-callable",
+      "python-module",
+      "remote-api",
+      "scheduler-job",
+      "skill"
+    ],
+    "invocation_targets": 40,
+    "method_slugs": [
+      "analytical-model",
+      "numerical-integration",
+      "root-finding",
+      "nonlinear-optimization",
+      "dense-linear-algebra",
+      "sparse-linear-algebra",
+      "statistical-inference",
+      "uncertainty-quantification",
+      "monte-carlo",
+      "quantum-chemistry",
+      "periodic-dft",
+      "molecular-dynamics",
+      "mesoscale-simulation",
+      "computational-fluid-dynamics",
+      "finite-element",
+      "multiphysics",
+      "process-simulation",
+      "dynamic-control",
+      "digital-twin",
+      "surrogate-model",
+      "machine-learning",
+      "data-processing",
+      "hpc-execution"
+    ],
+    "methods": 23,
+    "orchestration_stages": 9,
+    "trusted_local_callables": 7,
+    "workflows": 20
+  },
+  "audit_generation": "execution-integrity-v13",
+  "branch": "main",
+  "claim_boundary": "The Skill computes with registered trusted local functions and plans, routes, probes, configures and evidences external functions, tools, solvers and Skills. External execution and scientific acceptance remain separate, explicit and fail-closed.",
+  "commit_binding": "Exact final commit and production workflows are recorded in GitHub Issue #85.",
+  "created_pull_request": false,
+  "execution_policy": {
+    "arbitrary_python_import_execution": false,
+    "arbitrary_shell_execution": false,
+    "authorization_binds_executable_sha256": true,
+    "authorization_binds_input_sha256": true,
+    "direct_low_level_process_execution_disabled": true,
+    "external_process_execution_requires_hash_bound_authorization": true,
+    "external_targets_default_to_plan_only": true,
+    "python_module_probes_use_sanitized_environment": true,
+    "read_only_probe_commands_allowlisted": true,
+    "remote_api_contact_by_registration": false,
+    "skill_handoff_requires_available_authorized_runtime": true,
+    "trusted_local_callables_may_execute": true
+  },
+  "performance_evidence": {
+    "MATH_PERFORMANCE_AUDIT_V10.json": {
+      "claim_boundary": "Same-host repository-local Python mathematical kernels and acceleration planning only; no external solver, GPU kernel or production-HPC speedup is claimed.",
+      "speedups": {
+        "acceleration_plan": 1.0633415823171777,
+        "convergence_time": 1.236532870441927,
+        "parser": 1.006941226829745,
+        "scientific_benchmarks": 0.9989371903319644,
+        "uncertainty": 1.571009776161186
+      },
+      "status": "PASS"
+    },
+    "MATH_PERFORMANCE_AUDIT_V11.json": {
+      "claim_boundary": "Repository-local Python planning, routing and deterministic benchmark kernels only; no external solver, GPU kernel or production-HPC speedup is claimed.",
+      "speedups": {
+        "mapping_acceleration_plan": 1.104838406251582,
+        "preparsed_acceleration_plan": 1.09344321441341,
+        "scientific_benchmarks": 1.3667365064778798,
+        "semantic_route_variants": 184.0254895393999,
+        "v10_convergence": 1.00531426333479,
+        "v10_parser": 0.9971587049642507,
+        "v10_uncertainty": 0.9783737694593914
+      },
+      "status": "PASS"
+    }
+  },
+  "quality": {
+    "branch_coverage_percent": 90.98591549295774,
+    "controlled_mutation": "PASS",
+    "dependency_vulnerabilities": 0,
+    "repository_security_findings": 0,
+    "scientific_benchmarks": "PASS",
+    "source_and_wheel_reproducible": true,
+    "statement_coverage_percent": 96.63056558363418,
+    "tests_failed": 0,
+    "tests_passed": 774,
+    "verification_profile_passed": true
+  },
+  "remaining_limitations": [
+    "No external scientific solver, commercial license, remote API, container runtime, scheduler, GPU kernel or production HPC system is bundled or implicitly authorized.",
+    "Adapter detection and command construction do not prove solver build features, numerical speedup, convergence or physical validity.",
+    "Acceleration recommendations are guidance unless cited isolated evidence explicitly marks them measured.",
+    "High-risk engineering or safety decisions still require expert, approval and independent-reproduction gates."
+  ],
+  "schema_version": "1.2",
+  "status": "VALIDATED",
+  "supported_platforms": {
+    "linux": "compatible",
+    "macos": "not supported or release-qualified",
+    "windows": "core"
+  },
+  "telemetry": {
+    "claim_boundary": "Same-host repository-local orchestration latency only; no external solver or GPU speedup is measured.",
+    "orchestration_plan_median_seconds": 6.797517000009634e-05,
+    "trusted_balance_invocation_median_seconds": 1.8746510000028137e-05
+  },
+  "temporary_branch_created": false,
+  "validation_failures": [],
+  "validation_missing_evidence": [],
+  "version": "3.0.4"
+}

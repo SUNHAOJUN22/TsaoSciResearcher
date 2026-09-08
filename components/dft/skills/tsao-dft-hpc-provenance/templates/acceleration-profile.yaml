@@ -1,0 +1,52 @@
+schema_version: "1.1"
+profile_id: ACCEL-VASP-H100-001
+engine: vasp
+stage: engine
+workload:
+  model: periodic-plane-wave
+  atoms: 256
+hardware:
+  target: hpc
+  cpu_arch: x86_64
+  nodes: 1
+  tasks_per_node: 4
+  cpus_per_task: 8
+  gpu_vendor: nvidia
+  gpu_model: H100
+  gpus_per_node: 4
+  gpu_memory_gb: 80
+  cpus_per_gpu: 8
+  interconnect: nvlink
+software:
+  backend: cuda
+  engine_gpu_build: true
+  custom_engine_integration: false
+  build_fingerprint_id: BUILD-VASP-H100-001
+  model_family: none
+  libraries:
+    - cuBLAS
+    - cuSOLVER
+    - cuFFT
+    - NCCL
+    - cuTENSOR
+    - cuEquivariance
+binding:
+  ranks_per_gpu: 1
+  allow_gpu_oversubscription: false
+  cpu_bind: cores
+  gpu_bind: closest
+  device_order: pci_bus_id
+  record_runtime: true
+  runtime_record: tsao-acceleration-runtime.txt
+  device_inventory: tsao-nvidia-gpu-inventory.csv
+benchmark:
+  plan_id: BENCH-VASP-H100-001
+  node_counts: [1]
+  gpu_counts: [1, 2, 4]
+  ranks_per_gpu: [1]
+  cpu_reference_tasks_per_node: 4
+  cpu_reference_cpus_per_task: 8
+policy:
+  precision: fp64
+  require_cpu_fallback: true
+  require_real_benchmark: true

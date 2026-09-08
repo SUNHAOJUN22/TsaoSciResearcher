@@ -1,0 +1,7 @@
+ vasp.6.4.3 18Apr23
+ NIONS =      2 ions
+ free  energy   TOTEN  =       -10.123456 eV
+ E-fermi :   5.4321     XC(G=0): 0.0000
+ aborting loop because EDIFF is reached
+ General timing and accounting informations for this job:
+ Elapsed time (sec):      12.34

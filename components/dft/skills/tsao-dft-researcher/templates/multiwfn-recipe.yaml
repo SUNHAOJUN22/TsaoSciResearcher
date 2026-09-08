@@ -1,0 +1,16 @@
+schema_version: "1.0"
+recipe_id: MW001
+analysis_type: esp_surface
+multiwfn_version: unknown
+input_file: molecule.fchk
+input_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+upstream_method_fingerprint: MF001
+semantic_steps: [load_wavefunction, define_density_surface, evaluate_surface_esp, export_cube]
+parameters:
+  density_isovalue_au: 0.001
+  esp_min: -0.05
+  esp_max: 0.05
+  unit: a.u.
+expected_outputs: [density.cube, esp.cube, surface-statistics.txt]
+raw_menu_script: null
+status: draft

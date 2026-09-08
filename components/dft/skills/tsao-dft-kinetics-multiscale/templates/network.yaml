@@ -1,0 +1,9 @@
+schema_version: "1.0"
+network_id: NET001
+temperature_K: 298.15
+standard_state: solution_1M
+species:
+  - {id: A, formula: unknown, free_energy_kcal_mol: 0.0, artifact_id: unknown}
+reactions: []
+site_balance: null
+status: planned

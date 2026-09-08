@@ -1,0 +1,3 @@
+schema_version: "1.0"
+signature_algorithm: ed25519
+maximum_validity_days: 30

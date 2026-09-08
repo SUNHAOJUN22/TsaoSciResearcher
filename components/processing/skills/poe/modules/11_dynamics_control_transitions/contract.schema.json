@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/skills/poe/modules/11_dynamics_control_transitions/contract.schema.json",
+  "title": "Dynamics, control and transitions module contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id",
+    "input",
+    "output"
+  ],
+  "properties": {
+    "module_id": {
+      "const": "11_dynamics_control_transitions"
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "evidence_ids",
+        "unit_system",
+        "applicability_domain"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unit_system": {
+          "const": "SI"
+        },
+        "applicability_domain": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "status",
+        "evidence_ids",
+        "uncertainty",
+        "blockers",
+        "approval"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_EVALUATED",
+            "HOLD",
+            "CONDITIONAL",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "uncertainty": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approval": {
+          "enum": [
+            "NOT_EVALUATED",
+            "APPROVED",
+            "REJECTED"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

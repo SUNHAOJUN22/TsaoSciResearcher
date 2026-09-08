@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.example/schemas/v2/reaction-network-v2.schema.json",
+  "title": "EPDM V2 structural reaction network",
+  "type": "object",
+  "required": [
+    "schema",
+    "network_id",
+    "version",
+    "model_level",
+    "state_definition_id",
+    "generated_state_definition_id",
+    "generated_state_digest_sha256",
+    "site_family_ids",
+    "terminal_ids",
+    "options",
+    "channels",
+    "state_ids",
+    "stoichiometric_matrix",
+    "matrix_shape",
+    "family_counts",
+    "numerical_execution",
+    "digest_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "TSAO-EPDM-V2-REACTION-NETWORK-1"
+    },
+    "network_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_level": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 3
+    },
+    "state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "generated_state_definition_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "generated_state_digest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "site_family_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      }
+    },
+    "terminal_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "E",
+          "P",
+          "D"
+        ]
+      }
+    },
+    "options": {
+      "type": "object",
+      "required": [
+        "enable_cocatalyst_activation",
+        "enable_hydrogen_activation",
+        "transfer_to_monomers",
+        "enable_hydrogen_transfer",
+        "transfer_agents",
+        "enable_spontaneous_deactivation",
+        "enable_poison_deactivation",
+        "enable_hydrogen_inhibition",
+        "enable_tdb"
+      ],
+      "properties": {
+        "enable_cocatalyst_activation": {
+          "type": "boolean"
+        },
+        "enable_hydrogen_activation": {
+          "type": "boolean"
+        },
+        "transfer_to_monomers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "E",
+              "P",
+              "D"
+            ]
+          }
+        },
+        "enable_hydrogen_transfer": {
+          "type": "boolean"
+        },
+        "transfer_agents": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "SOLVENT",
+              "COCATALYST"
+            ]
+          }
+        },
+        "enable_spontaneous_deactivation": {
+          "type": "boolean"
+        },
+        "enable_poison_deactivation": {
+          "type": "boolean"
+        },
+        "enable_hydrogen_inhibition": {
+          "type": "boolean"
+        },
+        "enable_tdb": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "reaction_id",
+          "family",
+          "site_family_id",
+          "terminal_id",
+          "incoming_monomer_id",
+          "reactant_state_ids",
+          "modifier_state_ids",
+          "stoichiometry",
+          "moment_rules",
+          "rate_law_id"
+        ],
+        "properties": {
+          "reaction_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "family": {
+            "enum": [
+              "ACT_SPON",
+              "ACT_COCAT",
+              "ACT_H2",
+              "CHAIN_INI",
+              "PROPAGATION",
+              "CHAT_MON",
+              "CHAT_H2",
+              "CHAT_AGENT",
+              "DEACT_SPON",
+              "DEACT_POISON",
+              "INH_H2_FORWARD",
+              "INH_H2_REVERSE",
+              "TDB_GENERATION",
+              "TDB_POLY"
+            ]
+          },
+          "site_family_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "terminal_id": {
+            "oneOf": [
+              {
+                "enum": [
+                  "E",
+                  "P",
+                  "D"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "incoming_monomer_id": {
+            "oneOf": [
+              {
+                "enum": [
+                  "E",
+                  "P",
+                  "D"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reactant_state_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          },
+          "modifier_state_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+            }
+          },
+          "stoichiometry": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "state_id",
+                "coefficient"
+              ],
+              "properties": {
+                "state_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+                },
+                "coefficient": {
+                  "type": "number",
+                  "not": {
+                    "const": 0
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "moment_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "kind",
+                "site_family_id",
+                "source_terminal_id",
+                "target_terminal_id",
+                "incoming_monomer_id"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "INITIATE_UNIT_CHAIN",
+                    "PROPAGATE_TERMINAL",
+                    "TERMINATE_TO_DEAD",
+                    "TERMINATE_TO_TDB",
+                    "TDB_REINCORPORATION"
+                  ]
+                },
+                "site_family_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+                },
+                "source_terminal_id": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "E",
+                        "P",
+                        "D"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "target_terminal_id": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "E",
+                        "P",
+                        "D"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "incoming_monomer_id": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "E",
+                        "P",
+                        "D"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "rate_law_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "state_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      }
+    },
+    "stoichiometric_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "matrix_shape": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "family_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "numerical_execution": {
+      "const": "NOT_IMPLEMENTED_PHASE_A2"
+    },
+    "digest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

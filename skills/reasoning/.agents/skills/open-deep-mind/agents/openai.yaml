@@ -1,0 +1,6 @@
+interface:
+  display_name: "Open Deep Mind"
+  short_description: "Φ/P reasoning, explicit TRIZ, and benchmark integrity"
+  default_prompt: "Use $open-deep-mind to qualify the propositions, build a falsifiable first-principles model, enable TRIZ only explicitly, and audit publication readiness."
+policy:
+  allow_implicit_invocation: true

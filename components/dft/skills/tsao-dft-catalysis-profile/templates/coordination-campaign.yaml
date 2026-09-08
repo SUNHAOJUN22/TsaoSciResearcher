@@ -1,0 +1,10 @@
+campaign_id: COORD
+axes:
+  substrate_or_additive: [DCS, MCSOMe, DMOS]
+  catalyst_model: [Ti_model_1]
+  coordination_mode: [O_coordination, pi_coordination]
+  conformer: [c1, c2]
+  charge: [0]
+  multiplicity: [1]
+exclusions: []
+max_candidates: 24

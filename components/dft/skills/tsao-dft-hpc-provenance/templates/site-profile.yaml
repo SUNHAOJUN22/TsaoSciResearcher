@@ -1,0 +1,13 @@
+schema_version: "1.0"
+site_id: SITE
+scheduler: slurm
+execution_host_scope: cluster-login-and-compute
+software:
+  gaussian: {executable: g16, version_policy: pin_and_record, module_or_environment: gaussian/16}
+  vasp: {executable: vasp_std, version_policy: pin_and_record, module_or_environment: vasp/site}
+  quantum-espresso: {executable: pw.x, version_policy: pin_and_record, module_or_environment: qe/site}
+  cp2k: {executable: cp2k.popt, version_policy: pin_and_record, module_or_environment: cp2k/site}
+scratch: {root: /scratch/$USER, cleanup_policy: explicit_only}
+resource_limits: {max_nodes: 4, max_walltime: "48:00:00", max_memory_gb_per_node: 256}
+security: {contains_credentials: false, allow_unbounded_filesystem_scan: false}
+status: reviewed

@@ -1,0 +1,7 @@
+claim_id: CLAIM-001
+claim_level: relative_binding_preference
+text: DCS binds more favorably than MCSOMe within the declared model.
+system_scope: isolated validated Ti model, selected solvent and standard state
+evidence: [accepted_dft, common_reference_state, conformer_spin_scope]
+limitations: [finite catalyst model, no reactor context]
+status: reviewed

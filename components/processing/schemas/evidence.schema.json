@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tsao.dev/schemas/evidence.schema.json",
+  "title": "TSAO evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["evidence_id", "source_type", "grade", "title", "locator", "applicability", "decision_eligible", "contradiction_status", "retrieved_on", "review_due_on", "design_use"],
+  "properties": {
+    "evidence_id": {"type": "string", "minLength": 1},
+    "source_type": {"enum": ["standard", "government", "peer_reviewed", "patent", "official_software", "company_official", "book_report", "lead_only"]},
+    "grade": {"enum": ["A", "B", "C", "D"]},
+    "title": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "published_on": {"type": ["string", "null"], "format": "date"},
+    "retrieved_on": {"type": "string", "format": "date"},
+    "review_due_on": {"type": "string", "format": "date"},
+    "applicability": {"type": "string", "minLength": 1},
+    "decision_eligible": {"type": "boolean"},
+    "contradiction_status": {"enum": ["NONE", "RESOLVED", "OPEN", "SUPERSEDED", "RETRACTED"]},
+    "design_use": {"enum": ["PROHIBITED", "SCREENING_ONLY", "EXPERIMENT_DESIGN", "DESIGN_WITH_REVIEW"]}
+  }
+}

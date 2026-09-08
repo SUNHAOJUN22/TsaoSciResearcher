@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "project_id": "demo-orbital-gallery",
+  "figures": [
+    {
+      "id": "F-MO",
+      "title": "Frontier-orbital gallery",
+      "role": "si",
+      "conclusion": "Compare frontier-orbital localization using one shared isovalue and camera.",
+      "evidence_grade": "A",
+      "outputs": ["figures/homolumo-gallery.png", "figures/homolumo-gallery.pdf"],
+      "panels": [
+        {
+          "id": "a",
+          "type": "mo",
+          "source_artifact_ids": ["accepted-homo-cube-a"],
+          "method": "project method fingerprint",
+          "basis": "project basis/ECP",
+          "phase_or_solvent": "project phase/solvent",
+          "renderer": "VMD/Tachyon",
+          "camera_id": "shared-front",
+          "comparison_group": "molecular-series",
+          "multiplicity": 1,
+          "cube_file": "wavefunctions/a-homo.cube",
+          "parameters": {
+            "isovalue_au": 0.02,
+            "orbital_or_state_label": "HOMO",
+            "positive_phase_color": "blue",
+            "negative_phase_color": "orange",
+            "palette": "phase-pair"
+          }
+        }
+      ]
+    }
+  ]
+}

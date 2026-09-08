@@ -1,0 +1,55 @@
+{
+  "adapter_certification": {
+    "claim_boundary": "A0-A4 repository evidence is not live solver execution.",
+    "levels": {
+      "A2": 1,
+      "A3": 12,
+      "A4": 14
+    },
+    "live_solver_adapters": 0,
+    "scheme": "A0-A5"
+  },
+  "claim_boundary": "Validated locally for orchestration, contracts, routing, registries, security controls, deterministic fixtures, packaging, and isolated installation. No live third-party scientific solver, commercial-license environment, or production HPC execution is claimed.",
+  "counts": {
+    "adapters": 27,
+    "capabilities": 164,
+    "controlled_mutants_killed": 64,
+    "controlled_mutants_survived": 0,
+    "scientific_reference_benchmarks_failed": 0,
+    "scientific_reference_benchmarks_passed": 8,
+    "tests_failed": 0,
+    "tests_passed": 553,
+    "workflows": 20
+  },
+  "coverage": {
+    "branches_percent": 93.47826086956522,
+    "missing_branches": 21,
+    "missing_statements": 30,
+    "statements_percent": 97.270245677889
+  },
+  "packaging": {
+    "cyclonedx_sbom": true,
+    "github_sigstore_attestations_required_at_release": true,
+    "release_manifest": true,
+    "sha256_checksums": true,
+    "source_tar_gz_byte_identical_rebuild": true,
+    "source_zip_byte_identical_rebuild": true,
+    "spdx_sbom": true,
+    "wheel_byte_identical_rebuild": true,
+    "wheel_isolated_install": true
+  },
+  "schema_version": "1.0",
+  "scientific_confidence": {
+    "engineering_decision_ready_only_at": "C5",
+    "policy": "fail-closed-sequential",
+    "schema": "schemas/confidence-assessment.schema.json",
+    "scheme": "C0-C5"
+  },
+  "security": {
+    "dependency_audit": "PASS",
+    "dependency_vulnerabilities": 0,
+    "repository_findings": 0,
+    "runtime_dependencies": 0
+  },
+  "version": "3.0.2"
+}

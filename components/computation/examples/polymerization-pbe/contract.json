@@ -1,0 +1,86 @@
+{
+  "acceptance_criteria": {
+    "distribution_validation": true,
+    "identifiability_reported": true,
+    "mass_balance": true
+  },
+  "assumptions": [
+    "mechanism closure is tested",
+    "moment closure is validated against a higher-fidelity reference"
+  ],
+  "boundary_conditions": {
+    "population_domain": "chain-length and composition bounds declared"
+  },
+  "compute_resources": {
+    "parameter_runs": "bounded design",
+    "solver": "stiff ODE/PBE selected after diagnostics"
+  },
+  "conditions": {
+    "temperature_pressure_composition": "operating envelope declared"
+  },
+  "convergence_plan": {
+    "ode": "tolerance study",
+    "optimization": "multi-start diagnostics",
+    "population_grid_or_moments": "resolution or closure study"
+  },
+  "expected_artifacts": [
+    "mechanism and parameter table",
+    "solver model",
+    "fit and validation report"
+  ],
+  "human_approval_nodes": [
+    "mechanism approval",
+    "parameter identifiability review"
+  ],
+  "initial_conditions": {
+    "species_and_population": "feed and catalyst states declared"
+  },
+  "methods": [
+    "Eyring or fitted rate constants",
+    "ODE microkinetics",
+    "population balance or moments"
+  ],
+  "model_object": {
+    "description": "Polymerization microkinetic and population-balance workflow"
+  },
+  "parameter_sources": [
+    {
+      "parameter": "rate constants",
+      "source": "DFT, experiment, or calibrated literature with uncertainty"
+    }
+  ],
+  "question": "Which elementary kinetic parameters reproduce conversion, composition, molecular-weight distribution, and branching over the target operating window?",
+  "scales": [
+    "elementary reaction",
+    "population",
+    "reactor"
+  ],
+  "schema_version": "1.0",
+  "system": {
+    "mechanism": "initiation, propagation, transfer, termination, and deactivation network",
+    "reactor_context": "declared"
+  },
+  "target_observables": [
+    "conversion",
+    "Mn",
+    "Mw",
+    "PDI",
+    "composition_distribution",
+    "branching_distribution"
+  ],
+  "uncertainty_sources": [
+    "mechanism incompleteness",
+    "rate constants",
+    "measurement error",
+    "closure approximation"
+  ],
+  "validation_plan": {
+    "checks": [
+      "mass balance",
+      "limiting cases",
+      "experimental conversion and distribution",
+      "identifiability"
+    ]
+  },
+  "workflow": "polymerization"
+}

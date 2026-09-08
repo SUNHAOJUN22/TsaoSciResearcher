@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "dataKind": "resin-data-manifest",
+  "sourceType": "generated-index",
+  "recordStatus": "reference",
+  "updatedAt": "2026-07-28",
+  "data": {
+    "basePath": "/data/resins",
+    "assets": [
+      {
+        "file": "myLabUniverse.json",
+        "dataKind": "laboratory-material-records",
+        "recordStatus": "demo",
+        "recordCount": 2,
+        "bytes": 2338,
+        "sha256": "dc880400eb55d634f6bc039bafa333d7760bb1d6e8493b63897cf3cb7b1ca022"
+      },
+      {
+        "file": "openMarketUniverse.json",
+        "dataKind": "market-material-records",
+        "recordStatus": "demo",
+        "recordCount": 4,
+        "bytes": 4391,
+        "sha256": "f73480d979e320ec67793cb950d7821bd703ca1de4b4cd4ea943c9425552f231"
+      },
+      {
+        "file": "polymerDatabase.json",
+        "dataKind": "resin-seed-products",
+        "recordStatus": "demo",
+        "recordCount": 11,
+        "bytes": 14928,
+        "sha256": "ca9cbc4a99f53f78ab6e4d7bb4554f980532e457f6187885284eb26a5eca6379"
+      },
+      {
+        "file": "resin-category-aliases.json",
+        "dataKind": "resin-category-aliases",
+        "recordStatus": "reference",
+        "recordCount": 13,
+        "bytes": 2473,
+        "sha256": "2f2e4d9388398f724d3fc3b3119a64b21492a36a9a7586b0851913cde616c07a"
+      },
+      {
+        "file": "resin-manufacturers.json",
+        "dataKind": "resin-manufacturers",
+        "recordStatus": "reference",
+        "recordCount": 27,
+        "bytes": 3976,
+        "sha256": "ba211232a0b2441bd2cb5142118e3a53330de6d89ebecbe823832fecf2874723"
+      },
+      {
+        "file": "resin-network.json",
+        "dataKind": "resin-reaction-network",
+        "recordStatus": "demo",
+        "recordCount": 26,
+        "bytes": 8141,
+        "sha256": "a72c23ef63d7ece535728d6a31b9add9424a1ca3c7635b8410fe3b0a9cda1a2a"
+      },
+      {
+        "file": "resin-property-groups.json",
+        "dataKind": "resin-property-groups",
+        "recordStatus": "reference",
+        "recordCount": 8,
+        "bytes": 2204,
+        "sha256": "8b3caccc364772d5bdd84d643588cc80cbcf5081752740c9d63416cb88958e22"
+      },
+      {
+        "file": "resin-references.json",
+        "dataKind": "resin-references",
+        "recordStatus": "reference",
+        "recordCount": 10,
+        "bytes": 1740,
+        "sha256": "be67c72151110aa832767b722cc29e783d912d69d1cb2874313c48e06a85e9ff"
+      },
+      {
+        "file": "resin-taxonomy.json",
+        "dataKind": "resin-taxonomy",
+        "recordStatus": "demo",
+        "recordCount": 8,
+        "bytes": 10746,
+        "sha256": "c2985bc9e87697d0745fdc3f40e08c17ba12cd0f6f688d5e433eb87763255953"
+      }
+    ]
+  }
+}
