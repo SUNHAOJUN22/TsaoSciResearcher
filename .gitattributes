@@ -1,3 +1,3 @@
-# Preserve imported artifact bytes independently of developer core.autocrlf.
-# Nested component attributes retain their existing explicit policies.
-* -text
+# Preserve source bytes when developer core.autocrlf is enabled.
+# Components that opt back into text normalization inherit LF checkout.
+* -text eol=lf
