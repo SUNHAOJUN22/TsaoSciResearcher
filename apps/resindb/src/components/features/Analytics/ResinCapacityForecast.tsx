@@ -1,2 +1,0 @@
-import React from 'react';import{ResinCapacityForecast as LegacyResinCapacityForecast}from './ResinCapacityForecastLegacy';
-export const ResinCapacityForecast:React.FC=()=> <section><p className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900 dark:border-amber-900 dark:bg-amber-950/35 dark:text-amber-100">Capacity scenario based on deterministic product/category proxies; no measured plant output is used. Displayed ranges are heuristic scenario bands, not 95% confidence intervals.</p><LegacyResinCapacityForecast/></section>;

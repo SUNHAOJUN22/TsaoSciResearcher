@@ -1,8 +1,0 @@
-PyYAML>=6.0,<7
-jsonschema[format]>=4.20,<5
-numpy>=1.26,<3
-pytest>=8.0,<10
-coverage>=7.0,<8
-ruff>=0.5,<1
-setuptools>=68,<85
-wheel>=0.41,<1

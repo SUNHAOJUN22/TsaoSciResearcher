@@ -1,6 +1,0 @@
-PyYAML>=6.0,<7
-cryptography>=50,<51
-defusedxml>=0.7.1,<0.8
-jsonschema[format]>=4.26,<5
-matplotlib>=3.8,<4
-numpy>=1.24,<3

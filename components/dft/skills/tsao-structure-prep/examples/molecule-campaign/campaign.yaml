@@ -1,8 +1,0 @@
-schema_version: "1.0"
-campaign_id: ETH
-base_structure_id: ETHANOL
-axes:
-  conformer: [anti, gauche]
-  method_tier: [screen, production]
-exclusions: []
-max_candidates: 8

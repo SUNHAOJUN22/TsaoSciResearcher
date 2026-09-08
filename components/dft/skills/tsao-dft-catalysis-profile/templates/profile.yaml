@@ -1,8 +1,0 @@
-profile_id: CATALYSIS-PROFILE-001
-scope: organometallic_polyolefin_catalysis
-allowed_systems: [DCS, MCSOMe, DMOS, Ti_complex, TEA, Ziegler-Natta models]
-activation_terms: [DCS, MCSOMe, DMOS, Ti/TEA, Ziegler-Natta, polyolefin catalyst]
-forbidden_default_claims: [industrial_poisoning, catalyst_lifetime, plant_performance]
-requires: [tsao-dft-suite, tsao-dft-researcher, tsao-structure-prep, tsao-dft-kinetics-multiscale]
-dft_center: true
-status: reviewed
