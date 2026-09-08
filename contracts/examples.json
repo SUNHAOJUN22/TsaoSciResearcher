@@ -1,0 +1,15 @@
+{
+  "schema_version": "tsao.examples/1",
+  "examples": [
+    {
+      "id": "poe",
+      "label": "聚合动力学—参数估计—材料观测",
+      "path": "examples/poe-reference-workflow.json"
+    },
+    {
+      "id": "structure",
+      "label": "结构几何—材料观测",
+      "path": "examples/structure-reference-workflow.json"
+    }
+  ]
+}

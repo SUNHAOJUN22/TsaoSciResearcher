@@ -1,0 +1,59 @@
+{
+  "schema_version": "tsao.workflow/1",
+  "id": "structure-reference",
+  "tasks": [
+    {
+      "id": "geometry",
+      "capability": "dft.neighbors",
+      "depends_on": [],
+      "payload": {
+        "coordinates": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "length_unit": "angstrom",
+        "cutoff": {
+          "value": 1.1,
+          "unit": "angstrom"
+        }
+      }
+    },
+    {
+      "id": "observation",
+      "capability": "materials.observation",
+      "depends_on": [
+        "geometry"
+      ],
+      "payload": {
+        "observation": {
+          "sample_id": "synthetic-geometry",
+          "property": "neighbor_pair_count",
+          "source": "local-geometry-reference",
+          "conditions": {
+            "cutoff_angstrom": 1.1
+          },
+          "quantity": {
+            "value": {
+              "$ref": "geometry.neighbor_pairs"
+            },
+            "unit": "1"
+          },
+          "evidence_kind": "reference"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,901 @@
+{
+  "schema_version": "tsao.payload-contracts/1",
+  "inputs": {
+    "research.route": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "additionalProperties": false
+    },
+    "computation.route": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "additionalProperties": false
+    },
+    "processing.first_order": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "time_unit": {
+          "enum": [
+            "s",
+            "min"
+          ]
+        },
+        "rate_constant": {
+          "$ref": "#/$defs/quantity"
+        }
+      },
+      "required": [
+        "times",
+        "time_unit",
+        "rate_constant"
+      ],
+      "additionalProperties": false
+    },
+    "processing.fit_first_order": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "time_unit": {
+          "enum": [
+            "s",
+            "min"
+          ]
+        },
+        "conversion": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "upper_rate": {
+          "$ref": "#/$defs/quantity"
+        }
+      },
+      "required": [
+        "times",
+        "time_unit",
+        "conversion",
+        "upper_rate"
+      ],
+      "additionalProperties": false
+    },
+    "dft.neighbors": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "minItems": 0,
+          "maxItems": 200
+        },
+        "length_unit": {
+          "enum": [
+            "m",
+            "nm",
+            "angstrom"
+          ]
+        },
+        "cutoff": {
+          "$ref": "#/$defs/quantity"
+        }
+      },
+      "required": [
+        "coordinates",
+        "length_unit",
+        "cutoff"
+      ],
+      "additionalProperties": false
+    },
+    "aspen.classify": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "minItems": 0,
+          "maxItems": 200
+        },
+        "engine_idle": {
+          "type": "boolean"
+        },
+        "engine_returned": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "messages",
+        "engine_idle",
+        "engine_returned"
+      ],
+      "additionalProperties": false
+    },
+    "reasoning.validate": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "ledger": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "ledger"
+      ],
+      "additionalProperties": false
+    },
+    "materials.observation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "observation": {
+          "type": "object",
+          "properties": {
+            "sample_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "property": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "conditions": {
+              "type": "object"
+            },
+            "quantity": {
+              "$ref": "#/$defs/quantity"
+            },
+            "evidence_kind": {
+              "enum": [
+                "measured",
+                "simulation",
+                "reference",
+                "hypothesis"
+              ]
+            }
+          },
+          "required": [
+            "sample_id",
+            "property",
+            "source",
+            "conditions",
+            "quantity",
+            "evidence_kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "aspen.execute": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object"
+    },
+    "dft.execute": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object"
+    }
+  },
+  "outputs": {
+    "research.route": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "required": [
+        "primary_workflow"
+      ]
+    },
+    "computation.route": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "required": [
+        "workflow"
+      ]
+    },
+    "processing.first_order": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "times_s": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "conversion": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "conversion_unit": {
+          "const": "1"
+        },
+        "rate_constant_s": {
+          "type": "number"
+        },
+        "model": {
+          "const": "first-order-reference"
+        },
+        "status": {
+          "const": "CALCULATED_REFERENCE_ONLY"
+        }
+      },
+      "required": [
+        "times_s",
+        "conversion",
+        "conversion_unit",
+        "rate_constant_s",
+        "model",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "processing.fit_first_order": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "required": [
+        "rate_constant_s",
+        "identifiable"
+      ],
+      "properties": {
+        "rate_constant_s": {
+          "type": "number"
+        },
+        "identifiable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dft.neighbors": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "required": [
+        "pairs",
+        "evaluated_pairs",
+        "neighbor_pairs",
+        "external_solver_executed"
+      ],
+      "properties": {
+        "pairs": {
+          "type": "array"
+        },
+        "neighbor_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evaluated_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "external_solver_executed": {
+          "const": false
+        }
+      }
+    },
+    "aspen.classify": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "required": [
+        "state",
+        "external_solver_executed"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "converged",
+            "not_converged",
+            "unknown"
+          ]
+        },
+        "external_solver_executed": {
+          "const": false
+        }
+      }
+    },
+    "reasoning.validate": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "valid_structure": {
+          "type": "boolean"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "valid_structure",
+        "errors",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "materials.observation": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$defs": {
+        "quantity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "properties": {
+        "observation": {
+          "type": "object",
+          "properties": {
+            "sample_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "property": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "conditions": {
+              "type": "object"
+            },
+            "quantity": {
+              "$ref": "#/$defs/quantity"
+            },
+            "evidence_kind": {
+              "enum": [
+                "measured",
+                "simulation",
+                "reference",
+                "hypothesis"
+              ]
+            }
+          },
+          "required": [
+            "sample_id",
+            "property",
+            "source",
+            "conditions",
+            "quantity",
+            "evidence_kind"
+          ],
+          "additionalProperties": false
+        },
+        "verified_source": {
+          "const": false
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "observation",
+        "verified_source",
+        "scope"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

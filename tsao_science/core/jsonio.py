@@ -76,7 +76,7 @@ def strict_loads(text: str | bytes) -> Any:
     if len(raw) > MAX_JSON_BYTES:
         raise ValueError("JSON byte budget exceeded")
     try:
-        value = json.loads(raw, object_pairs_hook=_unique, parse_constant=_nonfinite)
+        value = json.loads(raw.decode("utf-8", errors="strict"), object_pairs_hook=_unique, parse_constant=_nonfinite)
     except RecursionError as exc:
         raise ValueError("JSON nesting is too deep") from exc
     validate_json(value)

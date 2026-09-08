@@ -1,0 +1,109 @@
+{
+  "schema_version": "tsao.components/1",
+  "canonical_repository": "SUNHAOJUN22/TsaoSciResearcher",
+  "components": [
+    {
+      "id": "research",
+      "path": "components/research",
+      "origin": "SUNHAOJUN22/TsaoSciResearcher",
+      "entry_module": "tsao_researcher",
+      "kind": "module",
+      "catalog_sources": [
+        {
+          "format": "json",
+          "path": "tsao_researcher/data/capabilities/capabilities.json",
+          "selector": ""
+        },
+        {
+          "format": "json",
+          "path": "tsao_researcher/data/capabilities/extensions.json",
+          "selector": ""
+        }
+      ]
+    },
+    {
+      "id": "computation",
+      "path": "components/computation",
+      "origin": "SUNHAOJUN22/TsaoSciComputation",
+      "entry_module": "tsao_computation",
+      "kind": "module",
+      "catalog_sources": [
+        {
+          "format": "yaml",
+          "path": "capability-index/capabilities/*.yaml",
+          "selector": "@single"
+        }
+      ]
+    },
+    {
+      "id": "aspen",
+      "path": "components/aspen",
+      "origin": "SUNHAOJUN22/AspenOps-Agent",
+      "entry_module": "aspenops_nexus",
+      "kind": "module",
+      "catalog_sources": [
+        {
+          "format": "json",
+          "path": "var/consolidation/capability-ledger.json",
+          "selector": "validated_main_capabilities"
+        }
+      ]
+    },
+    {
+      "id": "dft",
+      "path": "components/dft",
+      "origin": "SUNHAOJUN22/TsaoDFT_skill",
+      "entry_module": null,
+      "kind": "script",
+      "catalog_sources": [
+        {
+          "format": "yaml",
+          "path": "docs/CAPABILITY_STATUS.yaml",
+          "selector": "capabilities"
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "path": "components/processing",
+      "origin": "SUNHAOJUN22/TSAO-PROCESSING-SKILL",
+      "entry_module": "tsao.cli",
+      "kind": "module",
+      "catalog_sources": [
+        {
+          "format": "yaml",
+          "path": "manifest.yaml",
+          "selector": "subskills"
+        }
+      ]
+    },
+    {
+      "id": "resindb",
+      "path": "apps/resindb",
+      "origin": "SUNHAOJUN22/ResinDB-Pro-by-SunHJ",
+      "entry_module": null,
+      "kind": "web",
+      "catalog_sources": [
+        {
+          "format": "json",
+          "path": "docs/compute-module-catalog.json",
+          "selector": "modules"
+        }
+      ]
+    },
+    {
+      "id": "reasoning",
+      "path": "skills/reasoning",
+      "origin": "SUNHAOJUN22/OpenDeepMind_skill",
+      "entry_module": null,
+      "kind": "script",
+      "catalog_sources": [
+        {
+          "format": "json",
+          "path": "open-deep-mind/MODULES.json",
+          "selector": "modules"
+        }
+      ]
+    }
+  ]
+}

@@ -24,12 +24,12 @@ def convert(quantity: dict[str, Any], target: str, *, kind: str | None = None) -
     if not isinstance(quantity, dict) or set(quantity) - {"value", "unit", "kind", "reference"}:
         raise ValueError("quantity must contain only value, unit, kind and optional reference")
     source = quantity.get("unit")
-    if not isinstance(source, str) or source not in UNITS or target not in UNITS:
+    if not isinstance(source, str) or source not in UNITS or not isinstance(target, str) or target not in UNITS:
         raise ValueError("quantity requires an explicitly supported source and target unit")
     source_kind, scale, offset = UNITS[source]
     target_kind, target_scale, target_offset = UNITS[target]
     declared = quantity.get("kind", kind)
-    if source_kind != target_kind or (declared is not None and declared != source_kind):
+    if source_kind != target_kind or (declared is not None and declared != source_kind) or (kind is not None and kind != source_kind):
         raise ValueError("quantity kind or dimension mismatch")
     if source_kind == "pressure" and quantity.get("reference") != "absolute":
         raise ValueError("pressure requires reference='absolute'; gauge conversion needs site evidence")

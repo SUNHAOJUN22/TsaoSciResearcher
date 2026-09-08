@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from .workspace import root, component_paths
+from .workspace import root, component_paths, component_registry
 
 
 def forward(component: str, arguments: list[str]) -> int:
@@ -13,8 +13,7 @@ def forward(component: str, arguments: list[str]) -> int:
         raise ValueError("unknown component")
     args = arguments[1:] if arguments[:1] == ["--"] else arguments
     folder = paths[component]
-    modules = {"research": "tsao_researcher", "computation": "tsao_computation",
-               "aspen": "aspenops_nexus", "processing": "tsao.cli"}
+    modules = {key: row["entry_module"] for key, row in component_registry().items() if row["kind"] == "module"}
     if component in modules:
         command = [sys.executable, "-m", modules[component], *args]
     elif component == "resindb":

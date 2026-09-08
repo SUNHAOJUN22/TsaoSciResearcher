@@ -16,6 +16,7 @@ from .core.jsonio import read_json, strict_dumps, strict_loads, validate_json, M
 from .core.store import EvidenceStore
 from .registry import capabilities
 from .workspace import root
+from .contracts import validate_payload, enforce_lineage, data_dependencies
 
 _ID = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 
@@ -57,6 +58,7 @@ def plan(spec: dict[str, Any]) -> dict[str, Any]:
         if any(dep not in by_id or dep == task["id"] for dep in task["depends_on"]):
             raise ValueError("unknown or self dependency")
         _validate_references(task["payload"], set(task["depends_on"]))
+        validate_payload(task["capability"], task["payload"], deferred=True)
     pending = dict(by_id)
     ordered: list[dict] = []
     done: set[str] = set()
@@ -132,6 +134,7 @@ def execute_local(capability: str, payload: dict[str, Any], *, timeout: float = 
     registry = capabilities()
     if capability not in registry or registry[capability]["mode"] != "local-reference":
         raise ValueError("external execution is not authorized by a local workflow")
+    validate_payload(capability, payload)
     body = strict_dumps({"capability": capability, "payload": payload}).encode("utf-8")
     if len(body) > MAX_JSON_BYTES:
         raise ValueError("request too large")
@@ -156,6 +159,7 @@ def execute_local(capability: str, payload: dict[str, Any], *, timeout: float = 
         if process.returncode != 0 or not isinstance(response, dict) or response.get("ok") is not True:
             error = response.get("error", "worker rejected the task") if isinstance(response, dict) else "malformed worker output"
             raise RuntimeError(str(error))
+        validate_payload(capability, response["result"], output=True)
         return response["result"]
 
 
@@ -175,6 +179,8 @@ def validation_verdict(capability: str, output: dict[str, Any]) -> dict[str, str
 
 
 def run(spec: dict[str, Any], workdir: Path, *, allow_local: bool = False) -> dict[str, Any]:
+    # Snapshot the workflow before planning, hashing or execution.
+    spec = strict_loads(strict_dumps(spec))
     planned = plan(spec)
     if not allow_local:
         raise PermissionError("run requires explicit --execute-local; use plan for non-executing inspection")
@@ -187,46 +193,55 @@ def run(spec: dict[str, Any], workdir: Path, *, allow_local: bool = False) -> di
     store = EvidenceStore(workdir / "evidence.sqlite3")
     source = source_identity()
     results: dict[str, dict] = {}
-    record = {"schema_version": "tsao.run/1", "id": planned["id"], "run_id": run_id,
-              "workflow_digest": planned["workflow_digest"], "source_identity": source,
+    record = {"schema_version": "tsao.run/2", "id": planned["id"], "run_id": run_id,
+              "workflow": spec, "workflow_digest": planned["workflow_digest"], "source_identity": source,
               "execution": "RUNNING", "external_solver_executed": False,
               "scientific_approval": "NOT_EVALUATED", "tasks": results}
+    task_id = None
+    store.append({"event": "run-started", "run_id": run_id, "source_identity": source,
+                  "workflow_digest": planned["workflow_digest"]})
     try:
         for task in planned["tasks"]:
+            task_id = task["id"]
             payload = _resolve(task["payload"], results)
+            validate_payload(task["capability"], payload)
+            enforce_lineage(task["capability"], payload, {key: results[key] for key in data_dependencies(task["payload"])})
             output = execute_local(task["capability"], payload)
-            evidence = {"capability": task["capability"], "input_digest": digest(payload),
+            kind = payload["observation"]["evidence_kind"] if task["capability"] == "materials.observation" else "reference"
+            evidence = {"capability": task["capability"], "input": payload, "input_digest": digest(payload),
                         "output_digest": digest(output), "depends_on": task["depends_on"],
-                        "execution": "SUCCEEDED", "result": output,
+                        "execution": "SUCCEEDED", "result": output, "evidence_kind": kind,
                         "validation": validation_verdict(task["capability"], output),
                         "scientific_approval": "NOT_EVALUATED"}
-            results[task["id"]] = evidence
-            evidence["event_digest"] = store.append({"run_id": run_id, "task_id": task["id"],
+            results[task_id] = evidence
+            evidence["event_digest"] = store.append({"run_id": run_id, "task_id": task_id,
                 "source_identity": source, "input_digest": evidence["input_digest"],
                 "output_digest": evidence["output_digest"], "capability": task["capability"],
-                "validation": evidence["validation"]})
+                "validation": evidence["validation"], "evidence_kind": kind})
             if evidence["validation"]["state"] in {"FAIL", "HOLD"}:
-                raise RuntimeError(f"domain gate {evidence['validation']['state']}: {task['id']}; downstream tasks not executed")
+                raise RuntimeError(f"domain gate {evidence['validation']['state']}: {task_id}; downstream tasks not executed")
         if source_identity() != source:
             raise RuntimeError("source changed during execution")
         record["execution"] = "SUCCEEDED"
     except Exception as exc:
         record["execution"] = "FAILED"
+        record["failed_task"] = task_id
         record["error"] = str(exc)
+    store.append({"event": "run-finished", "run_id": run_id, "execution": record["execution"],
+                  "completed_tasks": list(results), "failed_task": record.get("failed_task")})
     record["evidence_chain"] = store.verify()
     record["record_digest"] = digest(record)
     target = destination / "result.json"
-    target.write_text(strict_dumps(record, pretty=True) + "\n", encoding="utf-8")
+    temporary = destination / "result.json.tmp"
+    temporary.write_text(strict_dumps(record, pretty=True) + "\n", encoding="utf-8")
+    temporary.replace(target)
     return {**record, "result_file": str(target)}
 
 
-def verify_result(path: Path) -> dict[str, Any]:
+def verify_result(path: Path, *, ledger: Path | None = None) -> dict[str, Any]:
+    from .verification import verify_record
     record = read_json(path)
-    expected = record.pop("record_digest", None)
-    if expected != digest(record):
-        raise ValueError("result record digest mismatch")
-    for task in record["tasks"].values():
-        if digest(task["result"]) != task["output_digest"]:
-            raise ValueError("task output digest mismatch")
-    return {"integrity": "PASS", "execution": record["execution"],
-            "scientific_approval": "NOT_EVALUATED", "external_solver_executed": False}
+    result = verify_record(record)
+    if ledger is not None:
+        result.update(EvidenceStore(ledger, readonly=True).verify_bindings(record))
+    return result

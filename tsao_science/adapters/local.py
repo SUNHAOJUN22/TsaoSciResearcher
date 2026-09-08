@@ -70,7 +70,7 @@ def invoke(capability: str, payload: dict[str, Any]) -> dict[str, Any]:
         cutoff = convert(payload.get("cutoff"), "angstrom", kind="length")
         result = model.reference_pairs(points, cutoff)
         return {"pairs": [dataclasses.asdict(pair) for pair in result.pairs],
-                "evaluated_pairs": result.evaluated_pairs, "backend": result.backend,
+                "evaluated_pairs": result.evaluated_pairs, "neighbor_pairs": len(result.pairs), "backend": result.backend,
                 "external_solver_executed": False}
     if capability == "aspen.classify":
         from aspenops_nexus.convergence import classify_convergence, IdleObservation, ConvergenceState

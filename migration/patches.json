@@ -12,9 +12,24 @@
       "target_sha256": "03f976ca6a94207bc171d7ab79501227dd7fb5cca9d5dd167338422e95a7e698"
     },
     {
+      "target_path": "components/computation/tsao_computation/hashing.py",
+      "source_sha256": "ad7bbbde3033f31c02486da011c812320342ee0553c7a99210147de7f0ec998f",
+      "target_sha256": "dc715c823a0b0a466433a592c5c18915bd22b2f0a4ada660e9cc1a609f5cb385"
+    },
+    {
+      "target_path": "components/aspen/src/aspenops_nexus/cache.py",
+      "source_sha256": "9de7604298d0f3024c4817d5d21f05766de231f58c3c5c58ccd846d17ab7d357",
+      "target_sha256": "fe274a5e6816cab3647e4d03662cb19afa1712f9fb84d33b713957cda22754cb"
+    },
+    {
       "target_path": "components/aspen/src/aspenops_nexus/convergence.py",
       "source_sha256": "a3f8536c85193a5e33bada55fc8dad6cd611aeebcfdc5162b6e0ccc9151e6fd0",
       "target_sha256": "5e104b9d3e8810dd6d64e423425cdec776db51d84d1c8ef7c12356b442202af5"
+    },
+    {
+      "target_path": "components/aspen/src/aspenops_nexus/hashing.py",
+      "source_sha256": "466f8870a9c4fd635bc2bfd9d52d58af0da3efc1394039c1b9614bfe0ffb3f09",
+      "target_sha256": "5f94c59d0d36c8f266a9d84b86833ce4bcc697c0731782b16f2867539842aa10"
     },
     {
       "target_path": "components/dft/docs/RELEASE_ACCEPTANCE.md",
@@ -50,6 +65,11 @@
       "target_path": "components/processing/skills/poe/estimation.py",
       "source_sha256": "3b57a7e177abe0fb9f853598455d98a8b00f1b1e5f0c1419386e57b962a28115",
       "target_sha256": "95b0b72a73ea2527705d8cdcbb40a88ef78171ca6b7a831f5fdd791698b11dd2"
+    },
+    {
+      "target_path": "components/processing/tsao/scientific_contracts_v16.py",
+      "source_sha256": "6974066752542f9b85d399d43ca29689d827070b78b1e572cd7ecffe017d549d",
+      "target_sha256": "aa5dd6d8bf90ed0ba2e2799288318c5aaeed4c189e56a8a8fd59aa5e72206641"
     },
     {
       "target_path": "apps/resindb/package.json",

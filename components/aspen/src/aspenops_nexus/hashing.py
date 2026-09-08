@@ -1,29 +1,19 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
 
+from tsao_science.core.hashing import file_digest, legacy_json_bytes
+
 
 def sha256_file(path: str | Path) -> str:
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    return file_digest(path)
 
 
 def canonical_bytes(value: Any) -> bytes:
-    """Serialize a value once using the repository-wide deterministic JSON contract."""
-
-    return json.dumps(
-        value,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-        allow_nan=False,
-    ).encode("utf-8")
+    """Preserve Aspen's UTF-8 legacy JSON identity through the shared implementation."""
+    return legacy_json_bytes(value, ensure_ascii=False)
 
 
 def canonical_hash(value: Any) -> str:

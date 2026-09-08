@@ -52,7 +52,7 @@ class Flow:
         scale = _real(self.scale_to_canonical, "scale_to_canonical")
         if self.basis not in {"mass", "molar"} or scale <= 0.0 or not self.unit:
             raise ContractError("invalid flow metadata")
-        return number * scale
+        return _real(number * scale, "canonical flow")
 
 
 def component_balance(
@@ -89,7 +89,7 @@ def component_balance(
             -(outputs[component].canonical() if component in outputs else 0.0),
             -(inventory_rate[component].canonical() if component in inventory_rate else 0.0),
         )
-        residual = sum(terms)
+        residual = _real(sum(terms), "balance residual")
         residuals[component] = residual
         scale = max(*(abs(term) for term in terms), 1.0e-30)
         if abs(residual) > absolute_tolerance + relative_tolerance * scale:

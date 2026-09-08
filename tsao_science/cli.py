@@ -4,7 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from . import __version__
+from . import __version__, EDITION
 from .core.jsonio import read_json, strict_dumps
 from .registry import capabilities
 from .workspace import root, component_paths
@@ -17,7 +17,7 @@ def doctor() -> dict:
     from .adapters.local import _module
     policy = _module("tsao_fusion_distribution", "components/processing/tsao/distribution_policy.py")
     distribution = policy.audit_public_distribution(paths["processing"])
-    return {"product": "TsaoScience", "version": __version__, "edition": "astra-pro-1",
+    return {"product": "TsaoScience", "version": __version__, "edition": EDITION,
             "canonical_repository": "SUNHAOJUN22/TsaoSciResearcher", "components": {k: str(v.relative_to(root())) for k, v in paths.items()},
             "missing_components": missing, "runtime_capabilities": len(capabilities()),
             "software_status": "SOURCE_PRESENT" if not missing else "INCOMPLETE",
@@ -32,6 +32,9 @@ def main() -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor")
     commands.add_parser("capabilities")
+    command = commands.add_parser("catalog")
+    command.add_argument("--query", default="")
+    command.add_argument("--owner", default=None)
     command = commands.add_parser("route")
     command.add_argument("question")
     command = commands.add_parser("plan")
@@ -44,6 +47,7 @@ def main() -> int:
     command.add_argument("--workdir", type=Path, default=Path("work/demo"))
     command = commands.add_parser("verify")
     command.add_argument("file", type=Path)
+    command.add_argument("--ledger", type=Path)
     command = commands.add_parser("serve")
     command.add_argument("--port", type=int, default=8765)
     command = commands.add_parser("component")
@@ -56,6 +60,9 @@ def main() -> int:
             return forward(args.name, args.arguments)
         if args.command == "doctor":
             result = doctor()
+        elif args.command == "catalog":
+            from .catalog import catalog
+            result = catalog(args.query, args.owner)
         elif args.command == "capabilities":
             result = {"capabilities": list(capabilities().values())}
         elif args.command == "route":
@@ -70,7 +77,7 @@ def main() -> int:
             # Choosing demo explicitly authorizes only its fixed synthetic local reference workload.
             result = run(read_json(root() / "examples/poe-reference-workflow.json"), args.workdir, allow_local=True)
         elif args.command == "verify":
-            result = verify_result(args.file)
+            result = verify_result(args.file, ledger=args.ledger)
         else:
             from .server import serve
             serve(args.port)

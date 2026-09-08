@@ -9,6 +9,8 @@ from contextlib import closing
 from pathlib import Path
 from typing import Any
 
+from tsao_science.core.jsonio import strict_loads
+
 _SQLITE_PARAMETER_BATCH = 900
 _MEMORY_MAX_ENTRIES = 4096
 _HIT_FLUSH_THRESHOLD = 1024
@@ -137,10 +139,7 @@ class ResultCache:
             corrupt: list[str] = []
             for key, payload in encoded.items():
                 try:
-                    value = json.loads(
-                        payload,
-                        parse_constant=_reject_nonfinite_constant,
-                    )
+                    value = strict_loads(payload)
                 except (json.JSONDecodeError, ValueError):
                     corrupt.append(key)
                     continue

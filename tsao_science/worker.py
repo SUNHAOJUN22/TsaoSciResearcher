@@ -5,6 +5,7 @@ import sys
 from .core.jsonio import strict_loads, strict_dumps, MAX_JSON_BYTES
 from .registry import capabilities
 from .adapters.local import invoke
+from .contracts import validate_payload
 
 
 def _plain(value):
@@ -24,14 +25,16 @@ def main() -> int:
         registry = capabilities()
         if cap not in registry or registry[cap]["mode"] != "local-reference":
             raise ValueError("capability is not locally executable")
-        result = invoke(cap, request["payload"])
+        validate_payload(cap, request["payload"])
+        result = _plain(invoke(cap, request["payload"]))
+        validate_payload(cap, result, output=True)
         text = strict_dumps({"ok": True, "result": _plain(result)})
         if len(text.encode("utf-8")) > MAX_JSON_BYTES:
             raise ValueError("worker output exceeds its budget")
         sys.stdout.buffer.write(text.encode("utf-8") + b"\n")
         return 0
     except Exception as exc:
-        print(json.dumps({"ok": False, "error_type": type(exc).__name__, "error": str(exc)}, allow_nan=False))
+        sys.stdout.buffer.write(json.dumps({"ok": False, "error_type": type(exc).__name__, "error": str(exc)}, ensure_ascii=True, allow_nan=False).encode("utf-8") + b"\n")
         return 1
 
 
