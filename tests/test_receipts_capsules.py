@@ -346,7 +346,7 @@ def test_receipt_rejects_non_integer_exit_code(tmp_path: Path, value: object) ->
         receipt["status"] = "failed"
         receipt["evidence_level"] = "failed"
     path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
-    with pytest.raises(IntegrityError, match="exit.code"):
+    with pytest.raises(IntegrityError, match=r"exit.code"):
         verify_receipts(project)
 
 
