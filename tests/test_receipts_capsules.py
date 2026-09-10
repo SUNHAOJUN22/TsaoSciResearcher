@@ -10,6 +10,7 @@ import pytest
 from tsao_researcher.capsule import export_capsule, verify_capsule
 from tsao_researcher.errors import IntegrityError
 from tsao_researcher.handoff import create_handoff
+from tsao_researcher.io import sha256_file
 from tsao_researcher.receipts import record_receipt, verify_receipts
 from tsao_researcher.state import initialize, verify
 
@@ -310,3 +311,82 @@ def test_capsule_detects_tree_digest_tampering_with_consistent_identifier(
             target.writestr(info, payload)
     with pytest.raises(IntegrityError, match="tree digest mismatch"):
         verify_capsule(tampered)
+
+
+@pytest.mark.parametrize("value", ["NaN", "1", True, None, [], {}, 10**400])
+def test_receipt_rejects_non_numeric_or_nonfinite_duration(tmp_path: Path, value: object) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["finished_at"] = "2026-07-24T00:00:01Z"
+    receipt["duration_seconds"] = value
+    path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+    with pytest.raises(IntegrityError, match="duration"):
+        verify_receipts(project)
+
+
+def test_receipt_rejects_negative_duration_within_tolerance(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["finished_at"] = receipt["started_at"]
+    receipt["duration_seconds"] = -1e-7
+    path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+    with pytest.raises(IntegrityError, match="duration"):
+        verify_receipts(project)
+
+
+@pytest.mark.parametrize("value", [False, 0.0, True, None, "1", 1.5])
+def test_receipt_rejects_non_integer_exit_code(tmp_path: Path, value: object) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["exit_code"] = value
+    if value != 0:
+        receipt["status"] = "failed"
+        receipt["evidence_level"] = "failed"
+    path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+    with pytest.raises(IntegrityError, match="exit.code"):
+        verify_receipts(project)
+
+
+@pytest.mark.parametrize("value", [True, 1.0])
+def test_receipt_rejects_non_integer_output_size(tmp_path: Path, value: object) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    output = project / "computation/result.out"
+    output.write_bytes(b"x")
+    receipt["outputs"][0]["sha256"] = sha256_file(output)
+    receipt["outputs"][0]["size_bytes"] = value
+    path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+    with pytest.raises(IntegrityError, match="size"):
+        verify_receipts(project)
+
+
+@pytest.mark.parametrize("duration", [0, 1, 1.0])
+@pytest.mark.parametrize("exit_code", [0, -9, 3])
+def test_receipt_preserves_valid_numeric_metadata(
+    tmp_path: Path, duration: int | float, exit_code: int
+) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["finished_at"] = f"2026-07-24T00:00:0{int(duration)}Z"
+    receipt["duration_seconds"] = duration
+    receipt["exit_code"] = exit_code
+    receipt["status"] = "succeeded" if exit_code == 0 else "failed"
+    receipt["evidence_level"] = "executed" if exit_code == 0 else "failed"
+    path.write_text(json.dumps(receipt) + "\n", encoding="utf-8")
+    assert verify_receipts(project)["valid"] is True
+
+
+def test_receipt_rejects_json_numeric_overflow_as_integrity_error(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    path = project / "execution-receipts.jsonl"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["duration_seconds"] = "OVERFLOW_PLACEHOLDER"
+    text = json.dumps(receipt).replace('"OVERFLOW_PLACEHOLDER"', "1e999")
+    path.write_text(text + "\n", encoding="utf-8")
+    with pytest.raises(IntegrityError, match="duration"):
+        verify_receipts(project)

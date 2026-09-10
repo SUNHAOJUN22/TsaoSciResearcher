@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -236,10 +237,23 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         if finished < started:
             raise IntegrityError(f"execution receipt has negative duration: {receipt_id}")
         expected_duration = (finished - started).total_seconds()
-        if abs(float(receipt.get("duration_seconds", -1)) - expected_duration) > 1e-6:
+        duration = receipt.get("duration_seconds")
+        if isinstance(duration, bool) or not isinstance(duration, (int, float)):
+            raise IntegrityError(f"execution receipt duration must be a finite number: {receipt_id}")
+        try:
+            duration_value = float(duration)
+        except OverflowError as exc:
+            raise IntegrityError(
+                f"execution receipt duration exceeds the finite range: {receipt_id}"
+            ) from exc
+        if not math.isfinite(duration_value) or duration_value < 0:
+            raise IntegrityError(f"execution receipt duration must be finite and non-negative: {receipt_id}")
+        if abs(duration_value - expected_duration) > 1e-6:
             raise IntegrityError(f"execution receipt duration mismatch: {receipt_id}")
         status = receipt.get("status")
         exit_code = receipt.get("exit_code")
+        if isinstance(exit_code, bool) or not isinstance(exit_code, int):
+            raise IntegrityError(f"execution receipt exit_code must be an integer: {receipt_id}")
         if status == "succeeded":
             if exit_code != 0 or receipt.get("evidence_level") != "executed":
                 raise IntegrityError(f"successful execution receipt semantics invalid: {receipt_id}")
@@ -257,6 +271,11 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         for output in outputs:
             if not isinstance(output, dict):
                 raise IntegrityError(f"execution receipt output invalid: {receipt_id}")
+            size_bytes = output.get("size_bytes")
+            if isinstance(size_bytes, bool) or not isinstance(size_bytes, int) or size_bytes < 0:
+                raise IntegrityError(
+                    f"execution receipt output size must be a non-negative integer: {receipt_id}"
+                )
             relative = str(output.get("path", ""))
             if relative in seen_paths:
                 raise IntegrityError(f"duplicate execution output path: {relative}")
@@ -265,7 +284,7 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
                 candidate = _safe_project_file(state_root, relative, field="output")
             except ValidationError as exc:
                 raise IntegrityError(str(exc)) from exc
-            if candidate.stat().st_size != output.get("size_bytes") or sha256_file(candidate) != output.get("sha256"):  # fmt: skip
+            if candidate.stat().st_size != size_bytes or sha256_file(candidate) != output.get("sha256"):  # fmt: skip
                 raise IntegrityError(f"execution output checksum mismatch: {relative}")
             output_count += 1
     if actual_ids != registered:
