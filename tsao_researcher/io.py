@@ -104,7 +104,25 @@ def project_regular_file(root: str | Path, value: str | Path, *, field: str) -> 
 def load_json(path: str | Path, *, max_bytes: int = MAX_TEXT_BYTES) -> Any:
     source = _regular_file(Path(path), max_bytes=max_bytes).resolve()
     stat = source.stat()
-    return _load_json_cached(source, stat.st_mtime_ns, stat.st_size)
+    return _copy_json_value(_load_json_cached(source, stat.st_mtime_ns, stat.st_size))
+
+
+def _copy_json_value(value: Any) -> Any:
+    """Detach decoded JSON containers without adding a recursive depth limit."""
+
+    if not isinstance(value, (dict, list)):
+        return value
+    result = value.copy()
+    pending: list[Any] = [result]
+    while pending:
+        current = pending.pop()
+        entries = current.items() if isinstance(current, dict) else enumerate(current)
+        for key, child in entries:
+            if isinstance(child, (dict, list)):
+                detached = child.copy()
+                current[key] = detached
+                pending.append(detached)
+    return result
 
 
 @lru_cache(maxsize=64)
@@ -266,12 +284,15 @@ def read_jsonl(path: str | Path) -> list[JsonObject]:
 
 
 def sha256_file(path: str | Path, *, chunk_bytes: int = 1024 * 1024) -> str:
+    if isinstance(chunk_bytes, bool) or not isinstance(chunk_bytes, int) or chunk_bytes <= 0:
+        raise ValidationError("chunk_bytes must be a positive non-boolean integer")
+    read_size = min(chunk_bytes, 1024 * 1024)
     source = Path(path)
     if source.is_symlink() or not source.is_file():
         raise ValidationError(f"checksum input must be a regular file: {source}")
     digest = hashlib.sha256()
     with source.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(chunk_bytes), b""):
+        for chunk in iter(lambda: handle.read(read_size), b""):
             digest.update(chunk)
     return digest.hexdigest()
 
