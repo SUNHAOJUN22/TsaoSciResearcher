@@ -284,7 +284,7 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
                 candidate = _safe_project_file(state_root, relative, field="output")
             except ValidationError as exc:
                 raise IntegrityError(str(exc)) from exc
-            if candidate.stat().st_size != size_bytes or sha256_file(candidate) != output.get("sha256"):  # fmt: skip
+            if candidate.stat().st_size != output.get("size_bytes") or sha256_file(candidate) != output.get("sha256"):  # fmt: skip
                 raise IntegrityError(f"execution output checksum mismatch: {relative}")
             output_count += 1
     if actual_ids != registered:
