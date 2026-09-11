@@ -5,9 +5,11 @@ import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, NoReturn
+from typing import Any
 
 import yaml
+
+from tsao_researcher.io import _decode_json
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_DIR = ".tsao-research"
@@ -15,10 +17,6 @@ MAX_TEXT_BYTES = 64 * 1024 * 1024
 MAX_JSONL_RECORDS = 1_000_000
 
 JsonObject = dict[str, Any]
-
-
-def _reject_non_finite(value: str) -> NoReturn:
-    raise ValueError(f"non-finite JSON number is forbidden: {value}")
 
 
 def _regular_file(path: Path) -> Path:
@@ -37,7 +35,7 @@ def load_data(path: str | Path) -> Any:
     text = source.read_text(encoding="utf-8", errors="strict")
     if source.suffix.lower() in {".yaml", ".yml"}:
         return yaml.safe_load(text)
-    return json.loads(text, parse_constant=_reject_non_finite)
+    return _decode_json(text)
 
 
 def atomic_write_text(path: str | Path, text: str, *, mode: int = 0o644) -> None:
@@ -92,7 +90,7 @@ def read_jsonl(path: str | Path) -> list[JsonObject]:
             if not line.strip():
                 continue
             try:
-                value = json.loads(line, parse_constant=_reject_non_finite)
+                value = _decode_json(line)
             except json.JSONDecodeError as exc:
                 raise ValueError(f"{source}:{line_number}: invalid JSON: {exc}") from exc
             if not isinstance(value, dict):

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import secrets
 import tempfile
@@ -28,6 +29,30 @@ JsonObject = dict[str, Any]
 
 def _reject_non_finite(value: str) -> NoReturn:
     raise ValidationError(f"non-finite JSON number is forbidden: {value}")
+
+
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> JsonObject:
+    result: JsonObject = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValidationError(f"duplicate JSON key is forbidden: {key!r}")
+        result[key] = value
+    return result
+
+
+def _decode_json(text: str) -> Any:
+    """Reject ambiguous objects and non-finite numbers with a field location."""
+    value = json.loads(text, parse_constant=_reject_non_finite, object_pairs_hook=_unique_json_object)
+    pending: list[tuple[str, Any]] = [("$", value)]
+    while pending:
+        location, current = pending.pop()
+        if isinstance(current, float) and not math.isfinite(current):
+            raise ValidationError(f"non-finite JSON number is forbidden at {location}")
+        if isinstance(current, dict):
+            pending.extend((f"{location}.{key}", child) for key, child in current.items())
+        elif isinstance(current, list):
+            pending.extend((f"{location}[{index}]", child) for index, child in enumerate(current))
+    return value
 
 
 def utc_now() -> str:
@@ -128,7 +153,7 @@ def _copy_json_value(value: Any) -> Any:
 @lru_cache(maxsize=64)
 def _load_json_cached(path: Path, mtime_ns: int, size: int) -> Any:
     del mtime_ns, size
-    return json.loads(read_text(path), parse_constant=_reject_non_finite)
+    return _decode_json(read_text(path))
 
 
 def clear_json_cache() -> None:
@@ -271,7 +296,7 @@ def iter_jsonl(path: str | Path) -> Iterator[JsonObject]:
             if not line.strip():
                 continue
             try:
-                value = json.loads(line, parse_constant=_reject_non_finite)
+                value = _decode_json(line)
             except json.JSONDecodeError as exc:
                 raise ValidationError(f"{source}:{line_number}: invalid JSON: {exc}") from exc
             if not isinstance(value, dict):
@@ -310,7 +335,7 @@ def _same_lock(path: Path, identity: tuple[int, int], token: str) -> bool:
             payload = os.read(fd, 4096).decode("utf-8", errors="strict")
         finally:
             os.close(fd)
-        value = json.loads(payload, parse_constant=_reject_non_finite)
+        value = _decode_json(payload)
         return isinstance(value, dict) and value.get("token") == token
     except (FileNotFoundError, OSError, UnicodeError, ValueError):
         return False

@@ -186,7 +186,10 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
 
     state_root = project_root(root)
     project = load_project(state_root)
-    receipts = list(read_jsonl(state_root / RECEIPT_LOG))
+    try:
+        receipts = list(read_jsonl(state_root / RECEIPT_LOG))
+    except ValidationError as exc:
+        raise IntegrityError(f"execution receipt log is invalid: {exc}") from exc
     registered = project.get("execution_receipts", [])
     if not isinstance(registered, list) or any(not isinstance(value, str) for value in registered):
         raise IntegrityError("project execution_receipts must be a list of receipt IDs")

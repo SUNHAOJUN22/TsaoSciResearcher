@@ -192,3 +192,89 @@ def test_checksum_empty_and_nonempty_files_are_distinct(tmp_path: Path) -> None:
     assert sha256_file(empty) == hashlib.sha256(b"").hexdigest()
     assert sha256_file(full) == hashlib.sha256(b"evidence").hexdigest()
     assert sha256_file(empty) != sha256_file(full)
+
+
+@pytest.mark.parametrize("loader", ["json", "jsonl", "runtime-jsonl", "script-json"])
+@pytest.mark.parametrize(
+    "text",
+    [
+        '{"accepted": false, "accepted": true}',
+        '{"a": 1, "a": 1}',
+        '{"outer": {"rate": 0.1, "rate": 0.2}}',
+        '{"rows": [{"unit": "Pa", "unit": "MPa"}]}',
+        '{"a": 1, "\\u0061": 2}',
+    ],
+)
+def test_json_readers_reject_duplicate_members(tmp_path: Path, loader: str, text: str) -> None:
+    path = tmp_path / "duplicate.json"
+    path.write_text(text + "\n", encoding="utf-8")
+    read = {
+        "json": load_json,
+        "jsonl": read_jsonl,
+        "runtime-jsonl": io_module.read_jsonl,
+        "script-json": common.load_data,
+    }[loader]
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        read(path)
+
+
+@pytest.mark.parametrize("loader", ["json", "jsonl", "runtime-jsonl", "script-json"])
+@pytest.mark.parametrize("number", ["1e400", "-1e400", "1.8e308", "NaN", "Infinity", "-Infinity"])
+def test_json_readers_reject_nonfinite_numbers(tmp_path: Path, loader: str, number: str) -> None:
+    path = tmp_path / "overflow.json"
+    path.write_text('{"outer": [{"value": ' + number + "}]}\n", encoding="utf-8")
+    read = {
+        "json": load_json,
+        "jsonl": read_jsonl,
+        "runtime-jsonl": io_module.read_jsonl,
+        "script-json": common.load_data,
+    }[loader]
+    with pytest.raises(ValueError, match="non-finite JSON number"):
+        read(path)
+
+
+@pytest.mark.parametrize("text", ["1e400", "[-1e400]", '[{"x": 1, "x": 2}]'])
+def test_json_reader_rejects_invalid_top_level_values(tmp_path: Path, text: str) -> None:
+    path = tmp_path / "invalid.json"
+    path.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_json(path)
+
+
+@pytest.mark.parametrize("loader", ["json", "jsonl", "runtime-jsonl", "script-json"])
+def test_strict_json_preserves_valid_values_and_independent_scopes(tmp_path: Path, loader: str) -> None:
+    text = '{"left": {"x": 1}, "right": {"x": 2}, "large": 1e308, "small": 5e-324, "zero": -0.0, "flag": true, "none": null, "integer": 123456789012345678901234567890, "text": "1e400"}'
+    path = tmp_path / "valid.json"
+    path.write_text(text + "\n", encoding="utf-8")
+    read = {
+        "json": load_json,
+        "jsonl": read_jsonl,
+        "runtime-jsonl": io_module.read_jsonl,
+        "script-json": common.load_data,
+    }[loader]
+    decoded = read(path)
+    value = decoded[0] if loader.endswith("jsonl") else decoded
+    assert value == json.loads(text)
+    assert type(value["integer"]) is int
+    assert type(value["flag"]) is bool
+    assert math.copysign(1, value["zero"]) == -1
+    json.dumps(value, allow_nan=False)
+
+
+def test_rejected_json_is_not_cached_and_replacement_is_readable(tmp_path: Path) -> None:
+    path = tmp_path / "mutable.json"
+    path.write_text('{"x": 1, "x": 2}', encoding="utf-8")
+    clear_json_cache()
+    with pytest.raises(ValueError, match="duplicate"):
+        load_json(path)
+    path.write_text('{"x": 3}', encoding="utf-8")
+    assert load_json(path) == {"x": 3}
+
+
+def test_jsonl_checks_later_lines_without_merging_objects(tmp_path: Path) -> None:
+    path = tmp_path / "events.jsonl"
+    path.write_text('{"x": 1}\n\n{"x": 2, "x": 3}\n', encoding="utf-8")
+    rows = io_module.iter_jsonl(path)
+    assert next(rows) == {"x": 1}
+    with pytest.raises(ValueError, match="duplicate"):
+        next(rows)
