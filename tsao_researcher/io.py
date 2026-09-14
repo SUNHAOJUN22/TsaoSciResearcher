@@ -129,7 +129,16 @@ def project_regular_file(root: str | Path, value: str | Path, *, field: str) -> 
 def load_json(path: str | Path, *, max_bytes: int = MAX_TEXT_BYTES) -> Any:
     source = _regular_file(Path(path), max_bytes=max_bytes).resolve()
     stat = source.stat()
-    return _copy_json_value(_load_json_cached(source, stat.st_mtime_ns, stat.st_size))
+    return _copy_json_value(
+        _load_json_cached(
+            source,
+            stat.st_dev,
+            stat.st_ino,
+            stat.st_ctime_ns,
+            stat.st_mtime_ns,
+            stat.st_size,
+        )
+    )
 
 
 def _copy_json_value(value: Any) -> Any:
@@ -151,8 +160,15 @@ def _copy_json_value(value: Any) -> Any:
 
 
 @lru_cache(maxsize=64)
-def _load_json_cached(path: Path, mtime_ns: int, size: int) -> Any:
-    del mtime_ns, size
+def _load_json_cached(
+    path: Path,
+    device: int,
+    inode: int,
+    ctime_ns: int,
+    mtime_ns: int,
+    size: int,
+) -> Any:
+    del device, inode, ctime_ns, mtime_ns, size
     return _decode_json(read_text(path))
 
 
