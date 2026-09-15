@@ -7,6 +7,7 @@ import argparse
 import html
 import json
 import math
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -52,11 +53,20 @@ def _load_evidence(path: Path = EVIDENCE_PATH) -> dict[str, Any]:
 
 
 def _state(status: str) -> str:
+    """Classify explicit outcomes without upgrading partial or unexecuted evidence."""
     folded = status.strip().upper()
-    if folded in {"PASS", "PASSED"} or folded.endswith(" PASS") or "/" in folded:
-        return "PASS"
     if folded in {"NOT_RUN", "NOT RUN", "PENDING", "UNKNOWN", "N/A", "PARTIAL", "LOCAL_PREFLIGHT"}:
         return "NOT_RUN"
+    if folded in {"PASS", "PASSED"}:
+        return "PASS"
+    counts = re.fullmatch(r"([0-9]+)\s*/\s*([0-9]+)", folded)
+    if counts is not None:
+        # Decimal strings avoid numeric overflow and Python's integer-digit limit.
+        passed, total = (part.lstrip("0") or "0" for part in counts.groups())
+        if total == "0":
+            return "NOT_RUN" if passed == "0" else "FAIL"
+        if passed == total:
+            return "PASS"
     return "FAIL"
 
 

@@ -19,7 +19,7 @@ endobj
 << /Length 2183 >>
 stream
 BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
-BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | preflight evidence | 2026-09-11) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | preflight evidence | 2026-09-15) Tj ET
 q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
 BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
@@ -37,7 +37,7 @@ q 0.980 g 0.750 G 301.0 504.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (20) Tj ET
 BT /F1 9 Tf 1 0 0 1 317.0 521.0 Tm (Schemas) Tj ET
 q 0.980 g 0.750 G 46.0 418.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (52) Tj ET
+BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (53) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 435.0 Tm (Test modules) Tj ET
 q 0.980 g 0.750 G 301.0 418.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 457.0 Tm (7) Tj ET
@@ -55,7 +55,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
 endobj
 8 0 obj
-<< /Length 5186 >>
+<< /Length 5146 >>
 stream
 BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scoped software validation matrix) Tj ET
 BT /F2 14 Tf 1 0 0 1 46.0 760.0 Tm (Recorded cross-platform baseline) Tj ET
@@ -83,20 +83,20 @@ q 0.55 g 330.0 562.0 82.5 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 569.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 547.0 Tm (bounded performance) Tj ET
 q 0.92 g 330.0 540.0 150.0 10 re f Q
-q 0.30 g 330.0 540.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 547.0 Tm (LOCAL_PREFLIGHT) Tj ET
+q 0.55 g 330.0 540.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 547.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 525.0 Tm (byte identical release builds) Tj ET
 q 0.92 g 330.0 518.0 150.0 10 re f Q
-q 0.30 g 330.0 518.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 525.0 Tm (LOCAL_PREFLIGHT) Tj ET
+q 0.55 g 330.0 518.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 525.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 503.0 Tm (complete regression) Tj ET
 q 0.92 g 330.0 496.0 150.0 10 re f Q
-q 0.30 g 330.0 496.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 503.0 Tm (PARTIAL) Tj ET
+q 0.55 g 330.0 496.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 503.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 481.0 Tm (coverage line and branch) Tj ET
 q 0.92 g 330.0 474.0 150.0 10 re f Q
-q 0.30 g 330.0 474.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 481.0 Tm (LOCAL_PREFLIGHT) Tj ET
+q 0.55 g 330.0 474.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 481.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 459.0 Tm (critical mutation killed) Tj ET
 q 0.92 g 330.0 452.0 150.0 10 re f Q
 q 0.55 g 330.0 452.0 82.5 10 re f Q
@@ -119,8 +119,8 @@ q 0.55 g 330.0 364.0 82.5 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 371.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 349.0 Tm (execution receipts) Tj ET
 q 0.92 g 330.0 342.0 150.0 10 re f Q
-q 0.30 g 330.0 342.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (LOCAL_PREFLIGHT) Tj ET
+q 0.55 g 330.0 342.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 349.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 327.0 Tm (json schemas 19) Tj ET
 q 0.92 g 330.0 320.0 150.0 10 re f Q
 q 0.30 g 330.0 320.0 150.0 10 re f Q
@@ -135,8 +135,8 @@ q 0.30 g 330.0 276.0 150.0 10 re f Q
 BT /F2 8 Tf 1 0 0 1 492.0 283.0 Tm (PASS) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 261.0 Tm (reproducibility capsule) Tj ET
 q 0.92 g 330.0 254.0 150.0 10 re f Q
-q 0.30 g 330.0 254.0 22.5 10 re f Q
-BT /F2 8 Tf 1 0 0 1 492.0 261.0 Tm (LOCAL_PREFLIGHT) Tj ET
+q 0.55 g 330.0 254.0 82.5 10 re f Q
+BT /F2 8 Tf 1 0 0 1 492.0 261.0 Tm (NOT RUN) Tj ET
 BT /F1 8 Tf 1 0 0 1 56.0 239.0 Tm (reverse order regression) Tj ET
 q 0.92 g 330.0 232.0 150.0 10 re f Q
 q 0.55 g 330.0 232.0 82.5 10 re f Q
@@ -259,12 +259,12 @@ xref
 0000000455 00000 n 
 0000002689 00000 n 
 0000002825 00000 n 
-0000008062 00000 n 
-0000008199 00000 n 
-0000011569 00000 n 
-0000011707 00000 n 
+0000008022 00000 n 
+0000008159 00000 n 
+0000011529 00000 n 
+0000011667 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-13364
+13324
 %%EOF

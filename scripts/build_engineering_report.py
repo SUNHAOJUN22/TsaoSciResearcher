@@ -5,9 +5,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import textwrap
 from pathlib import Path
 from typing import Any
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.build_test_dashboard import _state
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/engineering-audit-report.pdf"
@@ -119,10 +125,10 @@ def _page_one(evidence: dict[str, Any]) -> str:
 
 def _status_ratio(value: Any) -> tuple[float, str]:
     text = str(value)
-    folded = text.upper()
-    if folded in {"NOT_RUN", "NOT RUN", "PENDING", "UNKNOWN"}:
+    state = _state(text)
+    if state == "NOT_RUN":
         return 0.55, "NOT RUN"
-    if folded == "PASS" or folded.endswith(" PASS") or "/" in folded:
+    if state == "PASS":
         return 1.0, text
     return 0.15, text
 
