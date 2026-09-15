@@ -31,9 +31,7 @@ def test_json_cache_invalidates_same_size_replacement_with_preserved_mtime(tmp_p
     assert load_json(path) == {"value": 2}
 
 
-def test_json_cache_still_hits_when_file_identity_is_unchanged(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_json_cache_still_hits_when_file_identity_is_unchanged(tmp_path: Path, monkeypatch) -> None:
     from tsao_researcher import io as io_module
 
     path = tmp_path / "record.json"
