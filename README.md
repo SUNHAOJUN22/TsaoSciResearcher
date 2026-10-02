@@ -190,7 +190,7 @@ U_{\mathrm{closure}}^2+
 U_{\mathrm{target}}^2
 \]
 
-A microscopic result cannot jump directly to an engineering conclusion. Each bridge needs measurable bridge variables, mapping assumptions, closure validation and target-scale acceptance evidence.
+This quadrature requires mutually uncorrelated standard-uncertainty contributions expressed in the same output units. Correlated contributions require their cross-covariance terms; first-order propagation is only a local linear approximation. A microscopic result cannot jump directly to an engineering conclusion. Each bridge needs measurable bridge variables, mapping assumptions, closure validation and target-scale acceptance evidence.
 
 ### 3.8 Conservative decision readiness
 
@@ -239,7 +239,7 @@ A strategy should declare:
 4. the minimum model able to falsify the candidate mechanism;
 5. validation, uncertainty and escalation rules.
 
-For a conserved extensive quantity \(\phi\):
+For a mass-specific quantity \(\phi\) in a fixed control volume, with density \(\rho\), total outward flux \(\mathbf J_\phi\) (advective plus diffusive), and volumetric source \(s_\phi\):
 
 \[
 \frac{\mathrm d}{\mathrm dt}\int_{\Omega}\rho\phi\,\mathrm dV
@@ -300,13 +300,15 @@ The repository supports three validation scopes:
 - `current-tree`: a fresh externally attested end-to-end CI run bound to the tested commit.
 - `composite`: a pinned exact-tree full-repository baseline plus a SHA-256-bound focused current-change regression.
 
-The checked-in acceptance-hardening record uses **composite** evidence. It pins the fully qualified v0.7.4 baseline and separately records the new Schema/CLI regression. It deliberately keeps:
+The checked-in record now uses **preflight** evidence: it binds the current source digest but leaves full CI qualification **PARTIAL** until an external run produces its attestation. The historical composite baseline and focused Schema/CLI records remain references, not proof of the changed tree.
 
 ```text
-current_end_to_end_ci = NOT_RUN
+validation_scope = preflight
+status = PARTIAL
+current_end_to_end_ci = NOT_RUN until externally attested
 ```
 
-This is stricter than copying the old full-tree checksum onto changed code. In composite mode `SHA256SUMS` explicitly defers a new whole-tree digest until a complete checkout performs the full-repository calculation.
+`SHA256SUMS` records a recomputed complete-checkout digest in preflight mode. Composite mode instead explicitly defers a new whole-tree digest. Neither scope permits copying an old PASS onto changed code.
 
 See [validation evidence](docs/VALIDATION_EVIDENCE.json), [baseline record](docs/VALIDATION_BASELINE.json), and [focused regression](docs/CURRENT_CHANGE_REGRESSION.json).
 
@@ -511,3 +513,24 @@ $$
 
 Execution prompt: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
 <!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->
+
+## Six-repository source-pinned acceptance
+
+The executable coordinator is [six-repository-acceptance.yml](.github/workflows/six-repository-acceptance.yml); the complete audit and remediation instructions are in [Prompt V5](.github/acceptance/PROMPT.md). The [plan](.github/acceptance/repositories.json) pins five external source commits and resolves this repository's `SELF` to the workflow commit. Each target is read-only during testing.
+
+After baseline gates, six repositories run in parallel through two sequential regression segments. Each segment requires 10,800 seconds of successful, nonempty test processes:
+
+$$
+t_{r,p}=\sum_{k\in\mathcal{S}_{r,p}}\Delta t_k\ge 10{,}800\;\mathrm{s},\qquad
+T_r=t_{r,1}+t_{r,2}\ge 21{,}600\;\mathrm{s}.
+$$
+
+Here $\mathcal{S}_{r,p}$ includes only successful commands with verified JUnit witnesses. Dependency installation, queueing and failed commands contribute no accepted time. This is segmented Linux regression, **not uninterrupted service soak, CPU time, cross-platform release qualification, or scientific solver certification**.
+
+[The executor](.github/acceptance/regression_segment.py) rejects dirty source and moved remote heads; [the independent verifier](.github/acceptance/verify_segments.py) recomputes ledger durations, validates original log/JUnit hashes and checks both segment identities. A short development run is `SMOKE_ONLY`; missing or incomplete evidence cannot produce `SEGMENTED_REGRESSION_COMPLETE`. The current status is the actual Actions result, not this documentation.
+
+```bash
+python -m unittest discover -s .github/acceptance -v
+```
+
+Use the existing **Six repository acceptance** Actions workflow from `main`. Changing the pinned plan or either acceptance workflow also triggers a new run. Any source change invalidates that older commit's qualification for the changed tree. Full permanent CI, browser review and external engineering approval remain separate delivery gates.

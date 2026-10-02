@@ -188,7 +188,7 @@ U_{\mathrm{closure}}^2+
 U_{\mathrm{target}}^2
 \]
 
-微观结果不能直接跳到工程结论。每个尺度桥必须有可测桥接变量、映射假设、闭合验证与目标尺度验收证据。
+上述平方和要求各项是同一输出单位下相互不相关的标准不确定度；存在相关性时必须加入交叉协方差项。一阶传播仅为局部线性近似。微观结果不能直接跳到工程结论。每个尺度桥必须有可测桥接变量、映射假设、闭合验证与目标尺度验收证据。
 
 ### 3.8 保守决策就绪度
 
@@ -237,7 +237,7 @@ y=h(x,\theta)+\epsilon_{\mathrm{measurement}}
 4. 能够证伪候选机制的最低充分模型；
 5. 验证、不确定性和升级规则。
 
-对守恒广延量 \(\phi\)：
+对固定控制体中的单位质量物理量 \(\phi\)，令 \(\rho\) 为密度，\(\mathbf J_\phi\) 为包含对流和扩散的总向外通量，\(s_\phi\) 为单位体积源项：
 
 \[
 \frac{\mathrm d}{\mathrm dt}\int_{\Omega}\rho\phi\,\mathrm dV
@@ -295,13 +295,15 @@ y=h(x,\theta)+\epsilon_{\mathrm{measurement}}
 - `current-tree`：由外部 CI 对当前树执行端到端验证，并绑定具体 commit；
 - `composite`：固定一个 exact-tree 全仓库基线，再叠加 SHA-256 绑定的当前聚焦回归。
 
-当前验收加固记录使用 **composite**。它固定已完整通过的 v0.7.4 基线，并单独记录新增 Schema/CLI 回归，同时明确保留：
+当前签入记录采用 **preflight**：绑定当前源码摘要，但完整 CI 资格在外部运行产生证明前保持 **PARTIAL**。历史 composite 基线和 Schema/CLI 聚焦记录保留供参考，不证明变更后的当前树已经通过。
 
 ```text
-current_end_to_end_ci = NOT_RUN
+validation_scope = preflight
+status = PARTIAL
+current_end_to_end_ci = NOT_RUN until externally attested
 ```
 
-这比把旧的全树 checksum 直接复制到已变更代码上更严格。在 composite 模式下，`SHA256SUMS` 会明确延后新的全树摘要，直到完整 checkout 能够重新计算整个仓库。
+preflight 模式的 `SHA256SUMS` 记录从完整 checkout 重新计算的摘要；composite 模式则明确延后新的全树摘要。两种范围都不允许把旧 PASS 复制到新代码上。
 
 详见 [验证证据](docs/VALIDATION_EVIDENCE.json)、[基线记录](docs/VALIDATION_BASELINE.json) 和 [当前聚焦回归](docs/CURRENT_CHANGE_REGRESSION.json)。
 
@@ -506,3 +508,24 @@ $$
 
 执行提示词: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
 <!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->
+
+## 六仓固定源码验收
+
+执行入口是 [六仓验收工作流](.github/workflows/six-repository-acceptance.yml)，完整审计与修复要求见 [Prompt V5](.github/acceptance/PROMPT.md)。[源码计划](.github/acceptance/repositories.json) 固定另外五仓提交，本仓 `SELF` 解析为触发工作流的提交。测试期间只读目标源码。
+
+基线门禁成功后，同一测试段内六仓并行，每仓依次执行两个回归测试段。每段累计至少 10,800 秒成功且具有非空 JUnit 见证的测试进程时间：
+
+$$
+t_{r,p}=\sum_{k\in\mathcal{S}_{r,p}}\Delta t_k\ge 10{,}800\;\mathrm{s},\qquad
+T_r=t_{r,1}+t_{r,2}\ge 21{,}600\;\mathrm{s}.
+$$
+
+其中 $\mathcal{S}_{r,p}$ 只包含验证通过的测试命令；安装、排队和失败命令不计入已认可时长。这是分段 Linux 重复回归，**不是不间断服务稳定性测试、CPU 时间、跨平台发布验收或商业求解器工程认证**。
+
+[执行器](.github/acceptance/regression_segment.py) 拒绝脏工作区和已经前移的远端主分支；[独立终审器](.github/acceptance/verify_segments.py) 重新累计账本时长、验证日志及 JUnit 哈希，并核对两段身份。开发短跑只能标记 `SMOKE_ONLY`；证据缺失或未完成不能成为 `SEGMENTED_REGRESSION_COMPLETE`。真实状态以 Actions 实际结果为准，本文不构成已完成声明。
+
+```bash
+python -m unittest discover -s .github/acceptance -v
+```
+
+从 `main` 运行已有的 **Six repository acceptance** 工作流；修改固定源码计划或验收工作流也会触发新运行。源码修改后不能把旧提交的验收时间转移给新树。永久完整 CI、浏览器审阅与外部工程批准仍为独立交付门禁。

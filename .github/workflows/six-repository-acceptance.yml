@@ -6,37 +6,64 @@ on:
     paths:
       - .github/workflows/six-repository-acceptance.yml
       - .github/acceptance/**
+      - .github/workflows/acceptance-segment.yml
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: six-repository-acceptance-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Test the regression executor, including negative controls
+        run: |
+          python -m pip install pytest==9.0.3
+          PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s .github/acceptance -v
+      - name: Validate six exact repository identities
+        id: plan
+        env:
+          SOURCE_REF: ${{ github.ref }}
+        run: |
+          python - <<'PYTHON'
+          import json, os, pathlib, re, sys
+          sys.path.insert(0, '.github/acceptance')
+          from regression_segment import REPOSITORIES
+          if os.environ['SOURCE_REF'] != 'refs/heads/main':
+              raise SystemExit('Acceptance must run from main')
+          plan = json.loads(pathlib.Path('.github/acceptance/repositories.json').read_text())
+          if set(plan) != set(REPOSITORIES):
+              raise SystemExit('Exactly six approved repositories are required')
+          for repo, sha in plan.items():
+              if not isinstance(sha, str) or not (re.fullmatch('[0-9a-f]{40}', sha) or (repo == 'TsaoSciResearcher' and sha == 'SELF')):
+                  raise SystemExit('Invalid source identity')
+          matrix = {'include': [{'repo': repo, 'sha': plan[repo]} for repo in REPOSITORIES]}
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('matrix=' + json.dumps(matrix, separators=(',', ':')) + '\n')
+          PYTHON
   baseline:
+    needs: plan
     name: baseline-${{ matrix.repo }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 6
-      matrix:
-        include:
-          - repo: AspenOps-Agent
-            sha: 363bae23a6b7e57baf9e6a61704acea119cf1c55
-          - repo: TsaoSciComputation
-            sha: ffec9f4fa87994e14a2a81f66369374f5e287dc3
-          - repo: TSAO-PROCESSING-SKILL
-            sha: 60fe603efe603ca9d6f0fd3bc92c6ef3cec5f9ab
-          - repo: ResinDB-Pro-by-SunHJ
-            sha: 4dba2fde2dde952bb17004bc45c7ec700d362231
-          - repo: TsaoDFT_skill
-            sha: 44ecc2b3ec12fdf4d5cd364a4c44bd3af2e2be73
-          - repo: TsaoSciResearcher
-            sha: SELF
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
       TARGET_REPOSITORY: SUNHAOJUN22/${{ matrix.repo }}
       TARGET_SHA: ${{ matrix.sha == 'SELF' && github.sha || matrix.sha }}
@@ -171,7 +198,7 @@ jobs:
               npm run validate:ci
               ;;
             SUNHAOJUN22/TsaoDFT_skill)
-              python scripts/quality_gate.py
+              python scripts/quality_gate.py --report-dir "$RUNNER_TEMP/test-evidence/dft"
               ;;
             SUNHAOJUN22/TsaoSciResearcher)
               export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
@@ -212,5 +239,63 @@ jobs:
         with:
           name: baseline-${{ matrix.repo }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/test-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+  phase-one:
+    needs: [plan, baseline]
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    uses: ./.github/workflows/acceptance-segment.yml
+    with:
+      repository: ${{ matrix.repo }}
+      sha: ${{ matrix.sha == 'SELF' && github.sha || matrix.sha }}
+      phase: 1
+
+  phase-two:
+    needs: [plan, phase-one]
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    uses: ./.github/workflows/acceptance-segment.yml
+    with:
+      repository: ${{ matrix.repo }}
+      sha: ${{ matrix.sha == 'SELF' && github.sha || matrix.sha }}
+      phase: 2
+
+  verify-six-hours:
+    if: always()
+    needs: [plan, baseline, phase-one, phase-two]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Retrieve the original segment receipts and test witnesses
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          pattern: regression-segment-*-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/all-segments
+          merge-multiple: false
+      - name: Independently verify twelve segments and live source identities
+        if: always()
+        run: |
+          python .github/acceptance/verify_segments.py \
+            --input "$RUNNER_TEMP/all-segments" \
+            --plan .github/acceptance/repositories.json \
+            --output "$RUNNER_TEMP/six-hour-summary"
+      - name: Preserve an explicit complete or incomplete conclusion
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: six-hour-summary-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/six-hour-summary
           if-no-files-found: error
           retention-days: 14

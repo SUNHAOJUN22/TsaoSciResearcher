@@ -1,0 +1,141 @@
+name: Exact-source regression segment
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        type: string
+        required: true
+      sha:
+        type: string
+        required: true
+      phase:
+        type: number
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  regression:
+    name: segment-${{ inputs.phase }}-${{ inputs.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 250
+    env:
+      TARGET_REPO: ${{ inputs.repository }}
+      TARGET_SHA: ${{ inputs.sha }}
+      TARGET_PHASE: ${{ inputs.phase }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      MPLBACKEND: Agg
+      UV_PYTHON: '3.12'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Validate reusable-workflow inputs before checkout
+        run: |
+          python3 - <<'PYTHON'
+          import os, re
+          allowed = {'AspenOps-Agent', 'TsaoSciComputation', 'TSAO-PROCESSING-SKILL', 'ResinDB-Pro-by-SunHJ', 'TsaoDFT_skill', 'TsaoSciResearcher'}
+          if os.environ['TARGET_REPO'] not in allowed or not re.fullmatch('[0-9a-f]{40}', os.environ['TARGET_SHA']) or os.environ['TARGET_PHASE'] not in ('1', '2'):
+              raise SystemExit('Invalid repository, SHA or phase')
+          PYTHON
+      - name: Check out the tested orchestration revision
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.sha }}
+          path: control
+          persist-credentials: false
+      - name: Check out the exact target source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: SUNHAOJUN22/${{ inputs.repository }}
+          ref: ${{ inputs.sha }}
+          path: target
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Restore phase-one evidence before the second segment
+        if: inputs.phase == 2
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: regression-segment-1-${{ inputs.repository }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/previous
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Set up Node for ResinDB
+        if: inputs.repository == 'ResinDB-Pro-by-SunHJ'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: target/.nvmrc
+      - name: Create an isolated dependency environment outside source
+        run: |
+          python -m venv "$RUNNER_TEMP/acceptance-env"
+          echo "$RUNNER_TEMP/acceptance-env/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/segment"
+      - name: Install declared dependencies without counting setup time
+        run: |
+          set -euo pipefail
+          cd target
+          if [ "$TARGET_PHASE" = 2 ]; then
+            test -s "$RUNNER_TEMP/previous/python-constraints.txt"
+            python -m pip install -r "$RUNNER_TEMP/previous/python-constraints.txt"
+            export PIP_CONSTRAINT="$RUNNER_TEMP/previous/python-constraints.txt"
+          fi
+          case "$TARGET_REPO" in
+            AspenOps-Agent)
+              python -m pip install uv==0.11.16
+              uv lock --check
+              uv sync --frozen --extra dev --extra agent --extra signing
+              ;;
+            TsaoSciComputation)
+              python -m pip install -e '.[validation,quality,security]'
+              ;;
+            TSAO-PROCESSING-SKILL)
+              python -m pip install --require-hashes -r requirements.lock
+              python -m pip install --no-deps --no-build-isolation -e .
+              ;;
+            ResinDB-Pro-by-SunHJ)
+              npm ci
+              npm ls --all
+              node scripts/prepare-artifacts.mjs
+              ;;
+            TsaoDFT_skill)
+              python -m pip install -c constraints/py312.txt -r requirements-dev.txt
+              ;;
+            TsaoSciResearcher)
+              python -m pip install -r requirements-ci.lock
+              python -m pip install -e . --no-deps
+              ;;
+            *) exit 2 ;;
+          esac
+          python -m pip check
+          python -m pip freeze --all --exclude-editable > "$RUNNER_TEMP/segment/python-constraints.txt"
+      - name: Install display fonts outside the timed regression loop
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          fc-cache -f
+      - name: Run three hours of successful nonempty test processes
+        run: |
+          set -euo pipefail
+          previous=()
+          if [ "$TARGET_PHASE" = 2 ]; then
+            previous=(--previous "$RUNNER_TEMP/previous/receipt.json")
+          fi
+          python control/.github/acceptance/regression_segment.py \
+            --root "$GITHUB_WORKSPACE/target" --repo "$TARGET_REPO" \
+            --sha "$TARGET_SHA" --phase "$TARGET_PHASE" --seconds 10800 \
+            --output "$RUNNER_TEMP/segment" "${previous[@]}"
+      - name: Preserve successful or failed segment evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: regression-segment-${{ inputs.phase }}-${{ inputs.repository }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/segment
+          if-no-files-found: error
+          retention-days: 7
