@@ -1,0 +1,106 @@
+name: DFT constraints candidate
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/dft-constraints-candidate.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolve-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: '3.10'
+            constraint: py310
+          - python: '3.12'
+            constraint: py312
+          - python: '3.13'
+            constraint: py313
+    env:
+      CONSTRAINT: ${{ matrix.constraint }}
+      PYTHON_VERSION: ${{ matrix.python }}
+      DFT_BASE_SHA: 8ab9bc25ac1396a04f39d5f3dec253b0f63ef3cb
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: SUNHAOJUN22/TsaoDFT_skill
+          ref: ${{ env.DFT_BASE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Resolve the minimum reviewed security update in the installed environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/constraints-candidate"
+          exec > >(tee "$RUNNER_TEMP/constraints-candidate/resolution.log") 2>&1
+          test "$(git rev-parse HEAD)" = "$DFT_BASE_SHA"
+          cp "constraints/$CONSTRAINT.txt" "$RUNNER_TEMP/constraints-candidate/original.txt"
+          python -m pip install -c "constraints/$CONSTRAINT.txt" -r requirements-dev.txt
+          python -m pip check
+          python -m pip install --upgrade urllib3==2.8.0
+          python -m pip check
+          python - <<'PY'
+          import os
+          import pathlib
+          import subprocess
+          version = os.environ['PYTHON_VERSION']
+          run = os.environ['GITHUB_RUN_ID']
+          pins = subprocess.check_output([
+              'python', '-m', 'pip', 'freeze', '--exclude', 'pip', '--exclude', 'setuptools', '--exclude', 'wheel'
+          ], text=True).splitlines()
+          if any('==' not in line or line.startswith('-') for line in pins):
+              raise SystemExit('Only exact registry package pins are permitted')
+          text = (
+              f'# Resolved on ubuntu-24.04 with CPython {version} in GitHub Actions run {run}.\n'
+              '# Installed-environment snapshot after the reviewed urllib3 2.8.0 security update.\n'
+              + '\n'.join(sorted(pins, key=str.casefold)) + '\n'
+          )
+          pathlib.Path('constraints', os.environ['CONSTRAINT'] + '.txt').write_text(text, encoding='utf-8')
+          PY
+          python scripts/validate_constraints.py
+      - name: Validate the candidate without publishing or changing any branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          exec > >(tee "$RUNNER_TEMP/constraints-candidate/validation.log") 2>&1
+          python scripts/quality_gate.py
+          python -m pip_audit --no-deps -r "constraints/$CONSTRAINT.txt" --format json --output "$RUNNER_TEMP/constraints-candidate/audit.json"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import subprocess
+          name = 'constraints/' + os.environ['CONSTRAINT'] + '.txt'
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          allowed = {name, 'coverage-report.json', 'release-acceptance.json'}
+          if not changed <= allowed:
+              raise SystemExit('Unexpected tracked changes: ' + repr(sorted(changed - allowed)))
+          data = pathlib.Path(name).read_bytes()
+          output = pathlib.Path(os.environ['RUNNER_TEMP']) / 'constraints-candidate'
+          (output / pathlib.Path(name).name).write_bytes(data)
+          (output / 'candidate.json').write_text(json.dumps({
+              'repository': 'SUNHAOJUN22/TsaoDFT_skill', 'base_sha': os.environ['DFT_BASE_SHA'],
+              'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'path': name, 'sha256': hashlib.sha256(data).hexdigest(),
+              'quality_gate': 'PASS', 'dependency_audit': 'PASS', 'publication': 'NOT_PUBLISHED',
+          }, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Preserve candidate files and diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: dft-constraints-${{ matrix.constraint }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/constraints-candidate
+          if-no-files-found: error
+          retention-days: 14
