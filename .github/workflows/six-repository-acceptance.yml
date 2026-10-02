@@ -1,0 +1,216 @@
+name: Six repository acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/six-repository-acceptance.yml
+      - .github/acceptance/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: six-repository-acceptance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  baseline:
+    name: baseline-${{ matrix.repo }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - repo: AspenOps-Agent
+            sha: 363bae23a6b7e57baf9e6a61704acea119cf1c55
+          - repo: TsaoSciComputation
+            sha: ffec9f4fa87994e14a2a81f66369374f5e287dc3
+          - repo: TSAO-PROCESSING-SKILL
+            sha: bd251fd69de1837ff37823a9b83b9e415ff56d78
+          - repo: ResinDB-Pro-by-SunHJ
+            sha: 88276b088a8aa1b234c3b6dff4877ad1a56828bd
+          - repo: TsaoDFT_skill
+            sha: 723340cb83193f94311f8411737b64dbfcdf2206
+          - repo: TsaoSciResearcher
+            sha: SELF
+    env:
+      TARGET_REPOSITORY: SUNHAOJUN22/${{ matrix.repo }}
+      TARGET_SHA: ${{ matrix.sha == 'SELF' && github.sha || matrix.sha }}
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      MPLBACKEND: Agg
+    steps:
+      - name: Check out the exact target commit without persisted credentials
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: SUNHAOJUN22/${{ matrix.repo }}
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record exact source identity before installing dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          mkdir -p "$RUNNER_TEMP/source-evidence" "$RUNNER_TEMP/test-evidence"
+          git ls-tree -r --full-tree HEAD > "$RUNNER_TEMP/source-evidence/git-tree.txt"
+          git ls-remote --heads origin > "$RUNNER_TEMP/source-evidence/remote-branches.txt"
+          python - <<'PY'
+          import datetime
+          import json
+          import os
+          import pathlib
+          import subprocess
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'source-evidence'
+          record = {
+              'schema': 'tsao.six-repository-baseline/v1',
+              'repository': os.environ['TARGET_REPOSITORY'],
+              'sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              'run_id': os.environ['GITHUB_RUN_ID'],
+              'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'recorded_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'qualification': 'NOT_RUN',
+              'active_test_seconds': 0,
+              'scope': 'Linux baseline; not six-hour or licensed-solver qualification',
+          }
+          (root / 'identity.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+          PY
+          # The processing registry currently blocks public distributions.
+          # Preserve that boundary: record identity, but do not publish its source archive.
+          if [ "$TARGET_REPOSITORY" != 'SUNHAOJUN22/TSAO-PROCESSING-SKILL' ]; then
+            git archive --format=zip --output="$RUNNER_TEMP/source-evidence/source.zip" HEAD
+            (cd "$RUNNER_TEMP/source-evidence" && sha256sum source.zip > source.sha256)
+          fi
+      - name: Preserve source identity independently of test success
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: source-${{ matrix.repo }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/source-evidence
+          if-no-files-found: error
+          retention-days: 7
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Set up Node for ResinDB
+        if: matrix.repo == 'ResinDB-Pro-by-SunHJ'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .nvmrc
+      - name: Install scientific display fonts
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          fc-cache -f
+          fc-match 'Noto Sans CJK SC'
+      - name: Install the target repository's declared dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$TARGET_REPOSITORY" in
+            SUNHAOJUN22/AspenOps-Agent)
+              python -m pip install uv==0.11.16
+              uv lock --check
+              uv sync --frozen --extra dev --extra agent --extra signing
+              ;;
+            SUNHAOJUN22/TsaoSciComputation)
+              python -m pip install -e '.[validation,quality,security]'
+              python -m pip check
+              ;;
+            SUNHAOJUN22/TSAO-PROCESSING-SKILL)
+              python -m pip install --require-hashes -r requirements.lock
+              python -m pip install --no-deps --no-build-isolation -e .
+              python -m pip check
+              ;;
+            SUNHAOJUN22/ResinDB-Pro-by-SunHJ)
+              npm ci
+              npm ls --all
+              ;;
+            SUNHAOJUN22/TsaoDFT_skill)
+              python -m pip install -c constraints/py312.txt -r requirements-dev.txt
+              python -m pip check
+              ;;
+            SUNHAOJUN22/TsaoSciResearcher)
+              python -m pip install -r requirements-ci.lock
+              python -m pip install -e . --no-deps
+              python -m pip check
+              ;;
+            *) exit 2 ;;
+          esac
+      - name: Execute actual baseline gates with failure propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          exec > >(tee "$RUNNER_TEMP/test-evidence/baseline.log") 2>&1
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          case "$TARGET_REPOSITORY" in
+            SUNHAOJUN22/AspenOps-Agent)
+              uv run pytest -W error::ResourceWarning --cov=aspenops_nexus --cov-branch --cov-fail-under=95 --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
+              uv run ruff check .
+              uv run ruff format --check .
+              uv run mypy src
+              uv run python scripts/verify_delivery.py
+              ;;
+            SUNHAOJUN22/TsaoSciComputation)
+              python scripts/verify_all.py --profile core
+              python scripts/verify_all.py --profile quality
+              python scripts/verify_native_core.py
+              ;;
+            SUNHAOJUN22/TSAO-PROCESSING-SKILL)
+              python scripts/run_ci.py
+              ;;
+            SUNHAOJUN22/ResinDB-Pro-by-SunHJ)
+              node --test scripts/tests/validation-receipt-contract.node.mjs
+              npm run validate:ci
+              ;;
+            SUNHAOJUN22/TsaoDFT_skill)
+              python scripts/quality_gate.py
+              ;;
+            SUNHAOJUN22/TsaoSciResearcher)
+              export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+              python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
+              python -m ruff check scripts tsao_researcher tests
+              python -m mypy scripts tsao_researcher
+              python scripts/validate_unicode_integrity.py --check
+              python scripts/validate_mathematical_contracts.py --check
+              ;;
+            *) exit 2 ;;
+          esac
+          git diff --exit-code
+          git diff --cached --exit-code
+      - name: Record final job outcome without manufacturing qualification
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          output = pathlib.Path(os.environ['RUNNER_TEMP']) / 'test-evidence'
+          output.mkdir(parents=True, exist_ok=True)
+          (output / 'job-result.json').write_text(json.dumps({
+              'repository': os.environ['TARGET_REPOSITORY'],
+              'sha': os.environ['TARGET_SHA'],
+              'job_status': os.environ['JOB_STATUS'],
+              'six_hour_status': 'NOT_RUN',
+              'active_test_seconds': 0,
+              'note': 'Baseline outcome only. See logs; no six-hour or commercial-solver claim.',
+          }, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Preserve baseline success or failure logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: baseline-${{ matrix.repo }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/test-evidence
+          if-no-files-found: error
+          retention-days: 14
