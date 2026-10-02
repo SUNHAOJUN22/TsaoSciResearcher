@@ -30,11 +30,11 @@ jobs:
           - repo: TsaoSciComputation
             sha: ffec9f4fa87994e14a2a81f66369374f5e287dc3
           - repo: TSAO-PROCESSING-SKILL
-            sha: bd251fd69de1837ff37823a9b83b9e415ff56d78
+            sha: 60fe603efe603ca9d6f0fd3bc92c6ef3cec5f9ab
           - repo: ResinDB-Pro-by-SunHJ
-            sha: 88276b088a8aa1b234c3b6dff4877ad1a56828bd
+            sha: 4dba2fde2dde952bb17004bc45c7ec700d362231
           - repo: TsaoDFT_skill
-            sha: 723340cb83193f94311f8411737b64dbfcdf2206
+            sha: 44ecc2b3ec12fdf4d5cd364a4c44bd3af2e2be73
           - repo: TsaoSciResearcher
             sha: SELF
     env:
