@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 
 from tsao_researcher.io import _decode_json
+from tsao_researcher.io import append_jsonl as _append_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_DIR = ".tsao-research"
@@ -61,20 +62,10 @@ def write_json(path: str | Path, data: Any) -> None:
 
 
 def append_jsonl(path: str | Path, record: Any) -> None:
-    target = Path(path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    if target.is_symlink():
-        raise ValueError(f"refusing to append through symbolic link: {target}")
-    payload = json.dumps(record, ensure_ascii=False, allow_nan=False) + "\n"
-    flags = os.O_APPEND | os.O_CREAT | os.O_WRONLY
-    if hasattr(os, "O_NOFOLLOW"):
-        flags |= os.O_NOFOLLOW
-    fd = os.open(target, flags, 0o644)
-    try:
-        os.write(fd, payload.encode("utf-8"))
-        os.fsync(fd)
-    finally:
-        os.close(fd)
+    """Use the runtime's locked, bounded, rollback-safe evidence writer."""
+    if not isinstance(record, dict):
+        raise ValueError("JSONL record must be an object")
+    _append_jsonl(path, record)
 
 
 def read_jsonl(path: str | Path) -> list[JsonObject]:
