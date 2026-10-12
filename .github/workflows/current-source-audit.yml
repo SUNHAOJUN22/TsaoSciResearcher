@@ -1,0 +1,137 @@
+name: Current six-repository source audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/current-source-audit.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: current-source-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: audit-${{ matrix.repo }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - repo: AspenOps-Agent
+            sha: 845bd26eee641ee0f7452fc4874d1ff258496efa
+          - repo: TsaoSciComputation
+            sha: 8d7096f94ff1701e47f092d64993d3f875d9fd0e
+          - repo: TSAO-PROCESSING-SKILL
+            sha: 4a50f1b3c33712deb379ffd54c3149e948e8e664
+          - repo: ResinDB-Pro-by-SunHJ
+            sha: 9ad1d4a59f71c3eb0e9ff465a0f7ff3497f98363
+          - repo: TsaoDFT_skill
+            sha: a8ed0feef2341ec6fc7a1cd4136d35e632a8dfce
+          - repo: TsaoSciResearcher
+            sha: 04a1e2f48ed351b84b8f1435597e0236a28af8aa
+    env:
+      TARGET_REPO: ${{ matrix.repo }}
+      TARGET_SHA: ${{ matrix.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      MPLBACKEND: Agg
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: SUNHAOJUN22/${{ matrix.repo }}
+          ref: ${{ matrix.sha }}
+          persist-credentials: false
+      - name: Record source identity before installation or generation
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/evidence"
+          git ls-tree -r --full-tree HEAD > "$RUNNER_TEMP/source/git-tree.txt"
+          git ls-remote --heads origin > "$RUNNER_TEMP/source/branches.txt"
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          record = {'repository': os.environ['TARGET_REPO'], 'sha': os.environ['TARGET_SHA'],
+                    'tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+                    'run_id': os.environ['GITHUB_RUN_ID'], 'status': 'IDENTITY_ONLY',
+                    'scope': 'Pinned source inspection; not six-hour or scientific qualification'}
+          (pathlib.Path(os.environ['RUNNER_TEMP']) / 'source/identity.json').write_text(json.dumps(record, indent=2) + '\n')
+          PY
+          if [ "$TARGET_REPO" != TSAO-PROCESSING-SKILL ]; then
+            git archive --format=zip --output="$RUNNER_TEMP/source/source.zip" HEAD
+            (cd "$RUNNER_TEMP/source" && sha256sum source.zip > source.sha256)
+          fi
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: audit-source-${{ matrix.repo }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/source
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Execute repository-owned checks without weakening failures
+        run: |
+          set -euo pipefail
+          exec > >(tee "$RUNNER_TEMP/evidence/audit.log") 2>&1
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          case "$TARGET_REPO" in
+            AspenOps-Agent)
+              python -m pip install uv==0.11.16
+              uv sync --frozen --extra dev --extra agent --extra signing
+              uv run pytest -q -W error::ResourceWarning --junitxml="$RUNNER_TEMP/evidence/junit.xml"
+              uv run ruff check .
+              uv run ruff format --check .
+              uv run mypy src
+              uv run python scripts/verify_delivery.py
+              ;;
+            TsaoSciComputation)
+              python -m pip install -e '.[validation,quality,security]'
+              python scripts/verify_all.py --profile core
+              python scripts/verify_all.py --profile quality
+              ;;
+            TSAO-PROCESSING-SKILL)
+              python -m pip install --require-hashes -r requirements.lock
+              python -m pip install --no-deps --no-build-isolation -e .
+              python scripts/run_ci.py
+              ;;
+            ResinDB-Pro-by-SunHJ)
+              npm ci
+              npm run validate:ci
+              ;;
+            TsaoDFT_skill)
+              python -m pip install -c constraints/py312.txt -r requirements-dev.txt
+              python scripts/quality_gate.py --report-dir "$RUNNER_TEMP/evidence/dft"
+              ;;
+            TsaoSciResearcher)
+              python -m pip install -r requirements-ci.lock
+              python -m pip install -e . --no-deps
+              PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml="$RUNNER_TEMP/evidence/junit.xml"
+              python -m unittest discover -s .github/acceptance -v
+              python -m ruff check scripts tsao_researcher tests
+              python scripts/build_validation_evidence.py --check
+              ;;
+            *) exit 2 ;;
+          esac
+          git diff --exit-code
+          git diff --cached --exit-code
+      - name: Preserve failure or success evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: current-audit-${{ matrix.repo }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/evidence
+          retention-days: 14
+          if-no-files-found: error
