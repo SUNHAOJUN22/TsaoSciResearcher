@@ -14,27 +14,63 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  snapshot:
+    name: Capture six live main identities
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.snapshot.outputs.matrix }}
+    steps:
+      - name: Resolve the approved repositories once, before all audit jobs
+        id: snapshot
+        env:
+          SOURCE_REF: ${{ github.ref }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, re, subprocess
+          if os.environ['SOURCE_REF'] != 'refs/heads/main':
+              raise SystemExit('Run the source audit from main')
+          repositories = ('AspenOps-Agent', 'TsaoSciComputation', 'TSAO-PROCESSING-SKILL',
+                          'ResinDB-Pro-by-SunHJ', 'TsaoDFT_skill', 'TsaoSciResearcher')
+          rows = []
+          for repo in repositories:
+              lines = subprocess.check_output(
+                  ['git', 'ls-remote', '--heads', f'https://github.com/SUNHAOJUN22/{repo}.git'],
+                  text=True, timeout=60).strip().splitlines()
+              refs = [line.split() for line in lines]
+              if len(refs) != 1 or len(refs[0]) != 2 or refs[0][1] != 'refs/heads/main':
+                  raise SystemExit(f'{repo}: expected sole main; inspect branches before merging')
+              sha = refs[0][0]
+              if not re.fullmatch('[0-9a-f]{40}', sha):
+                  raise SystemExit(f'{repo}: invalid commit identity')
+              rows.append({'repo': repo, 'sha': sha})
+          matrix = {'include': rows}
+          pathlib.Path('source-plan.json').write_text(json.dumps({
+              'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'orchestration_sha': os.environ['GITHUB_SHA'], 'matrix': matrix,
+              'scope': 'Live main snapshot; not an acceptance verdict'
+          }, indent=2) + '\n', encoding='utf-8')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as handle:
+              handle.write('matrix=' + json.dumps(matrix, separators=(',', ':')) + '\n')
+          print(json.dumps(matrix, indent=2))
+          PY
+      - name: Preserve the exact source plan
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: current-source-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: source-plan.json
+          retention-days: 14
+          if-no-files-found: error
+
   audit:
+    needs: snapshot
     name: audit-${{ matrix.repo }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 6
-      matrix:
-        include:
-          - repo: AspenOps-Agent
-            sha: 845bd26eee641ee0f7452fc4874d1ff258496efa
-          - repo: TsaoSciComputation
-            sha: 8d7096f94ff1701e47f092d64993d3f875d9fd0e
-          - repo: TSAO-PROCESSING-SKILL
-            sha: 4a50f1b3c33712deb379ffd54c3149e948e8e664
-          - repo: ResinDB-Pro-by-SunHJ
-            sha: 9ad1d4a59f71c3eb0e9ff465a0f7ff3497f98363
-          - repo: TsaoDFT_skill
-            sha: a8ed0feef2341ec6fc7a1cd4136d35e632a8dfce
-          - repo: TsaoSciResearcher
-            sha: 04a1e2f48ed351b84b8f1435597e0236a28af8aa
+      matrix: ${{ fromJSON(needs.snapshot.outputs.matrix) }}
     env:
       TARGET_REPO: ${{ matrix.repo }}
       TARGET_SHA: ${{ matrix.sha }}
@@ -59,11 +95,16 @@ jobs:
           git ls-remote --heads origin > "$RUNNER_TEMP/source/branches.txt"
           python3 - <<'PY'
           import json, os, pathlib, subprocess
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'source'
+          refs = [line.split() for line in (root / 'branches.txt').read_text().strip().splitlines()]
+          if refs != [[os.environ['TARGET_SHA'], 'refs/heads/main']]:
+              raise SystemExit('STALE_OR_NONSOLE_MAIN: source moved after the snapshot')
           record = {'repository': os.environ['TARGET_REPO'], 'sha': os.environ['TARGET_SHA'],
                     'tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
-                    'run_id': os.environ['GITHUB_RUN_ID'], 'status': 'IDENTITY_ONLY',
+                    'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                    'status': 'IDENTITY_ONLY',
                     'scope': 'Pinned source inspection; not six-hour or scientific qualification'}
-          (pathlib.Path(os.environ['RUNNER_TEMP']) / 'source/identity.json').write_text(json.dumps(record, indent=2) + '\n')
+          (root / 'identity.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
           PY
           if [ "$TARGET_REPO" != TSAO-PROCESSING-SKILL ]; then
             git archive --format=zip --output="$RUNNER_TEMP/source/source.zip" HEAD
@@ -71,7 +112,7 @@ jobs:
           fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: audit-source-${{ matrix.repo }}-${{ github.run_id }}
+          name: audit-source-${{ matrix.repo }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/source
           retention-days: 14
           if-no-files-found: error
@@ -127,11 +168,18 @@ jobs:
           esac
           git diff --exit-code
           git diff --cached --exit-code
+          python3 - <<'PY'
+          import os, subprocess
+          refs = [line.split() for line in subprocess.check_output(
+              ['git', 'ls-remote', '--heads', 'origin'], text=True, timeout=60).strip().splitlines()]
+          if refs != [[os.environ['TARGET_SHA'], 'refs/heads/main']]:
+              raise SystemExit('STALE_OR_NONSOLE_MAIN: source moved during the audit')
+          PY
       - name: Preserve failure or success evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: current-audit-${{ matrix.repo }}-${{ github.run_id }}
+          name: current-audit-${{ matrix.repo }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/evidence
           retention-days: 14
           if-no-files-found: error
