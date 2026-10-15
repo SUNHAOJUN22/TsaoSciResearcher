@@ -1,0 +1,35 @@
+name: Render final-tree Unicode evidence
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/render-unicode-evidence.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Generate evidence for the final tree without this temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/render-unicode-evidence.yml
+          python scripts/validate_unicode_integrity.py --write
+          mkdir -p "$RUNNER_TEMP/unicode-evidence"
+          cp reports/UNICODE_INTEGRITY_REPORT.json "$RUNNER_TEMP/unicode-evidence/UNICODE_INTEGRITY_REPORT.json"
+          git diff -- reports/UNICODE_INTEGRITY_REPORT.json > "$RUNNER_TEMP/unicode-evidence/report.patch"
+          sha256sum "$RUNNER_TEMP/unicode-evidence/UNICODE_INTEGRITY_REPORT.json" > "$RUNNER_TEMP/unicode-evidence/SHA256SUMS"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: final-tree-unicode-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/unicode-evidence
+          if-no-files-found: error
+          retention-days: 7
