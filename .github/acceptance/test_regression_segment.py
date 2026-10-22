@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import textwrap
 import unittest
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -467,6 +468,186 @@ class SegmentTests(unittest.TestCase):
             verify(self.root, {}, "1", "1", "a" * 40)
         with self.assertRaisesRegex(ValueError, "fourteen"):
             verify(self.root, dict.fromkeys(REPOSITORIES, "a" * 40), "1", "1", "a" * 40)
+
+
+@unittest.skipUnless(os.name == "posix", "The baseline workflow executes Bash on Linux")
+class BaselineFixedPointTests(unittest.TestCase):
+    """Execute the real workflow shell with bounded fixture workloads and a real Git tree."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.source = self.root / "source"
+        self.source.mkdir()
+        self.bin = self.root / "bin"
+        self.bin.mkdir()
+        self.runner = self.root / "runner"
+        (self.runner / "test-evidence").mkdir(parents=True)
+        self.report = self.source / "reports/UNICODE_INTEGRITY_REPORT.json"
+        self.report.parent.mkdir()
+        self.report.write_text('{"scannedTextFiles": 463}\n')
+        (self.source / "scripts/tests").mkdir(parents=True)
+        (self.source / "example.txt").write_text("A tracked fixture input.\n")
+        # This generator models the original report's tracked-file inventory only;
+        # the target repository's Unicode implementation has its own native tests.
+        (self.source / "scripts/validate-repository-unicode.mjs").write_text(
+            textwrap.dedent("""\
+            import json
+            import subprocess
+            import sys
+            from pathlib import Path
+            tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\\0')
+            report = {'scannedTextFiles': sum(bool(name) for name in tracked)}
+            if sys.argv[1:] == ['--write']:
+                Path('reports/UNICODE_INTEGRITY_REPORT.json').write_text(
+                    json.dumps(report, indent=2) + '\\n')
+            elif sys.argv[1:] != ['--audit']:
+                raise SystemExit(2)
+            """)
+        )
+        (self.source / "scripts/tests/validation-receipt-contract.node.mjs").write_text(
+            "raise SystemExit(0)\n"
+        )
+        (self.source / "scripts/tests/readme-image-contract.node.mjs").write_text(
+            "import os\nraise SystemExit(int(os.environ.get('TSAO_FIXTURE_IMAGE_EXIT', '0')))\n"
+        )
+        self.executable(
+            "node",
+            """\
+            import subprocess
+            import sys
+            args = sys.argv[1:]
+            if args[:1] == ['--test']:
+                for name in args[1:]:
+                    result = subprocess.run([sys.executable, name], check=False)
+                    if result.returncode:
+                        raise SystemExit(result.returncode)
+            else:
+                raise SystemExit(subprocess.run([sys.executable, *args], check=False).returncode)
+            """,
+        )
+        self.executable(
+            "npm",
+            """\
+            import os
+            import subprocess
+            import sys
+            args = sys.argv[1:]
+            if args == ['run', 'validate:ci']:
+                raise SystemExit(subprocess.run(
+                    [sys.executable, 'scripts/validate-repository-unicode.mjs', '--audit'],
+                    check=False).returncode)
+            if args == ['run', 'audit:prod']:
+                raise SystemExit(int(os.environ.get('TSAO_FIXTURE_AUDIT_EXIT', '0')))
+            raise SystemExit(2)
+            """,
+        )
+        self.executable("google-chrome", "raise SystemExit(0)\n")
+        self.git("init", "-q", "-b", "main")
+        self.git("add", ".")
+        self.expected_count = len(self.git("ls-files").stdout.splitlines())
+        self.generate_report()
+        self.commit()
+
+    def executable(self, name, program):
+        path = self.bin / name
+        path.write_text(f"#!{sys.executable}\n" + textwrap.dedent(program))
+        path.chmod(0o755)
+
+    def git(self, *args, check=True):
+        return subprocess.run(
+            ["git", *args],
+            cwd=self.source,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=check,
+            timeout=30,
+        )
+
+    def commit(self):
+        self.git("add", ".")
+        self.git(
+            "-c",
+            "user.name=Acceptance fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "-qm",
+            "Record fixture source",
+        )
+
+    def generate_report(self):
+        subprocess.run(
+            [sys.executable, "scripts/validate-repository-unicode.mjs", "--write"],
+            cwd=self.source,
+            check=True,
+            timeout=30,
+        )
+
+    def workflow_shell(self):
+        workflow = Path(__file__).parents[1] / "workflows/six-repository-acceptance.yml"
+        lines = workflow.read_text().splitlines()
+        step = lines.index("      - name: Execute actual baseline gates with failure propagation")
+        start = lines.index("        run: |", step) + 1
+        block = []
+        for line in lines[start:]:
+            if line and not line.startswith("          "):
+                break
+            block.append(line[10:])
+        return "\n".join(block) + "\n"
+
+    def run_baseline(self, **extra):
+        env = dict(
+            os.environ,
+            PATH=str(self.bin) + os.pathsep + os.environ.get("PATH", ""),
+            RUNNER_TEMP=str(self.runner),
+            TARGET_REPOSITORY="SUNHAOJUN22/ResinDB-Pro-by-SunHJ",
+            TARGET_SHA=self.git("rev-parse", "HEAD").stdout.strip(),
+            TSAO_FIXTURE_IMAGE_EXIT="0",
+            TSAO_FIXTURE_AUDIT_EXIT="0",
+        )
+        env.update(extra)
+        return subprocess.run(
+            ["bash", "-c", self.workflow_shell()],
+            cwd=self.source,
+            env=env,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            timeout=30,
+        )
+
+    def test_stale_generated_report_is_rebuilt_and_rejected(self):
+        self.report.write_text('{"scannedTextFiles": 463}\n')
+        self.commit()
+        result = self.run_baseline()
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(json.loads(self.report.read_text())["scannedTextFiles"], self.expected_count)
+        self.assertIn("scannedTextFiles", self.git("diff").stdout)
+
+    def test_committed_generated_report_is_a_fixed_point(self):
+        result = self.run_baseline()
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(self.git("status", "--porcelain").stdout, "")
+
+    def test_staged_source_drift_is_rejected(self):
+        (self.source / "example.txt").write_text("Unexpected staged source change.\n")
+        self.git("add", "example.txt")
+        result = self.run_baseline()
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(self.git("diff").stdout, "")
+        self.assertIn("Unexpected staged source change", self.git("diff", "--cached").stdout)
+
+    def test_original_image_contract_failure_propagates(self):
+        result = self.run_baseline(TSAO_FIXTURE_IMAGE_EXIT="31")
+        self.assertEqual(result.returncode, 31, result.stdout)
+
+    def test_production_audit_failure_propagates(self):
+        result = self.run_baseline(TSAO_FIXTURE_AUDIT_EXIT="23")
+        self.assertEqual(result.returncode, 23, result.stdout)
 
 
 if __name__ == "__main__":

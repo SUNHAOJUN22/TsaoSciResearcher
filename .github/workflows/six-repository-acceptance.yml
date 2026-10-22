@@ -205,8 +205,10 @@ jobs:
               export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
               test -x "$PUPPETEER_EXECUTABLE_PATH"
               export CHROME_BIN="$PUPPETEER_EXECUTABLE_PATH"
-              node --test scripts/tests/validation-receipt-contract.node.mjs
+              node --test scripts/tests/validation-receipt-contract.node.mjs scripts/tests/readme-image-contract.node.mjs
+              node scripts/validate-repository-unicode.mjs --write
               npm run validate:ci
+              npm run audit:prod
               ;;
             SUNHAOJUN22/TsaoDFT_skill)
               python scripts/quality_gate.py --report-dir "$RUNNER_TEMP/test-evidence/dft"
