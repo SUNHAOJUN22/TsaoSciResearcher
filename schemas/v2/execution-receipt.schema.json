@@ -23,7 +23,8 @@
     "environment",
     "notes",
     "recorded_at",
-    "truth_boundary"
+    "truth_boundary",
+    "input_snapshots"
   ],
   "properties": {
     "schema_version": {
@@ -124,7 +125,8 @@
             "pattern": "^[0-9a-f]{64}$"
           }
         }
-      }
+      },
+      "maxItems": 10000
     },
     "environment": {
       "type": "object",
@@ -146,6 +148,39 @@
     "handoff_sha256": {
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
+    },
+    "input_snapshots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "size_bytes",
+          "sha256",
+          "snapshot_path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "snapshot_path": {
+            "type": "string",
+            "pattern": "^artifacts/input-snapshots/[0-9a-f]{64}$"
+          }
+        }
+      }
     }
   },
   "allOf": [

@@ -18,6 +18,14 @@
       "version": "1.5.0"
     },
     {
+      "bom-ref": "pkg:pypi/certifi@2026.10.19",
+      "name": "certifi",
+      "purl": "pkg:pypi/certifi@2026.10.19",
+      "scope": "required",
+      "type": "library",
+      "version": "2026.10.19"
+    },
+    {
       "bom-ref": "pkg:pypi/coverage@7.15.2",
       "name": "coverage",
       "purl": "pkg:pypi/coverage@7.15.2",
@@ -64,6 +72,14 @@
       "scope": "required",
       "type": "library",
       "version": "1.20.2"
+    },
+    {
+      "bom-ref": "pkg:pypi/pip@26.2.0",
+      "name": "pip",
+      "purl": "pkg:pypi/pip@26.2.0",
+      "scope": "required",
+      "type": "library",
+      "version": "26.2.0"
     },
     {
       "bom-ref": "pkg:pypi/pip-audit@2.10.1",
@@ -135,12 +151,14 @@
       "dependsOn": [
         "pkg:pypi/bandit@1.9.4",
         "pkg:pypi/build@1.5.0",
+        "pkg:pypi/certifi@2026.10.19",
         "pkg:pypi/coverage@7.15.2",
         "pkg:pypi/defusedxml@0.7.1",
         "pkg:pypi/hypothesis@6.157.2",
         "pkg:pypi/jsonschema@4.26.0",
         "pkg:pypi/mkdocs@1.6.1",
         "pkg:pypi/mypy@1.20.2",
+        "pkg:pypi/pip@26.2.0",
         "pkg:pypi/pip-audit@2.10.1",
         "pkg:pypi/pytest@9.0.3",
         "pkg:pypi/pytest-cov@7.1.0",
@@ -159,6 +177,10 @@
     {
       "dependsOn": [],
       "ref": "pkg:pypi/build@1.5.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/certifi@2026.10.19"
     },
     {
       "dependsOn": [],
@@ -183,6 +205,10 @@
     {
       "dependsOn": [],
       "ref": "pkg:pypi/mypy@1.20.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:pypi/pip@26.2.0"
     },
     {
       "dependsOn": [],
@@ -232,7 +258,7 @@
       },
       {
         "name": "tsao:lock-sha256",
-        "value": "90d60ba96155a1101b2af22d2eadcff870ab77a7cd807dd03bf708adbcb25eee"
+        "value": "20f37c16d727b7113513473d7767337a124cff835d86711148902a373f686f94"
       },
       {
         "name": "tsao:truth-boundary",
@@ -240,7 +266,7 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:d9984b77-d920-536d-b4fe-22cc64629a56",
+  "serialNumber": "urn:uuid:b1d416f5-fe11-57f8-abd8-b648cde9f3d9",
   "specVersion": "1.6",
   "version": 1
 }

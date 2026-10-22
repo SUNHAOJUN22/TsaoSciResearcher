@@ -86,7 +86,7 @@ def test_replay_contract_covers_verified_states_and_integrity_failures() -> None
         "EXTERNAL_EXECUTED",
         {"signed_receipt": True},
     )
-    assert replay_state([executed]) == "EXTERNAL_EXECUTION_VERIFIED"
+    assert replay_state([executed]) == "SIGNED_RECEIPT_DECLARED_UNVERIFIED"
 
     added = make_event(0, "GENESIS", "EVIDENCE_ADDED", {"artifact": "sha256:abc"})
     assert replay_state([added]) == "EVIDENCE_AVAILABLE"

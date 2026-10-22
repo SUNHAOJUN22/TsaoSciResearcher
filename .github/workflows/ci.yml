@@ -126,10 +126,12 @@ jobs:
           python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
       - name: Static, type and source security
         run: |
-          python -m ruff format --check scripts tsao_researcher tests
-          python -m ruff check scripts tsao_researcher tests
+          python -m ruff format --check scripts tsao_researcher tests .github/acceptance
+          python -m ruff check scripts tsao_researcher tests .github/acceptance
           python -m mypy scripts tsao_researcher
           python -m bandit -q -lll -r scripts tsao_researcher
+      - name: Verify seven-repository acceptance controller and negative controls
+        run: python -m unittest discover -s .github/acceptance -p test_regression_segment.py -v
       - name: Dependency audit and deterministic SBOM
         run: |
           python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -99,3 +100,23 @@ def sha256(path: str | Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def source_candidates(root: Path) -> list[Path]:
+    """Use tracked source identities in Git checkouts; support extracted distributions."""
+    if not (root / ".git").exists():
+        return list(root.rglob("*"))
+    result = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z"], check=True, capture_output=True, timeout=30
+    )
+    paths = []
+    for relative in result.stdout.decode("utf-8", errors="strict").split("\0"):
+        if not relative:
+            continue
+        if Path(relative).is_absolute() or ".." in Path(relative).parts:
+            raise ValueError(f"unsafe tracked source path: {relative}")
+        candidate = root / relative
+        if not candidate.exists() and not candidate.is_symlink():
+            raise ValueError(f"tracked source file is missing: {relative}")
+        paths.append(candidate)
+    return paths

@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts import record_quality_history
 
 
-def test_quality_history_build_is_idempotent(tmp_path: Path) -> None:
+@pytest.mark.parametrize("combined", [None, 97.0])
+def test_quality_history_build_is_idempotent(tmp_path: Path, combined: float | None) -> None:
     base = tmp_path / "history.json"
     quality = tmp_path / "quality.json"
     base.write_text(
@@ -19,12 +22,15 @@ def test_quality_history_build_is_idempotent(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
+    coverage = {"line_percent": 96.0, "branch_percent": 98.0}
+    if combined is not None:
+        coverage["combined_percent"] = combined
     quality.write_text(
         json.dumps(
             {
                 "release": "0.6.0",
                 "status": "PASS",
-                "coverage": {"line_percent": 84.0, "branch_percent": 71.0},
+                "coverage": coverage,
                 "mutation": {"killed": 18, "total": 18, "survivors": 0},
                 "tests": {"tests": 150, "failures": 0, "errors": 0, "skipped": 0},
                 "performance": {"status": "PASS"},
@@ -50,6 +56,7 @@ def test_quality_history_build_is_idempotent(tmp_path: Path) -> None:
         evidence_date="2026-07-24",
     )
     assert first == second
+    assert second["entries"][0]["coverage"] == coverage
     assert second["entries"][0]["mutation"] == {"killed": 18, "total": 18, "survivors": 0}
 
 

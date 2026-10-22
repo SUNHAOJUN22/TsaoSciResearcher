@@ -39,7 +39,7 @@ jobs:
         run: |
           python3 - <<'PYTHON'
           import os, re
-          allowed = {'AspenOps-Agent', 'TsaoSciComputation', 'TSAO-PROCESSING-SKILL', 'ResinDB-Pro-by-SunHJ', 'TsaoDFT_skill', 'TsaoSciResearcher'}
+          allowed = {'AspenOps-Agent', 'TsaoSciComputation', 'TSAO-PROCESSING-SKILL', 'ResinDB-Pro-by-SunHJ', 'TsaoDFT_skill', 'TsaoSciResearcher', 'OpenDeepMind_skill'}
           if os.environ['TARGET_REPO'] not in allowed or not re.fullmatch('[0-9a-f]{40}', os.environ['TARGET_SHA']) or os.environ['TARGET_PHASE'] not in ('1', '2'):
               raise SystemExit('Invalid repository, SHA or phase')
           PYTHON
@@ -110,6 +110,9 @@ jobs:
             TsaoSciResearcher)
               python -m pip install -r requirements-ci.lock
               python -m pip install -e . --no-deps
+              ;;
+            OpenDeepMind_skill)
+              python -m pip install pytest==9.0.3
               ;;
             *) exit 2 ;;
           esac

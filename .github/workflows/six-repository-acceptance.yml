@@ -1,4 +1,4 @@
-name: Six repository acceptance
+name: Seven repository acceptance
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: six-repository-acceptance-${{ github.ref }}
+  group: seven-repository-acceptance-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
         run: |
           python -m pip install pytest==9.0.3
           PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s .github/acceptance -v
-      - name: Validate six exact repository identities
+      - name: Validate seven exact repository identities
         id: plan
         env:
           SOURCE_REF: ${{ github.ref }}
@@ -47,7 +47,7 @@ jobs:
               raise SystemExit('Acceptance must run from main')
           plan = json.loads(pathlib.Path('.github/acceptance/repositories.json').read_text())
           if set(plan) != set(REPOSITORIES):
-              raise SystemExit('Exactly six approved repositories are required')
+              raise SystemExit('Exactly seven approved repositories are required')
           for repo, sha in plan.items():
               if not isinstance(sha, str) or not (re.fullmatch('[0-9a-f]{40}', sha) or (repo == 'TsaoSciResearcher' and sha == 'SELF')):
                   raise SystemExit('Invalid source identity')
@@ -62,7 +62,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 7
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
       TARGET_REPOSITORY: SUNHAOJUN22/${{ matrix.repo }}
@@ -94,7 +94,7 @@ jobs:
           import subprocess
           root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'source-evidence'
           record = {
-              'schema': 'tsao.six-repository-baseline/v1',
+              'schema': 'tsao.seven-repository-baseline/v2',
               'repository': os.environ['TARGET_REPOSITORY'],
               'sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
@@ -129,6 +129,11 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version-file: .nvmrc
+      - name: Create isolated baseline environment outside source
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/baseline-env"
+          echo "$RUNNER_TEMP/baseline-env/bin" >> "$GITHUB_PATH"
       - name: Install scientific display fonts
         shell: bash
         run: |
@@ -169,6 +174,9 @@ jobs:
               python -m pip install -e . --no-deps
               python -m pip check
               ;;
+            SUNHAOJUN22/OpenDeepMind_skill)
+              python -m pip install pytest==9.0.3
+              ;;
             *) exit 2 ;;
           esac
       - name: Execute actual baseline gates with failure propagation
@@ -194,6 +202,9 @@ jobs:
               python scripts/run_ci.py
               ;;
             SUNHAOJUN22/ResinDB-Pro-by-SunHJ)
+              export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+              test -x "$PUPPETEER_EXECUTABLE_PATH"
+              export CHROME_BIN="$PUPPETEER_EXECUTABLE_PATH"
               node --test scripts/tests/validation-receipt-contract.node.mjs
               npm run validate:ci
               ;;
@@ -202,11 +213,54 @@ jobs:
               ;;
             SUNHAOJUN22/TsaoSciResearcher)
               export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+              mkdir -p artifacts
+              for script in validate_unicode_integrity sync_version sync_runtime_data validate_mathematical_contracts build_readme_facts build_sbom build_validation_evidence build_test_dashboard build_research_quality_dashboard build_engineering_report generate_checksums build_capability_index; do
+                python "scripts/$script.py" --check
+              done
+              python scripts/validate_schemas.py
+              python scripts/audit_repository.py
+              python scripts/validate_structure.py
+              python scripts/route_task.py --self-test
+              python scripts/validate_figure.py examples/figure-contract.json
+              python scripts/validate_computation_strategy.py examples/first-principles-strategy.json
+              python scripts/final_acceptance_preflight.py --root . --json
+              python -m tsao_researcher math --schema
+              python -m tsao_researcher math --contract uncertainty-budget --language both --output artifacts/math-contract.json
+              python -m mkdocs build --strict
               python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
-              python -m ruff check scripts tsao_researcher tests
+              python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
+              python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
+              TSR_TEST_ORDER_SEED=20260806 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
+              python -m ruff format --check scripts tsao_researcher tests .github/acceptance
+              python -m ruff check scripts tsao_researcher tests .github/acceptance
               python -m mypy scripts tsao_researcher
-              python scripts/validate_unicode_integrity.py --check
-              python scripts/validate_mathematical_contracts.py --check
+              python -m bandit -q -lll -r scripts tsao_researcher
+              python -m unittest discover -s .github/acceptance -p test_regression_segment.py -v
+              python -m pip list --format=freeze --exclude-editable | LC_ALL=C sort > artifacts/resolved-environment.lock
+              python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
+              python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
+              python scripts/performance_smoke.py --json-out artifacts/performance.json
+              python scripts/check_quality_baseline.py --junit "$RUNNER_TEMP/test-evidence/junit.xml"
+              python scripts/package_release.py --out dist-a
+              python scripts/package_release.py --out dist-b
+              cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"
+              python scripts/validate_release.py
+              python -m build --sdist --wheel --outdir dist-python
+              python scripts/validate_distribution.py dist-python
+              ;;
+            SUNHAOJUN22/OpenDeepMind_skill)
+              python open-deep-mind/first-philosophy/scripts/validate_module.py
+              python open-deep-mind/first-principles/scripts/validate_module.py
+              python open-deep-mind/triz/scripts/validate_triz_module.py
+              python open-deep-mind/evals/scripts/validate_evals.py
+              python open-deep-mind/scripts/validate_repository.py .
+              python open-deep-mind/scripts/validate_ledger.py open-deep-mind/assets/example-ledger.json
+              python open-deep-mind/triz/scripts/lookup_matrix.py --improve 1 --worsen 3 --json
+              python open-deep-mind/triz/scripts/lookup_standard_solution.py 1.2.1 --json
+              python -m unittest discover -s open-deep-mind/tests -p 'test_*.py' -v
+              PYTHONPYCACHEPREFIX="$RUNNER_TEMP/opendeep-pycache" python -m compileall -q open-deep-mind
+              python -m pytest -q --import-mode=importlib open-deep-mind/tests --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
+              git diff --check
               ;;
             *) exit 2 ;;
           esac
@@ -246,7 +300,7 @@ jobs:
     needs: [plan, baseline]
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 7
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     uses: ./.github/workflows/acceptance-segment.yml
     with:
@@ -258,7 +312,7 @@ jobs:
     needs: [plan, phase-one]
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 7
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     uses: ./.github/workflows/acceptance-segment.yml
     with:
@@ -284,18 +338,20 @@ jobs:
           pattern: regression-segment-*-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/all-segments
           merge-multiple: false
-      - name: Independently verify twelve segments and live source identities
+      - name: Independently verify fourteen segments and live source identities
         if: always()
         run: |
           python .github/acceptance/verify_segments.py \
-            --input "$RUNNER_TEMP/all-segments" \
+            --root "$RUNNER_TEMP/all-segments" \
             --plan .github/acceptance/repositories.json \
-            --output "$RUNNER_TEMP/six-hour-summary"
+            --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --orchestration-sha "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/six-hour-summary.json"
       - name: Preserve an explicit complete or incomplete conclusion
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: six-hour-summary-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/six-hour-summary
+          path: ${{ runner.temp }}/six-hour-summary.json
           if-no-files-found: error
           retention-days: 14

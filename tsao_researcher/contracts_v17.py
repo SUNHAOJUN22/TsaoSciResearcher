@@ -37,15 +37,19 @@ def canonical_event_hash(
     event_type: str,
     payload: Mapping[str, object],
 ) -> str:
-    if sequence < 0:
-        raise ValueError("sequence must be non-negative")
+    if type(sequence) is not int or sequence < 0:
+        raise ValueError("sequence must be a non-negative integer")
+    if not isinstance(payload, Mapping):
+        raise ValueError("payload must be a mapping")
     document = {
         "sequence": sequence,
         "previous_hash": previous_hash,
         "event_type": event_type,
         "payload": dict(payload),
     }
-    encoded = json.dumps(document, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    encoded = json.dumps(
+        document, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    ).encode("utf-8")
     return sha256(encoded).hexdigest()
 
 
@@ -57,6 +61,13 @@ def support_status(assessment: EvidenceAssessment) -> str:
     if assessment.maturity != "QUALIFIED":
         return "EVIDENCE_QUALIFICATION_HOLD"
     return "CLAIM_SUPPORTED_BY_QUALIFIED_EVIDENCE"
+
+
+def _declared_flag(payload: Mapping[str, object], key: str) -> bool:
+    value = payload.get(key, False)
+    if type(value) is not bool:
+        raise ValueError(f"{key} must be a boolean declaration")
+    return value
 
 
 def replay_state(events: Iterable[ReplayEvent]) -> str:
@@ -79,15 +90,19 @@ def replay_state(events: Iterable[ReplayEvent]) -> str:
         if event.event_hash != expected_hash:
             raise ValueError("event hash mismatch")
         if event.event_type == "EVIDENCE_REVIEWED":
-            independent_review = bool(event.payload.get("independent"))
+            independent_review = _declared_flag(event.payload, "independent")
             state = "REVIEWED"
         elif event.event_type == "HUMAN_ACCEPTED":
-            human_acceptance = bool(event.payload.get("qualified_approver"))
-            state = "ACCEPTED" if independent_review and human_acceptance else "ACCEPTANCE_HOLD"
+            human_acceptance = _declared_flag(event.payload, "qualified_approver")
+            state = (
+                "ACCEPTANCE_DECLARED_UNVERIFIED"
+                if independent_review and human_acceptance
+                else "ACCEPTANCE_HOLD"
+            )
         elif event.event_type == "EXTERNAL_EXECUTED":
             state = (
-                "EXTERNAL_EXECUTION_VERIFIED"
-                if bool(event.payload.get("signed_receipt"))
+                "SIGNED_RECEIPT_DECLARED_UNVERIFIED"
+                if _declared_flag(event.payload, "signed_receipt")
                 else "EXTERNAL_EXECUTION_NOT_VERIFIED"
             )
         elif event.event_type == "EVIDENCE_ADDED":

@@ -232,7 +232,7 @@
       },
       "result": {
         "details": {
-          "bidirectional_traceability": true,
+          "bidirectional_traceability": false,
           "claim": "The recorded workflow completed successfully.",
           "claim_id": "CLM-001",
           "completeness_score": 100,
@@ -252,22 +252,23 @@
             "paper.pdf#page=4",
             "actions/run/123"
           ],
-          "uncertainty": "Software completion does not imply scientific acceptance."
+          "uncertainty": "Software completion does not imply scientific acceptance.",
+          "verification_status": "UNVERIFIED_DECLARATION"
         },
         "finding_counts": {
           "BLOCK": 0,
-          "PASS": 1,
-          "WARN": 0
+          "PASS": 0,
+          "WARN": 1
         },
         "findings": [
           {
-            "code": "ET-COMPLETE",
-            "message": "Claim, evidence, locators and execution boundary are traceable.",
-            "status": "PASS"
+            "code": "ET-UNVERIFIED",
+            "message": "Locators and receipt IDs are declarations until checked against a real project_root.",
+            "status": "WARN"
           }
         ],
         "kind": "evidence-traceability",
-        "status": "PASS"
+        "status": "WARN"
       },
       "summary": "Claims link to evidence locators and execution claims require receipts.",
       "title": "Evidence traceability"
@@ -279,8 +280,8 @@
     "guard_count": 4,
     "statuses": {
       "BLOCK": 1,
-      "PASS": 3,
-      "WARN": 0
+      "PASS": 2,
+      "WARN": 1
     },
     "truth_boundary": "Software guards constrain claims; they do not grant scientific acceptance."
   }

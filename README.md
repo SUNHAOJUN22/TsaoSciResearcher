@@ -9,16 +9,13 @@
 [![CI](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SUNHAOJUN22/TsaoSciResearcher/actions/workflows/ci.yml)
 </div>
 
-<!-- LOCALIZED_VISION_EN:START -->
-## Project vision: from scientific questions to falsifiable, transferable research plans
+## Project vision: questions, contracts and verifiable evidence
 
-<p align="center">
-  <img src="docs/localized-vision/researcher-vision-en.svg" width="100%" alt="TsaoSciResearcher English evidence-first research control architecture">
-</p>
+![Project vision: questions, contracts and verifiable evidence](docs/assets/vision-en.png)
 
-> The equations map to capability routing, dimensional checks, evidence conflict, uncertainty, scale bridges and receipt verification. The figure is not paper evidence, an experiment or automatic scientific approval.
+> AI-generated conceptual illustration. The evidence triad E=(E+, E−, E0), weakest-gate G=min(g_i), and H=SHA256(bytes) summarize implemented contracts. The image is a vision and navigation aid, not computed research data or automatic scientific approval.
 
-<!-- LOCALIZED_VISION_EN:END -->
+
 
 > **Release 0.7.4 · acceptance-hardened main** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
@@ -41,25 +38,26 @@ The implemented inventory is machine checked:
 | Primary workflows | **15** |
 | JSON Schemas | **20** |
 | Domain packs | **7** |
-| AI-generated conceptual diagrams | **38** |
+| Registered historical conceptual atlas assets | **38** |
+| New localized vision images | **2** |
 
 Acceptance evidence: [README audit](docs/README_AUDIT_REPORT.md), [capability matrix](docs/CAPABILITY_COVERAGE_MATRIX.md), [architecture mapping](docs/README_ARCHITECTURE_MAPPING.md), [mathematical contracts](docs/MATHEMATICAL_CONTRACTS.md), [mathematical registry schema](schemas/v2/mathematical-contract-registry.schema.json), [validation evidence](docs/VALIDATION_EVIDENCE.json), [HTML dashboard](docs/test-dashboard.html), and [SVG dashboard](docs/test-dashboard.svg).
 
-> Every diagram in this repository is an **AI-generated conceptual illustration for documentation**. It is not experimental data, a measured dataset, a numerical solver result, or proof that an external computation ran.
+> The localized vision is an **AI-generated conceptual illustration**. The 38 registered atlas assets are historical conceptual documentation; generated test dashboards summarize software evidence. Their roles are separate, and none is a substitute for measured scientific data.
 
 ## 2. Architecture and responsibility boundary
 
-```text
-CLI / Python API
-      │
-      ├── router.py ─────────────────────> deterministic task classification
-      ├── capabilities.py ────────────────> validated capability retrieval
-      ├── strategy.py ────────────────────> first-principles Scientific Passport
-      ├── mathematical_contracts.py ──────> schema-backed equations and interpretation limits
-      ├── scientific_quality.py ──────────> quantity, evidence, causality and traceability guards
-      ├── state.py ───────────────────────> hash-linked project state
-      ├── handoff.py / receipts.py ───────> external execution evidence boundary
-      └── capsule.py ─────────────────────> deterministic reproducibility archive
+```mermaid
+flowchart TD
+    A["CLI / Python API"]
+    B["Routing and strategy"]
+    C["State and approval ledger"]
+    D["Handoff and receipt"]
+    E["Evidence and capsule"]
+    A --> B
+    A --> C
+    C --> D
+    D --> E
 ```
 
 ![Research operating architecture](docs/assets/ai/research_os_architecture.svg)
@@ -87,6 +85,118 @@ checksum-bound external handoff
     ↓
 execution receipt + independently reviewable evidence
 ```
+
+## Runtime guarantees and practical workflow
+
+The runtime separates a useful research plan, a supplied execution record, verified local bytes, and independent scientific acceptance. These are distinct states in the code. `state.verify()` now invokes the real receipt verifier; `quality` requires a real `project_root` before it can report verified bidirectional local traceability.
+
+| Entry point | What is checked | What the result establishes |
+|---|---|---|
+| `create_handoff()` | project, methods, scale, finite input inventory, file sizes and SHA-256 | a prepared external job contract |
+| `record_receipt()` | ready registered handoff, current input bytes, argv, engine fields, timestamps, exit status, output files | a supplied execution declaration bound to retained input snapshots |
+| `verify()` / `verify_receipts()` | legal event history, current output bytes, retained input snapshots, registry membership and approval bindings | local state and artifact integrity |
+| `quality` / `check_evidence_traceability()` | registered claim text, reciprocal evidence links, local source locators and checksums, every referenced receipt's actual output binding | `LOCAL_ARTIFACT_LINKS_VERIFIED` when all checks succeed |
+| `transition(..., "accepted")` | a fresh approval reference bound to this project's exact transition event | `DECLARED_NOT_IDENTITY_VERIFIED`; no authentication of an external person's identity |
+| `capsule export --mode full` | complete deterministic inventory, file hashes, state and receipt verification | a portable integrity archive including retained input bytes |
+
+### Install and upgrade
+
+Python **3.10 or newer** is required by this repository; the permanent matrix exercises Linux 3.10/3.12/3.13 and Windows 3.12. Use an isolated environment outside the checkout so tooling and release inventories cannot contaminate one another:
+
+```bash
+python -m venv ../tsao-researcher-env
+# POSIX shell; on Windows activate ../tsao-researcher-env/Scripts/Activate.ps1
+. ../tsao-researcher-env/bin/activate
+python -m pip install -r requirements-ci.lock
+python -m pip install -e . --no-deps
+python -m pip check
+python -m tsao_researcher --version
+```
+
+The CI lock explicitly pins `certifi==2026.10.19` and `pip==26.2.0`; the resolved environment is audited again during CI. Researcher has no MCP runtime dependency. Legacy receipts without retained `input_snapshots`, or approvals without event/scope bindings, intentionally fail the stronger verifier. Preserve the old archive, reconstruct new declarations only from available original bytes and real review references, and keep the historical record; filling missing fields is not evidence that an old execution happened. An omitted engine version remains explicit `null`, never an invented version.
+
+### Executable setup and handoff
+
+This creates a **demonstration input and prepared handoff**, not a solver result:
+
+```bash
+python -m tsao_researcher init --name demo \
+  --question "Which calculation would distinguish the candidate mechanisms?" \
+  --output ./research-demo
+python - <<'PY'
+from pathlib import Path
+from tsao_researcher.handoff import create_handoff
+root = Path("research-demo/.tsao-research")
+(root / "data/input.dat").write_text("demonstration input only\n", encoding="utf-8")
+create_handoff(root, "computation/job.json",
+    "Which calculation would distinguish the candidate mechanisms?",
+    "energy difference", "quantum", ["DFT"], ["data/input.dat"],
+    scale="electronic", evaluation_metrics=["energy difference in eV"],
+    expected_outputs=["converged energy and method provenance"])
+PY
+python -m tsao_researcher verify ./research-demo
+```
+
+Run the chosen external engine separately, retain its real input/output/logs, and record the actual argv, software version, environment and times. The `receipt record` example in section 8 assumes those files already exist. `--command` is repeatable and represents an argument vector; it does not execute a shell command. Recheck `receipt verify` and `verify` before advancing state or exporting an archive.
+
+### Input snapshots and byte integrity
+
+For each handoff input $i$, the implementation verifies the pair
+
+$$
+I_i=\left(\operatorname{size}(B_i),\operatorname{SHA256}(B_i)\right),
+\qquad S_i=\texttt{artifacts/input-snapshots/}\operatorname{SHA256}(B_i).
+$$
+
+`input_snapshots.py` compares the live input to the handoff manifest **before** creating the receipt, streams the copy, verifies the copied size/hash, rejects symbolic-link components, and refuses to replace an altered existing snapshot. Later receipt verification uses the retained snapshot. Editing a working input later does not rewrite the historical input associated with a prior receipt. Missing or altered snapshots fail verification. Successful receipts need nonempty checksum-verified outputs; failed executions remain explicitly failed and may have no output.
+
+For output $j$, acceptance of the local byte binding requires
+
+$$
+\operatorname{size}(B_j)=s_j\ \land\
+\operatorname{SHA256}(B_j)=h_j.
+$$
+
+A digest proves consistency of bytes against the recorded manifest. It cannot prove that an external engine produced them or that the reported physics is correct. Metadata capsules exclude raw `data`, `figures` and `artifacts`; full capsules include retained input snapshots. Choose the mode according to the evidence transfer required.
+
+### Event chain, legal transitions and declared approvals
+
+Each event includes its predecessor hash in the canonical body:
+
+$$
+h_i=\operatorname{SHA256}\!\left(\operatorname{canonicalJSON}(e_i\setminus\{\texttt{event\_hash}\})\right),
+\qquad e_i[\texttt{previous\_event\_hash}]=h_{i-1}.
+$$
+
+Verification additionally requires an initialized `proposed` state, legal transition edges, matching previous/next state, chronological timezone-aware timestamps, matching project identity, and the final project head. Rehashing an illegal transition does not make it valid. The normal path is `proposed → planned → running → completed → checked → validated → accepted`; the implemented rejection/supersession edges remain available.
+
+An approval ledger record binds project, scope, target state, transition event hash, timestamp and reference. Duplicate/orphan references, foreign records, revoked approvals, and non-boolean revocation flags are rejected. `accepted` requires fresh references for that transition. The local record is explicitly `DECLARED_NOT_IDENTITY_VERIFIED`; cryptographic identity verification and scientific sign-off remain outside this declaration API. The v16/v17 replay helpers similarly return `ACCEPTANCE_DECLARED_UNVERIFIED` or `SIGNED_RECEIPT_DECLARED_UNVERIFIED` when given positive boolean declarations.
+
+### Real evidence resolution
+
+Set `spec.project_root` in a `kind: "evidence-traceability"` quality request. The submitted claim text and evidence IDs must match `claims.jsonl`; each supporting evidence row in `evidence.jsonl` must link back to the claim. Local source kinds, locator, checksum and current bytes are resolved. An `execution-receipt` evidence role must point to an actual output of a referenced successful receipt, and **every** referenced receipt must bind supplied execution evidence:
+
+$$
+C\leftrightarrow E_i,\qquad
+\forall R_k\in R,\ \exists E_i:\
+\operatorname{path}(E_i)\in\operatorname{outputs}(R_k)
+\land h(E_i)=h_{R_k}.
+$$
+
+Without `project_root`, the result is `WARN / UNVERIFIED_DECLARATION`, even if flags claim that sources or receipts were verified. Missing or inconsistent actual records produce `BLOCK`. Background, null, refuting or planned-handoff records cannot certify positive support. Web/paper declarations are not silently treated as checked local files. `LOCAL_ARTIFACT_LINKS_VERIFIED` means local identity and integrity; it is not automatic verification of the scientific assertion.
+
+### Quantities, uncertainty and causal language
+
+`compare_quantities()` supports the implemented pressure units `Pa`, `kPa`, `MPa`, `bar`, and temperature `K`. It checks dimensions and finite numeric values both before and after scale conversion:
+
+$$
+v_{\mathrm{SI}}=s_u v_u,\qquad
+\operatorname{finite}(v_u)\land\operatorname{finite}(v_{\mathrm{SI}}).
+$$
+
+Booleans, numeric strings, huge integers and conversion overflow are rejected. The mathematical registry's more general uncertainty and scale equations in section 3 are advisory contracts; the runtime does not execute Jacobian estimation, Bayesian inference, CFD or DFT from those formulas. Use covariance terms when errors are correlated, and justify local linearization before applying first-order propagation.
+
+The deterministic causal guard scopes negation to the affected marker. “Cannot establish causality” cannot hide a separate affirmative “C causes D” assertion in the same text. Simplified/traditional Chinese markers, including `使得`, `导致/導致`, `驱动/驅動` and `决定/決定`, are handled. It still needs the declared design, comparison, temporal order and confounder controls; this guard is not a general natural-language proof engine.
 
 ## 3. Schema-backed mathematical contracts
 
@@ -119,82 +229,82 @@ The canonical Schema is [`schemas/v2/mathematical-contract-registry.schema.json`
 
 ### 3.1 Capability-ranking abstraction
 
-\[
+$$
 S(c\mid q,o,e)=w_qR(q,c)+w_oR(o,c)+w_eM(e,c)-w_xC(c)
-\]
+$$
 
-- \(c\): candidate capability
-- \(q\): scientific question
-- \(o\): decision-critical observable
-- \(e\): declared evidence context
-- \(C(c)\): conflict or exclusion penalty
+- $c$: candidate capability
+- $q$: scientific question
+- $o$: decision-critical observable
+- $e$: declared evidence context
+- $C(c)$: conflict or exclusion penalty
 
 Use this as a decomposition of deterministic routing logic, not as a fitted statistical model. A method should be relevant to the question, able to produce the requested observable, compatible with the evidence, and not excluded by negative semantics.
 
 ### 3.2 Quantity, unit and dimension contract
 
-\[
+$$
 x=(v,u,d),\qquad d_{\mathrm{left}}=d_{\mathrm{right}}
-\]
+$$
 
-A quantitative comparison should identify value \(v\), unit \(u\) and physical dimension \(d\). Missing units require review. Incompatible dimensions block the comparison.
+A quantitative comparison should identify value $v$, unit $u$ and physical dimension $d$. Missing units require review. Incompatible dimensions block the comparison.
 
 ### 3.3 Applicability and extrapolation
 
-\[
+$$
 r_{\mathrm{extra}}=
 \frac{d(x,\mathcal A)}{\max(s_{\mathcal A},\varepsilon)}
-\]
+$$
 
-Here \(x\) is the target condition, \(\mathcal A\) is the declared applicability domain and \(s_{\mathcal A}\) is a characteristic domain scale. The farther the transfer, the stronger the evidence and uncertainty inflation must become. The runtime does not fabricate a numerical distance when data are absent.
+Here $x$ is the target condition, $\mathcal A$ is the declared applicability domain and $s_{\mathcal A}$ is a characteristic domain scale. The farther the transfer, the stronger the evidence and uncertainty inflation must become. The runtime does not fabricate a numerical distance when data are absent.
 
 ### 3.4 Evidence triad and conflict ledger
 
-\[
+$$
 E=(E_+,E_-,E_0),\qquad
 \kappa=\mathbf 1[E_+\neq\varnothing\land E_-\neq\varnothing]
-\]
+$$
 
 Supporting, challenging and unresolved evidence stay separate. Contradictory evidence is preserved rather than silently averaged into a positive conclusion.
 
 ### 3.5 Mechanism and parameter identifiability
 
-\[
+$$
 D_{ij}(O,C)>\tau
 \qquad\text{or}\qquad
 \operatorname{rank}(J_\theta)=p
-\]
+$$
 
 Mechanism selection requires discriminating observables. Unique parameter claims require sufficient sensitivity rank. Numerical Jacobian construction remains an external analysis task.
 
 ### 3.6 Decision-observable uncertainty budget
 
-\[
+$$
 \Sigma_y\approx
 J\Sigma_\theta J^{\mathsf T}
 +\Sigma_{\mathrm{num}}
 +\Sigma_{\mathrm{sample}}
 +\Sigma_{\mathrm{model}}
 +\Sigma_{\mathrm{transfer}}
-\]
+$$
 
 Uncertainty must reach the actual acceptance observable. Parameter, numerical, sampling, model-form and scale-transfer uncertainty must remain traceable instead of being collapsed into an undocumented confidence score.
 
 ### 3.7 Multiscale bridge error budget
 
-\[
+$$
 U_{\mathrm{bridge}}^2=
 U_{\mathrm{source}}^2+
 U_{\mathrm{mapping}}^2+
 U_{\mathrm{closure}}^2+
 U_{\mathrm{target}}^2
-\]
+$$
 
 This quadrature requires mutually uncorrelated standard-uncertainty contributions expressed in the same output units. Correlated contributions require their cross-covariance terms; first-order propagation is only a local linear approximation. A microscopic result cannot jump directly to an engineering conclusion. Each bridge needs measurable bridge variables, mapping assumptions, closure validation and target-scale acceptance evidence.
 
 ### 3.8 Conservative decision readiness
 
-\[
+$$
 G=\min\left(
  g_{\mathrm{quantity}},
  g_{\mathrm{applicability}},
@@ -202,7 +312,7 @@ G=\min\left(
  g_{\mathrm{identifiability}},
  g_{\mathrm{bridge}}
 \right)
-\]
+$$
 
 The weakest mandatory gate controls readiness:
 
@@ -225,27 +335,27 @@ TsaoSciResearcher selects methods from the decision physics rather than from a f
 
 A generic state model is:
 
-\[
+$$
 \dot{x}=f(x,u,\theta)+\epsilon_{\mathrm{model}},
 \qquad
 y=h(x,\theta)+\epsilon_{\mathrm{measurement}}
-\]
+$$
 
 A strategy should declare:
 
-1. state variables \(x\), controls \(u\), and parameters \(\theta\);
-2. decision observable \(y\) and acceptance threshold;
+1. state variables $x$, controls $u$, and parameters $\theta$;
+2. decision observable $y$ and acceptance threshold;
 3. conserved quantities, reservoirs, boundary and initial conditions;
 4. the minimum model able to falsify the candidate mechanism;
 5. validation, uncertainty and escalation rules.
 
-For a mass-specific quantity \(\phi\) in a fixed control volume, with density \(\rho\), total outward flux \(\mathbf J_\phi\) (advective plus diffusive), and volumetric source \(s_\phi\):
+For a mass-specific quantity $\phi$ in a fixed control volume, with density $\rho$, total outward flux $\mathbf J_\phi$ (advective plus diffusive), and volumetric source $s_\phi$:
 
-\[
+$$
 \frac{\mathrm d}{\mathrm dt}\int_{\Omega}\rho\phi\,\mathrm dV
 +\int_{\partial\Omega}\mathbf J_\phi\cdot\mathbf n\,\mathrm dA
 =\int_{\Omega}s_\phi\,\mathrm dV
-\]
+$$
 
 This equation does not imply that a mesh, constitutive model or solver run exists. It defines what must be declared before a CFD, FEM, transport or process handoff can be considered scientifically interpretable.
 
@@ -272,12 +382,12 @@ A generated strategy carries structured declarations for model assumptions, evid
 
 Useful abstractions include:
 
-\[
+$$
 \mathcal P=
 \{M,E,U,A,I,B,V,F\}
-\]
+$$
 
-where \(M\) is the model contract, \(E\) evidence, \(U\) uncertainty, \(A\) applicability, \(I\) identifiability, \(B\) bridge contract, \(V\) validation and \(F\) falsification.
+where $M$ is the model contract, $E$ evidence, $U$ uncertainty, $A$ applicability, $I$ identifiability, $B$ bridge contract, $V$ validation and $F$ falsification.
 
 The strategy remains advisory even when every software gate is green.
 
@@ -292,7 +402,7 @@ The strategy remains advisory even when every software gate is green.
 ![Uncertainty validation](docs/assets/ai/uncertainty_quantification_validation.svg)
 ![Scientific integrity causality guard](docs/assets/ai/scientific_integrity_causality_guard.svg)
 
-## 6. Acceptance strategy: exact baseline + focused delta
+## 6. Acceptance strategy and evidence scope
 
 The repository supports three validation scopes:
 
@@ -319,7 +429,6 @@ See [validation evidence](docs/VALIDATION_EVIDENCE.json), [baseline record](docs
 ## 7. Core CLI
 
 ```bash
-python -m pip install --upgrade pip
 python -m pip install -r requirements-ci.lock
 python -m pip install -e . --no-deps
 python -m pip check
@@ -393,7 +502,7 @@ A reproducibility capsule preserves software state and evidence relationships. I
 
 The permanent quality stack includes:
 
-- four-platform Python compatibility;
+- Linux Python 3.10/3.12/3.13 and Windows Python 3.12 compatibility;
 - complete regression and line/branch coverage;
 - reverse and seeded-random test ordering;
 - Ruff format/lint and strict Mypy;
@@ -402,7 +511,17 @@ The permanent quality stack includes:
 - Schema validation, deterministic SBOM and documentation build;
 - byte-identical source releases and isolated wheel/sdist installation.
 
-The pinned exact-tree baseline records **314 passing tests**, **95.827% line coverage**, **93.438% branch coverage**, and **24/24 critical mutations killed**. The current Schema-delivery delta has a separate focused regression record; the README does not relabel that focused run as a fresh current-tree full CI pass.
+Historical baselines remain explicitly tied to their original source. Current test counts, coverage, mutation results and security outcomes must come from the actual current-SHA CI artifacts. The release floors require **95% statement-line coverage, 90% branch coverage, 95% combined coverage, and 24 killed critical mutants**. All three coverage measures are computed from their own integer counts:
+
+$$
+\begin{aligned}
+C_\ell&=100\frac{n_\ell}{N_\ell}\qquad(N_\ell>0),\\
+C_b&=\begin{cases}100\frac{n_b}{N_b},&N_b>0\\100,&N_b=0\end{cases},\\
+C_{\mathrm{combined}}&=100\frac{n_\ell+n_b}{N_\ell+N_b}.
+\end{aligned}
+$$
+
+Here $n_\ell,N_\ell$ are covered and total executable statement lines; $n_b,N_b$ are covered and total branches. The existing `line_percent` field now records the actual statement-line ratio; `combined_percent` explicitly records the separate combined measure. For example, 94/100 statement lines and 100/100 branches yield 97% combined coverage but still **fail** the statement-line floor. Historical entries are preserved; new quality histories retain the explicit combined field when supplied. Publication attestations bind the complete quality and history artifact bytes.
 
 ## 11. Complete conceptual atlas
 
@@ -481,56 +600,39 @@ External computations and experiments must be independently executed, recorded a
 
 Apache-2.0.
 
-<!-- CURRENT_MAIN_ACCEPTANCE_V2:START -->
-## Current `main`: question–contract–evidence–receipt loop
 
-<p align="center"><img src="docs/current-main/tsao-researcher-current-main-en.svg" width="100%" alt="Current `main`: question–contract–evidence–receipt loop"></p>
+## Seven-repository source-pinned acceptance
 
-> This figure is generated from current code contracts and is a research-control concept, not a paper, experiment or automatic approval result.
+The [complete parallel repair prompt](docs/SEVEN_REPOSITORY_ACCEPTANCE_PROMPT.md) assigns **one repository to each child agent**, with three child slots rotated across seven repositories. The [workflow](.github/workflows/six-repository-acceptance.yml) retains its historical filename but is displayed as **Seven repository acceptance**. It tests all seven repositories with a matrix limit of seven, after their real baseline gates. The [plan](.github/acceptance/repositories.json) pins six external main SHAs and resolves Researcher's `SELF` to the workflow revision.
 
-### Core mathematical contracts
+Phase two depends on all phase-one jobs. Every repository requires two independent v2 segments, each with at least 10,800 seconds of successful, nonempty test-process wall time:
 
 $$
-G = min(g_quantity, g_applicability, g_evidence, g_identifiability, g_bridge)
+t_{r,p}=\sum_{k\in\mathcal S_{r,p}}\frac{m_{k,\mathrm{end}}-m_{k,\mathrm{start}}}{10^9}
+\ge 10{,}800\ \mathrm{s},\qquad
+T_r=t_{r,1}+t_{r,2}\ge 21{,}600\ \mathrm{s}.
 $$
 
-$$
-Σ_y = J Σ_x Jᵀ + Σ_model + Σ_scale
-$$
+Here $m$ is a monotonic nanosecond clock. Each command is subject to a 1,800-second timeout; the independent verifier rejects recorded intervals above 1,801 seconds. UTC and monotonic elapsed intervals must agree within one second. Only completed canonical command cycles count. Installation, queueing, sleeps, failed tests and missing witnesses cannot contribute accepted time.
+
+[The executor](.github/acceptance/regression_segment.py) checks the exact clean checkout, dependency fingerprint and sole remote `main` at the start, at the end and periodically. [The verifier](.github/acceptance/verify_segments.py) requires **14 receipts** with globally unique segment/iteration IDs, exact run and attempt identities, source and orchestration SHAs, tree hashes, absolute source/output paths, argv and interpreter identities, original logs/JUnit/event hashes, nonoverlapping phase intervals, and phase-two binding to the phase-one receipt hash. Changing the source invalidates qualification for the old source; it never transfers elapsed time to a different commit.
+
+### Pytest subtests and original reports
+
+Pytest's [documented JUnit implementation](https://docs.pytest.org/en/stable/_modules/_pytest/junitxml.html) can count successful subtests without separate `<testcase>` elements; multiple skipped subtests may share a parent element. See the [upstream issue](https://github.com/pytest-dev/pytest-subtests/issues/83). The controller keeps the raw XML and records collection/setup/call/teardown/subtest events using only public hooks in [the observer](.github/acceptance/tsao_acceptance_pytest_events.py). It does not alter test selection, outcomes or XML totals.
+
+For a failure-free pytest session, the verifier reconciles:
 
 $$
-H_receipt = SHA256(contract ∥ input ∥ engine ∥ environment ∥ result)
+N_{\mathrm{JUnit}}=N_{\mathrm{ordinary\ call\ pass}}+N_{\mathrm{subtest\ pass}}+N_{\mathrm{all\ skip\ events}},
+\qquad
+N_{\mathrm{leaves}}=N_{\mathrm{ordinary\ cases}}+N_{\mathrm{collection\ skips}}.
 $$
 
-### Usage strategy
-
-1. Define the decision, observables, conditions and dimensions before selecting models or tools.
-2. Separate sourced, computed and inferred claims; evidence conflicts must not be silently merged.
-3. Scale bridges must report identifiability, propagation assumptions and uncertainty budgets.
-4. External execution enters acceptance only with a complete receipt identity; new commits invalidate old-SHA evidence.
-
-> **Responsibility boundary：** The repository generates research strategies, contracts, evidence controls and external-execution receipts; automatic_approval=false and it does not replace experts, experiments or third-party solver qualification.
-
-Execution prompt: [SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md](docs/SIX_REPOSITORY_PARALLEL_6H_ACCEPTANCE_PROMPT_V2.md)
-<!-- CURRENT_MAIN_ACCEPTANCE_V2:END -->
-
-## Six-repository source-pinned acceptance
-
-The executable coordinator is [six-repository-acceptance.yml](.github/workflows/six-repository-acceptance.yml); the complete audit and remediation instructions are in [Prompt V5](.github/acceptance/PROMPT.md). The [plan](.github/acceptance/repositories.json) pins five external source commits and resolves this repository's `SELF` to the workflow commit. Each target is read-only during testing.
-
-After baseline gates, six repositories run in parallel through two sequential regression segments. Each segment requires 10,800 seconds of successful, nonempty test processes:
-
-$$
-t_{r,p}=\sum_{k\in\mathcal{S}_{r,p}}\Delta t_k\ge 10{,}800\;\mathrm{s},\qquad
-T_r=t_{r,1}+t_{r,2}\ge 21{,}600\;\mathrm{s}.
-$$
-
-Here $\mathcal{S}_{r,p}$ includes only successful commands with verified JUnit witnesses. Dependency installation, queueing and failed commands contribute no accepted time. This is segmented Linux regression, **not uninterrupted service soak, CPU time, cross-platform release qualification, or scientific solver certification**.
-
-[The executor](.github/acceptance/regression_segment.py) rejects dirty source and moved remote heads; [the independent verifier](.github/acceptance/verify_segments.py) recomputes ledger durations, validates original log/JUnit hashes and checks both segment identities. A short development run is `SMOKE_ONLY`; missing or incomplete evidence cannot produce `SEGMENTED_REGRESSION_COMPLETE`. The current status is the actual Actions result, not this documentation.
+Ordinary tests, passed subtests, skipped subtests and collection skips are recorded separately. Any collection/setup/call/teardown/subtest failure or error, nonzero process exit, incomplete lifecycle or XML/event mismatch fails closed. Every Python command explicitly loads the observer from the control checkout; the observed interpreter must match the command (or the recorded `uv` target interpreter for Aspen). Vitest keeps strict summary-to-leaf reconciliation. No event witness means no Python segment qualification.
 
 ```bash
-python -m unittest discover -s .github/acceptance -v
+python -m unittest discover -s .github/acceptance -p test_regression_segment.py -v
 ```
 
-Use the existing **Six repository acceptance** Actions workflow from `main`. Changing the pinned plan or either acceptance workflow also triggers a new run. Any source change invalidates that older commit's qualification for the changed tree. Full permanent CI, browser review and external engineering approval remain separate delivery gates.
+These controller tests include real subprocess pass/failure/subtest fixtures and synthetic fourteen-receipt tamper tests. Fixture timestamps are **not six-hour evidence**. A short executor run is `SMOKE_ONLY`; v1 receipts and incomplete evidence cannot yield `SEGMENTED_REGRESSION_COMPLETE`. The actual Actions result and preserved raw artifacts are the status record. This is segmented Linux software regression; cross-platform release gates, uninterrupted service availability and external scientific acceptance retain their separate meanings.

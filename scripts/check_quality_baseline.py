@@ -23,16 +23,26 @@ def _load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8", errors="strict"))
 
 
-def _coverage(path: Path) -> tuple[float, float]:
+def _coverage(path: Path) -> tuple[float, float, float]:
+    """Return statement-line, branch and combined percentages from their counts."""
     value = _load(path)
     totals = value.get("totals") if isinstance(value, dict) else None
     if not isinstance(totals, dict):
         raise ValueError("coverage JSON has no totals object")
-    line = float(totals.get("percent_covered", 0.0))
-    branches = int(totals.get("num_branches", 0))
-    covered = int(totals.get("covered_branches", 0))
-    branch = 100.0 if branches == 0 else covered * 100.0 / branches
-    return line, branch
+    counts: dict[str, int] = {}
+    for key in ("num_statements", "covered_lines", "num_branches", "covered_branches"):
+        count = totals.get(key)
+        if type(count) is not int or count < 0:
+            raise ValueError(f"coverage {key} must be a nonnegative integer")
+        counts[key] = count
+    statements, lines = counts["num_statements"], counts["covered_lines"]
+    branches, covered = counts["num_branches"], counts["covered_branches"]
+    if statements == 0 or lines > statements or covered > branches:
+        raise ValueError("coverage counts must describe nonempty, consistent measurements")
+    line = 100.0 * (lines / statements)
+    branch = 100.0 if branches == 0 else 100.0 * (covered / branches)
+    combined = 100.0 * ((lines + covered) / (statements + branches))
+    return line, branch, combined
 
 
 def _junit(path: Path) -> dict[str, int | float]:
@@ -67,7 +77,7 @@ def evaluate(
     junit_path: Path,
 ) -> tuple[dict[str, Any], list[str]]:
     baseline = _load(BASELINE)
-    line, branch = _coverage(coverage_path)
+    line, branch, combined = _coverage(coverage_path)
     mutation = _load(mutation_path)
     performance = _load(performance_path)
     junit = _junit(junit_path)
@@ -78,11 +88,14 @@ def evaluate(
     errors: list[str] = []
     line_min = float(baseline["coverage"]["line_percent_minimum"])
     branch_min = float(baseline["coverage"]["branch_percent_minimum"])
+    combined_min = float(baseline["coverage"].get("combined_percent_minimum", line_min))
     mutation_min = int(baseline["mutation"]["critical_mutants_minimum"])
     if line < line_min:
         errors.append(f"line coverage {line:.2f}% < {line_min:.2f}%")
     if branch < branch_min:
         errors.append(f"branch coverage {branch:.2f}% < {branch_min:.2f}%")
+    if combined < combined_min:
+        errors.append(f"combined coverage {combined:.2f}% < {combined_min:.2f}%")
     if killed < mutation_min or survivors > int(baseline["mutation"]["survivors_maximum"]):
         errors.append(f"mutation result killed={killed}, survivors={survivors}")
     if (
@@ -99,8 +112,10 @@ def evaluate(
         "coverage": {
             "line_percent": round(line, 3),
             "branch_percent": round(branch, 3),
+            "combined_percent": round(combined, 3),
             "line_minimum": line_min,
             "branch_minimum": branch_min,
+            "combined_minimum": combined_min,
         },
         "mutation": {"killed": killed, "total": len(mutation), "survivors": survivors},
         "tests": junit,
@@ -131,6 +146,7 @@ def main() -> None:
     print(
         "quality baseline PASS "
         f"line={result['coverage']['line_percent']}% branch={result['coverage']['branch_percent']}% "
+        f"combined={result['coverage']['combined_percent']}% "
         f"mutation={result['mutation']['killed']}/{result['mutation']['total']}"
     )
 

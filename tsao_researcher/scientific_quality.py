@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from .errors import ValidationError
+from .evidence_resolution import EVIDENCE_ROLES, resolve_traceability
 from .scientific_contracts_v16 import causal_clauses
 
 QualityStatus = Literal["PASS", "WARN", "BLOCK"]
@@ -408,7 +409,10 @@ def check_evidence_traceability(spec: Mapping[str, Any]) -> dict[str, Any]:
     execution_claim = _flag(spec.get("execution_claim"), "execution_claim")
     execution_receipts = _optional_strings(spec.get("execution_receipts"), "execution_receipts")
     uncertainty = _optional_text(spec.get("uncertainty"), "uncertainty")
+    root = _optional_text(spec.get("project_root"), "project_root")
     findings: list[QualityFinding] = []
+    if any(role not in EVIDENCE_ROLES for role in evidence_roles):
+        raise ValidationError("evidence_roles contains an unsupported or placeholder role")
 
     if len(set(evidence_ids)) != len(evidence_ids):
         findings.append(QualityFinding("BLOCK", "ET-DUPLICATE", "Evidence identifiers must be unique."))
@@ -436,19 +440,39 @@ def check_evidence_traceability(spec: Mapping[str, Any]) -> dict[str, Any]:
         findings.append(
             QualityFinding("WARN", "ET-UNCERTAINTY", "Claim uncertainty or limitation is not recorded.")
         )
-    if not findings:
+    verification: dict[str, Any] = {"verification_status": "UNVERIFIED_DECLARATION"}
+    traceable = False
+    if root is None:
         findings.append(
             QualityFinding(
-                "PASS", "ET-COMPLETE", "Claim, evidence, locators and execution boundary are traceable."
+                "WARN",
+                "ET-UNVERIFIED",
+                "Locators and receipt IDs are declarations until checked against a real project_root.",
             )
         )
-
-    traceable = (
-        len(set(evidence_ids)) == len(evidence_ids)
-        and len(source_locators) == len(evidence_ids)
-        and (not evidence_roles or len(evidence_roles) == len(evidence_ids))
-        and (not execution_claim or bool(execution_receipts))
-    )
+    elif not any(finding.status == "BLOCK" for finding in findings):
+        try:
+            verification = resolve_traceability(
+                root,
+                claim_id,
+                claim,
+                evidence_ids,
+                source_locators,
+                evidence_roles,
+                execution_receipts,
+                execution_claim=execution_claim,
+            )
+            traceable = True
+            findings.append(
+                QualityFinding(
+                    "PASS",
+                    "ET-LOCAL-VERIFIED",
+                    "Registered reciprocal links and local artifact checksums were verified.",
+                )
+            )
+        except (OSError, ValueError, TypeError, KeyError) as exc:
+            verification = {"verification_status": "LOCAL_VERIFICATION_FAILED"}
+            findings.append(QualityFinding("BLOCK", "ET-VERIFICATION", str(exc)))
     present = (
         4
         + int(bool(evidence_roles))
@@ -468,6 +492,7 @@ def check_evidence_traceability(spec: Mapping[str, Any]) -> dict[str, Any]:
             "execution_receipts": list(execution_receipts),
             "uncertainty": uncertainty,
             "bidirectional_traceability": traceable,
+            **verification,
             "completeness_score": _score(present, 7),
         },
     )

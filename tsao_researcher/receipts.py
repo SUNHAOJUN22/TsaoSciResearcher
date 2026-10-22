@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 
 from .errors import IntegrityError, ValidationError
+from .input_snapshots import snapshot_inputs, verify_input_snapshots
 from .io import (
     append_jsonl,
     atomic_write_text,
@@ -29,6 +30,8 @@ MAX_OUTPUT_FILES = 10_000
 
 
 def _parse_timestamp(value: str, field: str) -> datetime:
+    if not isinstance(value, str):
+        raise ValidationError(f"{field} must be an ISO-8601 string")
     text = value.strip()
     if not text:
         raise ValidationError(f"{field} is required")
@@ -49,11 +52,17 @@ def _safe_project_file(state_root: Path, relative: str, *, field: str) -> Path:
 
 
 def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]]:
+    if not isinstance(outputs, list) or any(
+        not isinstance(value, str) or not value.strip() for value in outputs
+    ):
+        raise ValidationError("receipt outputs must be a list of nonblank paths")
     if len(outputs) > MAX_OUTPUT_FILES:
         raise ValidationError(f"receipt has more than {MAX_OUTPUT_FILES} outputs")
+    if len({value.strip() for value in outputs}) != len(outputs):
+        raise ValidationError("receipt output paths must be unique")
     resolved_root = state_root.resolve()
     records: list[dict[str, Any]] = []
-    for relative in dict.fromkeys(value.strip() for value in outputs if value.strip()):
+    for relative in (value.strip() for value in outputs):
         candidate = _safe_project_file(state_root, relative, field="output")
         records.append(
             {
@@ -66,6 +75,10 @@ def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]
 
 
 def _environment(values: list[str] | None) -> dict[str, str]:
+    if values is not None and (
+        not isinstance(values, list) or any(not isinstance(value, str) for value in values)
+    ):
+        raise ValidationError("environment must be a list of KEY=VALUE strings")
     result: dict[str, str] = {}
     for item in values or []:
         key, separator, value = item.partition("=")
@@ -119,6 +132,8 @@ def record_receipt(
         raise TypeError("exit_code must be an integer")
     if not engine.strip() or not command or any(not value.strip() for value in command):
         raise ValidationError("engine and a non-empty command vector are required")
+    if not isinstance(engine_version, str) or not isinstance(notes, str):
+        raise ValidationError("engine_version and notes must be strings")
     start = _parse_timestamp(started_at, "started_at")
     finish = _parse_timestamp(finished_at, "finished_at")
     if finish < start:
@@ -127,6 +142,7 @@ def record_receipt(
     status = "succeeded" if exit_code == 0 else "failed"
     if status == "succeeded" and not output_records:
         raise ValidationError("a successful execution receipt requires at least one checksum-verified output")
+    input_snapshots = snapshot_inputs(state_root, handoff.get("inputs"))
     receipt = {
         "schema_version": "2.0",
         "receipt_id": new_id("RUN"),
@@ -143,6 +159,7 @@ def record_receipt(
         "status": status,
         "evidence_level": "executed" if status == "succeeded" else "failed",
         "outputs": output_records,
+        "input_snapshots": input_snapshots,
         "environment": _environment(environment),
         "notes": notes.strip(),
         "recorded_at": utc_now(),
@@ -230,6 +247,34 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
             raise IntegrityError(f"execution receipt handoff boundary invalid: {receipt_id}")
         if receipt.get("handoff_sha256") != sha256_file(handoff_file):
             raise IntegrityError(f"execution receipt handoff checksum mismatch: {receipt_id}")
+        verify_input_snapshots(state_root, handoff.get("inputs"), receipt.get("input_snapshots"))
+        engine = receipt.get("engine")
+        if (
+            not isinstance(engine, dict)
+            or set(engine) != {"name", "version"}
+            or not isinstance(engine.get("name"), str)
+            or not engine["name"].strip()
+            or (
+                engine["version"] is not None
+                and (not isinstance(engine["version"], str) or not engine["version"].strip())
+            )
+        ):
+            raise IntegrityError(f"execution receipt engine identity invalid: {receipt_id}")
+        command = receipt.get("command")
+        if (
+            not isinstance(command, list)
+            or not command
+            or any(not isinstance(value, str) or not value.strip() for value in command)
+        ):
+            raise IntegrityError(f"execution receipt command argv invalid: {receipt_id}")
+        environment = receipt.get("environment")
+        if not isinstance(environment, dict) or any(
+            not isinstance(key, str) or not key.strip() or not isinstance(value, str)
+            for key, value in environment.items()
+        ):
+            raise IntegrityError(f"execution receipt environment invalid: {receipt_id}")
+        if not isinstance(receipt.get("notes"), str):
+            raise IntegrityError(f"execution receipt notes invalid: {receipt_id}")
         if not str(receipt.get("truth_boundary", "")).endswith("does not grant scientific acceptance."):
             raise IntegrityError(f"execution receipt truth boundary invalid: {receipt_id}")
         try:
@@ -268,7 +313,11 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         else:
             raise IntegrityError(f"execution receipt status invalid: {receipt_id}")
         outputs = receipt.get("outputs")
-        if not isinstance(outputs, list) or (status == "succeeded" and not outputs):
+        if (
+            not isinstance(outputs, list)
+            or len(outputs) > MAX_OUTPUT_FILES
+            or (status == "succeeded" and not outputs)
+        ):
             raise IntegrityError(f"execution receipt outputs invalid: {receipt_id}")
         seen_paths: set[str] = set()
         for output in outputs:
@@ -279,7 +328,9 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
                 raise IntegrityError(
                     f"execution receipt output size must be a non-negative integer: {receipt_id}"
                 )
-            relative = str(output.get("path", ""))
+            relative = output.get("path")
+            if not isinstance(relative, str) or not relative.strip():
+                raise IntegrityError(f"execution receipt output path invalid: {receipt_id}")
             if relative in seen_paths:
                 raise IntegrityError(f"duplicate execution output path: {relative}")
             seen_paths.add(relative)

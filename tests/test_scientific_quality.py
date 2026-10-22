@@ -194,7 +194,7 @@ def test_boolean_strings_are_rejected_instead_of_becoming_truthy() -> None:
         )
 
 
-def test_evidence_traceability_passes_with_locators_and_receipt() -> None:
+def test_evidence_traceability_declarations_require_live_project_verification() -> None:
     result = check_evidence_traceability(
         {
             "claim_id": "CLM-001",
@@ -207,8 +207,9 @@ def test_evidence_traceability_passes_with_locators_and_receipt() -> None:
             "uncertainty": "Software completion does not imply scientific acceptance.",
         }
     )
-    assert result["status"] == "PASS"
-    assert result["details"]["bidirectional_traceability"] is True
+    assert result["status"] == "WARN"
+    assert result["details"]["bidirectional_traceability"] is False
+    assert result["details"]["verification_status"] == "UNVERIFIED_DECLARATION"
 
 
 def test_evidence_traceability_blocks_unreceipted_execution_claim() -> None:
@@ -242,7 +243,8 @@ def test_quality_dispatch_supports_evidence_traceability() -> None:
             },
         }
     )
-    assert result["status"] == "PASS"
+    assert result["status"] == "WARN"
+    assert result["details"]["verification_status"] == "UNVERIFIED_DECLARATION"
 
 
 def test_quality_dispatch_rejects_unknown_kind() -> None:

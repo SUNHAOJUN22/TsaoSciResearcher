@@ -23,6 +23,10 @@ _CAUSAL_MARKERS = (
     "results in",
     "drives",
     "determines",
+    "使得",
+    "導致",
+    "驅動",
+    "決定",
     "导致",
     "引起",
     "造成",
@@ -64,11 +68,20 @@ def causal_clauses(text: str) -> list[dict[str, object]]:
     results: list[dict[str, object]] = []
     for clause in split_clauses(text):
         matches: list[tuple[str, int, int, bool]] = []
-        explicit_negated = any(phrase in clause.normalized for phrase in _EXPLICIT_NEGATED_CAUSAL_PHRASES)
         for marker in _CAUSAL_MARKERS:
             for start, end in _marker_spans(clause.normalized, marker):
                 matches.append(
-                    (marker, start, end, explicit_negated or trigger_is_negated(clause.normalized, start))
+                    (
+                        marker,
+                        start,
+                        end,
+                        any(
+                            left <= start and end <= right
+                            for phrase in _EXPLICIT_NEGATED_CAUSAL_PHRASES
+                            for left, right in _marker_spans(clause.normalized, phrase)
+                        )
+                        or trigger_is_negated(clause.normalized, start),
+                    )
                 )
         if not matches:
             continue
@@ -122,12 +135,20 @@ def compare_quantities(
 ) -> bool:
     if isinstance(left_value, bool) or isinstance(right_value, bool):
         raise ContractError("Boolean quantities are invalid")
-    if not all(isfinite(float(value)) for value in (left_value, right_value)):
+    if not isinstance(left_value, (int, float)) or not isinstance(right_value, (int, float)):
+        raise ContractError("quantities must be numeric")
+    try:
+        finite = all(isfinite(float(value)) for value in (left_value, right_value))
+    except OverflowError as exc:
+        raise ContractError("quantities exceed finite numeric range") from exc
+    if not finite:
         raise ContractError("quantities must be finite")
     if left_unit not in _UNITS or right_unit not in _UNITS or _UNITS[left_unit][0] != _UNITS[right_unit][0]:
         raise ContractError("dimension mismatch")
     left = float(left_value) * _UNITS[left_unit][1]
     right = float(right_value) * _UNITS[right_unit][1]
+    if not isfinite(left) or not isfinite(right):
+        raise ContractError("unit conversion exceeds finite numeric range")
     operations = {">": left > right, "<": left < right, "==": left == right}
     if operator not in operations:
         raise ContractError("unsupported comparison operator")
@@ -139,23 +160,33 @@ def verify_event_chain(
     *,
     accepted_requires_approval: bool = True,
 ) -> str:
+    if type(accepted_requires_approval) is not bool:
+        raise ContractError("accepted_requires_approval must be a boolean")
     previous_hash = "0" * 64
     approval_verified = False
     state = "planned"
     for sequence, event in enumerate(events):
-        if event.get("sequence") != sequence or event.get("prev_hash") != previous_hash:
+        if (
+            type(event.get("sequence")) is not int
+            or event.get("sequence") != sequence
+            or event.get("prev_hash") != previous_hash
+        ):
             raise ContractError("sequence or chain mismatch")
         body = {key: value for key, value in event.items() if key != "record_hash"}
         digest = hashlib.sha256(
-            json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+            json.dumps(
+                body, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+            ).encode()
         ).hexdigest()
         if event.get("record_hash") != digest:
             raise ContractError("record hash mismatch")
-        if event.get("type") == "approval" and event.get("verified") is True:
-            approval_verified = True
+        if event.get("type") == "approval":
+            if type(event.get("verified")) is not bool:
+                raise ContractError("approval verified must be an actual boolean declaration")
+            approval_verified = event["verified"] is True
         if event.get("type") == "transition":
             state = str(event.get("to", state))
         previous_hash = digest
     if state == "accepted" and accepted_requires_approval and not approval_verified:
         raise ContractError("accepted state lacks verified approval")
-    return state
+    return "ACCEPTANCE_DECLARED_UNVERIFIED" if state == "accepted" else state

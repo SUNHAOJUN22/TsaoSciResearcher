@@ -57,4 +57,4 @@ def test_accepted_state_requires_replayable_approval() -> None:
 
     approval = event(0, "0" * 64, "approval", verified=True)
     accepted = event(1, str(approval["record_hash"]), "transition", to="accepted")
-    assert verify_event_chain([approval, accepted]) == "accepted"
+    assert verify_event_chain([approval, accepted]) == "ACCEPTANCE_DECLARED_UNVERIFIED"

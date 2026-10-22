@@ -3,7 +3,8 @@
   "release_floor": "0.7.0",
   "coverage": {
     "line_percent_minimum": 95.0,
-    "branch_percent_minimum": 90.0
+    "branch_percent_minimum": 90.0,
+    "combined_percent_minimum": 95.0
   },
   "mutation": {
     "critical_mutants_minimum": 24,

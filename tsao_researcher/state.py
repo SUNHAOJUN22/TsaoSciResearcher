@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -224,23 +225,34 @@ def transition(
     clean_reason = reason.strip()
     if not clean_reason:
         raise ValidationError("transition reason must not be blank")
+    if approvals is not None and (
+        not isinstance(approvals, list)
+        or any(not isinstance(value, str) or not value.strip() for value in approvals)
+    ):
+        raise ValidationError("approvals must be nonblank reference strings")
     with exclusive_lock(state_root / "state" / ".mutation.lock"):
+        verify(state_root)
         project = load_project(state_root)
         current = project.get("status")
         if not isinstance(current, str) or next_state not in TRANSITIONS.get(current, frozenset()):
             raise StateTransitionError(f"illegal transition {current!r}->{next_state!r}")
-        existing_approvals = project.get("approvals", [])
-        if not isinstance(existing_approvals, list):
-            raise ValidationError("project approvals must be a list")
-        requested = sorted({str(value).strip() for value in approvals or [] if str(value).strip()})
-        merged_approvals = sorted(
-            {str(value).strip() for value in [*existing_approvals, *requested] if str(value).strip()}
-        )
-        if next_state == "accepted" and not merged_approvals:
-            raise StateTransitionError("accepted state requires a recorded human approval")
-        project_id = str(project.get("project_id", ""))
-        timestamp = utc_now()
+        existing_approvals = project["approvals"]
+        requested = sorted({value.strip() for value in approvals or []})
         new_approvals = [value for value in requested if value not in existing_approvals]
+        if next_state == "accepted" and (not requested or new_approvals != requested):
+            raise StateTransitionError("accepted state requires fresh recorded approval references")
+        project_id = str(project.get("project_id", ""))
+        previous_hash = project.get("latest_event_hash")
+        event = _event_payload(
+            project_id,
+            "project.transition",
+            current,
+            next_state,
+            clean_reason,
+            requested,
+            previous_hash if isinstance(previous_hash, str) else None,
+        )
+        timestamp = event["timestamp"]
         approvals_path = state_root / "approvals.jsonl"
         decisions_path = state_root / "decisions.jsonl"
         events_path = state_root / "state" / "events.jsonl"
@@ -255,6 +267,9 @@ def transition(
                         "timestamp": timestamp,
                         "reference": reference,
                         "transition": next_state,
+                        "scope": "project.transition",
+                        "event_hash": event["event_hash"],
+                        "identity_verification": "DECLARED_NOT_IDENTITY_VERIFIED",
                     },
                 )
             append_jsonl(
@@ -269,23 +284,81 @@ def transition(
                     "approvals": requested,
                 },
             )
-            previous_hash = project.get("latest_event_hash")
-            event = _event_payload(
-                project_id,
-                "project.transition",
-                current,
-                next_state,
-                clean_reason,
-                requested,
-                previous_hash if isinstance(previous_hash, str) else None,
-            )
             append_jsonl(events_path, event)
             project["status"] = next_state
             project["updated_at"] = timestamp
             project["latest_event_hash"] = event["event_hash"]
-            project["approvals"] = merged_approvals
+            project["approvals"] = sorted(set(existing_approvals) | set(requested))
             _write_project(project_path, project)
         return project
+
+
+def _timestamp(value: Any) -> datetime:
+    if not isinstance(value, str):
+        raise IntegrityError("event/approval timestamp must be timezone-aware ISO-8601")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise IntegrityError("invalid event/approval timestamp") from exc
+    if parsed.utcoffset() is None:
+        raise IntegrityError("event/approval timestamp must include a timezone")
+    return parsed
+
+
+def _verify_approvals(state_root: Path, project: dict[str, Any], events: list[dict[str, Any]]) -> None:
+    registered = project.get("approvals")
+    if (
+        not isinstance(registered, list)
+        or any(not isinstance(value, str) or not value.strip() for value in registered)
+        or len(registered) != len(set(registered))
+    ):
+        raise IntegrityError("project approvals must be unique nonblank reference strings")
+    by_hash = {event["event_hash"]: event for event in events}
+    references: dict[str, dict[str, Any]] = {}
+    ids: set[str] = set()
+    for approval in read_jsonl(state_root / "approvals.jsonl"):
+        identifier, reference = approval.get("approval_id"), approval.get("reference")
+        if (
+            not isinstance(identifier, str)
+            or not identifier.startswith("APR-")
+            or identifier in ids
+            or not isinstance(reference, str)
+            or not reference.strip()
+            or reference in references
+        ):
+            raise IntegrityError("duplicate or invalid approval ledger identity/reference")
+        ids.add(identifier)
+        references[reference] = approval
+        if "revoked" in approval and (type(approval["revoked"]) is not bool or approval["revoked"]):
+            raise IntegrityError("approval is revoked or has an invalid revocation flag")
+        event = by_hash.get(approval.get("event_hash", ""))
+        if (
+            approval.get("project_id") != project.get("project_id")
+            or approval.get("scope") != "project.transition"
+            or approval.get("identity_verification") != "DECLARED_NOT_IDENTITY_VERIFIED"
+            or event is None
+            or event.get("action") != "project.transition"
+            or approval.get("transition") != event.get("next_state")
+            or reference not in event.get("related_ids", [])
+            or _timestamp(approval.get("timestamp")) != _timestamp(event.get("timestamp"))
+        ):
+            raise IntegrityError("approval ledger scope/project/event/target/time binding mismatch")
+    if set(references) != set(registered):
+        raise IntegrityError("project approvals registry does not match approval ledger")
+    for event in events:
+        if event.get("next_state") == "accepted":
+            related = event.get("related_ids")
+            if (
+                not isinstance(related, list)
+                or not related
+                or any(
+                    not isinstance(reference, str)
+                    or reference not in references
+                    or references[reference].get("event_hash") != event["event_hash"]
+                    for reference in related
+                )
+            ):
+                raise IntegrityError("accepted event lacks its own bound approval declaration")
 
 
 def verify(root: str | Path) -> dict[str, Any]:
@@ -327,13 +400,17 @@ def verify(root: str | Path) -> dict[str, Any]:
         raise IntegrityError("project execution_receipts registry does not match receipt log")
     if any(receipt.get("project_id") != project.get("project_id") for receipt in receipts):
         raise IntegrityError("execution receipt project mismatch")
-    # Receipt output hashes are verified by the dedicated receipts module to avoid
-    # duplicating the truth boundary in two implementations.
+    # Delegate to the one real validator; registry identity alone cannot attest bytes.
+    from .receipts import verify_receipts
+
+    verify_receipts(state_root)
 
     previous_hash: str | None = None
     count = 0
     last_state: str | None = None
-    for count, event in enumerate(read_jsonl(state_root / "state" / "events.jsonl"), 1):
+    last_timestamp: datetime | None = None
+    events = list(read_jsonl(state_root / "state" / "events.jsonl"))
+    for count, event in enumerate(events, 1):
         event_hash = event.get("event_hash")
         body = dict(event)
         body.pop("event_hash", None)
@@ -342,14 +419,35 @@ def verify(root: str | Path) -> dict[str, Any]:
             raise IntegrityError(f"event chain invalid at record {count}")
         if event.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"event project mismatch at record {count}")
+        timestamp = _timestamp(event.get("timestamp"))
+        if last_timestamp is not None and timestamp < last_timestamp:
+            raise IntegrityError(f"event timestamp is not chronological at record {count}")
+        next_state = event.get("next_state")
+        if count == 1:
+            legal = (
+                event.get("action") == "project.initialized"
+                and event.get("previous_state") is None
+                and next_state == "proposed"
+            )
+        else:
+            legal = (
+                event.get("action") == "project.transition"
+                and event.get("previous_state") == last_state
+                and isinstance(next_state, str)
+                and next_state in TRANSITIONS.get(str(last_state), frozenset())
+            )
+        if not legal:
+            raise IntegrityError(f"illegal or discontinuous event transition at record {count}")
         previous_hash = str(event_hash)
-        last_state = str(event.get("next_state"))
+        last_state = str(next_state)
+        last_timestamp = timestamp
     if count == 0:
         raise IntegrityError("project event chain is empty")
     if previous_hash != project.get("latest_event_hash"):
         raise IntegrityError("project latest_event_hash does not match event-chain head")
     if last_state != project.get("status"):
         raise IntegrityError("project status does not match the final event")
+    _verify_approvals(state_root, project, events)
     return {
         "valid": True,
         "events": count,

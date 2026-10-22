@@ -10,7 +10,7 @@ from pathlib import Path
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.common import ROOT, atomic_write_text
+from scripts.common import ROOT, atomic_write_text, source_candidates
 
 EXCLUDED_DIRS = {
     ".git",
@@ -41,7 +41,7 @@ def _is_coverage_runtime_file(path: Path) -> bool:
 
 def source_files(root: Path = ROOT) -> list[Path]:
     files: list[Path] = []
-    for path in root.rglob("*"):
+    for path in source_candidates(root):
         relative = path.relative_to(root)
         if any(part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts):
             continue

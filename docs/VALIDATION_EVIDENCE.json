@@ -6,7 +6,7 @@
     "windows_python_3_12": "PASS"
   },
   "compatibility_scope": "Recorded compatibility results are a prior release baseline. CI-only gates for this source tree remain explicitly NOT_RUN or PARTIAL until an external attestation is created.",
-  "evidence_date": "2026-10-15",
+  "evidence_date": "2026-10-22",
   "gates": {
     "bandit_high_severity": "NOT_RUN",
     "bounded_performance": "LOCAL_PREFLIGHT",
@@ -42,7 +42,7 @@
   ],
   "provenance": {
     "commit_resolution": "pending-external-attestation",
-    "dependency_lock_sha256": "90d60ba96155a1101b2af22d2eadcff870ab77a7cd807dd03bf708adbcb25eee",
+    "dependency_lock_sha256": "20f37c16d727b7113513473d7767337a124cff835d86711148902a373f686f94",
     "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
     "digest_exclusions": [
       ".coverage",
@@ -57,8 +57,8 @@
     "evidence_generated_from_commit": null,
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
-    "validated_file_count": 463,
-    "validated_tree_sha256": "15b80d1b1c9b2a402a7959f723782d3dca7615548192e47cce119618e5b60ced",
+    "validated_file_count": 473,
+    "validated_tree_sha256": "8dddfd33fb21530ea6ac50fd5ff382afb447c1349eabb838566b51a1edc6278f",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null
@@ -73,7 +73,7 @@
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 19,
     "schemas": 20,
-    "test_modules": 54,
+    "test_modules": 56,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },

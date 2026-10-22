@@ -13,7 +13,7 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.archive_safety import validate_zip
-from scripts.common import ROOT, atomic_write_text, sha256
+from scripts.common import ROOT, atomic_write_text, sha256, source_candidates
 
 ARCHIVE_ROOT = "TsaoSciResearcher"
 FIXED_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
@@ -86,7 +86,7 @@ def _is_generated_path(relative: Path) -> bool:
 def source_files(root: Path = ROOT) -> list[Path]:
     files: list[Path] = []
     total = 0
-    for path in root.rglob("*"):
+    for path in source_candidates(root):
         relative = path.relative_to(root)
         if _is_generated_path(relative) or any(
             part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts[1:]

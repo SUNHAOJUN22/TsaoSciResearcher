@@ -40,7 +40,7 @@ class ResearcherContractsV17Tests(unittest.TestCase):
     def test_replay_accepts_only_independent_review_and_qualified_approver(self) -> None:
         first = make_event(0, "GENESIS", "EVIDENCE_REVIEWED", {"independent": True})
         second = make_event(1, first.event_hash, "HUMAN_ACCEPTED", {"qualified_approver": True})
-        self.assertEqual(replay_state([first, second]), "ACCEPTED")
+        self.assertEqual(replay_state([first, second]), "ACCEPTANCE_DECLARED_UNVERIFIED")
 
     def test_hash_tampering_is_rejected(self) -> None:
         event = make_event(0, "GENESIS", "EVIDENCE_ADDED", {"artifact": "sha256:abc"})

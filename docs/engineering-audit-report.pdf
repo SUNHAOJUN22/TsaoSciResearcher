@@ -19,7 +19,7 @@ endobj
 << /Length 2183 >>
 stream
 BT /F2 24 Tf 1 0 0 1 46.0 790.0 Tm (TsaoSciResearcher Engineering Audit) Tj ET
-BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | preflight evidence | 2026-10-02) Tj ET
+BT /F1 11 Tf 1 0 0 1 46.0 765.0 Tm (Release 0.7.4 | preflight evidence | 2026-10-22) Tj ET
 q 0.950 g 0.750 G 46.0 650.0 500.0 88.0 re B Q
 BT /F2 16 Tf 1 0 0 1 66.0 708.0 Tm (Evidence-first scientific research control layer) Tj ET
 BT /F1 10 Tf 1 0 0 1 66.0 681.0 Tm (Question -> evidence -> design -> execution handoff -> validation -> artifact) Tj ET
@@ -37,7 +37,7 @@ q 0.980 g 0.750 G 301.0 504.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 543.0 Tm (20) Tj ET
 BT /F1 9 Tf 1 0 0 1 317.0 521.0 Tm (Schemas) Tj ET
 q 0.980 g 0.750 G 46.0 418.0 235.0 64.0 re B Q
-BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (54) Tj ET
+BT /F2 20 Tf 1 0 0 1 62.0 457.0 Tm (56) Tj ET
 BT /F1 9 Tf 1 0 0 1 62.0 435.0 Tm (Test modules) Tj ET
 q 0.980 g 0.750 G 301.0 418.0 235.0 64.0 re B Q
 BT /F2 20 Tf 1 0 0 1 317.0 457.0 Tm (7) Tj ET
@@ -168,11 +168,11 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 10 0 R >>
 endobj
 10 0 obj
-<< /Length 3318 >>
+<< /Length 3330 >>
 stream
 BT /F2 22 Tf 1 0 0 1 46.0 790.0 Tm (Scientific quality controls) Tj ET
 BT /F1 9 Tf 1 0 0 1 46.0 762.0 Tm (Four deterministic contracts: measurement, multiscale reasoning, causal claims and evidence provenance.) Tj ET
-BT /F2 9 Tf 1 0 0 1 46.0 738.0 Tm (Examples: PASS 3 | WARN 0 | BLOCK 1 | average completeness 89%) Tj ET
+BT /F2 9 Tf 1 0 0 1 46.0 738.0 Tm (Examples: PASS 2 | WARN 1 | BLOCK 1 | average completeness 89%) Tj ET
 q 0.980 g 0.750 G 46.0 430.0 245.0 275.0 re B Q
 BT /F2 13 Tf 1 0 0 1 62.0 672.0 Tm (Measurement boundary) Tj ET
 BT /F2 11 Tf 1 0 0 1 234.0 672.0 Tm (PASS) Tj ET
@@ -208,14 +208,14 @@ BT /F1 7 Tf 1 0 0 1 66.0 257.0 Tm (declared study design.) Tj ET
 BT /F1 7 Tf 1 0 0 1 62.0 157.0 Tm (Kind: causality-guard) Tj ET
 q 0.980 g 0.750 G 304.0 135.0 245.0 275.0 re B Q
 BT /F2 13 Tf 1 0 0 1 320.0 377.0 Tm (Evidence traceability) Tj ET
-BT /F2 11 Tf 1 0 0 1 492.0 377.0 Tm (PASS) Tj ET
+BT /F2 11 Tf 1 0 0 1 492.0 377.0 Tm (WARN) Tj ET
 BT /F1 9 Tf 1 0 0 1 320.0 353.0 Tm (Declared completeness: 100%) Tj ET
 q 0.92 g 320.0 333.0 210.0 10 re f Q
 q 0.30 g 320.0 333.0 210.0 10 re f Q
 BT /F1 8 Tf 1 0 0 1 320.0 308.0 Tm (Claims link to evidence locators and) Tj ET
 BT /F1 8 Tf 1 0 0 1 320.0 296.0 Tm (execution claims require receipts.) Tj ET
-BT /F1 7 Tf 1 0 0 1 324.0 268.0 Tm (ET-COMPLETE: Claim, evidence, locators and) Tj ET
-BT /F1 7 Tf 1 0 0 1 324.0 257.0 Tm (execution boundary are traceable.) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 268.0 Tm (ET-UNVERIFIED: Locators and receipt IDs are) Tj ET
+BT /F1 7 Tf 1 0 0 1 324.0 257.0 Tm (declarations until checked against a real...) Tj ET
 BT /F1 7 Tf 1 0 0 1 320.0 157.0 Tm (Kind: evidence-traceability) Tj ET
 BT /F1 8 Tf 1 0 0 1 46.0 82.0 Tm (BLOCK is intentional when wording exceeds evidence or an execution claim lacks a receipt.) Tj ET
 BT /F1 8 Tf 1 0 0 1 46.0 62.0 Tm (The guards remain configurable and do not hard-code material-specific trends.) Tj ET
@@ -261,10 +261,10 @@ xref
 0000002825 00000 n 
 0000008022 00000 n 
 0000008159 00000 n 
-0000011529 00000 n 
-0000011667 00000 n 
+0000011541 00000 n 
+0000011679 00000 n 
 trailer
 << /Size 13 /Root 1 0 R >>
 startxref
-13324
+13336
 %%EOF

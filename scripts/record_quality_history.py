@@ -46,6 +46,13 @@ def _validated_entry(
         raise ValueError("quality-current tests must be an object")
     if not isinstance(performance, dict):
         raise ValueError("quality-current performance must be an object")
+    coverage_summary = {
+        "line_percent": coverage["line_percent"],
+        "branch_percent": coverage["branch_percent"],
+    }
+    # Retain the explicit metric for new runs without inventing it for old records.
+    if "combined_percent" in coverage:
+        coverage_summary["combined_percent"] = coverage["combined_percent"]
     return {
         "release": release,
         "evidence_scope": "current-tree",
@@ -54,10 +61,7 @@ def _validated_entry(
         "workflow_run_id": workflow_run_id,
         "workflow_attempt": workflow_attempt,
         "status": "PASS",
-        "coverage": {
-            "line_percent": coverage["line_percent"],
-            "branch_percent": coverage["branch_percent"],
-        },
+        "coverage": coverage_summary,
         "mutation": {
             "killed": mutation["killed"],
             "total": mutation["total"],

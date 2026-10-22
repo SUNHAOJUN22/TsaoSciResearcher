@@ -96,7 +96,7 @@ def main() -> None:
             check=True,
         )
         result = _run_checked(
-            [str(python), "-c", "import tsao_researcher; print(tsao_researcher.__version__)"]
+            [str(python), "-I", "-c", "import tsao_researcher; print(tsao_researcher.__version__)"]
         )
         if result.stdout.strip() != version:
             raise SystemExit("isolated wheel import version mismatch")
@@ -104,7 +104,7 @@ def main() -> None:
             ["-m", "tsao_researcher", "route", "Design a traceable multiscale polymer study"],
             ["-m", "tsao_researcher", "search", "polymer molecular dynamics", "--limit", "3"],
         ):
-            completed = _run_checked([str(python), *arguments])
+            completed = _run_checked([str(python), "-I", *arguments])
             if not completed.stdout.strip().startswith(("{", "[")):
                 raise SystemExit(f"installed runtime command produced invalid output: {arguments}")
 

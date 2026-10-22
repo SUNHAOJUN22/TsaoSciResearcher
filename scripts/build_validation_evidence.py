@@ -8,11 +8,17 @@ import hashlib
 import json
 import os
 import re
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Any
 
 import jsonschema
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common import source_candidates
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/VALIDATION_EVIDENCE.json"
@@ -84,7 +90,7 @@ def _is_coverage_runtime_file(path: Path) -> bool:
 
 def _source_files() -> list[Path]:
     rows: list[Path] = []
-    for path in ROOT.rglob("*"):
+    for path in source_candidates(ROOT):
         relative = path.relative_to(ROOT)
         if any(part in EXCLUDED_DIRS or part.endswith(".egg-info") for part in relative.parts):
             continue
