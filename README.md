@@ -194,7 +194,18 @@ v_{\mathrm{SI}}=s_u v_u,\qquad
 \operatorname{finite}(v_u)\land\operatorname{finite}(v_{\mathrm{SI}}).
 $$
 
-Booleans, numeric strings, huge integers and conversion overflow are rejected. The mathematical registry's more general uncertainty and scale equations in section 3 are advisory contracts; the runtime does not execute Jacobian estimation, Bayesian inference, CFD or DFT from those formulas. Use covariance terms when errors are correlated, and justify local linearization before applying first-order propagation.
+Booleans, numeric strings, integers outside the finite numeric range and conversion overflow are rejected. All implemented unit factors are integers, so integer inputs retain their exact distinctions during scaling and comparison: `2**53 Pa` is smaller than `(2**53 + 1) Pa`. Float inputs retain ordinary binary floating-point rounding; equality does not imply an uncertainty tolerance.
+
+Public JSON/JSONL readers, quality requests, handoff/receipt verification, project registries and capsule manifests reject duplicate keys, non-finite numbers and nonzero decimal tokens that would silently become zero. YAML project metadata and compatibility validators apply the same numeric and explicit-key checks, while preserving ordinary YAML merge overrides:
+
+$$
+x\ne0\ \land\ \operatorname{fl}(x)=0
+\quad\Longrightarrow\quad\text{reject the input}.
+$$
+
+True signed zero and representable subnormals such as `5e-324` remain valid. Choose appropriate units before serializing an out-of-range measurement, or retain it as explicitly documented textual source evidence; never replace it with a zero-valued measurement. A value already rounded to zero by the caller cannot reveal its original decimal token.
+
+The mathematical registry's more general uncertainty and scale equations in section 3 are advisory contracts; the runtime does not execute Jacobian estimation, Bayesian inference, CFD or DFT from those formulas. Use covariance terms when errors are correlated, and justify local linearization before applying first-order propagation.
 
 The deterministic causal guard scopes negation to the affected marker. “Cannot establish causality” cannot hide a separate affirmative “C causes D” assertion in the same text. Simplified/traditional Chinese markers, including `使得`, `导致/導致`, `驱动/驅動` and `决定/決定`, are handled. It still needs the declared design, comparison, temporal order and confounder controls; this guard is not a general natural-language proof engine.
 

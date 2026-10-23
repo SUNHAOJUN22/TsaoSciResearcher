@@ -153,7 +153,8 @@ jobs:
               uv sync --frozen --extra dev --extra agent --extra signing
               ;;
             SUNHAOJUN22/TsaoSciComputation)
-              python -m pip install -e '.[validation,quality,security]'
+              python -m pip install --require-hashes --only-binary=:all: -r requirements-ci.txt
+              python -m pip install --no-index --no-deps --no-build-isolation -e '.[validation,quality,security]'
               python -m pip check
               ;;
             SUNHAOJUN22/TSAO-PROCESSING-SKILL)

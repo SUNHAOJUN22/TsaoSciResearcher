@@ -19,7 +19,7 @@ metadata:
   legacy_capability_count: 158
   domain_named_capability_count: 164
   workflow_count: 15
-  schema_count: 19
+  schema_count: 20
   domain_pack_count: 7
   progressive_disclosure: true
   evidence_first: true

@@ -14,6 +14,7 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.common import ROOT
+from tsao_researcher.io import load_json
 
 
 def main() -> None:
@@ -24,7 +25,7 @@ def main() -> None:
         strategy_path = Path(args.strategy)
         if strategy_path.is_symlink() or not strategy_path.is_file():
             raise ValueError("strategy input must be a regular file")
-        value = json.loads(strategy_path.read_text(encoding="utf-8", errors="strict"))
+        value = load_json(strategy_path)
         schema = json.loads(
             (ROOT / "schemas/v2/computation-strategy.schema.json").read_text(
                 encoding="utf-8", errors="strict"

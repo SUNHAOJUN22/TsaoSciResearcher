@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import math
 from datetime import datetime
 from pathlib import Path
@@ -17,6 +16,7 @@ from .io import (
     atomic_write_text,
     exclusive_lock,
     file_transaction,
+    load_json,
     new_id,
     project_regular_file,
     read_jsonl,
@@ -110,7 +110,7 @@ def record_receipt(
     if not isinstance(handoff_path, str):
         raise TypeError("handoff_path must be a string")
     handoff_file = _safe_project_file(state_root, handoff_path, field="handoff")
-    handoff = json.loads(handoff_file.read_text(encoding="utf-8", errors="strict"))
+    handoff = load_json(handoff_file)
     registered_handoffs = project.get("computation_handoffs", [])
     relative_handoff = handoff_file.relative_to(state_root.resolve()).as_posix()
     if not isinstance(registered_handoffs, list) or relative_handoff not in registered_handoffs:
@@ -235,7 +235,10 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         registered_handoffs = project.get("computation_handoffs", [])
         if not isinstance(registered_handoffs, list) or handoff_path not in registered_handoffs:
             raise IntegrityError(f"execution receipt handoff is not registered: {receipt_id}")
-        handoff = json.loads(handoff_file.read_text(encoding="utf-8", errors="strict"))
+        try:
+            handoff = load_json(handoff_file)
+        except ValueError as exc:
+            raise IntegrityError(f"invalid execution receipt handoff JSON: {exc}") from exc
         if not isinstance(handoff, dict) or handoff.get("handoff_id") != receipt.get("handoff_id"):
             raise IntegrityError(f"execution receipt handoff mismatch: {receipt_id}")
         if handoff.get("project_id") != project.get("project_id"):

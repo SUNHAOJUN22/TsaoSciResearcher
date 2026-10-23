@@ -21,11 +21,13 @@ from .io import (
     canonical_json,
     exclusive_lock,
     file_transaction,
+    load_json,
     new_id,
     project_regular_file,
     read_jsonl,
     utc_now,
 )
+from .yaml_io import load_yaml
 
 STATE_DIR = ".tsao-research"
 MANAGED_MARKER = "This directory is managed by TsaoSciResearcher."
@@ -68,7 +70,7 @@ def load_project(root: str | Path) -> dict[str, Any]:
     path = _project_path(root)
     if path.is_symlink() or not path.is_file():
         raise FileNotFoundError(path)
-    value = yaml.safe_load(path.read_text(encoding="utf-8", errors="strict"))
+    value = load_yaml(path)
     if not isinstance(value, dict):
         raise ValidationError("project.yaml must contain a mapping")
     return value
@@ -368,7 +370,10 @@ def verify(root: str | Path) -> dict[str, Any]:
         path = state_root / filename
         if path.is_symlink() or not path.is_file():
             raise IntegrityError(f"required project registry missing or unsafe: {filename}")
-        value = json.loads(path.read_text(encoding="utf-8", errors="strict"))
+        try:
+            value = load_json(path)
+        except ValueError as exc:
+            raise IntegrityError(f"invalid project registry JSON: {exc}") from exc
         if not isinstance(value, dict) or not isinstance(value.get(key), list):
             raise IntegrityError(f"invalid project registry: {filename}")
     for filename in COMPATIBILITY_JSONL:
@@ -387,7 +392,10 @@ def verify(root: str | Path) -> dict[str, Any]:
             candidate = project_regular_file(state_root, relative, field="computation handoff")
         except ValidationError as exc:
             raise IntegrityError(str(exc)) from exc
-        value = json.loads(candidate.read_text(encoding="utf-8", errors="strict"))
+        try:
+            value = load_json(candidate)
+        except ValueError as exc:
+            raise IntegrityError(f"invalid registered computation handoff JSON: {exc}") from exc
         if not isinstance(value, dict) or value.get("project_id") != project.get("project_id"):
             raise IntegrityError(f"registered computation handoff is invalid: {relative}")
 

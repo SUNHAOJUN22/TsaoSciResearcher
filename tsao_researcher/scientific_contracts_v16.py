@@ -118,11 +118,11 @@ def claim_readiness(evidence: list[dict[str, object]]) -> str:
 
 
 _UNITS = {
-    "Pa": ("pressure", 1.0),
-    "kPa": ("pressure", 1.0e3),
-    "MPa": ("pressure", 1.0e6),
-    "bar": ("pressure", 1.0e5),
-    "K": ("temperature", 1.0),
+    "Pa": ("pressure", 1),
+    "kPa": ("pressure", 1000),
+    "MPa": ("pressure", 1000000),
+    "bar": ("pressure", 100000),
+    "K": ("temperature", 1),
 }
 
 
@@ -145,9 +145,13 @@ def compare_quantities(
         raise ContractError("quantities must be finite")
     if left_unit not in _UNITS or right_unit not in _UNITS or _UNITS[left_unit][0] != _UNITS[right_unit][0]:
         raise ContractError("dimension mismatch")
-    left = float(left_value) * _UNITS[left_unit][1]
-    right = float(right_value) * _UNITS[right_unit][1]
-    if not isfinite(left) or not isfinite(right):
+    left = left_value * _UNITS[left_unit][1]
+    right = right_value * _UNITS[right_unit][1]
+    try:
+        converted_finite = isfinite(left) and isfinite(right)
+    except OverflowError as exc:
+        raise ContractError("unit conversion exceeds finite numeric range") from exc
+    if not converted_finite:
         raise ContractError("unit conversion exceeds finite numeric range")
     operations = {">": left > right, "<": left < right, "==": left == right}
     if operator not in operations:

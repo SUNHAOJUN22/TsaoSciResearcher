@@ -83,8 +83,10 @@ jobs:
           cd target
           if [ "$TARGET_PHASE" = 2 ]; then
             test -s "$RUNNER_TEMP/previous/python-constraints.txt"
-            python -m pip install -r "$RUNNER_TEMP/previous/python-constraints.txt"
             export PIP_CONSTRAINT="$RUNNER_TEMP/previous/python-constraints.txt"
+            if [ "$TARGET_REPO" != "TsaoSciComputation" ]; then
+              python -m pip install -r "$PIP_CONSTRAINT"
+            fi
           fi
           case "$TARGET_REPO" in
             AspenOps-Agent)
@@ -93,7 +95,8 @@ jobs:
               uv sync --frozen --extra dev --extra agent --extra signing
               ;;
             TsaoSciComputation)
-              python -m pip install -e '.[validation,quality,security]'
+              python -m pip install --require-hashes --only-binary=:all: -r requirements-ci.txt
+              python -m pip install --no-index --no-deps --no-build-isolation -e '.[validation,quality,security]'
               ;;
             TSAO-PROCESSING-SKILL)
               python -m pip install --require-hashes -r requirements.lock

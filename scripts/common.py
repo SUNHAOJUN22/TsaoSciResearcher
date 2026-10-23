@@ -8,10 +8,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-import yaml
-
 from tsao_researcher.io import _decode_json
 from tsao_researcher.io import append_jsonl as _append_jsonl
+from tsao_researcher.yaml_io import decode_yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_DIR = ".tsao-research"
@@ -36,7 +35,7 @@ def load_data(path: str | Path) -> Any:
     source = _regular_file(Path(path))
     text = source.read_text(encoding="utf-8", errors="strict")
     if source.suffix.lower() in {".yaml", ".yml"}:
-        return yaml.safe_load(text)
+        return decode_yaml(text)
     return _decode_json(text)
 
 

@@ -31,6 +31,14 @@ def _reject_non_finite(value: str) -> NoReturn:
     raise ValidationError(f"non-finite JSON number is forbidden: {value}")
 
 
+def _parse_json_float(value: str) -> float:
+    result = float(value)
+    significand = value.lower().split("e", 1)[0]
+    if result == 0.0 and any(digit in "123456789" for digit in significand):
+        raise ValidationError("non-zero JSON number underflows the finite numeric range")
+    return result
+
+
 def _unique_json_object(pairs: list[tuple[str, Any]]) -> JsonObject:
     result: JsonObject = {}
     for key, value in pairs:
@@ -41,8 +49,13 @@ def _unique_json_object(pairs: list[tuple[str, Any]]) -> JsonObject:
 
 
 def _decode_json(text: str) -> Any:
-    """Reject ambiguous objects and non-finite numbers with a field location."""
-    value = json.loads(text, parse_constant=_reject_non_finite, object_pairs_hook=_unique_json_object)
+    """Reject ambiguous objects, non-finite numbers and silent nonzero underflow."""
+    value = json.loads(
+        text,
+        parse_constant=_reject_non_finite,
+        parse_float=_parse_json_float,
+        object_pairs_hook=_unique_json_object,
+    )
     pending: list[tuple[str, Any]] = [("$", value)]
     while pending:
         location, current = pending.pop()

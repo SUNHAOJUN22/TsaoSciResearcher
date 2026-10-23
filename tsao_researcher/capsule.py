@@ -15,7 +15,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from .errors import IntegrityError, ValidationError
-from .io import atomic_write_text, canonical_json, sha256_file
+from .io import _decode_json, atomic_write_text, canonical_json, sha256_file
 from .receipts import verify_receipts
 from .state import load_project, project_root, verify
 from .version import __version__
@@ -238,7 +238,10 @@ def verify_capsule(path: str | Path) -> dict[str, Any]:
                 raise IntegrityError("capsule exceeds expanded-size limit")
         if "capsule/manifest.json" not in names:
             raise IntegrityError("capsule manifest is missing")
-        manifest = json.loads(handle.read("capsule/manifest.json").decode("utf-8", errors="strict"))
+        try:
+            manifest = _decode_json(handle.read("capsule/manifest.json").decode("utf-8", errors="strict"))
+        except ValueError as exc:
+            raise IntegrityError(f"invalid capsule manifest JSON: {exc}") from exc
         if not isinstance(manifest, dict) or manifest.get("schema_version") != CAPSULE_SCHEMA_VERSION:
             raise IntegrityError("capsule manifest schema is invalid")
         records = manifest.get("files")

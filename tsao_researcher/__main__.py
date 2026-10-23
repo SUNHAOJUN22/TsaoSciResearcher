@@ -22,7 +22,9 @@ def _emit(value: Any) -> None:
 
 
 def _load_quality_request(path: str) -> dict[str, Any]:
-    value = json.loads(Path(path).read_text(encoding="utf-8", errors="strict"))
+    from .io import load_json
+
+    value = load_json(path)
     if not isinstance(value, dict):
         raise ValueError("quality request root must be a JSON object")
     return value
