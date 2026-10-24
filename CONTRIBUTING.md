@@ -14,6 +14,12 @@ python -m pytest -q -p hypothesis.extra.pytestplugin
 
 A change is complete only when behavior, Schema, CLI, tests, documentation and generated evidence agree. New executable behavior requires positive, negative, boundary and tamper tests. Generated files must pass their `--check` mode and deterministic outputs must be byte-identical.
 
+Tracked UTF-8 text uses LF line endings on every platform. The repository's
+`.gitattributes` keeps fresh Windows checkouts consistent with the Unicode gate,
+including when a contributor uses `core.autocrlf=true`; binary artifacts retain
+their original bytes. The gate continues to reject CRLF and other encoding
+defects instead of normalizing them during validation.
+
 ## Capability contracts
 
 New capabilities require a unique slug, workflow, bounded inputs, explicit outputs, evidence policy, risk level, applicability boundary and completion gates. A named external engine is an integration target, not proof that it is installed or executed.

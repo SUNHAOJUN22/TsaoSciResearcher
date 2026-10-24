@@ -57,8 +57,8 @@
     "evidence_generated_from_commit": null,
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
-    "validated_file_count": 485,
-    "validated_tree_sha256": "3bd4a4659507485fec67e436fac6fedd47a9f728eca2575c14674a86d63cb8db",
+    "validated_file_count": 486,
+    "validated_tree_sha256": "0bb1027dd4b4e7a45ede8b0c0b391a6a3073f4f487ff25612e0e9bd2e8f716be",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null
@@ -73,7 +73,7 @@
     "generic_domain_placeholders": 0,
     "runtime_core_capabilities": 19,
     "schemas": 20,
-    "test_modules": 64,
+    "test_modules": 65,
     "workbook_named_capabilities": 322,
     "workflows": 15
   },
