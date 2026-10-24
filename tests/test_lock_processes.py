@@ -13,6 +13,7 @@ from typing import Any
 
 import pytest
 
+import tsao_researcher.io as researcher_io
 from tsao_researcher.errors import LockTimeoutError
 from tsao_researcher.io import exclusive_lock
 
@@ -104,6 +105,34 @@ def test_concurrent_stale_lock_recovery_never_enters_two_critical_sections(
     assert errors == []
     assert acquired == {"late-reclaimer", "fast-reclaimer"}
     assert max_active == 1
+
+
+def test_stale_owner_is_rechecked_only_after_recovery_guard_is_acquired(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock = tmp_path / "stale-owner-guard.lock"
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    dead_pid = child.pid
+    child.wait(timeout=5)
+    lock.write_text(
+        json.dumps({"pid": dead_pid, "host": socket.gethostname(), "token": "stale"}),
+        encoding="utf-8",
+    )
+    old = time.time() - 60
+    os.utime(lock, (old, old))
+
+    original_probe = researcher_io._lock_owner_is_alive
+    observed_guard_state: list[bool] = []
+
+    def guarded_owner_probe(path: Path) -> bool:
+        guarded = researcher_io._STALE_LOCK_RECOVERY_THREAD_GUARD.locked()
+        observed_guard_state.append(guarded)
+        assert guarded, "owner metadata must not be opened while another reclaimer may unlink it"
+        return original_probe(path)
+
+    monkeypatch.setattr(researcher_io, "_lock_owner_is_alive", guarded_owner_probe)
+    with exclusive_lock(lock, timeout=2, stale_after=0.01):
+        assert observed_guard_state == [True]
 
 
 def test_stale_lock_recovery_guard_serializes_separate_processes(

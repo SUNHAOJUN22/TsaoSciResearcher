@@ -696,7 +696,6 @@ def exclusive_lock(
                 if (
                     stat.S_ISREG(observed.st_mode)
                     and time.time() - observed.st_mtime > stale_after
-                    and not _lock_owner_is_alive(lock)
                     and _reclaim_stale_lock(lock, observed, stale_after, deadline)
                 ):
                     continue
