@@ -7,6 +7,8 @@ import json
 import math
 import os
 import secrets
+import socket
+import stat
 import tempfile
 import time
 from collections.abc import Iterator, Mapping, Sequence
@@ -427,6 +429,58 @@ def _unlink_if_same(path: Path, stat_result: os.stat_result) -> bool:
     return True
 
 
+def _lock_owner_is_alive(path: Path) -> bool:
+    """Return conservatively whether a lock file names a live local owner.
+
+    Unknown, foreign-host, or malformed ownership is treated as live.  This
+    favors mutual exclusion over reclaiming a lock whose owner cannot be
+    established safely.
+    """
+    try:
+        observed = path.lstat()
+    except FileNotFoundError:
+        return False
+    if stat.S_ISLNK(observed.st_mode) or not stat.S_ISREG(observed.st_mode):
+        return True
+    flags = os.O_RDONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        fd = os.open(path, flags)
+        try:
+            if (opened := os.fstat(fd)).st_ino != observed.st_ino or opened.st_dev != observed.st_dev:
+                return True
+            payload = os.read(fd, 4096).decode("utf-8", errors="strict")
+        finally:
+            os.close(fd)
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+    try:
+        value = _decode_json(payload)
+    except (UnicodeError, ValueError):
+        return True
+    if not isinstance(value, dict) or not isinstance(value.get("pid"), int):
+        return True
+    host = value.get("host")
+    if host is not None and host != socket.gethostname():
+        return True
+    pid = value["pid"]
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        # An inability to query process state must not authorize lock theft.
+        return True
+    return True
+
+
 @contextmanager
 def exclusive_lock(
     path: str | Path,
@@ -443,7 +497,13 @@ def exclusive_lock(
     _reject_symlink_components(lock, include_leaf=False)
     deadline = time.monotonic() + timeout
     token = secrets.token_hex(32)
-    payload = (canonical_json({"pid": os.getpid(), "created_at": utc_now(), "token": token}) + "\n").encode()
+    owner_pid = os.getpid()
+    payload = (
+        canonical_json(
+            {"pid": owner_pid, "host": socket.gethostname(), "created_at": utc_now(), "token": token}
+        )
+        + "\n"
+    ).encode()
     identity: tuple[int, int] | None = None
     while True:
         try:
@@ -455,7 +515,12 @@ def exclusive_lock(
             try:
                 observed = lock.lstat()
                 age = time.time() - observed.st_mtime
-                if age > stale_after and not lock.is_symlink() and _unlink_if_same(lock, observed):
+                if (
+                    age > stale_after
+                    and not lock.is_symlink()
+                    and not _lock_owner_is_alive(lock)
+                    and _unlink_if_same(lock, observed)
+                ):
                     continue
             except FileNotFoundError:
                 continue
@@ -475,7 +540,9 @@ def exclusive_lock(
     try:
         yield
     finally:
-        if identity is not None and _same_lock(lock, identity, token):
+        # A forked child inherits this context manager object.  It must not
+        # release the lock owned by the parent process.
+        if os.getpid() == owner_pid and identity is not None and _same_lock(lock, identity, token):
             try:
                 current = lock.lstat()
                 _unlink_if_same(lock, current)

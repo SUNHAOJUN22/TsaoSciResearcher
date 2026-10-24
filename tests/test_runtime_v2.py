@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -160,7 +162,11 @@ def test_lock_timeout_and_stale_lock_recovery(tmp_path: Path) -> None:
     lock = tmp_path / "x.lock"
     with exclusive_lock(lock), pytest.raises(LockTimeoutError), exclusive_lock(lock, timeout=0.01):
         pass
-    lock.write_text("stale", encoding="utf-8")
+    exited = subprocess.Popen([sys.executable, "-c", "pass"])
+    exited.wait(timeout=5)
+    lock.write_text(
+        canonical_json({"pid": exited.pid, "created_at": "old", "token": "stale"}), encoding="utf-8"
+    )
     old = time.time() - 1000
     os.utime(lock, (old, old))
     with exclusive_lock(lock, timeout=0.1, stale_after=10):
