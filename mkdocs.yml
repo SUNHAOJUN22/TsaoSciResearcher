@@ -15,6 +15,7 @@ nav:
   - Scientific quality: SCIENTIFIC_QUALITY.md
   - First-principles strategy: FIRST_PRINCIPLES_STRATEGY.md
   - Reproducibility capsule: REPRODUCIBILITY_CAPSULE.md
+  - Lock ownership: LOCKING.md
   - Execution receipts: EXECUTION_RECEIPTS.md
   - Supply chain: SUPPLY_CHAIN.md
   - Release process: RELEASE_PROCESS.md

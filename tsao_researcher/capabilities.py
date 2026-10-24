@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from .errors import ValidationError
-from .io import load_json
+from .io import MAX_TEXT_BYTES, _decode_json, _regular_file
 
 PACKAGE_DATA = Path(__file__).resolve().parent / "data" / "capabilities"
 CATALOG_PATH = PACKAGE_DATA / "capabilities.json"
@@ -61,9 +61,11 @@ def _clone_contract_rows(rows: tuple[dict[str, Any], ...]) -> list[dict[str, Any
 
 
 @lru_cache(maxsize=16)
-def _catalog(path: Path, mtime_ns: int, size: int) -> tuple[dict[str, Any], ...]:
-    del mtime_ns, size
-    value = load_json(path)
+def _catalog(path: Path, snapshot: bytes) -> tuple[dict[str, Any], ...]:
+    # The snapshot itself is the cache identity: size and timestamps can remain
+    # unchanged after content edits, including on Windows. Decode that same
+    # snapshot so a cache miss cannot read a different file version.
+    value = _decode_json(snapshot.decode("utf-8", errors="strict"))
     if not isinstance(value, list):
         raise ValidationError(f"v2 capability catalog must be a list: {path}")
     rows: list[dict[str, Any]] = []
@@ -145,14 +147,12 @@ def _catalog(path: Path, mtime_ns: int, size: int) -> tuple[dict[str, Any], ...]
 @lru_cache(maxsize=8)
 def _merged_catalog(
     base_path: Path,
-    base_mtime_ns: int,
-    base_size: int,
+    base_snapshot: bytes,
     extension_path: Path,
-    extension_mtime_ns: int,
-    extension_size: int,
+    extension_snapshot: bytes,
 ) -> tuple[dict[str, Any], ...]:
-    base_rows = _catalog(base_path, base_mtime_ns, base_size)
-    extension_rows = _catalog(extension_path, extension_mtime_ns, extension_size)
+    base_rows = _catalog(base_path, base_snapshot)
+    extension_rows = _catalog(extension_path, extension_snapshot)
     rows = (*base_rows, *extension_rows)
     ids: set[str] = set()
     slugs: set[str] = set()
@@ -166,28 +166,37 @@ def _merged_catalog(
     return rows
 
 
-def _rows(source: Path) -> tuple[dict[str, Any], ...]:
+def _catalog_snapshot(path: Path) -> bytes:
+    with _regular_file(path).open("rb") as handle:
+        snapshot = handle.read(MAX_TEXT_BYTES + 1)
+    if len(snapshot) > MAX_TEXT_BYTES:
+        raise ValidationError(f"input exceeds {MAX_TEXT_BYTES} bytes: {path}")
+    return snapshot
+
+
+def _catalog_sources(source: Path) -> tuple[tuple[Path, bytes], ...]:
+    """Read bounded snapshots before consulting any catalog or index cache."""
+
     if source != CATALOG_PATH:
         resolved = source.resolve()
-        stat = resolved.stat()
-        return _catalog(resolved, stat.st_mtime_ns, stat.st_size)
+        return ((resolved, _catalog_snapshot(resolved)),)
     base = CATALOG_PATH
-    base_stat = base.stat()
+    base_source = (base, _catalog_snapshot(base))
     extension = EXTENSIONS_PATH
     try:
         extension_stat = extension.stat()
     except FileNotFoundError:
-        return _catalog(base, base_stat.st_mtime_ns, base_stat.st_size)
+        return (base_source,)
     if not stat_module.S_ISREG(extension_stat.st_mode):
-        return _catalog(base, base_stat.st_mtime_ns, base_stat.st_size)
-    return _merged_catalog(
-        base,
-        base_stat.st_mtime_ns,
-        base_stat.st_size,
-        extension,
-        extension_stat.st_mtime_ns,
-        extension_stat.st_size,
-    )
+        return (base_source,)
+    return (base_source, (extension, _catalog_snapshot(extension)))
+
+
+def _rows(source: Path) -> tuple[dict[str, Any], ...]:
+    sources = _catalog_sources(source)
+    if len(sources) == 1:
+        return _catalog(*sources[0])
+    return _merged_catalog(*sources[0], *sources[1])
 
 
 def load_capabilities(path: str | Path = CATALOG_PATH) -> list[dict[str, Any]]:
@@ -231,54 +240,26 @@ def _build_search_index(
 
 @lru_cache(maxsize=16)
 def _single_search_index(
-    path: Path, mtime_ns: int, size: int
+    path: Path, snapshot: bytes
 ) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
-    return _build_search_index(_catalog(path, mtime_ns, size))
+    return _build_search_index(_catalog(path, snapshot))
 
 
 @lru_cache(maxsize=8)
 def _merged_search_index(
     base_path: Path,
-    base_mtime_ns: int,
-    base_size: int,
+    base_snapshot: bytes,
     extension_path: Path,
-    extension_mtime_ns: int,
-    extension_size: int,
+    extension_snapshot: bytes,
 ) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
-    return _build_search_index(
-        _merged_catalog(
-            base_path,
-            base_mtime_ns,
-            base_size,
-            extension_path,
-            extension_mtime_ns,
-            extension_size,
-        )
-    )
+    return _build_search_index(_merged_catalog(base_path, base_snapshot, extension_path, extension_snapshot))
 
 
 def _search_rows(source: Path) -> tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]:
-    if source != CATALOG_PATH:
-        resolved = source.resolve()
-        stat = resolved.stat()
-        return _single_search_index(resolved, stat.st_mtime_ns, stat.st_size)
-    base = CATALOG_PATH
-    base_stat = base.stat()
-    extension = EXTENSIONS_PATH
-    try:
-        extension_stat = extension.stat()
-    except FileNotFoundError:
-        return _single_search_index(base, base_stat.st_mtime_ns, base_stat.st_size)
-    if not stat_module.S_ISREG(extension_stat.st_mode):
-        return _single_search_index(base, base_stat.st_mtime_ns, base_stat.st_size)
-    return _merged_search_index(
-        base,
-        base_stat.st_mtime_ns,
-        base_stat.st_size,
-        extension,
-        extension_stat.st_mtime_ns,
-        extension_stat.st_size,
-    )
+    sources = _catalog_sources(source)
+    if len(sources) == 1:
+        return _single_search_index(*sources[0])
+    return _merged_search_index(*sources[0], *sources[1])
 
 
 def search_capabilities(

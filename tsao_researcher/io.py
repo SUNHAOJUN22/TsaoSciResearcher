@@ -9,6 +9,7 @@ import os
 import secrets
 import socket
 import stat
+import sys
 import tempfile
 import time
 from collections.abc import Iterator, Mapping, Sequence
@@ -338,8 +339,8 @@ def append_jsonl(path: str | Path, record: Mapping[str, Any]) -> None:
             flags |= os.O_NOFOLLOW
         existed = target.exists()
         fd = os.open(target, flags, 0o644)
-        original_size = os.fstat(fd).st_size
         try:
+            original_size = os.fstat(fd).st_size
             try:
                 written = os.write(fd, payload)
                 if written != len(payload):
@@ -429,6 +430,53 @@ def _unlink_if_same(path: Path, stat_result: os.stat_result) -> bool:
     return True
 
 
+@lru_cache(maxsize=1)
+def _windows_process_api() -> Any:
+    """Bind pointer-width-safe, read-only process-query functions once."""
+
+    import ctypes
+    from ctypes import wintypes
+
+    windows_ctypes: Any = ctypes
+    api = windows_ctypes.WinDLL("kernel32", use_last_error=True)
+    api.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+    api.OpenProcess.restype = wintypes.HANDLE
+    api.GetProcessId.argtypes = (wintypes.HANDLE,)
+    api.GetProcessId.restype = wintypes.DWORD
+    api.WaitForSingleObject.argtypes = (wintypes.HANDLE, wintypes.DWORD)
+    api.WaitForSingleObject.restype = wintypes.DWORD
+    api.CloseHandle.argtypes = (wintypes.HANDLE,)
+    api.CloseHandle.restype = wintypes.BOOL
+    return api
+
+
+def _windows_process_is_alive(pid: int) -> bool:
+    """Only a verified, signaled process handle or absent PID proves death."""
+
+    import ctypes
+
+    # OpenProcess accepts a DWORD; never truncate an unrepresentable identity.
+    if not 0 < pid <= 0xFFFFFFFF:
+        return True
+    api = _windows_process_api()
+    # PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE, with a noninherited handle.
+    handle = api.OpenProcess(0x1000 | 0x00100000, False, pid)
+    if not handle:
+        # With valid fixed access flags and a positive DWORD PID, invalid
+        # parameter identifies an absent process. Access denial stays unknown.
+        windows_ctypes: Any = ctypes
+        return int(windows_ctypes.get_last_error()) != 87  # ERROR_INVALID_PARAMETER
+    try:
+        if int(api.GetProcessId(handle)) != pid:
+            return True
+        # WAIT_OBJECT_0 means this process has exited. Timeout and all failures
+        # remain live/unknown. A zero wait never delays the caller's timeout.
+        return int(api.WaitForSingleObject(handle, 0)) != 0
+    finally:
+        if not api.CloseHandle(handle):
+            raise OSError("could not close the process-query handle")
+
+
 def _lock_owner_is_alive(path: Path) -> bool:
     """Return conservatively whether a lock file names a live local owner.
 
@@ -455,13 +503,13 @@ def _lock_owner_is_alive(path: Path) -> bool:
             os.close(fd)
     except FileNotFoundError:
         return False
-    except OSError:
+    except (OSError, UnicodeError):
         return True
     try:
         value = _decode_json(payload)
     except (UnicodeError, ValueError):
         return True
-    if not isinstance(value, dict) or not isinstance(value.get("pid"), int):
+    if not isinstance(value, dict) or type(value.get("pid")) is not int:
         return True
     host = value.get("host")
     if host is not None and host != socket.gethostname():
@@ -470,12 +518,14 @@ def _lock_owner_is_alive(path: Path) -> bool:
     if pid <= 0:
         return False
     try:
+        if sys.platform == "win32":
+            return _windows_process_is_alive(pid)
         os.kill(pid, 0)
     except ProcessLookupError:
         return False
     except PermissionError:
         return True
-    except OSError:
+    except (OSError, OverflowError):
         # An inability to query process state must not authorize lock theft.
         return True
     return True
