@@ -20,9 +20,7 @@ def test_sbom_is_deterministic_and_matches_lock() -> None:
         if line and not line.startswith("#")
     ]
     assert len(first["components"]) == len(locked)
-    assert first["metadata"]["properties"][1]["value"] == canonical_sha256(
-        ROOT / "requirements-ci.lock"
-    )
+    assert first["metadata"]["properties"][1]["value"] == canonical_sha256(ROOT / "requirements-ci.lock")
 
 
 def test_validation_evidence_schema_16_and_lock_digest() -> None:
@@ -38,9 +36,7 @@ def test_validation_evidence_schema_16_and_lock_digest() -> None:
     assert value["validation_scope"] == "current-tree"
     assert value["provenance"]["commit_resolution"] == "external-attestation"
     assert len(value["provenance"]["dependency_lock_sha256"]) == 64
-    assert value["provenance"]["dependency_lock_sha256"] == canonical_sha256(
-        ROOT / "requirements-ci.lock"
-    )
+    assert value["provenance"]["dependency_lock_sha256"] == canonical_sha256(ROOT / "requirements-ci.lock")
     assert build_validation_evidence.validate(value) == []
     schema = json.loads((ROOT / "schemas/v2/validation-evidence.schema.json").read_text(encoding="utf-8"))
     assert schema["properties"]["schema_version"]["const"] == "1.6"
