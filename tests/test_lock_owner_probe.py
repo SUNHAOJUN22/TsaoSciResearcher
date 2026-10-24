@@ -262,6 +262,7 @@ def test_failed_append_descriptor_inspection_closes_file_and_preserves_records(
     target.write_text('{"id":1}\n', encoding="utf-8")
     original = target.read_bytes()
     opened: list[int] = []
+    injected: set[int] = set()
     real_open, real_stat = os.open, os.fstat
 
     def track_open(path: Any, flags: int, mode: int = 0o777) -> int:
@@ -271,7 +272,8 @@ def test_failed_append_descriptor_inspection_closes_file_and_preserves_records(
         return fd
 
     def inspect(fd: int) -> os.stat_result:
-        if fd in opened:
+        if fd in opened and fd not in injected:
+            injected.add(fd)
             raise OSError("injected append descriptor inspection failure")
         return real_stat(fd)
 

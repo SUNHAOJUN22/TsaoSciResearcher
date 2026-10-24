@@ -23,6 +23,15 @@ presence does not become research input or alter exported provenance. On POSIX,
 fork waits for active stale recovery to finish; the child resets the inherited
 thread mutex before it can attempt recovery. This coordinates the lock helper;
 it does not make general-purpose `fork()` from a multithreaded process safe.
+If the platform temporarily denies unlink of a stale lock, recovery retries
+without removing or bypassing the lock and remains bounded by the acquisition
+deadline.
+Owner payload probes and owner cleanup use the same guard, preventing a Windows
+reader handle from racing the owner's pathname removal.
+Owner cleanup waits for the guard only up to `DEFAULT_LOCK_TIMEOUT`. If that
+deadline expires, it leaves the lock file in place rather than unlinking without
+synchronization; contenders may keep timing out while the owner process remains
+alive, and stale recovery can proceed after that process exits.
 
 Windows `os.kill(pid, 0)` is not a POSIX existence query: CPython console builds
 route zero to `GenerateConsoleCtrlEvent`. The Windows implementation therefore
@@ -54,3 +63,6 @@ and catalog-cache regressions run explicitly in the Windows/Linux matrices.
 - [Python 3.12 `os.register_at_fork`](https://docs.python.org/3.12/library/os.html#os.register_at_fork)
 - [Python 3.12 `fcntl.flock`](https://docs.python.org/3.12/library/fcntl.html#fcntl.flock)
 - [Python 3.12 `msvcrt.locking`](https://docs.python.org/3.12/library/msvcrt.html#msvcrt.locking)
+- [Python 3.12 Windows behavior for `os.remove`/`os.unlink`](https://docs.python.org/3.12/library/os.html#os.remove)
+- [Python 3.12 Windows open-handle sharing and `PermissionError`](https://docs.python.org/3.12/library/tempfile.html#tempfile.NamedTemporaryFile)
+- [Microsoft CRT file-sharing modes](https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sopen-s-wsopen-s)

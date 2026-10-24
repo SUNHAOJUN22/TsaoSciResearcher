@@ -67,7 +67,9 @@ def test_external_capsule_can_be_refreshed_without_changing_project_state(tmp_pa
     assert _project_bytes(root) == before
     with zipfile.ZipFile(archive) as handle:
         manifest = json.loads(handle.read("capsule/manifest.json"))
-    assert {row["path"] for row in manifest["files"]} == set(before)
+    reserved_runtime_names = {".mutation.lock", ".tsao-researcher-lock-recovery.guard"}
+    expected_paths = {path for path in before if Path(path).name not in reserved_runtime_names}
+    assert {row["path"] for row in manifest["files"]} == expected_paths
 
 
 def test_capsule_rejects_output_parent_linked_into_project(tmp_path: Path) -> None:

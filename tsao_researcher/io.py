@@ -556,7 +556,13 @@ def _reclaim_stale_lock(
             or _lock_owner_is_alive(lock_path)
         ):
             return False
-        return _unlink_if_same(lock_path, current)
+        try:
+            return _unlink_if_same(lock_path, current)
+        except PermissionError:
+            # Windows can transiently deny unlink while another process still
+            # has a non-delete-sharing handle open. Keep the stale lock in place
+            # and let exclusive_lock retry within its existing deadline.
+            return False
 
 
 @lru_cache(maxsize=1)
@@ -719,12 +725,18 @@ def exclusive_lock(
     finally:
         # A forked child inherits this context manager object.  It must not
         # release the lock owned by the parent process.
-        if os.getpid() == owner_pid and identity is not None and _same_lock(lock, identity, token):
-            try:
-                current = lock.lstat()
-                _unlink_if_same(lock, current)
-            except FileNotFoundError:
-                pass
+        if os.getpid() == owner_pid and identity is not None:
+            # Owner probes and stale recovery also hold this guard. On Windows,
+            # unlink can fail while another thread has a non-delete-sharing
+            # handle open to inspect the lock payload.
+            cleanup_deadline = time.monotonic() + DEFAULT_LOCK_TIMEOUT
+            with _stale_recovery_guard(lock, cleanup_deadline) as acquired:
+                if acquired and _same_lock(lock, identity, token):
+                    try:
+                        current = lock.lstat()
+                        _unlink_if_same(lock, current)
+                    except FileNotFoundError:
+                        pass
 
 
 __all__ = [

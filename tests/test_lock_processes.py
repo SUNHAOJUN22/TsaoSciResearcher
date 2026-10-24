@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import json
 import multiprocessing
 import os
@@ -13,7 +14,7 @@ from typing import Any
 
 import pytest
 
-import tsao_researcher.io as researcher_io
+import tsao_researcher.io as io_module
 from tsao_researcher.errors import LockTimeoutError
 from tsao_researcher.io import exclusive_lock
 
@@ -121,18 +122,120 @@ def test_stale_owner_is_rechecked_only_after_recovery_guard_is_acquired(
     old = time.time() - 60
     os.utime(lock, (old, old))
 
-    original_probe = researcher_io._lock_owner_is_alive
+    original_probe = io_module._lock_owner_is_alive
     observed_guard_state: list[bool] = []
 
     def guarded_owner_probe(path: Path) -> bool:
-        guarded = researcher_io._STALE_LOCK_RECOVERY_THREAD_GUARD.locked()
+        guarded = io_module._STALE_LOCK_RECOVERY_THREAD_GUARD.locked()
         observed_guard_state.append(guarded)
         assert guarded, "owner metadata must not be opened while another reclaimer may unlink it"
         return original_probe(path)
 
-    monkeypatch.setattr(researcher_io, "_lock_owner_is_alive", guarded_owner_probe)
+    monkeypatch.setattr(io_module, "_lock_owner_is_alive", guarded_owner_probe)
     with exclusive_lock(lock, timeout=2, stale_after=0.01):
         assert observed_guard_state == [True]
+
+
+def test_stale_lock_recovery_retries_transient_unlink_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock = tmp_path / "stale-unlink-retry.lock"
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    dead_pid = child.pid
+    child.wait(timeout=5)
+    lock.write_text(
+        json.dumps({"pid": dead_pid, "host": socket.gethostname(), "token": "stale"}),
+        encoding="utf-8",
+    )
+    old = time.time() - 60
+    os.utime(lock, (old, old))
+
+    original_unlink = Path.unlink
+    denied_once = True
+
+    def deny_one_unlink(path: Path, *args: Any, **kwargs: Any) -> None:
+        nonlocal denied_once
+        if path == lock and denied_once:
+            denied_once = False
+            raise PermissionError(errno.EACCES, "simulated transient sharing denial", str(path))
+        original_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", deny_one_unlink)
+
+    with exclusive_lock(lock, timeout=2, stale_after=0.01):
+        assert lock.exists()
+
+    assert not denied_once
+    assert not lock.exists()
+
+
+def test_owner_release_waits_for_guarded_stale_owner_probe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock = tmp_path / "owner-probe-release-race.lock"
+    owner_ready = threading.Event()
+    release_owner = threading.Event()
+    owner_released = threading.Event()
+    probe_entered = threading.Event()
+    finish_probe = threading.Event()
+    waiter_entered = threading.Event()
+    owner_errors: list[BaseException] = []
+    waiter_errors: list[BaseException] = []
+
+    def own_lock() -> None:
+        try:
+            with exclusive_lock(lock, timeout=3, stale_after=0.01):
+                owner_ready.set()
+                if not release_owner.wait(5):
+                    raise RuntimeError("test did not release lock owner")
+            owner_released.set()
+        except BaseException as exc:
+            owner_errors.append(exc)
+
+    original_probe = io_module._lock_owner_is_alive
+
+    def paused_probe(path: Path) -> bool:
+        if path == lock and threading.current_thread().name == "paused-owner-probe":
+            probe_entered.set()
+            if not finish_probe.wait(3):
+                raise RuntimeError("test did not release the owner probe")
+        return original_probe(path)
+
+    monkeypatch.setattr(io_module, "_lock_owner_is_alive", paused_probe)
+
+    def wait_for_lock() -> None:
+        try:
+            with exclusive_lock(lock, timeout=5, stale_after=0.01):
+                waiter_entered.set()
+        except BaseException as exc:
+            waiter_errors.append(exc)
+
+    owner = threading.Thread(target=own_lock, name="active-owner")
+    waiter = threading.Thread(target=wait_for_lock, name="paused-owner-probe")
+    owner.start()
+    try:
+        assert owner_ready.wait(2)
+        old = time.time() - 60
+        os.utime(lock, (old, old))
+        waiter.start()
+        assert probe_entered.wait(2)
+        release_owner.set()
+        assert not owner_released.wait(0.2)
+        assert not waiter_entered.wait(0.2)
+    finally:
+        finish_probe.set()
+        release_owner.set()
+        owner.join(4)
+        if waiter.ident is not None:
+            waiter.join(6)
+
+    assert not owner.is_alive()
+    assert not waiter.is_alive()
+    assert waiter_entered.is_set()
+    assert owner_released.is_set()
+    assert owner_errors == []
+    assert waiter_errors == []
+    assert not lock.exists()
 
 
 def test_stale_lock_recovery_guard_serializes_separate_processes(
