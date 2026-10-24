@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -53,7 +54,10 @@ def test_mechanical_normalization_is_idempotent(tmp_path: Path) -> None:
 
     assert normalize_file(path) is True
     assert path.read_text(encoding="utf-8") == "value = 'caf\N{LATIN SMALL LETTER E WITH ACUTE}'\n"
-    assert path.stat().st_mode & 0o777 == 0o754
+    if os.name == "nt":
+        assert os.access(path, os.W_OK)
+    else:
+        assert path.stat().st_mode & 0o777 == 0o754
     assert audit_repository(tmp_path)["verdict"] == "PASS"
     assert normalize_file(path) is False
 

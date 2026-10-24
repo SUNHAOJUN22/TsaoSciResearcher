@@ -160,6 +160,20 @@ def test_unknown_or_foreign_ownership_does_not_query_a_process(
     assert lock.read_bytes() == payload
 
 
+@pytest.mark.parametrize("pid", [0, -1])
+def test_nonpositive_lock_pid_stays_protected(tmp_path: Path, pid: int) -> None:
+    lock = tmp_path / "nonpositive-owner.lock"
+    _owner_file(lock, pid)
+    payload = lock.read_bytes()
+    old = time.time() - 60
+    os.utime(lock, (old, old))
+
+    with pytest.raises(LockTimeoutError), io.exclusive_lock(lock, timeout=0.05, stale_after=0.01):
+        pytest.fail("unknown process ownership must not authorize lock recovery")
+
+    assert lock.read_bytes() == payload
+
+
 def _mock_windows_api(
     monkeypatch: pytest.MonkeyPatch,
     *,

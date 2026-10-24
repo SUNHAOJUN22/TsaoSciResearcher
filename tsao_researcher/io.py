@@ -516,7 +516,7 @@ def _lock_owner_is_alive(path: Path) -> bool:
         return True
     pid = value["pid"]
     if pid <= 0:
-        return False
+        return True
     try:
         if sys.platform == "win32":
             return _windows_process_is_alive(pid)
