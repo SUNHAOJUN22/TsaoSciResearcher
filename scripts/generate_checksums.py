@@ -11,6 +11,7 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.common import ROOT, atomic_write_text, source_candidates
+from scripts.digest_utils import canonical_file_bytes
 
 EXCLUDED_DIRS = {
     ".git",
@@ -64,7 +65,7 @@ def build(root: Path = ROOT) -> str:
     files = source_files(root)
     for path in files:
         relative = path.relative_to(root).as_posix().encode("utf-8")
-        digest = hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii")
+        digest = hashlib.sha256(canonical_file_bytes(path)).hexdigest().encode("ascii")
         tree.update(relative + b"\0" + digest + b"\n")
     return f"{tree.hexdigest()}  TREE-SHA256 ({len(files)} files)\n"
 

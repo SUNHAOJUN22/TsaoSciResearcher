@@ -4,12 +4,17 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
+import sys
 import uuid
 from pathlib import Path
 from typing import Any
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.digest_utils import canonical_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/SBOM.cdx.json"
@@ -68,7 +73,7 @@ def build() -> dict[str, Any]:
             },
             "properties": [
                 {"name": "tsao:source", "value": "requirements-ci.lock"},
-                {"name": "tsao:lock-sha256", "value": hashlib.sha256(LOCK.read_bytes()).hexdigest()},
+                {"name": "tsao:lock-sha256", "value": canonical_sha256(LOCK)},
                 {"name": "tsao:truth-boundary", "value": "SBOM inventory is not a vulnerability assessment."},
             ],
         },
@@ -88,7 +93,7 @@ def validate(value: dict[str, Any]) -> list[str]:
     if not isinstance(components, list) or len(components) != len(_requirements()):
         errors.append("SBOM component inventory does not match requirements-ci.lock")
     serialized = json.dumps(value, sort_keys=True)
-    if hashlib.sha256(LOCK.read_bytes()).hexdigest() not in serialized:
+    if canonical_sha256(LOCK) not in serialized:
         errors.append("SBOM does not contain the dependency lock digest")
     return errors
 

@@ -19,6 +19,7 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.common import source_candidates
+from scripts.digest_utils import canonical_file_bytes, canonical_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/VALIDATION_EVIDENCE.json"
@@ -111,7 +112,7 @@ def tree_digest() -> tuple[str, int]:
     files = _source_files()
     for path in files:
         relative = path.relative_to(ROOT).as_posix().encode("utf-8")
-        file_digest = hashlib.sha256(path.read_bytes()).hexdigest().encode("ascii")
+        file_digest = hashlib.sha256(canonical_file_bytes(path)).hexdigest().encode("ascii")
         digest.update(relative + b"\0" + file_digest + b"\n")
     return digest.hexdigest(), len(files)
 
@@ -303,7 +304,7 @@ def _build_composite(evidence_date: str, baseline_path: Path, focused_path: Path
             "publication_parent_commit": None,
             "validated_file_count": baseline["validated_file_count"],
             "validated_tree_sha256": baseline["validation_tree_sha256"],
-            "dependency_lock_sha256": _sha256(LOCK_FILE),
+            "dependency_lock_sha256": canonical_sha256(LOCK_FILE),
             "workflow_run_id": None,
             "workflow_run_attempt": None,
             "workflow_job_id": None,
@@ -404,13 +405,16 @@ def build(
         "gates": gates,
         "verified_inventory": _inventory(),
         "provenance": {
-            "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
+            "digest_algorithm": (
+                "sha256(path\\0sha256(canonical-file-bytes)\\n); UTF-8 text uses LF line endings, "
+                "known binary files retain raw bytes"
+            ),
             "digest_exclusions": sorted([*EXCLUDED_PATHS, *COVERAGE_RUNTIME_PATTERNS]),
             "evidence_generated_from_commit": source_commit if attested else None,
             "publication_parent_commit": publication_parent if attested else None,
             "validated_file_count": file_count,
             "validated_tree_sha256": digest,
-            "dependency_lock_sha256": _sha256(LOCK_FILE),
+            "dependency_lock_sha256": canonical_sha256(LOCK_FILE),
             "workflow_run_id": run_id if attested else None,
             "workflow_run_attempt": run_attempt if attested else None,
             "workflow_job_id": job_id if attested else None,
@@ -444,7 +448,7 @@ def validate(value: dict[str, Any]) -> list[str]:
     provenance = value.get("provenance")
     if isinstance(provenance, dict):
         actual_lock = provenance.get("dependency_lock_sha256")
-        expected_lock = _sha256(LOCK_FILE)
+        expected_lock = canonical_sha256(LOCK_FILE)
         if actual_lock != expected_lock:
             errors.append(
                 f"dependency_lock_sha256 is stale (checked-in={actual_lock}, expected={expected_lock})",

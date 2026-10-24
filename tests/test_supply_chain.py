@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from scripts import build_readme_facts, build_sbom, build_validation_evidence, generate_checksums
+from scripts.digest_utils import canonical_file_bytes, canonical_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,6 +20,9 @@ def test_sbom_is_deterministic_and_matches_lock() -> None:
         if line and not line.startswith("#")
     ]
     assert len(first["components"]) == len(locked)
+    assert first["metadata"]["properties"][1]["value"] == canonical_sha256(
+        ROOT / "requirements-ci.lock"
+    )
 
 
 def test_validation_evidence_schema_16_and_lock_digest() -> None:
@@ -34,6 +38,9 @@ def test_validation_evidence_schema_16_and_lock_digest() -> None:
     assert value["validation_scope"] == "current-tree"
     assert value["provenance"]["commit_resolution"] == "external-attestation"
     assert len(value["provenance"]["dependency_lock_sha256"]) == 64
+    assert value["provenance"]["dependency_lock_sha256"] == canonical_sha256(
+        ROOT / "requirements-ci.lock"
+    )
     assert build_validation_evidence.validate(value) == []
     schema = json.loads((ROOT / "schemas/v2/validation-evidence.schema.json").read_text(encoding="utf-8"))
     assert schema["properties"]["schema_version"]["const"] == "1.6"
@@ -63,6 +70,19 @@ def test_repository_checksum_ignores_coverage_runtime_files(tmp_path: Path) -> N
 
     (tmp_path / ".coveragerc").write_text("[run]\nbranch = true\n", encoding="utf-8")
     assert generate_checksums.build(tmp_path) != baseline
+
+
+def test_repository_hashes_normalize_text_newlines_but_keep_binary_bytes(tmp_path: Path) -> None:
+    lf = tmp_path / "source.py"
+    crlf = tmp_path / "source-copy.py"
+    lf.write_bytes(b"first line\nsecond line\n")
+    crlf.write_bytes(b"first line\r\nsecond line\r\n")
+    assert canonical_file_bytes(lf) == canonical_file_bytes(crlf)
+    assert canonical_sha256(lf) == canonical_sha256(crlf)
+
+    png = tmp_path / "image.png"
+    png.write_bytes(b"binary\r\nbytes")
+    assert canonical_file_bytes(png) == b"binary\r\nbytes"
 
 
 def test_validation_tree_digest_ignores_coverage_runtime_files(tmp_path: Path, monkeypatch) -> None:
