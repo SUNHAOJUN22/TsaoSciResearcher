@@ -84,7 +84,15 @@ def manifest_fixture() -> dict[str, Any]:
         [dict(manifest_fixture(), path=value) for value in ["data/input.dat", "data/input.dat"]],
         *[
             [dict(manifest_fixture(), path=value)]
-            for value in ["", "..", "../escape", "/absolute", "./data/input.dat", 1]
+            for value in [
+                "",
+                "..",
+                "../escape",
+                "/absolute",
+                "C:/absolute",
+                "./data/input.dat",
+                1,
+            ]
         ],
         *[[dict(manifest_fixture(), size_bytes=value)] for value in [True, -1, 1.5, "1"]],
         *[[dict(manifest_fixture(), sha256=value)] for value in ["x", "A" * 64, 1]],

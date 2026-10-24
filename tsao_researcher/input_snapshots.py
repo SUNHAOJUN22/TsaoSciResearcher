@@ -6,7 +6,7 @@ import hashlib
 import os
 import re
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 from .errors import IntegrityError, ValidationError
@@ -24,12 +24,18 @@ def input_manifest(value: Any) -> list[dict[str, Any]]:
         if not isinstance(item, dict):
             raise ValidationError("handoff input record must be an object")
         relative = item.get("path")
+        posix_path = PurePosixPath(relative) if isinstance(relative, str) else None
+        windows_path = PureWindowsPath(relative) if isinstance(relative, str) else None
         if (
             not isinstance(relative, str)
             or not relative.strip()
-            or Path(relative).is_absolute()
-            or ".." in Path(relative).parts
-            or Path(relative).as_posix() != relative
+            or posix_path is None
+            or windows_path is None
+            or posix_path.is_absolute()
+            or windows_path.drive
+            or windows_path.root
+            or ".." in posix_path.parts
+            or posix_path.as_posix() != relative
             or relative in paths
         ):
             raise ValidationError("handoff input paths must be unique canonical relative paths")

@@ -8,7 +8,7 @@ import jsonschema
 import pytest
 
 from tsao_researcher.capsule import export_capsule, verify_capsule
-from tsao_researcher.errors import IntegrityError
+from tsao_researcher.errors import IntegrityError, ValidationError
 from tsao_researcher.handoff import create_handoff
 from tsao_researcher.io import sha256_file
 from tsao_researcher.receipts import record_receipt, verify_receipts
@@ -109,6 +109,23 @@ def test_metadata_capsule_excludes_raw_data(tmp_path: Path) -> None:
         names = set(handle.namelist())
     assert "capsule/project/data/input.dat" not in names
     assert "capsule/project/project.yaml" in names
+
+
+def test_capsule_rejects_a_symlinked_project_root(tmp_path: Path) -> None:
+    outside = initialize("outside", "does the capsule stay within its requested root?", tmp_path / "outside")
+    (outside / "data" / "outside-only.txt").write_text("outside sentinel\n", encoding="utf-8")
+    linked = tmp_path / "linked"
+    linked.mkdir()
+    try:
+        (linked / ".tsao-research").symlink_to(outside, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        pytest.skip("symbolic links unavailable")
+
+    destination = tmp_path / "must-not-be-created.zip"
+    with pytest.raises(ValidationError, match="symbolic-link path component"):
+        export_capsule(linked, destination, mode="full")
+
+    assert not destination.exists()
 
 
 def test_success_receipt_requires_output(tmp_path: Path) -> None:

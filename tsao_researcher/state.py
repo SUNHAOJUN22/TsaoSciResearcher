@@ -58,8 +58,10 @@ TRANSITIONS: dict[str, frozenset[str]] = {
 
 
 def project_root(path: str | Path) -> Path:
-    value = Path(path).expanduser().resolve(strict=False)
-    return value if value.name == STATE_DIR else value / STATE_DIR
+    requested = Path(path).expanduser()
+    requested_root = requested if requested.name == STATE_DIR else requested / STATE_DIR
+    _reject_symlink_components(requested_root)
+    return requested_root.resolve(strict=False)
 
 
 def _project_path(root: str | Path) -> Path:
