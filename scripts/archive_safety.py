@@ -5,7 +5,7 @@ import shutil
 import stat
 import tempfile
 import zipfile
-from pathlib import Path, PurePosixPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 DEFAULT_MAX_MEMBERS = 10_000
 DEFAULT_MAX_MEMBER_BYTES = 64 * 1024 * 1024
@@ -19,7 +19,7 @@ def _validated_member_name(name: str) -> PurePosixPath:
     path = PurePosixPath(name)
     if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
         raise ValueError(f"unsafe ZIP member path: {name!r}")
-    if path.parts and path.parts[0].endswith(":"):
+    if any(PureWindowsPath(part).drive for part in path.parts):
         raise ValueError(f"drive-qualified ZIP path is forbidden: {name!r}")
     return path
 

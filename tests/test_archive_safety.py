@@ -17,7 +17,18 @@ def _write_zip(path: Path, members: list[tuple[str, bytes]]) -> None:
             archive.writestr(name, payload)
 
 
-@pytest.mark.parametrize("name", ["../escape", "/absolute", "C:/drive", "a\\..\\escape", "a/../escape"])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "../escape",
+        "/absolute",
+        "C:/drive",
+        "a\\..\\escape",
+        "a/../escape",
+        "nested/D:/escape.txt",
+        "nested/D:escape.txt",
+    ],
+)
 def test_rejects_path_traversal(tmp_path: Path, name: str) -> None:
     archive = tmp_path / "attack.zip"
     _write_zip(archive, [(name, b"x")])
