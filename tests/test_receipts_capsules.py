@@ -86,6 +86,19 @@ def test_capsule_is_deterministic_and_schema_valid(tmp_path: Path) -> None:
     jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(manifest)
 
 
+def test_capsule_excludes_persistent_lock_recovery_guard(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    guard = project / "state" / ".tsao-researcher-lock-recovery.guard"
+    guard.write_bytes(b"\0")
+    archive = tmp_path / "capsule-with-lock-guard.zip"
+
+    export_capsule(project, archive, mode="full")
+
+    with zipfile.ZipFile(archive) as handle:
+        names = set(handle.namelist())
+    assert "capsule/project/state/.tsao-researcher-lock-recovery.guard" not in names
+
+
 def test_capsule_detects_manifest_preserving_tamper(tmp_path: Path) -> None:
     project = _project(tmp_path)
     original = tmp_path / "original.zip"

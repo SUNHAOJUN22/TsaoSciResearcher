@@ -34,7 +34,7 @@ MAX_FILES = 20_000
 MAX_FILE_BYTES = 128 * 1024 * 1024
 MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
 METADATA_EXCLUDED_TOP_LEVEL = {"data", "figures", "artifacts"}
-IGNORED_NAMES = {".mutation.lock", ".DS_Store"}
+IGNORED_NAMES = {".mutation.lock", ".tsao-researcher-lock-recovery.guard", ".DS_Store"}
 IGNORED_DIRECTORIES = {".git", ".pytest_cache", "__pycache__"}
 
 

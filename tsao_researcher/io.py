@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -11,6 +13,7 @@ import socket
 import stat
 import sys
 import tempfile
+import threading
 import time
 from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
@@ -26,6 +29,29 @@ MAX_JSONL_RECORDS = 1_000_000
 MAX_JSONL_RECORD_BYTES = 4 * 1024 * 1024
 DEFAULT_LOCK_TIMEOUT = 10.0
 DEFAULT_STALE_LOCK_SECONDS = 300.0
+_STALE_LOCK_RECOVERY_GUARD = ".tsao-researcher-lock-recovery.guard"
+_STALE_LOCK_RECOVERY_THREAD_GUARD = threading.Lock()
+
+
+def _before_fork_during_stale_lock_recovery() -> None:
+    _STALE_LOCK_RECOVERY_THREAD_GUARD.acquire()
+
+
+def _after_fork_parent_during_stale_lock_recovery() -> None:
+    _STALE_LOCK_RECOVERY_THREAD_GUARD.release()
+
+
+def _after_fork_child_during_stale_lock_recovery() -> None:
+    global _STALE_LOCK_RECOVERY_THREAD_GUARD
+    _STALE_LOCK_RECOVERY_THREAD_GUARD = threading.Lock()
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(
+        before=_before_fork_during_stale_lock_recovery,
+        after_in_parent=_after_fork_parent_during_stale_lock_recovery,
+        after_in_child=_after_fork_child_during_stale_lock_recovery,
+    )
 
 JsonObject = dict[str, Any]
 
@@ -430,6 +456,109 @@ def _unlink_if_same(path: Path, stat_result: os.stat_result) -> bool:
     return True
 
 
+def _try_lock_recovery_guard(fd: int) -> bool:
+    """Try to lock one byte of the persistent stale-recovery guard file."""
+    if os.name == "nt":
+        msvcrt: Any = importlib.import_module("msvcrt")
+
+        os.lseek(fd, 0, os.SEEK_SET)
+        try:
+            msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+        except OSError as exc:
+            if exc.errno in {errno.EACCES, errno.EAGAIN, getattr(errno, "EDEADLK", None)}:
+                return False
+            raise
+        return True
+
+    fcntl: Any = importlib.import_module("fcntl")
+
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError as exc:
+        if exc.errno in {errno.EACCES, errno.EAGAIN, getattr(errno, "EWOULDBLOCK", None)}:
+            return False
+        raise
+    return True
+
+
+def _unlock_recovery_guard(fd: int) -> None:
+    if os.name == "nt":
+        msvcrt: Any = importlib.import_module("msvcrt")
+
+        os.lseek(fd, 0, os.SEEK_SET)
+        msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
+        return
+
+    fcntl: Any = importlib.import_module("fcntl")
+
+    fcntl.flock(fd, fcntl.LOCK_UN)
+
+
+@contextmanager
+def _stale_recovery_guard(lock_path: Path, deadline: float) -> Iterator[bool]:
+    """Serialize stale-owner rechecks and unlink across threads and processes."""
+    remaining = max(0.0, deadline - time.monotonic())
+    if not _STALE_LOCK_RECOVERY_THREAD_GUARD.acquire(timeout=remaining):
+        yield False
+        return
+
+    fd: int | None = None
+    acquired = False
+    try:
+        guard_path = lock_path.parent / _STALE_LOCK_RECOVERY_GUARD
+        flags = os.O_CREAT | os.O_RDWR
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(guard_path, flags, 0o600)
+        opened = os.fstat(fd)
+        observed = guard_path.lstat()
+        if (
+            not stat.S_ISREG(opened.st_mode)
+            or not stat.S_ISREG(observed.st_mode)
+            or (opened.st_dev, opened.st_ino) != (observed.st_dev, observed.st_ino)
+        ):
+            raise ValidationError(f"stale-lock recovery guard is not a stable regular file: {guard_path}")
+
+        while not (acquired := _try_lock_recovery_guard(fd)):
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                yield False
+                return
+            time.sleep(min(0.01, remaining))
+        yield True
+    finally:
+        try:
+            if fd is not None:
+                try:
+                    if acquired:
+                        _unlock_recovery_guard(fd)
+                finally:
+                    os.close(fd)
+        finally:
+            _STALE_LOCK_RECOVERY_THREAD_GUARD.release()
+
+
+def _reclaim_stale_lock(
+    lock_path: Path, observed: os.stat_result, stale_after: float, deadline: float
+) -> bool:
+    """Recheck ownership under a stable guard before removing the stale pathname."""
+    with _stale_recovery_guard(lock_path, deadline) as acquired:
+        if not acquired:
+            return False
+        try:
+            current = lock_path.lstat()
+        except FileNotFoundError:
+            return False
+        if (
+            not stat.S_ISREG(current.st_mode)
+            or (current.st_dev, current.st_ino) != (observed.st_dev, observed.st_ino)
+            or time.time() - current.st_mtime <= stale_after
+            or _lock_owner_is_alive(lock_path)
+        ):
+            return False
+        return _unlink_if_same(lock_path, current)
+
+
 @lru_cache(maxsize=1)
 def _windows_process_api() -> Any:
     """Bind pointer-width-safe, read-only process-query functions once."""
@@ -564,12 +693,11 @@ def exclusive_lock(
         except FileExistsError:
             try:
                 observed = lock.lstat()
-                age = time.time() - observed.st_mtime
                 if (
-                    age > stale_after
-                    and not lock.is_symlink()
+                    stat.S_ISREG(observed.st_mode)
+                    and time.time() - observed.st_mtime > stale_after
                     and not _lock_owner_is_alive(lock)
-                    and _unlink_if_same(lock, observed)
+                    and _reclaim_stale_lock(lock, observed, stale_after, deadline)
                 ):
                     continue
             except FileNotFoundError:
@@ -581,8 +709,8 @@ def exclusive_lock(
         try:
             _write_all(fd, payload)
             os.fsync(fd)
-            stat = os.fstat(fd)
-            identity = (stat.st_dev, stat.st_ino)
+            lock_stat = os.fstat(fd)
+            identity = (lock_stat.st_dev, lock_stat.st_ino)
         finally:
             os.close(fd)
         _fsync_directory(lock.parent)

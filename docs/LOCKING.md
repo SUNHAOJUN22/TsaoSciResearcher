@@ -14,6 +14,16 @@ Access denial, identity mismatch and query failures keep the lock occupied.
 PID reuse can conservatively delay recovery; the runtime never terminates a
 process to obtain a lock.
 
+Stale-owner checks and pathname removal are serialized by a persistent hidden
+recovery guard in the lock directory. The guard uses `fcntl.flock` on POSIX and
+`msvcrt.locking` on Windows, with a process-local mutex for concurrent threads.
+It is deliberately not deleted: unlinking a locked guard could let waiters lock
+different inodes. Capsule export excludes this reserved runtime file so its
+presence does not become research input or alter exported provenance. On POSIX,
+fork waits for active stale recovery to finish; the child resets the inherited
+thread mutex before it can attempt recovery. This coordinates the lock helper;
+it does not make general-purpose `fork()` from a multithreaded process safe.
+
 Windows `os.kill(pid, 0)` is not a POSIX existence query: CPython console builds
 route zero to `GenerateConsoleCtrlEvent`. The Windows implementation therefore
 uses process-handle observation. Waiting on the handle also distinguishes an
@@ -41,3 +51,6 @@ and catalog-cache regressions run explicitly in the Windows/Linux matrices.
 - [OpenProcess](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
 - [GetProcessId](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 - [WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
+- [Python 3.12 `os.register_at_fork`](https://docs.python.org/3.12/library/os.html#os.register_at_fork)
+- [Python 3.12 `fcntl.flock`](https://docs.python.org/3.12/library/fcntl.html#fcntl.flock)
+- [Python 3.12 `msvcrt.locking`](https://docs.python.org/3.12/library/msvcrt.html#msvcrt.locking)
