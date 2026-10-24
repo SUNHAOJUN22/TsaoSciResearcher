@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pytest_witness import collector_digest, load_events, pytest_counts, verify_invocation
+from strict_json import loads as strict_json_loads
 
 REPOSITORIES = (
     "AspenOps-Agent",
@@ -355,7 +356,7 @@ def main() -> int:
                 raise ValueError("phase two requires the phase-one receipt")
             from verify_segments import verified_elapsed
 
-            previous = json.loads(args.previous.read_text(encoding="utf-8"))
+            previous = strict_json_loads(args.previous.read_text(encoding="utf-8"))
             validate_previous(previous, receipt)
             verified_elapsed(args.previous, previous)
             receipt["predecessor_sha256"] = digest(args.previous)

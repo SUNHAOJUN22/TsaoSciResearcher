@@ -8,10 +8,11 @@ the unmodified XML and validate its official semantics instead of dropping event
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 from collections import Counter
 from pathlib import Path
+
+from strict_json import loads as strict_json_loads
 
 PLUGIN = Path(__file__).with_name("tsao_acceptance_pytest_events.py")
 SCHEMA = "tsao.pytest-events/v1"
@@ -25,7 +26,7 @@ def collector_digest() -> str:
 def load_events(path: Path) -> dict:
     if path.is_symlink() or path.stat().st_size > 50_000_000:
         raise ValueError("unsafe or oversized pytest witness")
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = strict_json_loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema") != SCHEMA:
         raise ValueError("unsupported pytest witness schema")
     if payload.get("collector_sha256") != collector_digest():

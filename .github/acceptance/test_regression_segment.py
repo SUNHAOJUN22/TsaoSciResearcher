@@ -13,6 +13,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
+import verify_segments
 from pytest_witness import SCHEMA as EVENT_SCHEMA
 from pytest_witness import collector_digest, load_events, verify_invocation
 from regression_segment import (
@@ -30,6 +31,7 @@ from regression_segment import (
     validate_previous,
     write_json,
 )
+from strict_json import loads as strict_json_loads
 from verify_segments import verified_elapsed, verify
 
 
@@ -250,6 +252,132 @@ class SegmentTests(unittest.TestCase):
         witness.unlink()
         with self.assertRaises(ValueError):
             verified_elapsed(path, receipt)
+
+    def test_strict_json_rejects_duplicate_keys_nonfinite_and_underflow(self):
+        for text in (
+            '{"exit_code": 1, "exit_code": 0}',
+            '{"outer": {"status": "failed", "status": "passed"}}',
+            '{"value": NaN}',
+            '{"value": 1e9999}',
+            '{"value": 1e-9999}',
+        ):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                strict_json_loads(text)
+        self.assertEqual(strict_json_loads('{"value": -0.0}')["value"], -0.0)
+
+    def test_duplicate_keys_in_pytest_witness_are_rejected(self):
+        path, _, rows = self.fixture()
+        witness = path.parent / rows[0]["pytest_events"]
+        text = witness.read_text(encoding="utf-8")
+        self.assertIn('"exit_code": 0', text)
+        witness.write_text(text.replace('"exit_code": 0', '"exit_code": 1,\n  "exit_code": 0', 1))
+        with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
+            load_events(witness)
+
+    def test_duplicate_keys_in_iteration_ledger_are_rejected(self):
+        path, receipt, _ = self.fixture()
+        ledger = path.parent / "iterations.jsonl"
+        text = ledger.read_text(encoding="utf-8")
+        self.assertIn('"exit_code": 0', text)
+        ledger.write_text(text.replace('"exit_code": 0', '"exit_code": 1, "exit_code": 0', 1))
+        receipt["iterations_sha256"] = digest(ledger)
+        with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
+            verified_elapsed(path, receipt)
+
+    def test_duplicate_keys_in_receipt_are_rejected_by_verifier(self):
+        for repo in REPOSITORIES:
+            first_path, _, _ = self.fixture(repo, 1)
+            second_path, second, rows = self.fixture(repo, 2)
+            second["predecessor_sha256"] = digest(first_path)
+            self.save(second_path, second, rows)
+        first_path = self.root / "AspenOps-Agent-1" / "receipt.json"
+        text = first_path.read_text(encoding="utf-8")
+        self.assertIn('"status": "SEGMENT_COMPLETE"', text)
+        first_path.write_text(
+            text.replace(
+                '"status": "SEGMENT_COMPLETE"',
+                '"status": "FAILED",\n  "status": "SEGMENT_COMPLETE"',
+                1,
+            ),
+            encoding="utf-8",
+        )
+        plan = dict.fromkeys(REPOSITORIES, "a" * 40)
+        with (
+            patch("verify_segments.subprocess.check_output", return_value="a" * 40 + "\trefs/heads/main\n"),
+            self.assertRaisesRegex(ValueError, "duplicate JSON key"),
+        ):
+            verify(self.root, plan, "1", "1", "a" * 40)
+
+    def test_duplicate_keys_in_acceptance_plan_are_rejected_before_verification(self):
+        plan = dict.fromkeys(REPOSITORIES, "a" * 40)
+        text = json.dumps(plan, separators=(",", ":"))
+        target = '"AspenOps-Agent":"' + "a" * 40 + '"'
+        replacement = '"AspenOps-Agent":"' + "b" * 40 + '",' + target
+        self.assertIn(target, text)
+        plan_path = self.root / "plan.json"
+        plan_path.write_text(text.replace(target, replacement, 1), encoding="utf-8")
+        output = self.root / "summary.json"
+        argv = [
+            "verify_segments",
+            "--root",
+            str(self.root),
+            "--plan",
+            str(plan_path),
+            "--run-id",
+            "1",
+            "--run-attempt",
+            "1",
+            "--orchestration-sha",
+            "a" * 40,
+            "--output",
+            str(output),
+        ]
+        with patch("verify_segments.verify") as verifier, patch.object(sys, "argv", argv):
+            self.assertEqual(verify_segments.main(), 1)
+        verifier.assert_not_called()
+        summary = json.loads(output.read_text(encoding="utf-8"))
+        self.assertIn("duplicate JSON key", summary["error"])
+
+    def test_phase_two_runner_rejects_ambiguous_predecessor_receipt(self):
+        root = self.root / "target"
+        root.mkdir()
+        previous = self.root / "previous.json"
+        previous.write_text('{"status":"FAILED","status":"SEGMENT_COMPLETE"}', encoding="utf-8")
+        output = self.root / "phase-two-output"
+        argv = [
+            "regression_segment",
+            "--repo",
+            "TsaoSciComputation",
+            "--sha",
+            "a" * 40,
+            "--root",
+            str(root),
+            "--output",
+            str(output),
+            "--phase",
+            "2",
+            "--previous",
+            str(previous),
+        ]
+        with (
+            patch.object(sys, "argv", argv),
+            patch("regression_segment.target_python", return_value=sys.executable),
+            patch("regression_segment.normalized_commands", return_value=[]),
+            patch("regression_segment.source_check", return_value="b" * 40),
+            patch("regression_segment.environment", return_value="e" * 64),
+            patch.dict(
+                os.environ,
+                {
+                    "GITHUB_RUN_ID": "1",
+                    "GITHUB_RUN_ATTEMPT": "1",
+                    "GITHUB_SHA": "a" * 40,
+                },
+            ),
+        ):
+            self.assertEqual(main(), 1)
+        receipt = json.loads((output / "receipt.json").read_text(encoding="utf-8"))
+        self.assertEqual(receipt["status"], "FAILED")
+        self.assertIn("duplicate JSON key", receipt["error"])
 
     def test_modified_ledger_and_missing_cycle_fail(self):
         path, receipt, rows = self.fixture()

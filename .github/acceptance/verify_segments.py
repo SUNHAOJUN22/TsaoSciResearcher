@@ -24,6 +24,7 @@ from regression_segment import (
     validate_previous,
     write_json,
 )
+from strict_json import loads as strict_json_loads
 
 
 def identity(value: object, pattern: str, label: str) -> str:
@@ -88,7 +89,7 @@ def verified_elapsed(path: Path, receipt: dict, identities: set[str] | None = No
     rows = 0
     with ledger.open(encoding="utf-8") as handle:
         for rows, line in enumerate(handle, 1):
-            row = json.loads(line)
+            row = strict_json_loads(line)
             if (
                 not isinstance(row, dict)
                 or row.get("schema") != SCHEMA
@@ -185,7 +186,7 @@ def verify(root: Path, plan: dict, run: str, attempt: str, orchestration: str) -
     elapsed = {}
     identities = set()
     for path in paths:
-        receipt = json.loads(path.read_text(encoding="utf-8"))
+        receipt = strict_json_loads(path.read_text(encoding="utf-8"))
         if not isinstance(receipt, dict):
             raise ValueError("invalid receipt document")
         repo, phase = receipt.get("repository"), receipt.get("phase")
@@ -247,7 +248,7 @@ def main() -> int:
     try:
         summary["repositories"] = verify(
             args.root,
-            json.loads(args.plan.read_text(encoding="utf-8")),
+            strict_json_loads(args.plan.read_text(encoding="utf-8")),
             args.run_id,
             args.run_attempt,
             args.orchestration_sha,
