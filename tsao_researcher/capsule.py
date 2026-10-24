@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import platform
 import shutil
@@ -208,11 +209,49 @@ def _export_locked(state_root: Path, requested_destination: Path, mode: str) -> 
                 info = _zip_info(f"capsule/project/{item.relative.as_posix()}")
                 with item.path.open("rb") as source, handle.open(info, "w", force_zip64=True) as target:
                     shutil.copyfileobj(source, target, length=1024 * 1024)
-        os.replace(temporary, destination)
+        archive_sha256 = sha256_file(temporary)
+        # Prepare both outputs before replacing either. The project lock protects
+        # cooperating writers; two path replacements are not crash-atomic.
+        staging = Path(tempfile.mkdtemp(prefix=f".{destination.name}.publish.", dir=destination.parent))
+        retain_backup = False
+        published = False
+        backup = staging / "previous.zip"
+        try:
+            staged_sidecar = staging / "sidecar"
+            atomic_write_text(staged_sidecar, f"{archive_sha256}  {destination.name}\n")
+            if destination.exists():
+                os.link(destination, backup)
+            os.replace(temporary, destination)
+            published = True
+            os.replace(staged_sidecar, sidecar)
+        except BaseException:
+            if published:
+                try:
+                    if backup.exists():
+                        os.replace(backup, destination)
+                    else:
+                        destination.unlink()
+                except OSError as rollback_error:
+                    retain_backup = True
+                    raise IntegrityError(
+                        f"capsule rollback failed; recovery files retained at {staging}"
+                    ) from rollback_error
+            raise
+        finally:
+            if not retain_backup:
+                try:
+                    shutil.rmtree(staging)
+                except OSError:
+                    logging.getLogger(__name__).warning(
+                        "capsule cleanup failed; retained %s", staging, exc_info=True
+                    )
     finally:
-        temporary.unlink(missing_ok=True)
-    archive_sha256 = sha256_file(destination)
-    atomic_write_text(sidecar, f"{archive_sha256}  {destination.name}\n")
+        try:
+            temporary.unlink(missing_ok=True)
+        except OSError:
+            logging.getLogger(__name__).warning(
+                "capsule cleanup failed; retained %s", temporary, exc_info=True
+            )
     return {
         "valid": True,
         "capsule": str(destination),

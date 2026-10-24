@@ -174,3 +174,125 @@ def test_capsule_read_failure_preserves_existing_archive_and_project(
     assert sidecar.read_bytes() == sidecar_bytes
     assert _project_bytes(root) == before
     assert not list(tmp_path.glob(".capsule.zip.*"))
+
+
+def test_backup_failure_preserves_existing_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+    result = export_capsule(root, archive, mode="metadata")
+    sidecar = Path(result["sidecar"])
+    before = archive.read_bytes(), sidecar.read_bytes()
+
+    def fail_link(*args: Any, **kwargs: Any) -> None:
+        raise OSError("injected backup failure")
+
+    monkeypatch.setattr(capsule_module.os, "link", fail_link)
+    with pytest.raises(OSError, match="injected backup failure"):
+        export_capsule(root, archive, mode="full")
+    assert (archive.read_bytes(), sidecar.read_bytes()) == before
+    assert not list(tmp_path.glob(".capsule.zip.*"))
+
+
+def test_rollback_failure_retains_old_archive_for_recovery(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+    result = export_capsule(root, archive, mode="metadata")
+    sidecar = Path(result["sidecar"])
+    old_zip, old_sidecar = archive.read_bytes(), sidecar.read_bytes()
+    replace = capsule_module.os.replace
+
+    def fail_replace(source: Any, target: Any) -> None:
+        if Path(target) == sidecar or Path(source).name == "previous.zip":
+            raise OSError("injected publish/rollback failure")
+        replace(source, target)
+
+    monkeypatch.setattr(capsule_module.os, "replace", fail_replace)
+    with pytest.raises(capsule_module.IntegrityError, match="recovery files retained"):
+        export_capsule(root, archive, mode="full")
+    backups = list(tmp_path.glob(".capsule.zip.publish.*/previous.zip"))
+    assert len(backups) == 1
+    assert backups[0].read_bytes() == old_zip
+    assert sidecar.read_bytes() == old_sidecar
+
+
+def test_cleanup_failure_reports_warning_after_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+
+    def fail_cleanup(*args: Any, **kwargs: Any) -> None:
+        raise OSError("injected cleanup failure")
+
+    monkeypatch.setattr(capsule_module.shutil, "rmtree", fail_cleanup)
+    result = export_capsule(root, archive, mode="full")
+    assert result["valid"] is True
+    assert verify_capsule(archive)["valid"] is True
+    assert Path(result["sidecar"]).read_text().split()[0] == capsule_module.sha256_file(archive)
+    assert "capsule cleanup failed; retained" in caplog.text
+
+
+def test_cleanup_failure_preserves_original_publication_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+
+    def fail_write(*args: Any, **kwargs: Any) -> None:
+        raise OSError("original publication failure")
+
+    def fail_cleanup(*args: Any, **kwargs: Any) -> None:
+        raise OSError("secondary cleanup failure")
+
+    monkeypatch.setattr(capsule_module, "atomic_write_text", fail_write)
+    monkeypatch.setattr(capsule_module.shutil, "rmtree", fail_cleanup)
+    with pytest.raises(OSError, match="original publication failure"):
+        export_capsule(root, archive, mode="full")
+    assert not archive.exists()
+    assert "capsule cleanup failed; retained" in caplog.text
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_sidecar_write_failure_preserves_previous_pair(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, existing: bool
+) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+    sidecar = archive.with_name(archive.name + ".sha256")
+    if existing:
+        export_capsule(root, archive, mode="metadata")
+    before = {p: p.read_bytes() if p.exists() else None for p in (archive, sidecar)}
+
+    def fail_write(*args: Any, **kwargs: Any) -> None:
+        raise OSError("injected sidecar write failure")
+
+    monkeypatch.setattr(capsule_module, "atomic_write_text", fail_write)
+    with pytest.raises(OSError, match="injected sidecar write failure"):
+        export_capsule(root, archive, mode="full")
+    assert {p: p.read_bytes() if p.exists() else None for p in before} == before
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_sidecar_replace_failure_rolls_back_archive(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, existing: bool
+) -> None:
+    root = _project(tmp_path)
+    archive = tmp_path / "capsule.zip"
+    sidecar = archive.with_name(archive.name + ".sha256")
+    if existing:
+        export_capsule(root, archive, mode="metadata")
+    before = {p: p.read_bytes() if p.exists() else None for p in (archive, sidecar)}
+    replace = capsule_module.os.replace
+
+    def fail_sidecar(source: Any, target: Any) -> None:
+        if Path(target) == sidecar:
+            raise OSError("injected sidecar replace failure")
+        replace(source, target)
+
+    monkeypatch.setattr(capsule_module.os, "replace", fail_sidecar)
+    with pytest.raises(OSError, match="injected sidecar replace failure"):
+        export_capsule(root, archive, mode="full")
+    assert {p: p.read_bytes() if p.exists() else None for p in before} == before
+    assert not list(tmp_path.glob(".capsule.zip.*"))
