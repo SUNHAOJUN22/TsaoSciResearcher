@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 
@@ -14,8 +15,11 @@ from .io import (
     atomic_write_text,
     exclusive_lock,
     file_transaction,
+    load_json,
     new_id,
+    new_json_file,
     project_regular_file,
+    read_jsonl,
     sha256_file,
     utc_now,
     write_json,
@@ -166,11 +170,35 @@ def create_handoff(
         handoff_paths = project.get("computation_handoffs")
         if not isinstance(handoff_paths, list):
             raise ValidationError("project computation_handoffs must be a list")
+        updating_draft = False
+        if relative_output in handoff_paths or resolved.exists():
+            if relative_output in handoff_paths and resolved.is_file():
+                current = load_json(project_regular_file(state_root, relative_output, field="handoff"))
+                updating_draft = (
+                    isinstance(current, dict)
+                    and current.get("schema_version") == "2.0"
+                    and current.get("project_id") == project["project_id"]
+                    and current.get("status") == "draft"
+                    and current.get("evidence_level") == "planned"
+                    and relative_output not in {record["path"] for record in records}
+                    and not any(
+                        receipt.get("handoff_path") == relative_output
+                        or receipt.get("handoff_id") == current.get("handoff_id")
+                        for receipt in read_jsonl(state_root / "execution-receipts.jsonl")
+                    )
+                )
+            if not updating_draft:
+                raise ValidationError("handoff output already exists or is registered; choose a new path")
         project_path = state_root / "project.yaml"
         artifacts_path = state_root / "artifacts.jsonl"
-        with file_transaction((resolved, project_path, artifacts_path)):
-            write_json(resolved, handoff)
-            if relative_output not in handoff_paths:
+        publication = nullcontext() if updating_draft else new_json_file(resolved, handoff)
+        transaction_paths = (
+            (resolved, project_path, artifacts_path) if updating_draft else (project_path, artifacts_path)
+        )
+        with publication, file_transaction(transaction_paths):
+            if updating_draft:
+                write_json(resolved, handoff)
+            else:
                 handoff_paths.append(relative_output)
                 handoff_paths.sort()
             timestamp = utc_now()

@@ -15,7 +15,14 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from .errors import IntegrityError, ValidationError
-from .io import _decode_json, atomic_write_text, canonical_json, sha256_file
+from .io import (
+    _decode_json,
+    _reject_symlink_components,
+    atomic_write_text,
+    canonical_json,
+    exclusive_lock,
+    sha256_file,
+)
 from .receipts import verify_receipts
 from .state import load_project, project_root, verify
 from .version import __version__
@@ -128,18 +135,32 @@ def export_capsule(
     *,
     mode: str = "metadata",
 ) -> dict[str, Any]:
-    """Export project state to a deterministic ZIP with a complete checksum manifest."""
+    """Export a locked project snapshot outside its managed state directory."""
 
     if mode not in {"metadata", "full"}:
         raise ValidationError("capsule mode must be metadata or full")
     state_root = project_root(root)
+    # Validate existence before the lock helper can create a missing state directory.
+    load_project(state_root)
+    with exclusive_lock(state_root / "state" / ".mutation.lock"):
+        return _export_locked(state_root, Path(output).expanduser(), mode)
+
+
+def _export_locked(state_root: Path, requested_destination: Path, mode: str) -> dict[str, Any]:
     project = load_project(state_root)
     state_result = verify(state_root)
     receipt_result = verify_receipts(state_root)
-    requested_destination = Path(output).expanduser()
     if requested_destination.is_symlink():
         raise ValidationError("capsule output cannot be a symbolic link")
+    _reject_symlink_components(requested_destination)
     destination = requested_destination.resolve(strict=False)
+    sidecar = destination.with_name(destination.name + ".sha256")
+    for output_path in (destination, sidecar):
+        _reject_symlink_components(output_path)
+        if output_path.is_relative_to(state_root):
+            raise ValidationError("capsule output and sidecar must be outside managed project state")
+        if output_path.exists() and not output_path.is_file():
+            raise ValidationError(f"capsule output must be a regular file: {output_path}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     files, total_bytes = _project_files(state_root, destination, mode)
     records = [
@@ -191,7 +212,6 @@ def export_capsule(
     finally:
         temporary.unlink(missing_ok=True)
     archive_sha256 = sha256_file(destination)
-    sidecar = destination.with_name(destination.name + ".sha256")
     atomic_write_text(sidecar, f"{archive_sha256}  {destination.name}\n")
     return {
         "valid": True,

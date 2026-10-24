@@ -242,6 +242,48 @@ def write_json(path: str | Path, value: Any) -> None:
 
 
 @contextmanager
+def new_json_file(path: str | Path, value: Any) -> Iterator[None]:
+    """Publish a new file without replacement and check identity before rollback.
+
+    The complete JSON is staged on the destination filesystem, then linked with
+    an exclusive create operation. Existing files, including concurrent creates,
+    are never overwritten. Filesystems without hard-link support fail closed.
+    Callers hold their project mutation lock while updating related metadata.
+    Rollback's identity check and unlink are separate filesystem operations;
+    other project writers must honor that lock, including during rollback.
+    """
+
+    payload = (json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(target)
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+    temporary = Path(temporary_name)
+    linked = False
+    try:
+        try:
+            _write_all(fd, payload)
+            os.fsync(fd)
+            identity = os.fstat(fd)
+        finally:
+            os.close(fd)
+        os.chmod(temporary, 0o644)
+        try:
+            os.link(temporary, target)
+        except FileExistsError as exc:
+            raise ValidationError(f"output already exists; choose a new path: {target}") from exc
+        linked = True
+        _fsync_directory(target.parent)
+        yield
+    except BaseException:
+        if linked:
+            _unlink_if_same(target, identity)
+        raise
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+@contextmanager
 def file_transaction(paths: Sequence[str | Path]) -> Iterator[None]:
     """Restore every listed file if a multi-file mutation raises.
 
@@ -455,6 +497,7 @@ __all__ = [
     "iter_jsonl",
     "load_json",
     "new_id",
+    "new_json_file",
     "project_regular_file",
     "read_jsonl",
     "read_text",
