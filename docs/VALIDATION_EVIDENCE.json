@@ -42,7 +42,7 @@
   ],
   "provenance": {
     "commit_resolution": "pending-external-attestation",
-    "dependency_lock_sha256": "20f37c16d727b7113513473d7767337a124cff835d86711148902a373f686f94",
+    "dependency_lock_sha256": "7875dcd3c68634d7657c8b9d80025a0167f74a90880e4a08400d3fdc328344c6",
     "digest_algorithm": "sha256(path\\0sha256(file)\\n)",
     "digest_exclusions": [
       ".coverage",
@@ -58,7 +58,7 @@
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
     "validated_file_count": 478,
-    "validated_tree_sha256": "93fcf6349c9e770d6e1953854e4f6e1ab89480b5bd4dd8921e8328735540ac78",
+    "validated_tree_sha256": "02b135c9c6c0590d1fb71cbdff93ef1a0ad10d89f3ea1405b19226a6c45a35e8",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null
