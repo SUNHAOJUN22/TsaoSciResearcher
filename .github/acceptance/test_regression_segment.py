@@ -213,12 +213,15 @@ class SegmentTests(unittest.TestCase):
 
     def test_dirty_or_stale_source_is_rejected(self):
         with (
-            patch("regression_segment.git", side_effect=["a" * 40, " M source.py"]),
+            patch("regression_segment.git", side_effect=[str(self.root), "a" * 40, "", " M source.py"]),
             self.assertRaisesRegex(ValueError, "clean"),
         ):
             source_check(self.root, "a" * 40, remote=True)
         with (
-            patch("regression_segment.git", side_effect=["a" * 40, "", "b" * 40 + "\trefs/heads/main"]),
+            patch(
+                "regression_segment.git",
+                side_effect=[str(self.root), "a" * 40, "", "", "b" * 40 + "\trefs/heads/main"],
+            ),
             self.assertRaisesRegex(ValueError, "STALE"),
         ):
             source_check(self.root, "a" * 40, remote=True)
@@ -596,6 +599,82 @@ class SegmentTests(unittest.TestCase):
             verify(self.root, {}, "1", "1", "a" * 40)
         with self.assertRaisesRegex(ValueError, "fourteen"):
             verify(self.root, dict.fromkeys(REPOSITORIES, "a" * 40), "1", "1", "a" * 40)
+
+
+class SourceIdentityTests(unittest.TestCase):
+    """Real disposable Git repositories; no external acceptance run is asserted."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.source = self.root / "source"
+        self.source.mkdir()
+        self.git("init", "-q", "-b", "main")
+        self.payload = self.source / "payload.txt"
+        self.payload.write_text("committed fixture\n", encoding="utf-8", newline="\n")
+        (self.source / "subdir").mkdir()
+        (self.source / "subdir/README.txt").write_text(
+            "fixture subdirectory\n", encoding="utf-8", newline="\n"
+        )
+        self.git("add", "payload.txt", "subdir/README.txt")
+        self.git(
+            "-c",
+            "user.name=Acceptance fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "-c",
+            "commit.gpgsign=false",
+            "commit",
+            "-qm",
+            "Record source identity fixture",
+        )
+        self.sha = self.git("rev-parse", "HEAD")
+        self.tree = self.git("rev-parse", "HEAD^{tree}")
+        origin = self.root / "origin.git"
+        self.git("clone", "--bare", str(self.source), str(origin))
+        self.git("remote", "add", "origin", str(origin))
+
+    def git(self, *args):
+        return subprocess.check_output(
+            ["git", "-C", str(self.source), *args], text=True, stderr=subprocess.STDOUT, timeout=30
+        ).strip()
+
+    def test_clean_worktree_root_keeps_exact_commit_and_tree(self):
+        self.assertEqual(source_check(self.source, self.sha, remote=True), self.tree)
+
+    def test_ordinary_tracked_modification_still_fails(self):
+        self.payload.write_text("modified fixture\n", encoding="utf-8", newline="\n")
+        with self.assertRaisesRegex(ValueError, "not clean"):
+            source_check(self.source, self.sha, remote=True)
+
+    def test_hidden_index_flags_are_rejected_without_mutation(self):
+        self.payload.write_text("modified fixture\n", encoding="utf-8", newline="\n")
+        for flag in ("assume-unchanged", "skip-worktree"):
+            with self.subTest(flag=flag):
+                self.git("update-index", f"--{flag}", "payload.txt")
+                try:
+                    before = self.git("ls-files", "-v", "--", "payload.txt")
+                    self.assertEqual(self.git("status", "--porcelain"), "")
+                    with self.assertRaisesRegex(ValueError, "index"):
+                        source_check(self.source, self.sha, remote=True)
+                    self.assertEqual(self.git("ls-files", "-v", "--", "payload.txt"), before)
+                    self.assertEqual(self.payload.read_text(encoding="utf-8"), "modified fixture\n")
+                finally:
+                    self.git("update-index", f"--no-{flag}", "payload.txt")
+
+    def test_subdirectory_cannot_substitute_for_the_repository_root(self):
+        with self.assertRaisesRegex(ValueError, "worktree root"):
+            source_check(self.source / "subdir", self.sha, remote=True)
+
+    def test_fsmonitor_setting_is_ignored_without_changing_local_config(self):
+        unavailable_hook = str(self.root / "nonexistent-fsmonitor-fixture")
+        self.git("config", "core.fsmonitor", unavailable_hook)
+        self.assertEqual(source_check(self.source, self.sha, remote=True), self.tree)
+        self.payload.write_text("modified fixture\n", encoding="utf-8", newline="\n")
+        with self.assertRaisesRegex(ValueError, "not clean"):
+            source_check(self.source, self.sha, remote=True)
+        self.assertEqual(self.git("config", "core.fsmonitor"), unavailable_hook)
 
 
 @unittest.skipUnless(os.name == "posix", "The baseline workflow executes Bash on Linux")

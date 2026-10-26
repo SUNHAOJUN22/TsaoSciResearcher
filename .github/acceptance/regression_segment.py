@@ -93,13 +93,24 @@ def validate_clocks(record: dict) -> tuple[float, float, float]:
 
 
 def git(root: Path, *args: str) -> str:
-    return subprocess.check_output(["git", "-C", str(root), *args], text=True, timeout=60).strip()
+    # Acceptance must observe the worktree without trusting a local fsmonitor
+    # cache or changing the caller's repository configuration.
+    return subprocess.check_output(
+        ["git", "-c", "core.fsmonitor=false", "-C", str(root), *args], text=True, timeout=60
+    ).strip()
 
 
 def source_check(root: Path, sha: str, *, remote: bool) -> str:
+    if Path(git(root, "rev-parse", "--show-toplevel")).resolve() != root.resolve():
+        raise ValueError("source directory must be the repository worktree root")
     if git(root, "rev-parse", "HEAD") != sha:
         raise ValueError("checkout SHA changed")
-    if git(root, "status", "--porcelain", "--untracked-files=normal"):
+    # Git status intentionally omits paths carrying these index flags. Reject
+    # them without clearing user flags or silently changing the tested checkout.
+    flags = git(root, "ls-files", "-v", "-z").split("\0")
+    if any(item and (item[0].islower() or item[0] == "S") for item in flags):
+        raise ValueError("source index contains assume-unchanged or skip-worktree paths")
+    if git(root, "status", "--porcelain", "--untracked-files=all", "--ignore-submodules=none"):
         raise ValueError("source worktree is not clean")
     if remote:
         refs = git(root, "ls-remote", "--heads", "origin").splitlines()

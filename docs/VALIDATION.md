@@ -58,6 +58,20 @@ python scripts/validate_distribution.py dist-python
 
 The process-isolation test module is part of complete regression but intentionally excluded from coverage collection so its fresh subprocesses do not inherit pytest-cov state.
 
+## Regression source identity
+
+The independent segmented-regression controller requires the actual repository
+worktree root and its exact HEAD/tree. A subdirectory cannot stand in for the
+repository. Tracked or untracked source changes, including changes hidden by
+`assume-unchanged` or `skip-worktree` index flags, prevent qualification. The
+controller rejects those flags without clearing them and disables fsmonitor only
+for its own Git queries; it does not change local Git configuration. Source checks
+run before the segment, after each test command and before completion.
+
+These checks bind software-regression evidence to a clean source checkout. They
+do not freeze the operating system or ignored dependencies, authenticate a local
+caller, replace the Actions attestation, or establish scientific acceptance.
+
 ## Performance gate scope
 
 `scripts/performance_smoke.py` is a bounded software-regression gate, not evidence that an external DFT, MD, FEM, CFD, process-simulation, or laboratory engine ran faster. It measures implemented repository paths with deterministic inputs:
