@@ -205,8 +205,10 @@ def commands(repo: str, root: Path, output: Path, cycle: int) -> list[tuple[list
             command.extend(["-W", "error::ResourceWarning"])
         if repo == "TsaoSciResearcher":
             command.extend(["-p", "hypothesis.extra.pytestplugin"])
+        if repo == "TsaoDFT_skill":
+            command.append("--import-mode=importlib")
         if suite:
-            command.extend(["--import-mode=importlib", suite])
+            command.append(suite)
         result.append((command, report))
     return result
 

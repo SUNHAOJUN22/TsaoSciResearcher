@@ -262,7 +262,7 @@ jobs:
               python open-deep-mind/triz/scripts/lookup_standard_solution.py 1.2.1 --json
               python -m unittest discover -s open-deep-mind/tests -p 'test_*.py' -v
               PYTHONPYCACHEPREFIX="$RUNNER_TEMP/opendeep-pycache" python -m compileall -q open-deep-mind
-              python -m pytest -q --import-mode=importlib open-deep-mind/tests --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
+              python -m pytest -q open-deep-mind/tests --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
               git diff --check
               ;;
             *) exit 2 ;;

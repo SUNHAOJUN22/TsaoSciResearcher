@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -599,6 +600,61 @@ class SegmentTests(unittest.TestCase):
             verify(self.root, {}, "1", "1", "a" * 40)
         with self.assertRaisesRegex(ValueError, "fourteen"):
             verify(self.root, dict.fromkeys(REPOSITORIES, "a" * 40), "1", "1", "a" * 40)
+
+
+class OpenDeepMindImportTests(unittest.TestCase):
+    """Execute repository-specific commands with the target's sibling-import contract."""
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.source = self.root / "source"
+        suite = self.source / "open-deep-mind/tests"
+        suite.mkdir(parents=True)
+        (suite / "test_benchmark_identity.py").write_text("SHARED_VALUE = 42\n", encoding="utf-8")
+        (suite / "test_sibling_import.py").write_text(
+            "from test_benchmark_identity import SHARED_VALUE\n"
+            "def test_sibling_import_contract():\n    assert SHARED_VALUE == 42\n",
+            encoding="utf-8",
+        )
+        self.output = self.root / "test-evidence"
+        self.output.mkdir()
+
+    def run_target_command(self, command):
+        env = dict(
+            os.environ,
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+            PYTHONDONTWRITEBYTECODE="1",
+            PYTHONPATH=str(Path(__file__).parent.resolve()),
+        )
+        result = subprocess.run(command, cwd=self.source, env=env, capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_actual_baseline_pytest_command_supports_sibling_imports(self):
+        workflow = Path(__file__).parents[1] / "workflows/six-repository-acceptance.yml"
+        lines = [
+            line.strip()
+            for line in workflow.read_text().splitlines()
+            if "python -m pytest" in line and "open-deep-mind/tests" in line
+        ]
+        self.assertEqual(len(lines), 1)
+        command = [part.replace("$RUNNER_TEMP", str(self.root)) for part in shlex.split(lines[0])]
+        command[0] = sys.executable
+        self.run_target_command(command)
+        self.assertEqual(junit_counts(self.output / "junit.xml"), {"passed": 1, "skipped": 0, "failed": 0})
+
+    def test_actual_segment_pytest_command_supports_sibling_imports_and_witness(self):
+        selected = commands("OpenDeepMind_skill", self.source, self.output, 1)
+        self.assertEqual(len(selected), 1)
+        command, report = selected[0]
+        self.run_target_command(command)
+        events = load_events(Path(str(report) + ".events.json"))
+        verify_invocation(events, command, str(self.source))
+        counts = junit_counts(report, events)
+        self.assertEqual(counts["passed"], 1)
+        self.assertEqual(counts["skipped"], 0)
+        self.assertEqual(counts["failed"], 0)
 
 
 class SourceIdentityTests(unittest.TestCase):

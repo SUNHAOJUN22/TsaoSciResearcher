@@ -58,7 +58,7 @@
     "external_attestation": "NOT_AVAILABLE_UNTIL_CI_COMPLETES",
     "publication_parent_commit": null,
     "validated_file_count": 487,
-    "validated_tree_sha256": "1382aa189fc84f1c76683539f5a92b4310f5fa7e7907989be9f169fe718e0e88",
+    "validated_tree_sha256": "233a2a9050a34312cdc0add23f55c39cf1d5e5f666e56382be4e1122fc25bfba",
     "workflow_job_id": null,
     "workflow_run_attempt": null,
     "workflow_run_id": null
