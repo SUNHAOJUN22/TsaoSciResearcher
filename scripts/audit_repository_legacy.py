@@ -529,11 +529,18 @@ def audit() -> dict[str, Any]:
                 "contents: write",
                 "pull-requests: write",
                 "refs/heads/main",
-                "/git/refs/heads/{encoded}",
+                'method="GET"',
+                'list_all("/branches")',
+                'if names != ["main"]:',
+                "UNEXPECTED_BRANCHES",
+                "Review unmerged history",
             ]
             for marker in required_markers:
                 if marker not in text:
-                    errors.append(f"branch cleanup guard missing {marker!r}")
+                    errors.append(f"read-only branch guard missing {marker!r}")
+            for forbidden in ('"/pulls', '"/git/refs/', 'method="POST"', 'method="PATCH"', 'method="DELETE"'):
+                if forbidden in text:
+                    errors.append(f"branch verification contains a mutation path or method: {forbidden}")
     permanent = {path.name for path in workflow_files}
     required_automation = {"ci.yml", "audit.yml", "nightly.yml", "release.yml", "cleanup-branches.yml"}
     missing_automation = sorted(required_automation - permanent)
