@@ -6,6 +6,7 @@ import heapq
 import re
 import stat as stat_module
 import unicodedata
+from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
@@ -27,6 +28,7 @@ _STRING_LIST_FIELDS = (
     "references",
 )
 _LIST_FIELDS = (*_STRING_LIST_FIELDS, "source_lineage")
+SearchIndex = tuple[tuple[dict[str, Any], str, frozenset[str], str, frozenset[str]], ...]
 
 
 def _normalize(value: str) -> str:
@@ -61,7 +63,9 @@ def _clone_contract_rows(rows: tuple[dict[str, Any], ...]) -> list[dict[str, Any
 
 
 @lru_cache(maxsize=16)
-def _catalog(path: Path, snapshot: bytes) -> tuple[dict[str, Any], ...]:
+def _catalog(
+    path: Path, snapshot: bytes, *, strict_contract: bool | None = None
+) -> tuple[dict[str, Any], ...]:
     # The snapshot itself is the cache identity: size and timestamps can remain
     # unchanged after content edits, including on Windows. Decode that same
     # snapshot so a cache miss cannot read a different file version.
@@ -83,7 +87,8 @@ def _catalog(path: Path, snapshot: bytes) -> tuple[dict[str, Any], ...]:
         ids.add(identifier)
         slugs.add(slug)
         rows.append(row)
-    strict_contract = path.resolve() in {CATALOG_PATH.resolve(), EXTENSIONS_PATH.resolve()}
+    if strict_contract is None:
+        strict_contract = path.resolve() in {CATALOG_PATH.resolve(), EXTENSIONS_PATH.resolve()}
     if not strict_contract:
         return tuple(rows)
     required_strings = (
@@ -270,6 +275,27 @@ def search_capabilities(
     limit: int = 20,
     path: str | Path = CATALOG_PATH,
 ) -> list[dict[str, Any]]:
+    """Search fresh complete catalog snapshots, preserving the existing contract."""
+
+    return _ranked_search(
+        query,
+        workflow=workflow,
+        domains=domains,
+        limit=limit,
+        index_loader=lambda: _search_rows(Path(path)),
+    )
+
+
+def _ranked_search(
+    query: str,
+    *,
+    workflow: str | None,
+    domains: set[str] | None,
+    limit: int,
+    index_loader: Callable[[], SearchIndex],
+) -> list[dict[str, Any]]:
+    """Share ranking only; each caller retains its own source-validation scope."""
+
     if not isinstance(query, str):
         raise TypeError("query must be a string")
     if workflow is not None and not isinstance(workflow, str):
@@ -289,7 +315,7 @@ def search_capabilities(
         return []
     tokens = set(_TOKEN_RE.findall(normalized_query))
     scored: list[tuple[int, str, dict[str, Any]]] = []
-    for row, haystack, haystack_tokens, normalized_slug, row_domains in _search_rows(Path(path)):
+    for row, haystack, haystack_tokens, normalized_slug, row_domains in index_loader():
         if clean_workflow and row.get("workflow") != clean_workflow:
             continue
         if clean_domains and not clean_domains.intersection(row_domains):

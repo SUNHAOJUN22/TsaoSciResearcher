@@ -5,7 +5,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import sys
 from pathlib import Path
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tsao_researcher.discovery import discovery_index_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 MAPPINGS = {
@@ -39,9 +45,25 @@ def main() -> None:
             stale.append(destination.relative_to(ROOT).as_posix())
         if destination.is_file() and _digest(destination.read_bytes()) != _digest(payload):
             stale.append(destination.relative_to(ROOT).as_posix())
+    # Generate from full canonical sources on both paths. Copying an old index
+    # alongside new catalogs would conceal a stale discovery projection.
+    projection = discovery_index_bytes(
+        ROOT / "capabilities/v2/capabilities.json", ROOT / "capabilities/v2/extensions.json"
+    )
+    for destination in (
+        ROOT / "capabilities/v2/discovery-index.json",
+        ROOT / "tsao_researcher/data/capabilities/discovery-index.json",
+    ):
+        if destination.is_symlink():
+            raise SystemExit(f"discovery destination is unsafe: {destination}")
+        if args.write:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(projection)
+        elif not destination.is_file() or destination.read_bytes() != projection:
+            stale.append(destination.relative_to(ROOT).as_posix())
     if stale:
         raise SystemExit("runtime package data is stale: " + ", ".join(sorted(set(stale))))
-    print(f"runtime package data PASS ({len(MAPPINGS)} files)")
+    print(f"runtime package data PASS ({len(MAPPINGS)} copied files + 2 verified discovery projections)")
 
 
 if __name__ == "__main__":

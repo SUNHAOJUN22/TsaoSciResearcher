@@ -38,11 +38,21 @@ def main() -> None:
     route_parser = sub.add_parser("route", help="route a scientific task")
     route_parser.add_argument("text")
 
-    search_parser = sub.add_parser("search", help="search the v2 capability catalog")
-    search_parser.add_argument("query")
-    search_parser.add_argument("--workflow")
-    search_parser.add_argument("--domain", action="append", default=[])
-    search_parser.add_argument("--limit", type=int, default=20)
+    for command, help_text in (
+        ("search", "search fresh complete v2 capability catalog snapshots"),
+        ("browse", "browse discovery summaries; does not verify current source contracts or evidence"),
+    ):
+        search_parser = sub.add_parser(command, help=help_text)
+        search_parser.add_argument("query")
+        search_parser.add_argument("--workflow")
+        search_parser.add_argument("--domain", action="append", default=[])
+        search_parser.add_argument("--limit", type=int, default=20)
+
+    catalog_parser = sub.add_parser("catalog", help="verify complete capability catalog contracts")
+    catalog_sub = catalog_parser.add_subparsers(dest="catalog_command", required=True)
+    catalog_sub.add_parser(
+        "verify", help="read full sources and check the discovery projection; not scientific acceptance"
+    )
 
     quality_parser = sub.add_parser("quality", help="evaluate a scientific-quality JSON request")
     quality_parser.add_argument("input", help="path to a quality request JSON file")
@@ -151,6 +161,18 @@ def main() -> None:
                 limit=args.limit,
             )
         )
+    elif args.command == "browse":
+        from .discovery import browse_capabilities
+
+        _emit(
+            browse_capabilities(
+                args.query, workflow=args.workflow, domains=set(args.domain) or None, limit=args.limit
+            )
+        )
+    elif args.command == "catalog":
+        from .discovery import verify_capability_catalog
+
+        _emit(verify_capability_catalog())
     elif args.command == "quality":
         from .scientific_quality import evaluate_quality
 

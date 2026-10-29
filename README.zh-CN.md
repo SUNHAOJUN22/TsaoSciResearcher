@@ -439,7 +439,9 @@ python -m pip check
 
 python -m tsao_researcher --version
 python -m tsao_researcher route "run an actual DFT calculation"
+python -m tsao_researcher browse "molecular dynamics" --limit 3
 python -m tsao_researcher search "molecular dynamics" --limit 3
+python -m tsao_researcher catalog verify
 python -m tsao_researcher quality examples/scientific-quality-check.json
 python -m tsao_researcher strategy \
   "Can two mechanisms be discriminated?" \
@@ -450,6 +452,16 @@ python -m tsao_researcher math --schema
 python -m tsao_researcher math --contract decision-readiness --output contract.json
 python scripts/validate_mathematical_contracts.py --check
 ```
+
+### 发现摘要与完整目录结构核验
+
+可选的 `browse` 命令及 `browse_capabilities()` API 读取安装包中的紧凑发现索引，与 `search` 共用排序和筛选算法，并明确返回 `scope="discovery-index-only"`、`source_validation="NOT_PERFORMED"` 和 `authoritative_validation_required=true`。响应中的源指纹是**索引自身的声明**。浏览不会证明当前完整源文件仍然存在或与声明一致，过期建议不能成为已验证证据。
+
+既有 `search` 和 `load_capabilities()` 路径继续读取当前完整目录快照。新增 `catalog verify` 和 `verify_capability_catalog()` 还要求两份完整目录源文件均存在，核验每条运行时合同的结构，并将发现投影与这些确切源字节逐项比对。结果记录源路径、字节数和 SHA-256。即使文件大小与修改时间都未变化，内容替换、源截断或缺失、索引伪造指纹都不能复用先前核验成功的结论。
+
+完整目录结构与投影核验有明确边界：它不执行仓库引用与库存审计、项目证据检查、执行回执验证或科学验收。`scientific_acceptance` 保持 `NOT_EVALUATED`，`project_evidence_validation` 保持 `NOT_PERFORMED`。这些独立检查仍须使用原有仓库审计与完整 CI 门、`verify PROJECT`、`receipt verify PROJECT` 及所选工作流的验证器；外部计算和审批继续遵循下一节的要求。
+
+维护者可运行 `python scripts/sync_runtime_data.py --write`，同时重建规范发现索引及安装包镜像。既有 `--check` 门会从完整规范源重新生成预期投影，并拒绝过期生成物。两个新命令均不增加运行时依赖，也不调用外部模型。本轮已实现目录导航与完整性检查，未据此宣称求解器提速、浏览器视觉验收或新增科学资格。
 
 ## 8. 外部执行边界
 

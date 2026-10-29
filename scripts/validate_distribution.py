@@ -42,6 +42,7 @@ def main() -> None:
             "tsao_researcher/py.typed",
             "tsao_researcher/data/capabilities/capabilities.json",
             "tsao_researcher/data/capabilities/extensions.json",
+            "tsao_researcher/data/capabilities/discovery-index.json",
             "tsao_researcher/data/routing/router-rules-v2.json",
         }
         missing_runtime = sorted(required_runtime - names)
@@ -73,6 +74,7 @@ def main() -> None:
             "/tsao_researcher/py.typed",
             "/tsao_researcher/data/capabilities/capabilities.json",
             "/tsao_researcher/data/capabilities/extensions.json",
+            "/tsao_researcher/data/capabilities/discovery-index.json",
             "/tsao_researcher/data/routing/router-rules-v2.json",
         )
         for suffix in required_suffixes:
@@ -103,6 +105,8 @@ def main() -> None:
         for arguments in (
             ["-m", "tsao_researcher", "route", "Design a traceable multiscale polymer study"],
             ["-m", "tsao_researcher", "search", "polymer molecular dynamics", "--limit", "3"],
+            ["-m", "tsao_researcher", "browse", "polymer molecular dynamics", "--limit", "3"],
+            ["-m", "tsao_researcher", "catalog", "verify"],
         ):
             completed = _run_checked([str(python), "-I", *arguments])
             if not completed.stdout.strip().startswith(("{", "[")):

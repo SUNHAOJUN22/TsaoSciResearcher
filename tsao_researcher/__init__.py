@@ -9,6 +9,7 @@ from .version import __version__
 
 _LAZY_EXPORTS = {
     "advise_computation_strategy": (".strategy", "advise_computation_strategy"),
+    "browse_capabilities": (".discovery", "browse_capabilities"),
     "create_handoff": (".handoff", "create_handoff"),
     "export_capsule": (".capsule", "export_capsule"),
     "initialize": (".state", "initialize"),
@@ -19,6 +20,7 @@ _LAZY_EXPORTS = {
     "transition": (".state", "transition"),
     "verify": (".state", "verify"),
     "verify_capsule": (".capsule", "verify_capsule"),
+    "verify_capability_catalog": (".discovery", "verify_capability_catalog"),
     "verify_receipts": (".receipts", "verify_receipts"),
 }
 

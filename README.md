@@ -446,7 +446,9 @@ python -m pip check
 
 python -m tsao_researcher --version
 python -m tsao_researcher route "run an actual DFT calculation"
+python -m tsao_researcher browse "molecular dynamics" --limit 3
 python -m tsao_researcher search "molecular dynamics" --limit 3
+python -m tsao_researcher catalog verify
 python -m tsao_researcher quality examples/scientific-quality-check.json
 python -m tsao_researcher strategy \
   "Can two mechanisms be discriminated?" \
@@ -457,6 +459,16 @@ python -m tsao_researcher math --schema
 python -m tsao_researcher math --contract decision-readiness --output contract.json
 python scripts/validate_mathematical_contracts.py --check
 ```
+
+### Discovery summaries and complete catalog structure verification
+
+The optional `browse` command and `browse_capabilities()` API read a compact, packaged discovery index. They use the same ranking and filters as `search`, and return an explicit `scope="discovery-index-only"`, `source_validation="NOT_PERFORMED"`, and `authoritative_validation_required=true`. Source fingerprints in that response are **declarations from the index**. Browsing does not establish that the complete current sources still exist or match; stale suggestions never become validated evidence.
+
+The existing `search` and `load_capabilities()` paths continue to read fresh complete catalog snapshots. `catalog verify` and `verify_capability_catalog()` additionally require both complete catalog sources, validate every runtime contract's structure, and compare the discovery projection against those exact source bytes. The result identifies the source paths, byte counts and SHA-256 hashes. Changed content with unchanged size or modification time, a truncated or missing source, and an index with forged fingerprints cannot reuse a previous successful verification.
+
+This complete catalog structure and projection check has a bounded scope: it does not perform the repository's reference/inventory audit, project evidence checks, receipt verification, or scientific acceptance. `scientific_acceptance` remains `NOT_EVALUATED`, and `project_evidence_validation` remains `NOT_PERFORMED`. Use the original repository audit and full CI gates, `verify PROJECT`, `receipt verify PROJECT`, and the selected workflow's validators for those independent checks. External computations and their approvals retain the requirements in the next section.
+
+Maintainers regenerate both the canonical discovery index and its installed mirror with `python scripts/sync_runtime_data.py --write`. The existing `--check` gate rebuilds the expected projection from the complete canonical sources and rejects stale generated data. No extra runtime dependency or external model call is required by either new command. This delivery implements catalog navigation and integrity checks; it does not establish a solver speedup, browser visual acceptance, or new scientific qualification.
 
 ## 8. External execution boundary
 
