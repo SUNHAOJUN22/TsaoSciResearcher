@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Enforce reciprocal claim/evidence links in both directions, including registered refutations omitted from a claim's evidence list. Local traceability verification now blocks these omissions instead of certifying a selected subset; complete conflicting graphs remain structurally valid without granting scientific acceptance.
+
 ## 0.7.4 - 2026-08-06
 
 - Add a versioned bilingual `mathematical_contracts` runtime API and `math` CLI covering capability ranking, quantity/dimension consistency, applicability and extrapolation, evidence conflict, identifiability, uncertainty propagation, multiscale bridge error, and conservative decision readiness.

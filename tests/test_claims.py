@@ -72,3 +72,44 @@ def test_rejects_support_refute_overlap(tmp_path: Path) -> None:
     _write(claims_path, [claim(evidence_ids=["EV-1"])])
     with pytest.raises(ValueError, match="both support and refute"):
         validate_claim_graph(claims_path, evidence_path)
+
+
+@pytest.mark.parametrize("relation", ["supports_claims", "refutes_claims"])
+@pytest.mark.parametrize("claim_type", ["sourced_fact", "hypothesis"])
+def test_claim_cannot_omit_registered_support_or_refutation(
+    tmp_path: Path, relation: str, claim_type: str
+) -> None:
+    evidence_path, claims_path = tmp_path / "evidence.jsonl", tmp_path / "claims.jsonl"
+    omitted = evidence()
+    omitted.update(evidence_id="EV-2", **{relation: ["CL-1"]})
+    _write(evidence_path, [evidence(supports=["CL-1"]), omitted])
+    _write(claims_path, [claim(evidence_ids=["EV-1"], claim_type=claim_type)])
+    with pytest.raises(ValueError, match="missing reverse claim link"):
+        validate_claim_graph(claims_path, evidence_path)
+
+
+def test_each_claim_of_shared_evidence_requires_a_reciprocal_reference(tmp_path: Path) -> None:
+    evidence_path, claims_path = tmp_path / "evidence.jsonl", tmp_path / "claims.jsonl"
+    second_claim = claim(evidence_ids=["EV-1"], claim_type="hypothesis")
+    second_claim["claim_id"] = "CL-2"
+    _write(evidence_path, [evidence(supports=["CL-1", "CL-2"])])
+    first_claim = claim(evidence_ids=["EV-1"])
+    _write(claims_path, [first_claim, second_claim])
+    assert len(validate_claim_graph(claims_path, evidence_path)[0]) == 2
+    second_claim["evidence_ids"] = []
+    _write(claims_path, [first_claim, second_claim])
+    with pytest.raises(ValueError, match="EV-1 <-> CL-2"):
+        validate_claim_graph(claims_path, evidence_path)
+
+
+def test_complete_conflicting_graph_is_structurally_valid_without_certifying_claim(tmp_path: Path) -> None:
+    evidence_path, claims_path = tmp_path / "evidence.jsonl", tmp_path / "claims.jsonl"
+    adverse = evidence(refutes=["CL-1"])
+    adverse["evidence_id"] = "EV-2"
+    unrelated = evidence()
+    unrelated["evidence_id"] = "EV-3"
+    _write(evidence_path, [evidence(supports=["CL-1"]), adverse, unrelated])
+    _write(claims_path, [claim(evidence_ids=["EV-1", "EV-2"])])
+    claims, records = validate_claim_graph(claims_path, evidence_path)
+    assert len(claims) == 1 and len(records) == 3
+    assert records[1]["refutes_claims"] == ["CL-1"]

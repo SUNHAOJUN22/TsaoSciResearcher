@@ -501,6 +501,27 @@ def test_local_direct_evidence_without_execution_claim_can_verify(tmp_path: Path
         check_evidence_traceability(spec)
 
 
+@pytest.mark.parametrize("relation", ["supports_claims", "refutes_claims"])
+def test_traceability_blocks_claim_that_omits_registered_evidence(tmp_path: Path, relation: str) -> None:
+    root, spec = evidence_fixture(tmp_path)
+    omitted = json.loads((root / "evidence.jsonl").read_text())
+    omitted.update(evidence_id="EV-2", supports_claims=[], refutes_claims=[])
+    omitted[relation] = ["CL-1"]
+    append_jsonl(root / "evidence.jsonl", omitted)
+    result = check_evidence_traceability(spec)
+    assert result["status"] == "BLOCK"
+    assert result["details"]["bidirectional_traceability"] is False
+    assert any("omits registered evidence" in finding["message"] for finding in result["findings"])
+
+
+def test_traceability_ignores_unlinked_background_evidence(tmp_path: Path) -> None:
+    root, spec = evidence_fixture(tmp_path)
+    background = json.loads((root / "evidence.jsonl").read_text())
+    background.update(evidence_id="EV-2", supports_claims=[], refutes_claims=[])
+    append_jsonl(root / "evidence.jsonl", background)
+    assert check_evidence_traceability(spec)["status"] == "PASS"
+
+
 @pytest.mark.parametrize("value", [True, -1, 1.5, "0"])
 def test_event_sequence_requires_an_exact_nonnegative_integer(value: Any) -> None:
     with pytest.raises(ValueError):

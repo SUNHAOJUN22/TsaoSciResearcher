@@ -27,6 +27,7 @@ def validate_claim_graph(
     claims = read_jsonl(claims_path)
     evidence_by_id = {row["evidence_id"]: row for row in evidence}
     claim_by_id: dict[str, dict[str, Any]] = {}
+    claim_evidence_ids: dict[str, set[str]] = {}
     for row in claims:
         validator.validate(row)
         claim_id = row["claim_id"]
@@ -43,11 +44,17 @@ def validate_claim_graph(
         missing = set(evidence_ids) - evidence_by_id.keys()
         if missing:
             raise ValueError(f"{claim_id}: unknown evidence IDs {sorted(missing)}")
+        claim_evidence_ids[claim_id] = set(evidence_ids)
     for evidence_id, row in evidence_by_id.items():
         linked = set(row.get("supports_claims", [])) | set(row.get("refutes_claims", []))
         unknown = linked - claim_by_id.keys()
         if unknown:
             raise ValueError(f"{evidence_id}: unknown claim IDs {sorted(unknown)}")
+        # Check both directions: omitting a known refutation from the claim is
+        # also a broken edge, even when every listed supporting source is valid.
+        for claim_id in sorted(linked):
+            if evidence_id not in claim_evidence_ids[claim_id]:
+                raise ValueError(f"{evidence_id} <-> {claim_id}: missing reverse claim link")
     for claim_id, claim in claim_by_id.items():
         for evidence_id in claim["evidence_ids"]:
             evidence_row = evidence_by_id[evidence_id]

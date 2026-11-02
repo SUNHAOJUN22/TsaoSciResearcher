@@ -170,7 +170,7 @@ $$
 
 ### 根据真实项目解析证据
 
-在 `kind: "evidence-traceability"` 的质量请求中设置 `spec.project_root`。提交的声明文字与证据 ID 必须匹配 `claims.jsonl`；`evidence.jsonl` 中每项支持证据必须反向引用该声明。本地来源类型、定位符、校验和和当前字节都需要实际解析。标记为 `execution-receipt` 的证据必须对应所引用成功回执的真实输出，而且**每个**引用回执都必须绑定提供的执行证据：
+在 `kind: "evidence-traceability"` 的质量请求中设置 `spec.project_root`。提交的声明文字与证据 ID 必须匹配 `claims.jsonl`；`evidence.jsonl` 中每项支持证据必须反向引用该声明。所有已经登记为支持或反驳该声明的来源，也必须出现在声明的证据列表中；即使已选来源均一致，遗漏反向证据仍会阻止验证。本地来源类型、定位符、校验和和当前字节都需要实际解析。标记为 `execution-receipt` 的证据必须对应所引用成功回执的真实输出，而且**每个**引用回执都必须绑定提供的执行证据：
 
 $$
 C\leftrightarrow E_i,\qquad

@@ -174,7 +174,7 @@ An approval ledger record binds project, scope, target state, transition event h
 
 ### Real evidence resolution
 
-Set `spec.project_root` in a `kind: "evidence-traceability"` quality request. The submitted claim text and evidence IDs must match `claims.jsonl`; each supporting evidence row in `evidence.jsonl` must link back to the claim. Local source kinds, locator, checksum and current bytes are resolved. An `execution-receipt` evidence role must point to an actual output of a referenced successful receipt, and **every** referenced receipt must bind supplied execution evidence:
+Set `spec.project_root` in a `kind: "evidence-traceability"` quality request. The submitted claim text and evidence IDs must match `claims.jsonl`; each supporting evidence row in `evidence.jsonl` must link back to the claim. Every registered source that supports or refutes the claim must also appear in its evidence list: omitting a contrary source blocks verification even when all selected sources are consistent. Local source kinds, locator, checksum and current bytes are resolved. An `execution-receipt` evidence role must point to an actual output of a referenced successful receipt, and **every** referenced receipt must bind supplied execution evidence:
 
 $$
 C\leftrightarrow E_i,\qquad

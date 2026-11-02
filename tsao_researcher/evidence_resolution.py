@@ -59,13 +59,22 @@ def resolve_traceability(
     ):
         raise IntegrityError("claim ID/text/status does not match the live claim registry")
     registered = _references(claim.get("evidence_ids"), "claim evidence_ids")
+    registered_ids = set(registered)
     if (
         len(evidence_ids) != len(set(evidence_ids))
-        or set(evidence_ids) != set(registered)
+        or set(evidence_ids) != registered_ids
         or len(locators) != len(evidence_ids)
         or len(roles) != len(evidence_ids)
     ):
         raise IntegrityError("claim/evidence/locator/role vectors do not match the registry")
+    # A request cannot certify a selectively shortened claim ledger. Inspect
+    # incoming support and refutation links before checking the supplied files.
+    for identifier, incoming_record in evidence.items():
+        linked = _references(incoming_record.get("supports_claims"), "supports_claims") + _references(
+            incoming_record.get("refutes_claims", []), "refutes_claims"
+        )
+        if claim_id in linked and identifier not in registered_ids:
+            raise IntegrityError(f"claim omits registered evidence: {identifier}")
     if len(receipt_ids) != len(set(receipt_ids)) or (execution_claim and not receipt_ids):
         raise IntegrityError("execution receipt references are duplicate or missing")
     for identifier in receipt_ids:
