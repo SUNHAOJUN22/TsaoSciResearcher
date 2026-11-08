@@ -19,6 +19,25 @@
 
 > **Release 0.7.4 · acceptance-hardened main** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
+## Evidence-first decision path
+
+```mermaid
+flowchart LR
+  Q["Question + falsifiable scope"] --> M["Observable + model contract"]
+  M --> E["Evidence ledger + limitations"]
+  E --> H["Authorized computation handoff"]
+  H --> R["Bound execution receipt"]
+  R --> V{"Independent acceptance gate"}
+  V -->|"Unresolved"| M
+  V -->|"Scoped"| D["Decision + next test"]
+  classDef science fill:#1D4ED8,color:#fff,stroke:#93C5FD;
+  classDef guard fill:#9A3412,color:#fff,stroke:#FDBA74;
+  class M,E,H,R science;
+  class V guard;
+```
+
+This diagram is **editable methodology**, not a claim that an external solver ran. Treat a cited assertion, valid schema, executed job, converged result and accepted scientific claim as different states. Before external publication, link every important assertion to an evidence ID, state the applicability domain, and inspect the source-pinned acceptance report for the exact revision.
+
 ## 1. What this repository is
 
 TsaoSciResearcher is a **scientific research control layer**. It helps turn an under-specified research question into a traceable, falsifiable and reviewable research strategy. The runtime performs deterministic routing, capability retrieval, scientific-quality checks, strategy construction, project-state management, checksum-bound external handoff, execution-receipt verification and reproducibility packaging.
