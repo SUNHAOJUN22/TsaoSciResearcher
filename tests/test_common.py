@@ -278,3 +278,37 @@ def test_jsonl_checks_later_lines_without_merging_objects(tmp_path: Path) -> Non
     assert next(rows) == {"x": 1}
     with pytest.raises(ValueError, match="duplicate"):
         next(rows)
+
+@pytest.mark.parametrize(
+    "locator",
+    [
+        "https://",
+        "https:///10.1000/test",
+        "https://?query=paper",
+        "https://user:token@doi.org/10.1000/example",
+        "pmid:",
+        "arxiv: ",
+        "isbn:",
+        "10.1000/valid trailing",
+    ],
+)
+def test_citation_locator_rejects_ambiguous_or_empty_format(locator: str) -> None:
+    from scripts.validate_citations import recognized_paper_locator
+
+    assert recognized_paper_locator(locator) is False
+
+
+@pytest.mark.parametrize(
+    "locator",
+    [
+        "10.1000/valid",
+        "https://doi.org/10.1000/valid",
+        "PMID:12345",
+        "arxiv:2601.01234",
+        "ISBN:978-0-123456-47-2",
+    ],
+)
+def test_citation_locator_preserves_supported_identifier_forms(locator: str) -> None:
+    from scripts.validate_citations import recognized_paper_locator
+
+    assert recognized_paper_locator(locator) is True
