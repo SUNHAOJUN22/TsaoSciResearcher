@@ -15,6 +15,7 @@ from scripts.common import read_jsonl
 DOI = re.compile(r"^10\.\d{4,9}/\S+$", re.I)
 URL = re.compile(r"^https?://", re.I)
 
+
 def recognized_paper_locator(locator: str) -> bool:
     """Check *format* only; no network resolution or source authenticity claim."""
     if DOI.fullmatch(locator):
@@ -32,7 +33,7 @@ def recognized_paper_locator(locator: str) -> bool:
             return False
     lower = locator.lower()
     return any(
-        lower.startswith(prefix) and bool(locator[len(prefix):].strip())
+        lower.startswith(prefix) and bool(locator[len(prefix) :].strip())
         for prefix in ("pmid:", "arxiv:", "isbn:")
     )
 
