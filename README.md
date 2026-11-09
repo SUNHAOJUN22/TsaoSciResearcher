@@ -19,6 +19,12 @@
 
 > **Release 0.7.4 · acceptance-hardened main** · Apache-2.0 · Python 3.10–3.13 · deterministic CLI and Python API
 
+## New editable research architecture
+
+![Evidence-first scientific architecture](docs/assets/atlas-v2/architecture-en.svg)
+
+This original vector schematic is not experimental, solver or scientific acceptance evidence; each box represents a software or human-review contract. Claims must be scoped to source-bound receipts.
+
 ## Evidence-first decision path
 
 ```mermaid
