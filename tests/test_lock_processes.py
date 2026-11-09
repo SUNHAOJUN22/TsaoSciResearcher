@@ -169,6 +169,31 @@ def test_stale_lock_recovery_retries_transient_unlink_permission_error(
     assert not lock.exists()
 
 
+def test_owner_release_retries_one_transient_unlink_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock = tmp_path / "owner-release-retry.lock"
+    original_unlink = Path.unlink
+    denied_once = True
+    attempts = 0
+
+    def deny_one_unlink(path: Path, *args: Any, **kwargs: Any) -> None:
+        nonlocal denied_once, attempts
+        if path == lock:
+            attempts += 1
+            if denied_once:
+                denied_once = False
+                raise PermissionError(errno.EACCES, "simulated sharing violation", str(path))
+        original_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", deny_one_unlink)
+    with exclusive_lock(lock, timeout=2, stale_after=0.01):
+        assert lock.is_file()
+
+    assert attempts == 2
+    assert not lock.exists()
+
+
 def test_owner_release_waits_for_guarded_stale_owner_probe(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

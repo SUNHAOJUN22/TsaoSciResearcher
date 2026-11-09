@@ -732,11 +732,25 @@ def exclusive_lock(
             cleanup_deadline = time.monotonic() + DEFAULT_LOCK_TIMEOUT
             with _stale_recovery_guard(lock, cleanup_deadline) as acquired:
                 if acquired and _same_lock(lock, identity, token):
-                    try:
-                        current = lock.lstat()
-                        _unlink_if_same(lock, current)
-                    except FileNotFoundError:
-                        pass
+                    # Windows may briefly deny deletion even after the owner
+                    # probe has closed its file handle. Retry *under* the
+                    # recovery guard so nobody can reclaim the same lock.
+                    while True:
+                        try:
+                            current = lock.lstat()
+                            if (current.st_dev, current.st_ino) != identity:
+                                break
+                            _unlink_if_same(lock, current)
+                            break
+                        except FileNotFoundError:
+                            break
+                        except PermissionError as exc:
+                            remaining = cleanup_deadline - time.monotonic()
+                            if remaining <= 0:
+                                raise LockTimeoutError(
+                                    f"timed out releasing owned lock: {lock}"
+                                ) from exc
+                            time.sleep(min(0.02, remaining))
 
 
 __all__ = [
