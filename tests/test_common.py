@@ -279,6 +279,7 @@ def test_jsonl_checks_later_lines_without_merging_objects(tmp_path: Path) -> Non
     with pytest.raises(ValueError, match="duplicate"):
         next(rows)
 
+
 @pytest.mark.parametrize(
     "locator",
     [
