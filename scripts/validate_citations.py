@@ -38,7 +38,6 @@ def recognized_paper_locator(locator: str) -> bool:
     )
 
 
-
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("evidence_jsonl")

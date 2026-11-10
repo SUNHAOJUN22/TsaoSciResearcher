@@ -631,10 +631,7 @@ def _lock_owner_is_alive(path: Path) -> bool:
     try:
         fd = os.open(path, flags)
         try:
-            if (
-                (opened := os.fstat(fd)).st_ino != observed.st_ino
-                or opened.st_dev != observed.st_dev
-            ):
+            if (opened := os.fstat(fd)).st_ino != observed.st_ino or opened.st_dev != observed.st_dev:
                 return True
             payload = os.read(fd, 4096).decode("utf-8", errors="strict")
         finally:
@@ -688,12 +685,7 @@ def exclusive_lock(
     owner_pid = os.getpid()
     payload = (
         canonical_json(
-            {
-                "pid": owner_pid,
-                "host": socket.gethostname(),
-                "created_at": utc_now(),
-                "token": token,
-            }
+            {"pid": owner_pid, "host": socket.gethostname(), "created_at": utc_now(), "token": token}
         )
         + "\n"
     ).encode()
