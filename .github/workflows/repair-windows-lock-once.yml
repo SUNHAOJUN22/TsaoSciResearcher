@@ -1,0 +1,147 @@
+name: One-time Windows lock metadata repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-windows-lock-once.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: one-time-windows-lock-repair
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONNOUSERSITE: "1"
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+
+jobs:
+  repair:
+    if: github.actor == 'SUNHAOJUN22'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact staging commit
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 2
+      - name: Verify immutable repair base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "b45027d72ad6378f9f669ea181906c23eccb0a26"
+          test "$GITHUB_REF" = "refs/heads/main"
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.lock
+      - name: Install locked validation tools
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-ci.lock
+          python -m pip install --disable-pip-version-check -e . --no-deps
+          python -m pip check
+      - name: Apply bounded lock-acquisition repair and regression
+        shell: python
+        run: |
+          from pathlib import Path
+
+          io_path = Path("tsao_researcher/io.py")
+          source = io_path.read_text(encoding="utf-8")
+          old = '''            except FileNotFoundError:
+                          continue
+                      if time.monotonic() >= deadline:
+                          raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
+          '''
+          new = '''            except FileNotFoundError:
+                          continue
+                      except PermissionError:
+                          # Concurrent deletion can make metadata lookup fail with
+                          # a transient sharing denial, especially on Windows.
+                          # Retry within the existing deadline and fail closed.
+                          if time.monotonic() >= deadline:
+                              raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
+                          time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
+                          continue
+                      if time.monotonic() >= deadline:
+                          raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
+          '''
+          if source.count(old) != 1:
+              raise SystemExit(f"unexpected io.py repair anchor count: {source.count(old)}")
+          io_path.write_text(source.replace(old, new), encoding="utf-8", newline="\n")
+
+          test_path = Path("tests/test_lock_processes.py")
+          tests = test_path.read_text(encoding="utf-8")
+          anchor = '''def test_stale_lock_recovery_retries_transient_unlink_permission_error(
+              tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+          ) -> None:
+          '''
+          regression = '''def test_lock_acquisition_retries_transient_metadata_permission_error(
+              tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+          ) -> None:
+              lock = tmp_path / "metadata-sharing-retry.lock"
+              child = subprocess.Popen([sys.executable, "-c", "pass"])
+              dead_pid = child.pid
+              child.wait(timeout=5)
+              lock.write_text(
+                  json.dumps({"pid": dead_pid, "host": socket.gethostname(), "token": "stale"}),
+                  encoding="utf-8",
+              )
+              old = time.time() - 60
+              os.utime(lock, (old, old))
+
+              original_lstat = Path.lstat
+              denied_once = True
+
+              def deny_one_metadata_lookup(path: Path, *args: Any, **kwargs: Any) -> os.stat_result:
+                  nonlocal denied_once
+                  if path == lock and denied_once:
+                      denied_once = False
+                      raise PermissionError(errno.EACCES, "simulated transient metadata denial", str(path))
+                  return original_lstat(path, *args, **kwargs)
+
+              monkeypatch.setattr(Path, "lstat", deny_one_metadata_lookup)
+
+              with exclusive_lock(lock, timeout=2, stale_after=0.01):
+                  assert lock.is_file()
+
+              assert not denied_once
+              assert not lock.exists()
+
+
+          '''
+          if tests.count(anchor) != 1:
+              raise SystemExit(f"unexpected lock test anchor count: {tests.count(anchor)}")
+          test_path.write_text(tests.replace(anchor, regression + anchor), encoding="utf-8", newline="\n")
+      - name: Validate exact repair
+        run: |
+          python -m ruff format tsao_researcher/io.py tests/test_lock_processes.py
+          python -m ruff format --check tsao_researcher/io.py tests/test_lock_processes.py
+          python -m ruff check tsao_researcher/io.py tests/test_lock_processes.py
+          python -m compileall -q tsao_researcher/io.py tests/test_lock_processes.py
+          python -m pytest -q -p hypothesis.extra.pytestplugin tests/test_lock_processes.py tests/test_lock_owner_probe.py
+      - name: Rebuild non-self-referential evidence and remove repair workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/repair-windows-lock-once.yml
+          python scripts/build_validation_evidence.py --write --preflight
+          python scripts/generate_checksums.py --write
+          python scripts/build_validation_evidence.py --check
+          python scripts/generate_checksums.py --check
+      - name: Publish one atomic repair commit
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tsao_researcher/io.py tests/test_lock_processes.py docs/VALIDATION_EVIDENCE.json SHA256SUMS
+          test "$(git status --short | wc -l)" -eq 5
+          git commit -m "fix(lock): retry transient metadata denial during acquisition"
+          git push origin HEAD:main
