@@ -136,6 +136,39 @@ def test_stale_owner_is_rechecked_only_after_recovery_guard_is_acquired(
         assert observed_guard_state == [True]
 
 
+def test_lock_acquisition_retries_transient_metadata_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock = tmp_path / "metadata-sharing-retry.lock"
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    dead_pid = child.pid
+    child.wait(timeout=5)
+    lock.write_text(
+        json.dumps({"pid": dead_pid, "host": socket.gethostname(), "token": "stale"}),
+        encoding="utf-8",
+    )
+    old = time.time() - 60
+    os.utime(lock, (old, old))
+
+    original_lstat = Path.lstat
+    denied_once = True
+
+    def deny_one_metadata_lookup(path: Path, *args: Any, **kwargs: Any) -> os.stat_result:
+        nonlocal denied_once
+        if path == lock and denied_once:
+            denied_once = False
+            raise PermissionError(errno.EACCES, "simulated transient metadata denial", str(path))
+        return original_lstat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "lstat", deny_one_metadata_lookup)
+
+    with exclusive_lock(lock, timeout=2, stale_after=0.01):
+        assert lock.is_file()
+
+    assert not denied_once
+    assert not lock.exists()
+
+
 def test_stale_lock_recovery_retries_transient_unlink_permission_error(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

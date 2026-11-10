@@ -631,10 +631,7 @@ def _lock_owner_is_alive(path: Path) -> bool:
     try:
         fd = os.open(path, flags)
         try:
-            if (
-                (opened := os.fstat(fd)).st_ino != observed.st_ino
-                or opened.st_dev != observed.st_dev
-            ):
+            if (opened := os.fstat(fd)).st_ino != observed.st_ino or opened.st_dev != observed.st_dev:
                 return True
             payload = os.read(fd, 4096).decode("utf-8", errors="strict")
         finally:
@@ -715,6 +712,14 @@ def exclusive_lock(
                     continue
             except FileNotFoundError:
                 continue
+            except PermissionError:
+                # Concurrent deletion can make metadata lookup fail with
+                # a transient sharing denial, especially on Windows.
+                # Retry within the existing deadline and fail closed.
+                if time.monotonic() >= deadline:
+                    raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
+                time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
+                continue
             if time.monotonic() >= deadline:
                 raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
             time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
@@ -755,9 +760,7 @@ def exclusive_lock(
                         except PermissionError as exc:
                             remaining = cleanup_deadline - time.monotonic()
                             if remaining <= 0:
-                                raise LockTimeoutError(
-                                    f"timed out releasing owned lock: {lock}"
-                                ) from exc
+                                raise LockTimeoutError(f"timed out releasing owned lock: {lock}") from exc
                             time.sleep(min(0.02, remaining))
 
 
