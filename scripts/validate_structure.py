@@ -27,6 +27,8 @@ REQUIRED = {
 TEXT_SUFFIXES = {".py", ".md", ".json", ".yaml", ".yml", ".toml", ".txt", ".csv", ".ps1", ".sh"}
 IGNORED_DIRS = {
     ".git",
+    ".venv",
+    "venv",
     ".mypy_cache",
     ".pytest_cache",
     ".ruff_cache",

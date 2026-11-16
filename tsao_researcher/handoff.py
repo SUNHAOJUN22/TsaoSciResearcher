@@ -56,16 +56,25 @@ def _clean_string_list(values: list[str] | None, *, field: str) -> list[str]:
 
 
 def _verified_inputs(root: Path, inputs: list[str]) -> list[dict[str, Any]]:
+    if not isinstance(inputs, list) or any(
+        not isinstance(value, str) or not value.strip() for value in inputs
+    ):
+        raise ValidationError("handoff inputs must be a list of nonblank paths")
     if len(inputs) > MAX_INPUT_FILES:
         raise ValidationError(f"handoff has more than {MAX_INPUT_FILES} inputs")
     records: list[dict[str, Any]] = []
+    seen_paths: set[str] = set()
     resolved_root = root.resolve()
     for relative in inputs:
         candidate = project_regular_file(root, relative, field="input")
+        canonical_path = candidate.relative_to(resolved_root).as_posix()
+        if canonical_path in seen_paths:
+            raise ValidationError("handoff input paths must be unique after resolution")
+        seen_paths.add(canonical_path)
         info = candidate.stat()
         records.append(
             {
-                "path": candidate.relative_to(resolved_root).as_posix(),
+                "path": canonical_path,
                 "size_bytes": info.st_size,
                 "sha256": sha256_file(candidate),
             }
@@ -90,6 +99,8 @@ def create_handoff(
     evidence_level: str | None = None,
     ready: bool = True,
 ) -> dict[str, Any]:
+    if not isinstance(ready, bool):
+        raise ValidationError("ready must be a boolean")
     state_root = project_root(root)
     project = load_project(state_root)
     question = scientific_question.strip()

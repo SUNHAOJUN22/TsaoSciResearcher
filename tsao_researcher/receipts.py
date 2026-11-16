@@ -45,10 +45,9 @@ def _parse_timestamp(value: str, field: str) -> datetime:
 
 
 def _safe_project_file(state_root: Path, relative: str, *, field: str) -> Path:
-    clean = relative.strip()
-    if not clean:
+    if not relative.strip():
         raise ValidationError(f"{field} path must not be blank")
-    return project_regular_file(state_root, clean, field=field)
+    return project_regular_file(state_root, relative, field=field)
 
 
 def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]]:
@@ -58,15 +57,20 @@ def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]
         raise ValidationError("receipt outputs must be a list of nonblank paths")
     if len(outputs) > MAX_OUTPUT_FILES:
         raise ValidationError(f"receipt has more than {MAX_OUTPUT_FILES} outputs")
-    if len({value.strip() for value in outputs}) != len(outputs):
+    if len(set(outputs)) != len(outputs):
         raise ValidationError("receipt output paths must be unique")
     resolved_root = state_root.resolve()
     records: list[dict[str, Any]] = []
-    for relative in (value.strip() for value in outputs):
+    seen_paths: set[str] = set()
+    for relative in outputs:
         candidate = _safe_project_file(state_root, relative, field="output")
+        canonical_path = candidate.relative_to(resolved_root).as_posix()
+        if canonical_path in seen_paths:
+            raise ValidationError("receipt output paths must be unique after resolution")
+        seen_paths.add(canonical_path)
         records.append(
             {
-                "path": candidate.relative_to(resolved_root).as_posix(),
+                "path": canonical_path,
                 "size_bytes": candidate.stat().st_size,
                 "sha256": sha256_file(candidate),
             }
@@ -85,7 +89,9 @@ def _environment(values: list[str] | None) -> dict[str, str]:
         clean_key = key.strip()
         if not separator or not clean_key or clean_key in result:
             raise ValidationError("environment entries must be unique KEY=VALUE pairs")
-        result[clean_key] = value.strip()
+        # Environment values are execution inputs; surrounding whitespace may
+        # be significant to the engine and must survive provenance recording.
+        result[clean_key] = value
     return dict(sorted(result.items()))
 
 
@@ -130,7 +136,7 @@ def record_receipt(
         raise TypeError("engine and command values must be strings")
     if isinstance(exit_code, bool) or not isinstance(exit_code, int):
         raise TypeError("exit_code must be an integer")
-    if not engine.strip() or not command or any(not value.strip() for value in command):
+    if not engine.strip() or not command or not command[0].strip() or any("\0" in value for value in command):
         raise ValidationError("engine and a non-empty command vector are required")
     if not isinstance(engine_version, str) or not isinstance(notes, str):
         raise ValidationError("engine_version and notes must be strings")
@@ -151,7 +157,9 @@ def record_receipt(
         "handoff_path": relative_handoff,
         "handoff_sha256": sha256_file(handoff_file),
         "engine": {"name": engine.strip(), "version": engine_version.strip() or None},
-        "command": [value.strip() for value in command],
+        # Keep argv bytes represented by each string, including significant
+        # whitespace. Validation must not rewrite the recorded command.
+        "command": list(command),
         "started_at": started_at.strip(),
         "finished_at": finished_at.strip(),
         "duration_seconds": round((finish - start).total_seconds(), 6),
@@ -267,7 +275,8 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
         if (
             not isinstance(command, list)
             or not command
-            or any(not isinstance(value, str) or not value.strip() for value in command)
+            or any(not isinstance(value, str) or "\0" in value for value in command)
+            or not command[0].strip()
         ):
             raise IntegrityError(f"execution receipt command argv invalid: {receipt_id}")
         environment = receipt.get("environment")
@@ -334,13 +343,14 @@ def verify_receipts(root: str | Path) -> dict[str, Any]:
             relative = output.get("path")
             if not isinstance(relative, str) or not relative.strip():
                 raise IntegrityError(f"execution receipt output path invalid: {receipt_id}")
-            if relative in seen_paths:
-                raise IntegrityError(f"duplicate execution output path: {relative}")
-            seen_paths.add(relative)
             try:
                 candidate = _safe_project_file(state_root, relative, field="output")
             except ValidationError as exc:
                 raise IntegrityError(str(exc)) from exc
+            canonical_path = candidate.relative_to(state_root.resolve()).as_posix()
+            if canonical_path in seen_paths:
+                raise IntegrityError(f"duplicate execution output path: {relative}")
+            seen_paths.add(canonical_path)
             if candidate.stat().st_size != output.get("size_bytes") or sha256_file(candidate) != output.get("sha256"):  # fmt: skip
                 raise IntegrityError(f"execution output checksum mismatch: {relative}")
             output_count += 1

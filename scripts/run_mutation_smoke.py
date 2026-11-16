@@ -16,6 +16,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED_COPY_NAMES = {
     ".git",
+    ".venv",
+    "venv",
     ".hypothesis",
     "artifacts",
     ".mypy_cache",
