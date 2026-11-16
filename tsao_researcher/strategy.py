@@ -16,6 +16,7 @@ from typing import Any
 
 from .errors import ValidationError
 from .io import canonical_json
+from .semantic_scope import split_clauses, trigger_is_negated
 
 MAX_QUESTION_CHARS = 20_000
 MAX_ITEMS = 64
@@ -48,8 +49,10 @@ _EVIDENCE_LEVELS: tuple[tuple[int, str, tuple[str, ...]], ...] = (
             "theoretical",
             "literature",
             "review",
+            "reviews",
             "analytical",
             "equation",
+            "equations",
             "理论",
             "文献",
             "综述",
@@ -62,8 +65,10 @@ _EVIDENCE_LEVELS: tuple[tuple[int, str, tuple[str, ...]], ...] = (
         "E2-computational",
         (
             "simulation",
+            "simulations",
             "simulated",
             "calculation",
+            "calculations",
             "computed",
             "dft",
             "molecular dynamics",
@@ -81,6 +86,7 @@ _EVIDENCE_LEVELS: tuple[tuple[int, str, tuple[str, ...]], ...] = (
         "E3-experimental",
         (
             "experiment",
+            "experiments",
             "experimental",
             "measurement",
             "measurements",
@@ -1709,13 +1715,63 @@ def _marker_hits(text: str, markers: tuple[str, ...]) -> list[str]:
     return list(dict.fromkeys(marker for marker in markers if marker in text))
 
 
+_UNAVAILABLE_EVIDENCE_PREFIX = re.compile(
+    r"\b(?:no|not(?!\s+only\b)|without|lack(?:s|ing)?|absence\s+of|planned|proposed|"
+    r"scheduled|future|pending|intend(?:ed)?|plans?\s+(?:for|to)|"
+    r"(?:will|shall)\s+(?:perform|conduct|run|execute|collect|obtain|undertake))"
+    r"(?:\s+[a-z-]+){0,4}\s*$"
+    r"|(?:尚未|还未|未|没有|无|缺乏|计划|拟|打算|预定)"
+    r"(?:进行|开展|完成|实施|独立|相关|任何|的|了|\s)*$"
+)
+_UNAVAILABLE_EVIDENCE_SUFFIX = re.compile(
+    r"^\s*(?:(?:validation|data|results?|evidence)\s+){0,2}"
+    r"(?:(?:is|are|was|were|has|have|had)(?:\s+been)?\s+)?"
+    r"(?:not\s+(?:yet\s+)?(?:been\s+)?(?:available|present|complete(?:d)?|performed|conducted|executed|"
+    r"measured|obtained|collected|validated)|absent|unavailable|missing|planned|pending|proposed|scheduled)\b"
+    r"|^\s*(?:will|shall)\s+be\s+(?:performed|conducted|executed|measured|obtained|collected|validated)\b"
+    r"|^\s*(?:数据|结果|证据)?(?:尚未|还未|未|没有|暂无|计划|拟)"
+    r"(?:完成|进行|开展|实施|获得|收集|验证|执行)"
+)
+
+
+def _affirmed_evidence_hits(text: str, markers: tuple[str, ...]) -> list[str]:
+    """Screen explicit declarations, never authenticate scientific evidence.
+
+    Keep each clause independent and require Latin word boundaries. Explicitly
+    absent, negated, or planned work cannot satisfy an available-evidence gate.
+    Ambiguous prose still requires human review; this is not a language model.
+    """
+    hits: list[str] = []
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        # In evidence status, 'not yet' is one negation, not the contrast 'yet'.
+        sentence = re.sub(r"\bnot\s+yet\b", "not", sentence, flags=re.IGNORECASE)
+        for clause in split_clauses(sentence):
+            for marker in markers:
+                normalized, compiled = _compiled_trigger(marker)
+                if normalized not in clause.normalized:
+                    continue
+                pattern = compiled if compiled is not None else re.compile(re.escape(normalized))
+                for match in pattern.finditer(clause.normalized):
+                    prefix = clause.normalized[: match.start()]
+                    suffix = clause.normalized[match.end() :]
+                    if (
+                        trigger_is_negated(clause.normalized, match.start())
+                        or _UNAVAILABLE_EVIDENCE_PREFIX.search(prefix)
+                        or _UNAVAILABLE_EVIDENCE_SUFFIX.search(suffix)
+                    ):
+                        continue
+                    hits.append(marker)
+                    break
+    return list(dict.fromkeys(hits))
+
+
 def _detect_evidence_level(value: str) -> tuple[int, str, list[str]]:
     text = f" {_normalize(value)} "
     rank = 0
     level = "E0-hypothesis-only"
     matched: list[str] = []
     for candidate_rank, candidate_level, markers in _EVIDENCE_LEVELS:
-        hits = _marker_hits(text, markers)
+        hits = _affirmed_evidence_hits(text, markers)
         if hits:
             matched.extend(hits)
             if candidate_rank > rank:
@@ -1772,7 +1828,7 @@ def _evidence_maturity(evidence: list[str]) -> dict[str, Any]:
         ],
     }
     return {
-        "classification_basis": "item-level lexical classification of user-declared evidence; this is not independent validation",
+        "classification_basis": "clause-local, word-bounded lexical classification of affirmed user-declared evidence; this is not independent validation",
         "declared_only": True,
         "maturity_rank": rank,
         "maturity_level": level,
@@ -2038,8 +2094,13 @@ def _quantity_dimension_gate(statements: list[str]) -> dict[str, Any]:
 
 def _applicability_gate(text: str, conditions: list[str], evidence: list[str]) -> dict[str, Any]:
     extrapolation_markers = _marker_hits(text, _EXTRAPOLATION_MARKERS)
-    evidence_text = _normalize(" ".join(evidence))
-    transfer_markers = _marker_hits(evidence_text, _TRANSFER_VALIDATION_MARKERS)
+    transfer_markers = list(
+        dict.fromkeys(
+            marker
+            for item in evidence
+            for marker in _affirmed_evidence_hits(item, _TRANSFER_VALIDATION_MARKERS)
+        )
+    )
     explicit = bool(extrapolation_markers)
     if explicit and not transfer_markers:
         status = "blocked"
