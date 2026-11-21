@@ -209,7 +209,7 @@ def _export_locked(state_root: Path, requested_destination: Path, mode: str) -> 
                 info = _zip_info(f"capsule/project/{item.relative.as_posix()}")
                 with item.path.open("rb") as source, handle.open(info, "w", force_zip64=True) as target:
                     shutil.copyfileobj(source, target, length=1024 * 1024)
-        archive_sha256 = sha256_file(temporary)
+        archive_sha256 = verify_capsule(temporary)["archive_sha256"]
         # Prepare both outputs before replacing either. The project lock protects
         # cooperating writers; two path replacements are not crash-atomic.
         staging = Path(tempfile.mkdtemp(prefix=f".{destination.name}.publish.", dir=destination.parent))

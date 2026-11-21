@@ -9,7 +9,7 @@ import pytest
 
 from tsao_researcher import capsule as capsule_module
 from tsao_researcher.capsule import export_capsule, verify_capsule
-from tsao_researcher.errors import LockTimeoutError, ValidationError
+from tsao_researcher.errors import IntegrityError, LockTimeoutError, ValidationError
 from tsao_researcher.handoff import create_handoff
 from tsao_researcher.io import exclusive_lock
 from tsao_researcher.state import initialize
@@ -176,6 +176,51 @@ def test_capsule_read_failure_preserves_existing_archive_and_project(
     assert sidecar.read_bytes() == sidecar_bytes
     assert _project_bytes(root) == before
     assert not list(tmp_path.glob(".capsule.zip.*"))
+
+
+@pytest.mark.parametrize("existing_archive", [False, True])
+@pytest.mark.parametrize(
+    "replacement", [b"modified measured data\n", b"updated measurement contains more data\n"]
+)
+def test_source_change_after_hashing_rejects_capsule_before_publication(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    existing_archive: bool,
+    replacement: bytes,
+) -> None:
+    root = _project(tmp_path)
+    source = root / "data/input.dat"
+    archive = tmp_path / "capsule.zip"
+    sidecar = archive.with_name(archive.name + ".sha256")
+    if existing_archive:
+        export_capsule(root, archive, mode="full")
+    before = (archive.read_bytes(), sidecar.read_bytes()) if existing_archive else None
+    original_hash = capsule_module.sha256_file
+    changed = False
+
+    def hash_then_change(path: Path) -> str:
+        nonlocal changed
+        digest = original_hash(path)
+        if path == source and not changed:
+            source.write_bytes(replacement)
+            changed = True
+        return digest
+
+    monkeypatch.setattr(capsule_module, "sha256_file", hash_then_change)
+
+    with pytest.raises(IntegrityError, match=r"capsule checksum mismatch: data/input\.dat"):
+        export_capsule(root, archive, mode="full")
+
+    assert changed
+    assert source.read_bytes() == replacement
+    if existing_archive:
+        assert (archive.read_bytes(), sidecar.read_bytes()) == before
+        assert verify_capsule(archive)["valid"] is True
+    else:
+        assert not archive.exists()
+        assert not sidecar.exists()
+    assert not list(tmp_path.glob(".capsule.zip.*"))
+    assert not (root / "state/.mutation.lock").exists()
 
 
 def test_backup_failure_preserves_existing_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
