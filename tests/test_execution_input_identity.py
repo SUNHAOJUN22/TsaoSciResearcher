@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -187,3 +188,34 @@ def test_receipt_does_not_trim_significant_output_path_whitespace(tmp_path: Path
     assert receipt["outputs"][0]["path"] == " result.out"
     assert receipt["outputs"][0]["size_bytes"] == len(b"requested output")
     assert verify_receipts(root)["valid"] is True
+
+
+@pytest.mark.parametrize("metadata", ["project.yaml", "artifacts.jsonl", "execution-receipts.jsonl"])
+@pytest.mark.parametrize("alias", ["direct", "dotdot", "hardlink"])
+def test_receipt_rejects_its_own_mutable_metadata_without_publication(
+    tmp_path: Path, metadata: str, alias: str
+) -> None:
+    root = _project(tmp_path)
+    _handoff(root, ["data/input.dat"])
+    output = metadata
+    if alias == "dotdot":
+        output = f"computation/../{metadata}"
+    elif alias == "hardlink":
+        output = "computation/metadata-alias.out"
+        os.link(root / metadata, root / output)
+    before = {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+    with pytest.raises(ValidationError, match=r"receipt output.*metadata"):
+        record_receipt(
+            root,
+            "computation/job.json",
+            "fixture",
+            ["engine"],
+            0,
+            [output],
+            "2026-11-15T01:00:00Z",
+            "2026-11-15T01:00:01Z",
+        )
+
+    assert {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()} == before
+    assert verify_receipts(root)["receipts"] == 0

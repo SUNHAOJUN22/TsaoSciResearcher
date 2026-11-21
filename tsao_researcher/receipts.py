@@ -60,10 +60,16 @@ def _output_records(state_root: Path, outputs: list[str]) -> list[dict[str, Any]
     if len(set(outputs)) != len(outputs):
         raise ValidationError("receipt output paths must be unique")
     resolved_root = state_root.resolve()
+    metadata_paths = [resolved_root / name for name in (RECEIPT_LOG, "project.yaml", "artifacts.jsonl")]
     records: list[dict[str, Any]] = []
     seen_paths: set[str] = set()
     for relative in outputs:
         candidate = _safe_project_file(state_root, relative, field="output")
+        if any(
+            candidate == metadata or (metadata.exists() and candidate.samefile(metadata))
+            for metadata in metadata_paths
+        ):
+            raise ValidationError("receipt outputs must not alias mutable receipt or project metadata")
         canonical_path = candidate.relative_to(resolved_root).as_posix()
         if canonical_path in seen_paths:
             raise ValidationError("receipt output paths must be unique after resolution")
