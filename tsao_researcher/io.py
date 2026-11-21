@@ -724,6 +724,15 @@ def exclusive_lock(
                 raise LockTimeoutError(f"timed out acquiring lock: {lock}") from None
             time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
             continue
+        except PermissionError as exc:
+            # Windows denies O_EXCL creation while an unlinked file is still
+            # pending deletion. Wait within the same acquisition deadline;
+            # never enter the critical section until creation succeeds.
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise LockTimeoutError(f"timed out acquiring lock: {lock}") from exc
+            time.sleep(min(0.05, remaining))
+            continue
         try:
             _write_all(fd, payload)
             os.fsync(fd)

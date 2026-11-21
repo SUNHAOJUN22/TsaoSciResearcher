@@ -9,6 +9,7 @@ import subprocess
 import sys
 import threading
 import time
+import traceback
 from pathlib import Path
 from typing import Any
 
@@ -103,7 +104,7 @@ def test_concurrent_stale_lock_recovery_never_enters_two_critical_sections(
     assert not late.is_alive() and not fast.is_alive()
     assert reached_unlink, f"the stale reclaimer did not reach unlink; thread errors: {errors!r}"
     assert fast_entered_before_release is False
-    assert errors == []
+    assert errors == [], "".join("".join(traceback.format_exception(exc)) for exc in errors)
     assert acquired == {"late-reclaimer", "fast-reclaimer"}
     assert max_active == 1
 
@@ -136,8 +137,9 @@ def test_stale_owner_is_rechecked_only_after_recovery_guard_is_acquired(
         assert observed_guard_state == [True]
 
 
-def test_lock_acquisition_retries_transient_metadata_permission_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("operation", ["creation", "metadata"])
+def test_lock_acquisition_retries_transient_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, operation: str
 ) -> None:
     lock = tmp_path / "metadata-sharing-retry.lock"
     child = subprocess.Popen([sys.executable, "-c", "pass"])
@@ -151,22 +153,73 @@ def test_lock_acquisition_retries_transient_metadata_permission_error(
     os.utime(lock, (old, old))
 
     original_lstat = Path.lstat
+    original_open = os.open
     denied_once = True
 
     def deny_one_metadata_lookup(path: Path, *args: Any, **kwargs: Any) -> os.stat_result:
         nonlocal denied_once
-        if path == lock and denied_once:
+        if path == lock and operation == "metadata" and denied_once:
             denied_once = False
             raise PermissionError(errno.EACCES, "simulated transient metadata denial", str(path))
         return original_lstat(path, *args, **kwargs)
 
+    def deny_one_creation(path: Any, flags: int, mode: int = 0o777, **kwargs: Any) -> int:
+        nonlocal denied_once
+        if path == lock and flags & os.O_EXCL and operation == "creation" and denied_once:
+            denied_once = False
+            raise PermissionError(errno.EACCES, "simulated delete-pending creation denial", str(path))
+        return original_open(path, flags, mode, **kwargs)
+
     monkeypatch.setattr(Path, "lstat", deny_one_metadata_lookup)
+    monkeypatch.setattr(os, "open", deny_one_creation)
 
     with exclusive_lock(lock, timeout=2, stale_after=0.01):
         assert lock.is_file()
 
     assert not denied_once
     assert not lock.exists()
+
+
+@pytest.mark.parametrize("error_code", [errno.EACCES, errno.EIO])
+def test_failed_lock_creation_preserves_existing_lock_and_never_enters(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, error_code: int
+) -> None:
+    lock = tmp_path / "denied-creation.lock"
+    original_payload = b"existing lock must stay unchanged\n"
+    lock.write_bytes(original_payload)
+    original_open = os.open
+    attempts = 0
+    elapsed = 0.0
+
+    def advance_clock(seconds: float) -> None:
+        nonlocal elapsed
+        elapsed += seconds
+
+    def deny_creation(path: Any, flags: int, mode: int = 0o777, **kwargs: Any) -> int:
+        nonlocal attempts
+        if path == lock and flags & os.O_EXCL:
+            attempts += 1
+            raise OSError(error_code, "simulated lock creation failure", str(path))
+        return original_open(path, flags, mode, **kwargs)
+
+    monkeypatch.setattr(os, "open", deny_creation)
+    monkeypatch.setattr(time, "monotonic", lambda: elapsed)
+    monkeypatch.setattr(time, "sleep", advance_clock)
+    entered = False
+    expected_error = LockTimeoutError if error_code == errno.EACCES else OSError
+    with pytest.raises(expected_error) as failure, exclusive_lock(lock, timeout=0.05):
+        entered = True
+
+    assert not entered
+    assert lock.read_bytes() == original_payload
+    if error_code == errno.EACCES:
+        assert attempts == 2
+        assert elapsed == 0.05
+        assert isinstance(failure.value.__cause__, PermissionError)
+    else:
+        assert attempts == 1
+        assert elapsed == 0
+        assert failure.value.errno == errno.EIO
 
 
 def test_stale_lock_recovery_retries_transient_unlink_permission_error(

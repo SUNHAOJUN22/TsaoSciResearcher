@@ -31,6 +31,7 @@ def test_engineering_report_consumes_quality_contract() -> None:
     assert expected.startswith(b"%PDF-1.4")
     assert expected.count(b"/Type /Page ") == 4
     assert b"Evidence traceability" in expected
+    assert build_engineering_report.OUTPUT.read_bytes() == expected
 
 
 def test_current_tree_report_uses_current_tree_wording() -> None:
