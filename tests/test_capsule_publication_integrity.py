@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import zipfile
 from pathlib import Path
@@ -11,7 +12,7 @@ from tsao_researcher import capsule as capsule_module
 from tsao_researcher.capsule import export_capsule, verify_capsule
 from tsao_researcher.errors import IntegrityError, LockTimeoutError, ValidationError
 from tsao_researcher.handoff import create_handoff
-from tsao_researcher.io import exclusive_lock
+from tsao_researcher.io import canonical_json, exclusive_lock
 from tsao_researcher.state import initialize
 
 
@@ -343,3 +344,52 @@ def test_sidecar_replace_failure_rolls_back_archive(
         export_capsule(root, archive, mode="full")
     assert {p: p.read_bytes() if p.exists() else None for p in before} == before
     assert not list(tmp_path.glob(".capsule.zip.*"))
+
+
+def _capsule_with_inventory_path(tmp_path: Path, relative: str) -> Path:
+    root = _project(tmp_path)
+    original = tmp_path / "original.zip"
+    export_capsule(root, original, mode="full")
+    with zipfile.ZipFile(original) as source:
+        contents = {info.filename: source.read(info.filename) for info in source.infolist()}
+    manifest = json.loads(contents["capsule/manifest.json"])
+    next(row for row in manifest["files"] if row["path"] == "data/input.dat")["path"] = relative
+    manifest["tree_sha256"] = capsule_module._tree_digest(manifest["files"])
+    manifest.pop("capsule_id")
+    capsule_id = "CAP-" + hashlib.sha256(canonical_json(manifest).encode("utf-8")).hexdigest()[:24]
+    manifest["capsule_id"] = capsule_id
+    rewritten = tmp_path / "rewritten.zip"
+    with zipfile.ZipFile(rewritten, "w") as target:
+        for name, payload in contents.items():
+            if name == "capsule/project/data/input.dat":
+                name = f"capsule/project/{relative}"
+            elif name == "capsule/manifest.json":
+                payload = json.dumps(manifest).encode("utf-8")
+            target.writestr(name, payload)
+    return rewritten
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        r"data\input.dat",
+        r"data/..\..\..\..\outside.dat",
+        "data//input.dat",
+        "data/./input.dat",
+        "./data/input.dat",
+    ],
+)
+def test_capsule_rejects_noncanonical_or_windows_traversal_members(tmp_path: Path, relative: str) -> None:
+    archive = _capsule_with_inventory_path(tmp_path, relative)
+    before = archive.read_bytes()
+
+    with pytest.raises(IntegrityError, match="unsafe capsule member"):
+        verify_capsule(archive)
+
+    assert archive.read_bytes() == before
+
+
+@pytest.mark.parametrize("relative", ["data/measurement 01.dat", "data/测量数据.dat"])
+def test_capsule_keeps_canonical_space_and_unicode_members(tmp_path: Path, relative: str) -> None:
+    archive = _capsule_with_inventory_path(tmp_path, relative)
+    assert verify_capsule(archive)["valid"] is True

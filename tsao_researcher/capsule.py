@@ -47,7 +47,13 @@ class _ProjectFile:
 
 def _safe_member(name: str) -> PurePosixPath:
     path = PurePosixPath(name)
-    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
+    if (
+        not name
+        or "\\" in name
+        or path.as_posix() != name
+        or path.is_absolute()
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
         raise IntegrityError(f"unsafe capsule member: {name}")
     if path.parts[0] != "capsule":
         raise IntegrityError(f"capsule member must use capsule/ prefix: {name}")
@@ -277,14 +283,14 @@ def verify_capsule(path: str | Path) -> dict[str, Any]:
         if len(infos) > MAX_FILES + 1:
             raise IntegrityError(f"capsule has more than {MAX_FILES} project files")
         for info in infos:
+            if info.is_dir():
+                raise IntegrityError(f"directory capsule member forbidden: {info.filename}")
             _safe_member(info.filename)
             if info.filename in names:
                 raise IntegrityError(f"duplicate capsule member: {info.filename}")
             names.add(info.filename)
             if info.flag_bits & 0x1:
                 raise IntegrityError(f"encrypted capsule member forbidden: {info.filename}")
-            if info.is_dir():
-                raise IntegrityError(f"directory capsule member forbidden: {info.filename}")
             mode = (info.external_attr >> 16) & 0o170000
             if mode == 0o120000:
                 raise IntegrityError(f"symbolic link member forbidden: {info.filename}")
