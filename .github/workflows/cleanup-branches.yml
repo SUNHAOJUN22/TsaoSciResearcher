@@ -5,8 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: enforce-single-main
@@ -41,8 +40,8 @@ jobs:
               "User-Agent": "TsaoSciResearcher-single-main-governance",
           }
 
-          # Existing workflow permissions are unchanged. This verifier only
-          # uses GET; branch or PR cleanup requires a separate history review.
+          # The token has read-only contents access for this GET-only verifier.
+          # Branch or PR cleanup requires a separate history review.
           def get(path):
               for attempt in range(4):
                   try:

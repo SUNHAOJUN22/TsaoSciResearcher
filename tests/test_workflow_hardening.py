@@ -12,12 +12,16 @@ def _text(name: str) -> str:
 
 
 def test_permanent_workflows_are_idempotent_and_bounded() -> None:
-    for name in ("ci.yml", "audit.yml", "nightly.yml"):
+    for name in ("ci.yml", "audit.yml", "nightly.yml", "cleanup-branches.yml"):
         text = _text(name)
         assert "contents: read" in text
         assert "contents: write" not in text
         assert "git push" not in text
         assert "continue-on-error: true" not in text
+        workflow = yaml.safe_load(text)
+        assert workflow["permissions"] == {"contents": "read"}
+        for job in workflow["jobs"].values():
+            assert job.get("permissions", {"contents": "read"}) == {"contents": "read"}
     assert "workflow_dispatch:" in _text("audit.yml")
     assert "schedule:" in _text("nightly.yml")
 

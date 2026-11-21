@@ -29,7 +29,7 @@ flowchart TD
 
 ## Validation and supply chain
 
-Permanent CI is read-only and idempotent. Manual audit and nightly health runs do not mutate the repository. Tag release is the only publication workflow with content write permission besides single-main branch governance. Coverage, order independence, mutation, performance, SBOM, vulnerability audit, docs, source ZIP, wheel and sdist are all gated.
+Permanent CI is read-only and idempotent. Manual audit, nightly health and single-main verification runs do not mutate the repository. Tag release is the only workflow with content write permission. Coverage, order independence, mutation, performance, SBOM, vulnerability audit, docs, source ZIP, wheel and sdist are all gated.
 
 ## Truth boundaries
 

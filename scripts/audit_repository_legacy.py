@@ -509,7 +509,7 @@ def audit() -> dict[str, Any]:
         if re.search(r"continue-on-error:\s*true|\|\|\s*(?:true|exit\s+0)", text, re.IGNORECASE):
             errors.append(f"failure masking in workflow: {workflow.name}")
         has_write = re.search(r"contents:\s*write", text) is not None
-        allowed_write = workflow.name == "cleanup-branches.yml"
+        allowed_write = False
         if workflow.name == "release.yml":
             release_markers = [
                 "tags:",
@@ -526,10 +526,15 @@ def audit() -> dict[str, Any]:
         if has_write and not allowed_write:
             errors.append(f"unexpected contents:write permission in {workflow.name}")
         if workflow.name == "cleanup-branches.yml":
+            document = yaml.safe_load(text)
+            if document.get("permissions") != {"contents": "read"}:
+                errors.append("single-main verification requires only contents:read permission")
+            for job_name, job in document.get("jobs", {}).items():
+                if "permissions" in job and job["permissions"] != {"contents": "read"}:
+                    errors.append(f"single-main verification has a permission override: {job_name}")
             required_markers = [
                 "branches: [main]",
-                "contents: write",
-                "pull-requests: write",
+                "contents: read",
                 "refs/heads/main",
                 'method="GET"',
                 'list_all("/branches")',
