@@ -30,7 +30,7 @@ python scripts/build_test_dashboard.py --check
 python scripts/build_research_quality_dashboard.py --check
 python scripts/build_engineering_report.py --check
 python scripts/generate_checksums.py --check
-python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+PYTHONPATH="$PWD/.github/acceptance${PYTHONPATH:+:$PYTHONPATH}" python -m pytest -q -p hypothesis.extra.pytestplugin -p tsao_acceptance_pytest_events --tsao-event-report="$PWD/artifacts/junit.xml.events.json" --junitxml=artifacts/junit.xml
 python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=json:artifacts/coverage.json
 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
 TSR_TEST_ORDER_SEED=20260724 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
@@ -41,7 +41,7 @@ python -m bandit -q -lll -r scripts tsao_researcher
 python -m pip_audit --strict
 python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
 python scripts/performance_smoke.py --json-out artifacts/performance.json
-python scripts/check_quality_baseline.py
+python scripts/check_quality_baseline.py --junit-events artifacts/junit.xml.events.json
 mkdocs build --strict
 python scripts/package_release.py --out dist-a
 python scripts/package_release.py --out dist-b

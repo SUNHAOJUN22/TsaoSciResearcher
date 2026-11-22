@@ -230,7 +230,7 @@ jobs:
               python -m tsao_researcher math --schema
               python -m tsao_researcher math --contract uncertainty-budget --language both --output artifacts/math-contract.json
               python -m mkdocs build --strict
-              python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
+              PYTHONPATH="$PWD/.github/acceptance${PYTHONPATH:+:$PYTHONPATH}" python -m pytest -q -p hypothesis.extra.pytestplugin -p tsao_acceptance_pytest_events --tsao-event-report="$RUNNER_TEMP/test-evidence/junit.xml.events.json" --junitxml="$RUNNER_TEMP/test-evidence/junit.xml"
               python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
               python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.reverse_order_plugin
               TSR_TEST_ORDER_SEED=20260806 python -m pytest -q -p hypothesis.extra.pytestplugin -p tests.random_order_plugin
@@ -243,7 +243,7 @@ jobs:
               python -m pip_audit --strict -r artifacts/resolved-environment.lock --format cyclonedx-json --output artifacts/resolved-environment-sbom.json
               python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
               python scripts/performance_smoke.py --json-out artifacts/performance.json
-              python scripts/check_quality_baseline.py --junit "$RUNNER_TEMP/test-evidence/junit.xml"
+              python scripts/check_quality_baseline.py --junit "$RUNNER_TEMP/test-evidence/junit.xml" --junit-events "$RUNNER_TEMP/test-evidence/junit.xml.events.json"
               python scripts/package_release.py --out dist-a
               python scripts/package_release.py --out dist-b
               cmp "dist-a/TsaoSciResearcher-v$(cat VERSION).zip" "dist-b/TsaoSciResearcher-v$(cat VERSION).zip"

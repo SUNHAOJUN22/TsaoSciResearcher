@@ -118,7 +118,7 @@ jobs:
       - name: Complete regression
         run: |
           mkdir -p artifacts
-          python -m pytest -q -p hypothesis.extra.pytestplugin --junitxml=artifacts/junit.xml
+          PYTHONPATH="$PWD/.github/acceptance${PYTHONPATH:+:$PYTHONPATH}" python -m pytest -q -p hypothesis.extra.pytestplugin -p tsao_acceptance_pytest_events --tsao-event-report="$PWD/artifacts/junit.xml.events.json" --junitxml=artifacts/junit.xml
       - name: Line and branch coverage
         run: |
           python -m pytest -q -p hypothesis.extra.pytestplugin -p pytest_cov --ignore=tests/test_import_isolation.py --cov=tsao_researcher --cov-branch --cov-report=term-missing --cov-report=json:artifacts/coverage.json --cov-report=xml:artifacts/coverage.xml
@@ -145,7 +145,7 @@ jobs:
         run: |
           python scripts/run_mutation_smoke.py --json-out artifacts/mutation-results.json
           python scripts/performance_smoke.py --json-out artifacts/performance.json
-          python scripts/check_quality_baseline.py
+          python scripts/check_quality_baseline.py --junit-events artifacts/junit.xml.events.json
           python scripts/record_quality_history.py --source-commit "$GITHUB_SHA" --workflow-run-id "$GITHUB_RUN_ID" --workflow-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
           python scripts/build_validation_evidence.py --write --attested --out artifacts/VALIDATION_EVIDENCE.json --source-commit "$GITHUB_SHA" --publication-parent "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --evidence-date "$(date -u +%F)"
       - name: Deterministic source release

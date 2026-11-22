@@ -20,6 +20,23 @@ including when a contributor uses `core.autocrlf=true`; binary artifacts retain
 their original bytes. The gate continues to reject CRLF and other encoding
 defects instead of normalizing them during validation.
 
+## Test evidence
+
+The complete CI regression records raw JUnit and a matching event witness with
+the existing `tsao_acceptance_pytest_events` plugin. After coverage, mutation and
+performance artifacts are generated, consume both with
+`python scripts/check_quality_baseline.py --junit-events artifacts/junit.xml.events.json`.
+The plugin is loaded from `.github/acceptance` and requires an absolute
+`--tsao-event-report` path that does not already exist.
+
+Pytest may include passing subtests in the suite summary without adding separate
+JUnit testcase elements. The quality record reports ordinary cases in `tests`,
+with `subtests_passed`, `subtests_skipped` and `collection_skipped` separately.
+Collector identity, lifecycle events, output paths and raw XML must agree.
+Without event evidence, suite counts must agree with actual testcase elements;
+subtest counts are never guessed. Actual failure or error nodes and malformed
+mutation records cannot produce a passing quality record.
+
 ## Capability contracts
 
 New capabilities require a unique slug, workflow, bounded inputs, explicit outputs, evidence policy, risk level, applicability boundary and completion gates. A named external engine is an integration target, not proof that it is installed or executed.

@@ -5,6 +5,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import re
+import runpy
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -45,29 +49,94 @@ def _coverage(path: Path) -> tuple[float, float, float]:
     return line, branch, combined
 
 
-def _junit(path: Path) -> dict[str, int | float]:
+def _pytest_witness_counts(root: Any, junit: Path, events_path: Path) -> dict[str, int]:
+    """Use the same event/JUnit reconciliation as the acceptance controller."""
+    original_path = sys.path[:]
+    try:
+        adapter = ROOT / ".github" / "acceptance" / "pytest_witness.py"
+        sys.path.insert(0, str(adapter.parent))
+        namespace = runpy.run_path(str(adapter))
+        events = namespace["load_events"](events_path)
+        parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
+        parser.add_argument("--junitxml", "--junit-xml", dest="junit")
+        parser.add_argument("--tsao-event-report", dest="events")
+        try:
+            outputs, _ = parser.parse_known_args(events["pytest_argv"])
+        except argparse.ArgumentError as exc:
+            raise ValueError("pytest witness has invalid output arguments") from exc
+        for recorded, actual in ((outputs.junit, junit), (outputs.events, events_path)):
+            if recorded is None or (Path(events["cwd"]) / recorded).resolve() != actual.resolve():
+                raise ValueError("pytest witness output paths disagree with the supplied artifacts")
+        counts: dict[str, int] = namespace["pytest_counts"](root, events)
+        return counts
+    finally:
+        sys.path[:] = original_path
+
+
+def _junit(path: Path, events_path: Path | None = None) -> dict[str, int | float]:
     root = ET.parse(path).getroot()
-    if root is None:
-        raise ValueError("JUnit XML has no root element")
+    if root is None or root.tag not in {"testsuite", "testsuites"}:
+        raise ValueError("JUnit XML must have a testsuite or testsuites root")
+    parents = {child: node for node in root.iter() for child in node}
+    cases = list(root.iter("testcase"))
+    for case in cases:
+        if parents[case].tag != "testsuite":
+            raise ValueError("JUnit testcase must be a direct child of a testsuite")
+    for node in root.iter():
+        if node.tag in {"failure", "error", "skipped"} and parents[node].tag != "testcase":
+            raise ValueError("JUnit outcome must be a direct child of a testcase")
+    for suite in root.iter():
+        if suite.tag in {"testsuite", "testsuites"}:
+            elapsed = float(suite.get("time", "0"))
+            if not math.isfinite(elapsed) or elapsed < 0:
+                raise ValueError("JUnit elapsed time must be finite and nonnegative")
     suites = root.findall("testsuite") if root.tag == "testsuites" else [root]
-    tests = 0
-    failures = 0
-    errors = 0
-    skipped = 0
-    seconds = 0.0
-    for suite in suites:
-        tests += int(float(suite.attrib.get("tests", 0)))
-        failures += int(float(suite.attrib.get("failures", 0)))
-        errors += int(float(suite.attrib.get("errors", 0)))
-        skipped += int(float(suite.attrib.get("skipped", 0)))
-        seconds += float(suite.attrib.get("time", 0.0))
-    return {
-        "tests": tests,
-        "failures": failures,
-        "errors": errors,
-        "skipped": skipped,
-        "seconds": round(seconds, 6),
+    seconds = sum(float(suite.get("time", "0")) for suite in suites)
+    if not math.isfinite(seconds):
+        raise ValueError("JUnit aggregate elapsed time is outside the numeric range")
+    if events_path is not None:
+        if list(root.iter("failure")) or list(root.iter("error")):
+            raise ValueError("JUnit witness contains actual failure or error outcomes")
+        counts = _pytest_witness_counts(root, path, events_path)
+        return {
+            "tests": counts["ordinary_cases"],
+            "failures": counts["failed"],
+            "errors": 0,
+            "skipped": counts["ordinary_skip_events"],
+            "subtests_passed": counts["subtests_passed"],
+            "subtests_skipped": counts["subtests_skipped"],
+            "collection_skipped": counts["collection_skipped"],
+            "seconds": round(seconds, 6),
+        }
+    for case in cases:
+        outcomes = [child for child in case if child.tag in {"failure", "error", "skipped"}]
+        if len(outcomes) > 1:
+            raise ValueError("JUnit testcase has conflicting outcomes")
+    totals = {
+        "tests": len(cases),
+        "failures": sum(case.find("failure") is not None for case in cases),
+        "errors": sum(case.find("error") is not None for case in cases),
+        "skipped": sum(case.find("skipped") is not None for case in cases),
     }
+    if not cases or totals["tests"] == totals["skipped"]:
+        raise ValueError("JUnit witness is empty or entirely skipped")
+    for suite in root.iter():
+        if suite.tag not in {"testsuite", "testsuites"}:
+            continue
+        if suite is not root and parents[suite].tag not in {"testsuite", "testsuites"}:
+            raise ValueError("JUnit suite has an invalid parent")
+        leaves = list(suite.iter("testcase"))
+        expected = {
+            "tests": len(leaves),
+            "failures": sum(case.find("failure") is not None for case in leaves),
+            "errors": sum(case.find("error") is not None for case in leaves),
+            "skipped": sum(case.find("skipped") is not None for case in leaves),
+        }
+        for key, count in expected.items():
+            declared = suite.get(key)
+            if declared is not None and (not re.fullmatch(r"[0-9]+", declared) or int(declared) != count):
+                raise ValueError(f"JUnit {key} summary disagrees with actual testcase results")
+    return {**totals, "seconds": round(seconds, 6)}
 
 
 def evaluate(
@@ -75,15 +144,18 @@ def evaluate(
     mutation_path: Path,
     performance_path: Path,
     junit_path: Path,
+    events_path: Path | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     baseline = _load(BASELINE)
     line, branch, combined = _coverage(coverage_path)
     mutation = _load(mutation_path)
     performance = _load(performance_path)
-    junit = _junit(junit_path)
+    junit = _junit(junit_path, events_path)
     if not isinstance(mutation, list):
         raise ValueError("mutation artifact root must be a list")
-    killed = sum(bool(row.get("killed")) for row in mutation if isinstance(row, dict))
+    if any(not isinstance(row, dict) or type(row.get("killed")) is not bool for row in mutation):
+        raise ValueError("mutation records must be objects with a boolean killed field")
+    killed = sum(row["killed"] is True for row in mutation)
     survivors = len(mutation) - killed
     errors: list[str] = []
     line_min = float(baseline["coverage"]["line_percent_minimum"])
@@ -131,10 +203,13 @@ def main() -> None:
     parser.add_argument("--mutation", default=str(DEFAULT_MUTATION))
     parser.add_argument("--performance", default=str(DEFAULT_PERFORMANCE))
     parser.add_argument("--junit", default=str(DEFAULT_JUNIT))
+    parser.add_argument(
+        "--junit-events", type=Path, help="Same-run pytest event witness for raw JUnit subtest counts"
+    )
     parser.add_argument("--out", default=str(DEFAULT_OUTPUT))
     args = parser.parse_args()
     result, errors = evaluate(
-        Path(args.coverage), Path(args.mutation), Path(args.performance), Path(args.junit)
+        Path(args.coverage), Path(args.mutation), Path(args.performance), Path(args.junit), args.junit_events
     )
     output = Path(args.out)
     output.parent.mkdir(parents=True, exist_ok=True)
