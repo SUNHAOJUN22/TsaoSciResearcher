@@ -1,9 +1,9 @@
 {
-  "AspenOps-Agent": "5590f1552e3e7ef3e7e46c0e16e6275ebf88f078",
-  "TsaoSciComputation": "830f7b3acab452e985f3961d00334fc47aeb4e13",
-  "TSAO-PROCESSING-SKILL": "5c87aeee54c6c54a0016746e429dd9fa6bc8a5e7",
-  "ResinDB-Pro-by-SunHJ": "1ac6d7e7beb1c154490424bffac6559b9501fdd4",
-  "TsaoDFT_skill": "5b0423e88d4989b36ab74cfddcaeadb77fd0085f",
+  "AspenOps-Agent": "a2d26d1e837fe06280add307c005099e9f3dfcbd",
+  "TsaoSciComputation": "253261c1ef70cd691f0b1d2e6e33d63ed844794a",
+  "TSAO-PROCESSING-SKILL": "d0ad6ec8b49c3308ceb99dddd9c7f3875c0a36b2",
+  "ResinDB-Pro-by-SunHJ": "af7c22fed8291aa2143ab76f5a76fd727e93c144",
+  "TsaoDFT_skill": "77b9c2a6fddba7dcfeed68bd2f85809305838fc9",
   "TsaoSciResearcher": "SELF",
-  "OpenDeepMind_skill": "d9fe3c83cd59321ac5e5ac86e08e279d451fd197"
+  "OpenDeepMind_skill": "92fc9b924eea7d678f16dacf4316084fbccdb8ec"
 }
